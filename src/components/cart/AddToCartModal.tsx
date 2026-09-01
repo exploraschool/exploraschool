@@ -7,12 +7,20 @@ import { useLocale } from "next-intl";
 import {
   getMainDisciplines,
   getModalitiesForParent,
+  getSingleProductDiscipline,
   isMainDiscipline,
   type MainDisciplineId,
   type ModalityId,
 } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
-import { getActiveInstructors, isSnowboardOnlyInstructor } from "@/data/instructors";
+import {
+  getInstructorsForBooking,
+  getInstructorBySlug,
+  instructorCanTeachProduct,
+  instructorTeachesDiscipline,
+  isSnowboardOnlyInstructor,
+  type InstructorSlug,
+} from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
 import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
 import {
@@ -92,12 +100,15 @@ export function AddToCartModal({
       setTimeSlotId(slotId);
       setParticipants(people);
       const preferredInstructor = defaultInstructorSlug ?? "";
+      const singleDiscipline = product
+        ? getSingleProductDiscipline(product.disciplines)
+        : undefined;
       const initialDiscipline =
         preferredInstructor &&
         isSnowboardOnlyInstructor(preferredInstructor) &&
         product?.disciplines.includes("snowboard")
           ? "snowboard"
-          : (defaultDiscipline ?? "");
+          : (defaultDiscipline ?? singleDiscipline ?? "");
       setDiscipline(initialDiscipline);
       setModality("");
       setInstructorSlug(preferredInstructor);
@@ -134,18 +145,21 @@ export function AddToCartModal({
   if (!mounted || !open || !product) return null;
 
   const resolvedProduct = product;
+  const implicitDiscipline = getSingleProductDiscipline(resolvedProduct.disciplines);
+  const effectiveDiscipline = discipline || implicitDiscipline || undefined;
 
   const availableDisciplines = getMainDisciplines().filter((d) =>
     resolvedProduct.disciplines.includes(d.id),
   );
 
   const availableModalities =
-    discipline && (discipline === "esqui" || discipline === "snowboard")
-      ? getModalitiesForParent(discipline)
+    effectiveDiscipline && (effectiveDiscipline === "esqui" || effectiveDiscipline === "snowboard")
+      ? getModalitiesForParent(effectiveDiscipline)
       : [];
 
-  const instructors = getActiveInstructors().filter((i) =>
-    !discipline || i.disciplines.includes(discipline),
+  const instructors = getInstructorsForBooking(
+    resolvedProduct.disciplines,
+    effectiveDiscipline,
   );
 
   const disciplineLocked =
@@ -158,8 +172,13 @@ export function AddToCartModal({
       value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "";
     setDiscipline(next);
     setModality("");
-    if (next !== "snowboard" && instructorSlug && isSnowboardOnlyInstructor(instructorSlug)) {
-      setInstructorSlug("");
+    if (instructorSlug) {
+      const instructor = getInstructorBySlug(instructorSlug as InstructorSlug);
+      if (instructor && next && !instructorTeachesDiscipline(instructor, next)) {
+        setInstructorSlug("");
+      } else if (instructor && !next && !instructorCanTeachProduct(instructor, resolvedProduct.disciplines)) {
+        setInstructorSlug("");
+      }
     }
   }
 
@@ -189,10 +208,10 @@ export function AddToCartModal({
     if (participants < minPeople || participants > maxPeople) return;
 
     const instructor = instructors.find((i) => i.slug === instructorSlug);
-    const effectiveDiscipline =
+    const resolvedDiscipline =
       instructor && isSnowboardOnlyInstructor(instructor.slug)
         ? "snowboard"
-        : discipline || undefined;
+        : effectiveDiscipline;
     const slotLabel = getSlotLabel(timeSlotId, locale);
     const trimmedNotes = notes.trim() || undefined;
 
@@ -200,7 +219,7 @@ export function AddToCartModal({
       .map((date) =>
         buildCartItem({
           productId,
-          discipline: effectiveDiscipline,
+          discipline: resolvedDiscipline,
           modality: modality || undefined,
           instructorSlug: instructor?.slug,
           instructorName: instructor?.name ?? defaultInstructorName,
@@ -437,7 +456,7 @@ export function AddToCartModal({
               </div>
             </div>
 
-            <div className="shrink-0 space-y-2 border-t border-hielo/10 bg-white px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-5">
+            <div className="shrink-0 space-y-1.5 border-t border-hielo/10 bg-white px-3 py-2 pb-[max(0.375rem,env(safe-area-inset-bottom))] sm:space-y-2 sm:px-5 sm:py-2.5">
               <BookingPriceSummary
                 locale={locale}
                 productId={productId}
@@ -447,20 +466,27 @@ export function AddToCartModal({
                 compact
               />
 
-              <div className="flex gap-2">
+              <div className="modal-action-bar">
                 <button
                   type="submit"
                   disabled={!datesValid || sessionPrice === null}
-                  className="btn-primary min-h-10 flex-1 py-2.5 text-sm disabled:opacity-50"
+                  className="btn-primary modal-action-btn modal-action-btn-primary disabled:opacity-50"
                 >
-                  {dates.length > 1
-                    ? t("addDaysToCart", { count: dates.length })
-                    : t("addToCart")}
+                  <span className="truncate sm:hidden">
+                    {dates.length > 1
+                      ? pickLocale(locale, `Añadir · ${dates.length} días`, `Add · ${dates.length} days`)
+                      : pickLocale(locale, "Añadir", "Add")}
+                  </span>
+                  <span className="hidden truncate sm:inline">
+                    {dates.length > 1
+                      ? t("addDaysToCart", { count: dates.length })
+                      : t("addToCart")}
+                  </span>
                 </button>
                 <button
                   type="button"
                   onClick={onClose}
-                  className="btn-secondary min-h-10 shrink-0 px-3 py-2.5 text-sm"
+                  className="btn-secondary modal-action-btn modal-action-btn-secondary"
                 >
                   {t("cancel")}
                 </button>

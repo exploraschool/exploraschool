@@ -250,6 +250,57 @@
     box-shadow: 0 6px 20px rgb(10 18 25 / 0.08);
   }
 
+  .modal-action-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .modal-action-btn {
+    width: auto !important;
+    min-height: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.75rem !important;
+    font-size: 0.75rem;
+    line-height: 1.15;
+    box-shadow: none;
+    white-space: nowrap;
+  }
+
+  .modal-action-btn-primary {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .modal-action-btn-secondary {
+    min-width: 4.75rem;
+    padding-inline: 0.875rem !important;
+  }
+
+  .modal-action-bar .btn-primary:hover,
+  .modal-action-bar .btn-secondary:hover,
+  .modal-action-bar .btn-primary:active,
+  .modal-action-bar .btn-secondary:active {
+    transform: none;
+    filter: none;
+    box-shadow: none;
+  }
+
+  @media (min-width: 640px) {
+    .modal-action-btn {
+      min-height: 2.5rem;
+      height: 2.5rem;
+      padding: 0 1rem !important;
+      font-size: 0.875rem;
+    }
+
+    .modal-action-btn-secondary {
+      min-width: 5.25rem;
+    }
+  }
+
   .btn-glass {
     @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md;
     transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;

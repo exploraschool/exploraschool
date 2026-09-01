@@ -1,4 +1,5 @@
-import type { DisciplineId } from "./disciplines";
+import type { DisciplineId, MainDisciplineId } from "./disciplines";
+import { isMainDiscipline } from "./disciplines";
 
 export type InstructorSlug =
   | "reche"
@@ -268,4 +269,36 @@ export function getInstructorBySlug(slug: InstructorSlug): Instructor | undefine
 
 export function getActiveInstructors(): Instructor[] {
   return instructors.filter((i) => i.active).sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export function instructorTeachesDiscipline(
+  instructor: Instructor,
+  disciplineId: MainDisciplineId,
+): boolean {
+  return instructor.disciplines.includes(disciplineId);
+}
+
+export function instructorCanTeachProduct(
+  instructor: Instructor,
+  productDisciplines: DisciplineId[],
+): boolean {
+  return productDisciplines.some((disciplineId) => {
+    if (isMainDiscipline(disciplineId)) {
+      return instructorTeachesDiscipline(instructor, disciplineId);
+    }
+    return false;
+  });
+}
+
+export function getInstructorsForBooking(
+  productDisciplines: DisciplineId[],
+  selectedDiscipline?: MainDisciplineId,
+): Instructor[] {
+  const active = getActiveInstructors();
+
+  if (selectedDiscipline) {
+    return active.filter((instructor) => instructorTeachesDiscipline(instructor, selectedDiscipline));
+  }
+
+  return active.filter((instructor) => instructorCanTeachProduct(instructor, productDisciplines));
 }

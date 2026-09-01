@@ -295,6 +295,16 @@ export function productMatchesDiscipline(
   });
 }
 
+/** When a product only allows one main discipline, returns it (e.g. curso-snow → snowboard). */
+export function getSingleProductDiscipline(
+  productDisciplines: DisciplineId[],
+): MainDisciplineId | undefined {
+  const mainDisciplines = productDisciplines.filter((d): d is MainDisciplineId =>
+    isMainDiscipline(d),
+  );
+  return mainDisciplines.length === 1 ? mainDisciplines[0] : undefined;
+}
+
 export function getDisciplineDisplayName(
   locale: string,
   disciplineId?: MainDisciplineId,
