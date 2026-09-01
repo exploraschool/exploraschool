@@ -127,15 +127,15 @@ export const instructors: Instructor[] = [
   {
     slug: "ale",
     name: "Ale",
-    disciplines: ["snowboard"],
+    disciplines: ["esqui", "snowboard"],
     bioEs:
-      "Instructor de snowboard. Clases dinámicas para iniciación y perfeccionamiento en las pistas de Sierra Nevada.",
+      "Instructor de esquí y snowboard. Clases dinámicas para iniciación y perfeccionamiento en las pistas de Sierra Nevada.",
     bioEn:
-      "Snowboard instructor. Dynamic lessons for beginners and improvers on Sierra Nevada's slopes.",
+      "Ski and snowboard instructor. Dynamic lessons for beginners and improvers on Sierra Nevada's slopes.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 8,
-    photo: "/images/instructors/ale.jpg",
+    photo: "/images/instructors/ale.svg",
   },
   {
     slug: "badillo",

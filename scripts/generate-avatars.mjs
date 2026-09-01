@@ -15,6 +15,11 @@ const instructors = [
   { slug: "maria", initials: "MA", color: "#C4A574" },
   { slug: "eva", initials: "EV", color: "#3D7A8C" },
   { slug: "ferran", initials: "FE", color: "#0E1A24" },
+  { slug: "luis", initials: "LU", color: "#1E4D5C" },
+  { slug: "rocio", initials: "RO", color: "#2A6B7C" },
+  { slug: "violeta", initials: "VI", color: "#5C3D6E" },
+  { slug: "joan", initials: "JO", color: "#3D5C4A" },
+  { slug: "benja", initials: "BE", color: "#6B4A2A" },
 ];
 
 const dir = path.join("public", "images", "instructors");
