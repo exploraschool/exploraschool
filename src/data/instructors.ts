@@ -12,7 +12,12 @@ export type InstructorSlug =
   | "badillo"
   | "maria"
   | "eva"
-  | "ferran";
+  | "ferran"
+  | "luis"
+  | "rocio"
+  | "violeta"
+  | "joan"
+  | "benja";
 
 export type Instructor = {
   slug: InstructorSlug;
@@ -183,6 +188,71 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 12,
     photo: "/images/instructors/ferran.jpg",
+  },
+  {
+    slug: "luis",
+    name: "Luis",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructor del equipo Explora. Clases dinámicas y cercanas para disfrutar de Sierra Nevada desde el primer día.",
+    bioEn:
+      "Explora team instructor. Dynamic, friendly lessons to enjoy Sierra Nevada from day one.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 13,
+    photo: "/images/instructors/luis.svg",
+  },
+  {
+    slug: "rocio",
+    name: "Rocío",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructora del equipo Explora. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
+    bioEn:
+      "Explora team instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 14,
+    photo: "/images/instructors/rocio.svg",
+  },
+  {
+    slug: "violeta",
+    name: "Violeta",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructora del equipo Explora. Clases seguras y divertidas para todas las edades y niveles en Sierra Nevada.",
+    bioEn:
+      "Explora team instructor. Safe, fun lessons for all ages and levels in Sierra Nevada.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 15,
+    photo: "/images/instructors/violeta.svg",
+  },
+  {
+    slug: "joan",
+    name: "Joan",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructor del equipo Explora. Te guía en esquí y snowboard con energía y profesionalidad en Sierra Nevada.",
+    bioEn:
+      "Explora team instructor. Guides you in ski and snowboard with energy and professionalism in Sierra Nevada.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 16,
+    photo: "/images/instructors/joan.svg",
+  },
+  {
+    slug: "benja",
+    name: "Benja",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructor del equipo Explora. Clases amenas y técnicas para iniciación y perfeccionamiento en la nieve.",
+    bioEn:
+      "Explora team instructor. Engaging, technical lessons for beginners and improvers on the snow.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 17,
+    photo: "/images/instructors/benja.svg",
   },
 ];
 

@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const navItems = [
   { href: "clases", labelKey: "clases" as const },
@@ -125,30 +126,26 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  useBodyScrollLock(open);
+
   useEffect(() => {
     if (!open) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
 
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") onClose();
     }
 
     window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", onKeyDown);
-    };
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
   if (!open || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[120] lg:hidden" role="presentation">
+    <div className="fixed inset-0 z-[120] overscroll-none lg:hidden" role="presentation">
       <button
         type="button"
-        className="site-header__overlay"
+        className="site-header__overlay modal-overlay"
         aria-label={t("close")}
         onClick={onClose}
       />
@@ -172,7 +169,7 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto bg-white px-3 py-4">
+        <div className="modal-scroll flex-1 bg-white px-3 py-4">
           <ul className="space-y-1.5">
             {navItems.map((item) => {
               const active = isPathActive(pathname, locale, item.href);

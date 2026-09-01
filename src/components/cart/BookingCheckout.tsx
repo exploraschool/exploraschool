@@ -221,14 +221,14 @@ export function BookingCheckout() {
         <div className="xl:sticky xl:top-20 xl:max-h-[calc(100dvh-5.5rem)] xl:self-start">
           <form
             onSubmit={handleSend}
-            className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)] xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-y-auto xl:overscroll-contain"
+            className="flex max-h-[calc(100dvh-5.5rem)] flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)]"
           >
-            <div className="border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
+            <div className="shrink-0 border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
               <h2 className="font-display text-xl font-semibold text-hielo">{t("checkout")}</h2>
               <p className="mt-1.5 text-sm text-muted">{t("checkoutDesc")}</p>
             </div>
 
-            <div className="space-y-4 px-5 py-5 sm:px-6">
+            <div className="modal-scroll min-h-0 flex-1 space-y-4 px-5 py-5 sm:px-6">
               <div className="rounded-2xl bg-gradient-to-br from-hielo to-hielo-light px-5 py-4 text-white">
                 <p className="text-xs font-bold uppercase tracking-wider text-white/80">{t("estimatedTotal")}</p>
                 <p className="mt-1 font-display text-3xl font-semibold">{total} €</p>

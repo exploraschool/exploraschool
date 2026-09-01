@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { seasonPriceTables } from "@/data/prices";
+import type { ProductId } from "@/data/products";
+import { AddToCartModal } from "@/components/cart/AddToCartModal";
+import { getBookingFromSeasonRow, type TimeSlotId } from "@/lib/booking-config";
 import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 
@@ -11,12 +14,31 @@ type SeasonPriceTablesProps = {
 
 const PARTICIPANT_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
+type BookingSelection = {
+  productId: ProductId;
+  timeSlotId: TimeSlotId;
+  participants: number;
+};
+
 export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
   const [participants, setParticipants] = useState(2);
+  const [bookingSelection, setBookingSelection] = useState<BookingSelection | null>(null);
   const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
 
+  function handlePriceClick(tableId: string, schedule: string) {
+    const booking = getBookingFromSeasonRow(tableId, schedule);
+    if (!booking) return;
+
+    setBookingSelection({
+      productId: booking.productId,
+      timeSlotId: booking.timeSlotId,
+      participants,
+    });
+  }
+
   return (
-    <div className="mt-6 space-y-6">
+    <>
+      <div className="mt-6 space-y-6">
       <div className="rounded-2xl border border-hielo/10 bg-white p-4 sm:p-5">
         <p className="text-sm font-medium text-pizarra">
           {pickLocale(locale, "¿Cuántas personas sois?", "How many people are you?")}
@@ -92,12 +114,23 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                         </span>
                       )}
                     </div>
-                    <p className="shrink-0 text-right">
-                      <span className="text-lg font-bold text-accent">{price} €</span>
-                      <span className="mt-0.5 block text-[0.65rem] text-muted">
-                        {pickLocale(locale, "total grupo", "group total")}
+                    <button
+                      type="button"
+                      onClick={() => handlePriceClick(table.id, row.schedule)}
+                      className="group/price shrink-0 rounded-xl px-2 py-1 text-right transition hover:bg-accent/8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                      aria-label={pickLocale(
+                        locale,
+                        `Reservar ${row.schedule} por ${price} €`,
+                        `Book ${row.schedule} for €${price}`,
+                      )}
+                    >
+                      <span className="text-lg font-bold text-accent transition group-hover/price:text-accent-dark">
+                        {price} €
                       </span>
-                    </p>
+                      <span className="mt-0.5 block text-[0.65rem] text-muted">
+                        {pickLocale(locale, "total grupo · reservar", "group total · book")}
+                      </span>
+                    </button>
                   </div>
                 );
               })}
@@ -105,6 +138,17 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           </details>
         ))}
       </div>
-    </div>
+      </div>
+
+      {bookingSelection && (
+        <AddToCartModal
+          open
+          onClose={() => setBookingSelection(null)}
+          productId={bookingSelection.productId}
+          defaultTimeSlotId={bookingSelection.timeSlotId}
+          defaultParticipants={bookingSelection.participants}
+        />
+      )}
+    </>
   );
 }

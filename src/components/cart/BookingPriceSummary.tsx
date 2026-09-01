@@ -12,6 +12,7 @@ type BookingPriceSummaryProps = {
   sessionPrice: number | null;
   datesCount: number;
   participants: number;
+  compact?: boolean;
 };
 
 export function BookingPriceSummary({
@@ -20,6 +21,7 @@ export function BookingPriceSummary({
   sessionPrice,
   datesCount,
   participants,
+  compact = false,
 }: BookingPriceSummaryProps) {
   if (sessionPrice === null) return null;
 
@@ -29,81 +31,106 @@ export function BookingPriceSummary({
   const display = resolvePriceDisplay(sessionPrice);
   const perSession = display.discountActive ? display.finalPrice : sessionPrice;
   const total = perSession * Math.max(1, datesCount);
+  const hasDates = datesCount > 0;
+  const listTotal = display.listPrice * Math.max(1, datesCount);
 
-  return (
-    <div className="rounded-2xl border border-oro/25 bg-gradient-to-br from-oro/8 to-accent/5 p-4">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-oro">
-            {pickLocale(locale, "Tu selección", "Your selection")}
+  const selectionLabel = hasDates
+    ? pickLocale(
+        locale,
+        `${datesCount} día(s) · ${participants} pers.`,
+        `${datesCount} day(s) · ${participants} people`,
+      )
+    : pickLocale(locale, "Añade al menos un día", "Add at least one day");
+
+  if (compact) {
+    return (
+      <div className="flex items-center justify-between gap-2 rounded-lg border border-oro/20 bg-oro/5 px-2.5 py-1.5">
+        <div className="min-w-0">
+          <p className="truncate text-[0.6875rem] font-medium leading-tight text-pizarra">
+            {selectionLabel}
           </p>
-          <p className="mt-2 text-sm text-muted">
-            {datesCount > 0
-              ? pickLocale(
-                  locale,
-                  `${datesCount} día(s) · ${participants} persona(s)`,
-                  `${datesCount} day(s) · ${participants} person(s)`,
-                )
-              : pickLocale(locale, "Añade al menos un día", "Add at least one day")}
-          </p>
+          {display.discountActive && (
+            <p className="truncate text-[0.625rem] leading-tight text-oro">
+              {earlyBirdDiscountLabel(locale)}
+            </p>
+          )}
         </div>
-        <div className="text-right">
-          <p className="text-xs text-muted">
-            {showPerPerson && unitPrice
-              ? pickLocale(locale, "por persona", "per person")
-              : pickLocale(locale, "por sesión", "per session")}
-          </p>
-          {showPerPerson && unitPrice ? (
-            <div className="mt-1">
-              {unitPrice.discountActive ? (
-                <>
-                  <p className="text-sm text-muted line-through">{unitPrice.listPrice} €</p>
-                  <p className="font-display text-xl font-semibold text-accent">{unitPrice.finalPrice} €</p>
-                </>
-              ) : (
-                <p className="font-display text-xl font-semibold text-hielo">{unitPrice.finalPrice} €</p>
+        <div className="shrink-0 text-right leading-none">
+          {showPerPerson && unitPrice && !hasDates ? (
+            <>
+              {unitPrice.discountActive && (
+                <p className="text-[0.625rem] text-muted line-through">{unitPrice.listPrice} €</p>
               )}
-              <p className="text-[0.65rem] text-muted">
-                {pickLocale(
-                  locale,
-                  `Total sesión: ${perSession} € (${participants} pers.)`,
-                  `Session total: ${perSession} € (${participants} people)`,
-                )}
-              </p>
-            </div>
-          ) : display.discountActive ? (
-            <div className="mt-1">
-              <p className="text-sm text-muted line-through">{display.listPrice} €</p>
-              <p className="font-display text-xl font-semibold text-accent">{perSession} €</p>
-            </div>
+              <p className="font-display text-base font-semibold text-accent">{unitPrice.finalPrice} €</p>
+            </>
           ) : (
-            <p className="font-display text-xl font-semibold text-hielo">{perSession} €</p>
+            <>
+              {display.discountActive && hasDates && (
+                <p className="text-[0.625rem] text-muted line-through">{listTotal} €</p>
+              )}
+              {display.discountActive && !hasDates && (
+                <p className="text-[0.625rem] text-muted line-through">{display.listPrice} €</p>
+              )}
+              <p className="font-display text-base font-semibold text-accent">
+                {hasDates ? `${total} €` : `${perSession} €`}
+              </p>
+            </>
           )}
         </div>
       </div>
+    );
+  }
 
-      {display.discountActive && (
-        <p className="mt-3 text-xs font-medium text-oro">{earlyBirdDiscountLabel(locale)}</p>
-      )}
-
-      {datesCount > 0 && (
-        <div className="mt-4 flex items-end justify-between border-t border-hielo/10 pt-4">
-          <p className="text-sm font-medium text-pizarra">
-            {pickLocale(locale, "Total estimado", "Estimated total")}
+  return (
+    <div className="rounded-xl border border-oro/20 bg-gradient-to-br from-oro/8 to-accent/5 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-[0.625rem] font-bold uppercase tracking-wide text-oro">
+            {pickLocale(locale, "Tu selección", "Your selection")}
           </p>
-          <div className="text-right">
-            {display.discountActive && (
-              <p className="text-sm text-muted line-through">
-                {display.listPrice * datesCount} €
-              </p>
-            )}
-            <p className="font-display text-3xl font-semibold text-accent">{total} €</p>
-            <p className="text-[0.65rem] text-muted">
-              {pickLocale(locale, "IVA incl. · sujeto a confirmación", "VAT incl. · subject to confirmation")}
-            </p>
-          </div>
+          <p className="mt-0.5 text-xs text-muted">{selectionLabel}</p>
+          {display.discountActive && (
+            <p className="mt-0.5 text-[0.625rem] font-medium text-oro">{earlyBirdDiscountLabel(locale)}</p>
+          )}
         </div>
-      )}
+        <div className="shrink-0 text-right">
+          {!hasDates && (
+            <p className="text-[0.625rem] text-muted">
+              {showPerPerson && unitPrice
+                ? pickLocale(locale, "por persona", "per person")
+                : pickLocale(locale, "por sesión", "per session")}
+            </p>
+          )}
+          {showPerPerson && unitPrice && !hasDates ? (
+            <div>
+              {unitPrice.discountActive ? (
+                <>
+                  <p className="text-xs text-muted line-through">{unitPrice.listPrice} €</p>
+                  <p className="font-display text-lg font-semibold text-accent">{unitPrice.finalPrice} €</p>
+                </>
+              ) : (
+                <p className="font-display text-lg font-semibold text-hielo">{unitPrice.finalPrice} €</p>
+              )}
+            </div>
+          ) : display.discountActive ? (
+            <div>
+              <p className="text-xs text-muted line-through">{hasDates ? `${listTotal} €` : `${display.listPrice} €`}</p>
+              <p className="font-display text-lg font-semibold text-accent">
+                {hasDates ? `${total} €` : `${perSession} €`}
+              </p>
+            </div>
+          ) : (
+            <p className="font-display text-lg font-semibold text-hielo">
+              {hasDates ? `${total} €` : `${perSession} €`}
+            </p>
+          )}
+          {hasDates && (
+            <p className="text-[0.6rem] text-muted">
+              {pickLocale(locale, "IVA incl.", "VAT incl.")}
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

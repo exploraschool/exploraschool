@@ -32,6 +32,8 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   body {
@@ -483,9 +485,14 @@
   transform: translateX(100%);
 }
 
-/* Booking modal: lock page scroll and hide bottom overlays */
+/* Booking modal / drawer: lock page scroll and hide bottom overlays */
+html.modal-open,
 body.modal-open {
   overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body.modal-open {
   touch-action: none;
 }
 
@@ -497,4 +504,17 @@ body.modal-open [data-cookie-banner] {
 body.modal-open [data-sticky-book-bar] {
   visibility: hidden;
   pointer-events: none;
+}
+
+/* Scrollable regions inside modals and drawers */
+.modal-scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.modal-overlay {
+  overscroll-behavior: none;
+  touch-action: none;
 }

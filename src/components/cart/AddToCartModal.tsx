@@ -35,6 +35,8 @@ type AddToCartModalProps = {
   defaultDiscipline?: MainDisciplineId;
   defaultInstructorSlug?: string;
   defaultInstructorName?: string;
+  defaultTimeSlotId?: TimeSlotId;
+  defaultParticipants?: number;
 };
 
 export function AddToCartModal({
@@ -44,6 +46,8 @@ export function AddToCartModal({
   defaultDiscipline,
   defaultInstructorSlug,
   defaultInstructorName,
+  defaultTimeSlotId,
+  defaultParticipants,
 }: AddToCartModalProps) {
   const t = useTranslations("cart");
   const locale = useLocale();
@@ -71,9 +75,22 @@ export function AddToCartModal({
 
   useEffect(() => {
     if (open) {
+      const minPeople = bookingConfig.minPeople ?? product?.minPeople ?? 1;
+      const maxPeople = bookingConfig.maxPeople ?? product?.maxPeople ?? 8;
+      const slotId =
+        defaultTimeSlotId && bookingConfig.slotIds.includes(defaultTimeSlotId)
+          ? defaultTimeSlotId
+          : bookingConfig.defaultSlotId;
+      const people =
+        defaultParticipants !== undefined &&
+        defaultParticipants >= minPeople &&
+        defaultParticipants <= maxPeople
+          ? defaultParticipants
+          : minPeople;
+
       setDates([]);
-      setTimeSlotId(bookingConfig.defaultSlotId);
-      setParticipants(bookingConfig.minPeople ?? product?.minPeople ?? 1);
+      setTimeSlotId(slotId);
+      setParticipants(people);
       setDiscipline(defaultDiscipline ?? "");
       setModality("");
       setInstructorSlug(defaultInstructorSlug ?? "");
@@ -81,7 +98,15 @@ export function AddToCartModal({
       setAdded(false);
       setAddedCount(0);
     }
-  }, [open, product, defaultDiscipline, defaultInstructorSlug, bookingConfig]);
+  }, [
+    open,
+    product,
+    defaultDiscipline,
+    defaultInstructorSlug,
+    defaultTimeSlotId,
+    defaultParticipants,
+    bookingConfig,
+  ]);
 
   useEffect(() => {
     if (!open) return;
@@ -162,10 +187,10 @@ export function AddToCartModal({
   }
 
   const modal = (
-    <div className="fixed inset-0 z-[110] flex items-end justify-center sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-[130] overscroll-none">
       <button
         type="button"
-        className="absolute inset-0 bg-pizarra/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-pizarra/60 backdrop-blur-sm modal-overlay"
         aria-label={t("close")}
         onClick={onClose}
       />
@@ -173,13 +198,13 @@ export function AddToCartModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-to-cart-title"
-        className="relative flex w-full max-w-2xl max-h-[min(92dvh,100%)] flex-col rounded-t-2xl bg-white shadow-2xl sm:max-h-[min(90dvh,100%)] sm:rounded-2xl"
+        className="fixed inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
       >
-        <div className="shrink-0 border-b border-hielo/10 bg-white px-5 py-4 sm:px-6">
-          <div className="flex items-start justify-between gap-4">
+        <div className="shrink-0 border-b border-hielo/10 bg-white px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
-              <p className="eyebrow">{t("addToCart")}</p>
-              <h2 id="add-to-cart-title" className="font-display text-xl font-semibold text-pizarra">
+              <p className="eyebrow text-[0.65rem]">{t("addToCart")}</p>
+              <h2 id="add-to-cart-title" className="font-display text-lg font-semibold text-pizarra sm:text-xl">
                 {pickLocale(locale, product.titleEs, product.titleEn)}
               </h2>
             </div>
@@ -205,9 +230,10 @@ export function AddToCartModal({
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
-            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
-              <p className="text-sm text-muted">
+          <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div className="modal-scroll min-h-0 flex-1 px-4 py-4 sm:px-6 sm:py-5">
+              <div className="space-y-4 sm:space-y-5">
+              <p className="hidden text-sm text-muted sm:block">
                 {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
               </p>
 
@@ -367,28 +393,34 @@ export function AddToCartModal({
                   className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
                 />
               </div>
+              </div>
             </div>
 
-            <div className="shrink-0 space-y-3 border-t border-hielo/10 bg-white px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
+            <div className="shrink-0 space-y-2 border-t border-hielo/10 bg-white px-4 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-5">
               <BookingPriceSummary
                 locale={locale}
                 productId={productId}
                 sessionPrice={sessionPrice}
                 datesCount={dates.length}
                 participants={participants}
+                compact
               />
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div className="flex gap-2">
                 <button
                   type="submit"
                   disabled={!datesValid || sessionPrice === null}
-                  className="btn-primary flex-1 disabled:opacity-50"
+                  className="btn-primary min-h-10 flex-1 py-2.5 text-sm disabled:opacity-50"
                 >
                   {dates.length > 1
                     ? t("addDaysToCart", { count: dates.length })
                     : t("addToCart")}
                 </button>
-                <button type="button" onClick={onClose} className="btn-secondary flex-1">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="btn-secondary min-h-10 shrink-0 px-3 py-2.5 text-sm"
+                >
                   {t("cancel")}
                 </button>
               </div>

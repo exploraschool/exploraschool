@@ -25,7 +25,7 @@ export default async function ReservaPage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <section className="section-padding pb-24 sm:pb-12">
+    <section className="section-padding pb-8 sm:pb-12">
       <div className="container-page">
         <div className="mb-8 max-w-2xl">
           <h1 className="page-title">{pickLocale(locale, "Tu reserva", "Your booking")}</h1>
