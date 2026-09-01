@@ -2,6 +2,11 @@ import { useEffect } from "react";
 
 let lockCount = 0;
 let savedScrollY = 0;
+let savedLocation = "";
+
+function currentLocation() {
+  return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+}
 
 function lockBody() {
   if (lockCount > 0) {
@@ -11,6 +16,7 @@ function lockBody() {
 
   lockCount = 1;
   savedScrollY = window.scrollY;
+  savedLocation = currentLocation();
 
   const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
 
@@ -42,7 +48,11 @@ function unlockBody() {
   document.body.style.overflow = "";
   document.body.style.paddingRight = "";
 
-  window.scrollTo(0, savedScrollY);
+  if (currentLocation() === savedLocation) {
+    window.scrollTo(0, savedScrollY);
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 export function useBodyScrollLock(locked: boolean) {

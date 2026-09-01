@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { LocaleHtmlLang } from "@/components/LocaleHtmlLang";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import { CartProvider } from "@/context/CartContext";
 
 type Props = {
@@ -34,6 +35,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <LocaleHtmlLang locale={locale} />
       <NextIntlClientProvider locale={locale} messages={messages}>
         <CartProvider>
+          <ScrollToTop />
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent-dark focus:px-4 focus:py-2 focus:text-white"
