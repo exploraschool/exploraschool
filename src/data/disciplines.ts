@@ -91,9 +91,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Esquí adaptado",
     nameEn: "Adaptive skiing",
     descriptionEs:
-      "Clases inclusivas y personalizadas para disfrutar de la nieve con seguridad.",
+      "Clases individualizadas e inclusivas para disfrutar de la nieve con seguridad.",
     descriptionEn:
-      "Inclusive, personalised lessons to enjoy the snow safely.",
+      "Individualized, inclusive lessons to enjoy the snow safely.",
     image: "/images/stock/discipline-adaptado.jpg",
     sortOrder: 4,
   },
@@ -274,6 +274,11 @@ export function isModality(id: DisciplineId): id is ModalityId {
 
 export function isMainDiscipline(id: DisciplineId): id is MainDisciplineId {
   return !isModality(id);
+}
+
+/** Adaptive ski is always one-to-one — never group lessons. */
+export function isIndividualizedDiscipline(disciplineId: MainDisciplineId): boolean {
+  return disciplineId === "esqui-adaptado";
 }
 
 export function getParentDisciplineId(id: DisciplineId): MainDisciplineId | undefined {

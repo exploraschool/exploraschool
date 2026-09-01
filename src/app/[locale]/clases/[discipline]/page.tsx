@@ -74,7 +74,13 @@ export default async function DisciplinePage({ params }: Props) {
                       "Clases en pista, freeride y freestyle con instructores titulados. Punto de encuentro oficial en la estación de Sierra Nevada (Google Maps).",
                       "Piste, freeride and freestyle lessons with qualified instructors. Official meeting point at Sierra Nevada ski resort (Google Maps).",
                     )
-                  : pickLocale(
+                  : d.id === "esqui-adaptado"
+                    ? pickLocale(
+                        locale,
+                        "Clases individualizadas con instructores especializados. Punto de encuentro en la estación de Sierra Nevada.",
+                        "Individualized lessons with specialist instructors. Meeting point at Sierra Nevada ski resort.",
+                      )
+                    : pickLocale(
                       locale,
                       "Clases de 1 a 8 participantes con instructores con nombre y cara. Punto de encuentro en la estación de Sierra Nevada.",
                       "Lessons for 1 to 8 participants with named instructors. Meeting point at Sierra Nevada ski resort.",

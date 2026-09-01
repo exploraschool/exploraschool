@@ -8,6 +8,7 @@ import {
   getMainDisciplines,
   getModalitiesForParent,
   getSingleProductDiscipline,
+  isIndividualizedDiscipline,
   isMainDiscipline,
   type MainDisciplineId,
   type ModalityId,
@@ -26,6 +27,7 @@ import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
 import {
   calculateSessionPrice,
   clampParticipantCount,
+  getParticipantLimits,
   getProductBookingConfig,
   getSlotLabel,
   getSlotsForProduct,
@@ -84,22 +86,10 @@ export function AddToCartModal({
 
   useEffect(() => {
     if (open) {
-      const minPeople = bookingConfig.minPeople ?? product?.minPeople ?? 1;
-      const maxPeople = bookingConfig.maxPeople ?? product?.maxPeople ?? 8;
       const slotId =
         defaultTimeSlotId && bookingConfig.slotIds.includes(defaultTimeSlotId)
           ? defaultTimeSlotId
           : bookingConfig.defaultSlotId;
-      const people =
-        defaultParticipants !== undefined &&
-        defaultParticipants >= minPeople &&
-        defaultParticipants <= maxPeople
-          ? defaultParticipants
-          : minPeople;
-
-      setDates([]);
-      setTimeSlotId(slotId);
-      setParticipants(people);
       const preferredInstructor = defaultInstructorSlug ?? "";
       const singleDiscipline = product
         ? getSingleProductDiscipline(product.disciplines)
@@ -110,6 +100,22 @@ export function AddToCartModal({
         product?.disciplines.includes("snowboard")
           ? "snowboard"
           : (defaultDiscipline ?? singleDiscipline ?? "");
+      const { minPeople: limitsMin, maxPeople: limitsMax } = getParticipantLimits(
+        productId,
+        initialDiscipline || undefined,
+      );
+      const people =
+        initialDiscipline && isIndividualizedDiscipline(initialDiscipline)
+          ? 1
+          : defaultParticipants !== undefined &&
+              defaultParticipants >= limitsMin &&
+              defaultParticipants <= limitsMax
+            ? defaultParticipants
+            : limitsMin;
+
+      setDates([]);
+      setTimeSlotId(slotId);
+      setParticipants(people);
       setDiscipline(initialDiscipline);
       setModality("");
       setInstructorSlug(preferredInstructor);
@@ -120,6 +126,7 @@ export function AddToCartModal({
   }, [
     open,
     product,
+    productId,
     defaultDiscipline,
     defaultInstructorSlug,
     defaultTimeSlotId,
@@ -173,6 +180,11 @@ export function AddToCartModal({
       value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "";
     setDiscipline(next);
     setModality("");
+    if (next && isIndividualizedDiscipline(next)) {
+      setParticipants(1);
+    } else if (next) {
+      setParticipants((current) => clampParticipantCount(current, productId, next));
+    }
     if (instructorSlug) {
       const instructor = getInstructorBySlug(instructorSlug as InstructorSlug);
       if (instructor && next && !instructorTeachesDiscipline(instructor, next)) {
@@ -191,8 +203,10 @@ export function AddToCartModal({
     }
   }
 
-  const minPeople = bookingConfig.minPeople ?? product.minPeople ?? 1;
-  const maxPeople = bookingConfig.maxPeople ?? product.maxPeople ?? 8;
+  const { minPeople, maxPeople } = getParticipantLimits(productId, effectiveDiscipline);
+  const isIndividualized = effectiveDiscipline
+    ? isIndividualizedDiscipline(effectiveDiscipline)
+    : false;
   const minDays = bookingConfig.minDays;
   const maxDays = bookingConfig.maxDays;
   const requireConsecutiveDays = bookingConfig.requireConsecutiveDays ?? false;
@@ -336,21 +350,36 @@ export function AddToCartModal({
                     step={1}
                     inputMode="numeric"
                     value={participants}
+                    disabled={isIndividualized}
                     onChange={(e) =>
-                      setParticipants(clampParticipantCount(Number(e.target.value), productId))
+                      setParticipants(
+                        clampParticipantCount(Number(e.target.value), productId, effectiveDiscipline),
+                      )
                     }
                     onBlur={(e) =>
-                      setParticipants(clampParticipantCount(Number(e.target.value), productId))
+                      setParticipants(
+                        clampParticipantCount(Number(e.target.value), productId, effectiveDiscipline),
+                      )
                     }
-                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                   />
                   <p className="mt-1 text-xs text-muted">
-                    {minPeople}–{maxPeople} {t("peopleRange")}
-                    {productId === "curso-snow" &&
-                      pickLocale(
-                        locale,
-                        ` · Mínimo ${minPeople} para realizar el curso`,
-                        ` · Minimum ${minPeople} required to run the course`,
+                    {isIndividualized
+                      ? pickLocale(
+                          locale,
+                          "Clase individualizada (1 participante)",
+                          "Individual lesson (1 participant)",
+                        )
+                      : (
+                        <>
+                          {minPeople}–{maxPeople} {t("peopleRange")}
+                          {productId === "curso-snow" &&
+                            pickLocale(
+                              locale,
+                              ` · Mínimo ${minPeople} para realizar el curso`,
+                              ` · Minimum ${minPeople} required to run the course`,
+                            )}
+                        </>
                       )}
                   </p>
                 </div>
