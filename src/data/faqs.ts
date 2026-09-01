@@ -13,10 +13,10 @@ export const faqs: Faq[] = [
     sortOrder: 1,
     questionEs: "¿Cómo reservo mi clase?",
     answerEs:
-      "Por la web, en el apartado clases/reservas. También puedes escribirnos por email (explora.sclub@gmail.com), llamarnos o contactar por WhatsApp al +34 660 262 790.",
+      "Por la web: añade las clases que te interesen al carrito en /reserva, elige fechas y participantes, y envía tu solicitud por email. También puedes escribirnos a explora.sclub@gmail.com o llamarnos al +34 660 262 790.",
     questionEn: "How do I book my lesson?",
     answerEn:
-      "Through the website, in the classes/booking section. You can also email us (explora.sclub@gmail.com), call us or contact us on WhatsApp at +34 660 262 790.",
+      "On the website: add lessons to your cart at /reserva, pick dates and participants, and send your request by email. You can also write to explora.sclub@gmail.com or call us at +34 660 262 790.",
   },
   {
     id: "forfait",
@@ -121,10 +121,10 @@ export const faqs: Faq[] = [
     sortOrder: 12,
     questionEs: "¿Cómo llego a Explora School & Club en Sierra Nevada?",
     answerEs:
-      "Nos encontramos en Sierra Nevada, Granada (CP 18196). El punto de encuentro habitual es la salida del telecabina Al-Andalus, área de Borreguiles. Escríbenos por WhatsApp si necesitas indicaciones concretas para tu día.",
+      "Nos encontramos en Sierra Nevada, Granada (CP 18196). El punto de encuentro habitual es la salida del telecabina Al-Andalus, área de Borreguiles. Escríbenos por email si necesitas indicaciones concretas para tu día.",
     questionEn: "How do I get to Explora School & Club in Sierra Nevada?",
     answerEn:
-      "We are in Sierra Nevada, Granada (postal code 18196). The usual meeting point is the exit of the Al-Andalus gondola, Borreguiles area. Message us on WhatsApp if you need specific directions for your day.",
+      "We are in Sierra Nevada, Granada (postal code 18196). The usual meeting point is the exit of the Al-Andalus gondola, Borreguiles area. Email us if you need specific directions for your day.",
   },
   {
     id: "que-incluye",

@@ -2,6 +2,7 @@ import { setRequestLocale } from "next-intl/server";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { CTASection } from "@/components/CTASection";
+import { PageHeader } from "@/components/PageHeader";
 import { faqs } from "@/data/faqs";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
@@ -36,14 +37,10 @@ export default async function FaqsPage({ params }: Props) {
     <>
       <FaqJsonLd items={faqItems} />
 
-      <section className="border-b border-hielo/10 bg-white py-16">
-        <div className="container-page">
-          <p className="eyebrow">FAQs</p>
-          <h1 className="mt-3 font-display text-4xl font-semibold">
-            {pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
-          </h1>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="FAQs"
+        title={pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
+      />
 
       <section className="section-padding">
         <div className="container-page max-w-3xl">

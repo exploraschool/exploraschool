@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { media } from "@/lib/media";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,7 +34,10 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="card w-full max-w-sm space-y-4">
-        <h1 className="font-display text-2xl font-semibold text-hielo">Explora Admin</h1>
+        <div className="flex flex-col items-center text-center">
+          <Image src={media.logo} alt="Explora School & Club" width={80} height={80} className="h-20 w-20 object-contain" />
+          <h1 className="mt-4 font-display text-2xl font-semibold text-hielo">Explora Admin</h1>
+        </div>
         <div>
           <label htmlFor="password" className="mb-1 block text-sm font-medium">
             Contraseña

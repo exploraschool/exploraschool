@@ -65,9 +65,14 @@ Copiar desde `.env.example`:
 - `ADMIN_PASSWORD`
 - `RESEND_API_KEY` (Functions)
 
-### 5. Dominio sierranevadaclases.es
+### 5. Dominio sierranevadaclases.es (pendiente — no configurar aún)
 
-Vercel → Project → **Settings → Domains** → añadir `www.sierranevadaclases.es` y `sierranevadaclases.es` → actualizar DNS en el registrador.
+**No asociar el dominio todavía.** Usar solo la URL de Vercel (`https://exploraschool.vercel.app` o similar) hasta que el sitio esté listo para producción.
+
+Cuando llegue el momento:
+
+1. Vercel → Project → **Settings → Domains** → añadir `www.sierranevadaclases.es` y `sierranevadaclases.es` → actualizar DNS en el registrador.
+2. En Vercel, definir `NEXT_PUBLIC_SITE_URL=https://www.sierranevadaclases.es` (Production).
 
 ---
 

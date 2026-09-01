@@ -1,54 +1,55 @@
 import Image from "next/image";
+import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
+import { Reveal } from "@/components/Reveal";
+import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
-import { site } from "@/data/site";
 
 type AboutVisualProps = {
   locale: string;
+  compact?: boolean;
 };
 
-export function AboutVisual({ locale }: AboutVisualProps) {
+export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
   return (
-    <section className="section-padding bg-white">
-      <div className="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-2xl lg:aspect-auto lg:min-h-[420px]">
-          <Image
-            src={media.gallery[0].src}
-            alt={pickLocale(locale, media.gallery[0].altEs, media.gallery[0].altEn)}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-        </div>
-        <div>
-          <p className="eyebrow">{pickLocale(locale, "¿Quiénes somos?", "Who we are")}</p>
-          <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
-            {pickLocale(locale, "Experiencia única en la nieve", "A unique experience on the snow")}
-          </h2>
-          <div className="mt-6 space-y-4 text-muted leading-relaxed">
-            <p>
-              {pickLocale(
-                locale,
-                "Explora School & Club es una agrupación de instructores/as, fundada en 2010 para ofrecerte una experiencia única en la enseñanza de los deportes de invierno en Sierra Nevada.",
-                "Explora School & Club is a group of instructors founded in 2010 to offer you a unique experience teaching winter sports in Sierra Nevada.",
-              )}
-            </p>
-            <p>
-              {pickLocale(
-                locale,
-                "Queremos dar accesibilidad a la contratación de clases y garantizar un entorno seguro. La diversión y el aprendizaje están garantizados.",
-                "We want to make booking lessons accessible and guarantee a safe environment. Fun and learning are assured.",
-              )}
-            </p>
-            <p>
-              {pickLocale(
-                locale,
-                site.meetingPointEs,
-                site.meetingPointEn,
-              )}
-            </p>
+    <section className={`bg-white ${compact ? "section-padding-sm pt-10 sm:pt-12" : "section-padding"}`}>
+      <div className="container-page grid items-center gap-6 md:grid-cols-2 md:gap-10">
+        <Reveal>
+          <div className="group relative aspect-[4/3] overflow-hidden rounded-2xl md:aspect-[5/4]">
+            <Image
+              src={media.gallery[0].src}
+              alt={pickLocale(locale, media.gallery[0].altEs, media.gallery[0].altEn)}
+              fill
+              className="object-cover transition duration-500 group-hover:scale-105"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-pizarra/40 to-transparent" />
+            <div className="absolute bottom-3 left-3 rounded-lg bg-pizarra/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+              Borreguiles · Sierra Nevada
+            </div>
           </div>
-        </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <div>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Explora School & Club", "Explora School & Club")}
+              title={pickLocale(locale, "Tu escuela en Sierra Nevada", "Your school in Sierra Nevada")}
+            />
+            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+              {pickLocale(
+                locale,
+                "Agrupación de instructores titulados desde 2010. Clases particulares, grupales y cursos en esquí, snowboard, telemark y más. Punto de encuentro en Borreguiles.",
+                "A group of qualified instructors since 2010. Private, group and course lessons in ski, snowboard, telemark and more. Meeting point at Borreguiles.",
+              )}
+            </p>
+            <div className="mt-5">
+              <Link href="/como-llegar" className="btn-secondary !w-auto text-sm">
+                {pickLocale(locale, "Cómo llegar", "How to get here")}
+              </Link>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

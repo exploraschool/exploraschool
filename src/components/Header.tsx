@@ -1,43 +1,74 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
-import { site } from "@/data/site";
-import { HeaderNav } from "@/components/HeaderNav";
+import {
+  HeaderDesktopNav,
+  HeaderMenuButton,
+  HeaderMobileMenu,
+} from "@/components/HeaderNav";
+import { CartBadge } from "@/components/cart/CartBadge";
 
 type HeaderProps = {
   locale: string;
 };
 
 export function Header({ locale }: HeaderProps) {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 12);
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-hielo/10 bg-nieve/90 backdrop-blur-md">
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
-        <Link href={`/${locale}`} className="flex shrink-0 items-center gap-3">
+    <header
+      className={`site-header ${scrolled ? "site-header--scrolled" : "site-header--top"}`}
+    >
+      <div className="container-page site-header__bar">
+        <Link href="/" className="site-header__brand group">
           <Image
-            src={media.logoMark}
+            src={media.logo}
             alt="Explora School & Club"
-            width={40}
-            height={40}
-            className="h-9 w-9 md:h-10 md:w-10"
+            width={160}
+            height={160}
+            className="site-header__logo"
             priority
           />
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="font-display text-lg font-semibold text-pizarra">Explora</span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-hielo">School & Club</span>
+          <span className="site-header__name">
+            <span className="site-header__name-mobile">
+              <span className="block">Explora School</span>
+              <span className="block text-hielo">& Club</span>
+            </span>
+            <span className="site-header__name-desktop">
+              Explora School <span className="text-hielo">&</span> Club
+            </span>
           </span>
         </Link>
 
-        <HeaderNav locale={locale} />
+        <div className="site-header__nav">
+          <HeaderDesktopNav locale={locale} />
+        </div>
 
-        <a
-          href={site.whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-primary hidden shrink-0 text-xs sm:inline-flex sm:px-4 sm:py-2"
-        >
-          WhatsApp
-        </a>
+        <div className="site-header__actions">
+          <CartBadge />
+          <HeaderMenuButton
+            locale={locale}
+            open={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
+          />
+        </div>
       </div>
+
+      <HeaderMobileMenu locale={locale} open={menuOpen} onClose={() => setMenuOpen(false)} />
     </header>
   );
 }

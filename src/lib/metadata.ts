@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/data/site";
 
-const DEFAULT_OG = "/images/og-explora.svg";
+const DEFAULT_OG = "/images/logo-512.png";
 
 type PageMeta = {
   locale: string;

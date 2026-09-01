@@ -1,54 +1,56 @@
+import { Reveal } from "@/components/Reveal";
+import { SectionHeader } from "@/components/SectionHeader";
 import { getFeaturedReviews } from "@/data/reviews";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 
 type TestimonialsProps = {
   locale: string;
+  limit?: number;
 };
 
-export function Testimonials({ locale }: TestimonialsProps) {
-  const reviews = getFeaturedReviews().slice(0, 6);
+export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
+  const reviews = getFeaturedReviews().slice(0, limit);
 
   return (
-    <section className="section-padding bg-hielo text-nieve">
-      <div className="container-page">
-        <div className="max-w-2xl">
-          <p className="eyebrow text-oro/90">{pickLocale(locale, "Opiniones", "Reviews")}</p>
-          <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
-            {pickLocale(locale, "Nos respaldan más de…", "Backed by our guests")}
-          </h2>
-          <p className="mt-4 text-nieve/70">
-            {pickLocale(locale, "Valoración", "Rating")} {site.tripAdvisor.rating} ·{" "}
-            {site.tripAdvisor.reviewCount} {pickLocale(locale, "reseñas en TripAdvisor", "TripAdvisor reviews")}
-          </p>
-        </div>
-
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((review) => (
-            <blockquote
-              key={review.id}
-              className="rounded-xl border border-nieve/10 bg-pizarra/40 p-6 backdrop-blur-sm"
+    <section className="section-padding-sm relative overflow-hidden bg-hielo text-nieve">
+      <div className="container-page relative">
+        <Reveal>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <SectionHeader
+              dark
+              eyebrow={pickLocale(locale, "Opiniones", "Reviews")}
+              title={pickLocale(locale, "Lo que dicen nuestros clientes", "What our guests say")}
+            />
+            <a
+              href={site.tripAdvisor.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-oro-light"
             >
-              <p className="text-sm leading-relaxed text-nieve/90">
-                &ldquo;{pickLocale(locale, review.textEs, review.textEn)}&rdquo;
-              </p>
-              <footer className="mt-4 flex items-center justify-between text-xs text-nieve/60">
-                <cite className="not-italic font-semibold text-oro">{review.author}</cite>
-                {review.instructor && <span>{review.instructor}</span>}
-              </footer>
-            </blockquote>
-          ))}
-        </div>
+              {site.tripAdvisor.rating} ★ TripAdvisor
+            </a>
+          </div>
+        </Reveal>
 
-        <div className="mt-8 text-center">
-          <a
-            href={site.tripAdvisor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-medium text-oro hover:underline"
-          >
-            {pickLocale(locale, "Ver en TripAdvisor", "View on TripAdvisor")} →
-          </a>
+        <div className={`mt-6 grid gap-4 sm:mt-8 ${limit <= 3 ? "md:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-3"}`}>
+          {reviews.map((review, i) => (
+            <Reveal key={review.id} delay={i * 80}>
+              <blockquote className="flex h-full flex-col rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-5">
+                <div className="mb-2 flex gap-0.5 text-oro text-xs" aria-hidden>
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <span key={j}>★</span>
+                  ))}
+                </div>
+                <p className="flex-1 text-sm leading-relaxed text-on-dark line-clamp-4">
+                  &ldquo;{pickLocale(locale, review.textEs, review.textEn)}&rdquo;
+                </p>
+                <footer className="mt-3 border-t border-white/10 pt-3 text-xs text-oro-light">
+                  <cite className="not-italic font-semibold">{review.author}</cite>
+                </footer>
+              </blockquote>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

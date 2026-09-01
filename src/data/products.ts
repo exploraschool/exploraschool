@@ -1,4 +1,5 @@
 import type { DisciplineId } from "./disciplines";
+import { CURRENT_SEASON } from "./season";
 
 export type ProductId =
   | "full-day"
@@ -6,7 +7,6 @@ export type ProductId =
   | "full-day-tour"
   | "full-day-iniciacion"
   | "full-day-tecnico"
-  | "primeras-huellas"
   | "medio-dia"
   | "clase-grabada"
   | "curso-snow"
@@ -42,7 +42,7 @@ export type Product = {
   scheduleEn?: string;
   featuresEs: string[];
   featuresEn: string[];
-  season: "current-2025-26" | "legacy-2022" | "both";
+  season: typeof CURRENT_SEASON.key | "legacy-2022" | "both";
   highlighted: boolean;
   sortOrder: number;
   /** @pending Photo pending — upload to public/images/gallery-01.svg */
@@ -62,13 +62,13 @@ export const products: Product[] = [
       "Actividad de día completo con 5 horas de clase efectivas y 1 hora de comodín para recogida en hotel, retrasos, descansos y comidas. Horario ajustado a tus necesidades y punto de encuentro personalizado.",
     descriptionEn:
       "Full-day activity with 5 hours of effective lesson time and 1 hour buffer for hotel pick-up, delays, breaks and meals. Schedule tailored to your needs with a personalised meeting point.",
-    disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado", "freestyle", "freeride"],
+    disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado"],
     fromPrice: 160,
     hours: 6,
     featuresEs: [
       "5 horas de clase efectivas",
       "1 hora de descanso / comodín",
-      "+25 € por persona extra (temporada actual)",
+      "+25 € por persona extra",
       "Horario ajustado a tus necesidades",
       "Punto de encuentro personalizado",
       "Recogida en hotel (Full-Day)",
@@ -76,7 +76,7 @@ export const products: Product[] = [
     featuresEn: [
       "5 hours of effective lesson time",
       "1 hour break / buffer",
-      "+€25 per extra person (current season)",
+      "+€25 per extra person",
       "Schedule tailored to your needs",
       "Personalised meeting point",
       "Hotel pick-up (Full-Day)",
@@ -84,8 +84,7 @@ export const products: Product[] = [
     season: "both",
     highlighted: true,
     sortOrder: 1,
-    // pending: product-full-day.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-full-day.jpg",
   },
   {
     id: "full-day-ninos",
@@ -115,8 +114,7 @@ export const products: Product[] = [
     season: "legacy-2022",
     highlighted: false,
     sortOrder: 2,
-    // pending: product-full-day-ninos.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-kids.jpg",
   },
   {
     id: "full-day-tour",
@@ -137,8 +135,7 @@ export const products: Product[] = [
     season: "legacy-2022",
     highlighted: false,
     sortOrder: 3,
-    // pending: product-full-day-tour.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-tour.jpg",
   },
   {
     id: "full-day-iniciacion",
@@ -167,8 +164,7 @@ export const products: Product[] = [
     season: "legacy-2022",
     highlighted: false,
     sortOrder: 4,
-    // pending: product-full-day-iniciacion.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-beginners.jpg",
   },
   {
     id: "full-day-tecnico",
@@ -197,33 +193,7 @@ export const products: Product[] = [
     season: "legacy-2022",
     highlighted: false,
     sortOrder: 5,
-    // pending: product-full-day-tecnico.webp
-    image: "/images/gallery-01.svg",
-  },
-  {
-    id: "primeras-huellas",
-    slug: "primeras-huellas",
-    category: "half-day",
-    titleEs: "Primeras Huellas",
-    titleEn: "Primeras Huellas",
-    shortDescriptionEs: "3 h por la mañana. Pista recién pisada, sin colas.",
-    shortDescriptionEn: "3 h morning session. Fresh slopes, no queues.",
-    descriptionEs:
-      "Aprovecha a primera hora para empezar el día con la pista recién pisada y sin colas. Déjate guiar por uno de nuestros instructores.",
-    descriptionEn:
-      "Make the most of the morning with freshly groomed slopes and no queues. Let one of our instructors guide you.",
-    disciplines: ["esqui", "snowboard", "telemark"],
-    fromPrice: 110,
-    hours: 3,
-    scheduleEs: "9:00–12:00",
-    scheduleEn: "9:00 am–12:00 pm",
-    featuresEs: ["3 horas de clase", "Horario 9:00–12:00", "Primera hora de la mañana"],
-    featuresEn: ["3-hour lesson", "9:00 am–12:00 pm", "Early morning slot"],
-    season: "legacy-2022",
-    highlighted: true,
-    sortOrder: 6,
-    // pending: product-primeras-huellas.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-technical.jpg",
   },
   {
     id: "medio-dia",
@@ -244,11 +214,10 @@ export const products: Product[] = [
     scheduleEn: "From 1:00 pm",
     featuresEs: ["2 horas de clase", "Turno de tarde", "Ideal si llegas tarde"],
     featuresEn: ["2-hour lesson", "Afternoon slot", "Ideal if you arrive late"],
-    season: "legacy-2022",
-    highlighted: true,
+    season: CURRENT_SEASON.key,
+    highlighted: false,
     sortOrder: 7,
-    // pending: product-medio-dia.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-afternoon.jpg",
   },
   {
     id: "clase-grabada",
@@ -266,11 +235,10 @@ export const products: Product[] = [
     fromPrice: 20,
     featuresEs: ["Vídeo correcciones", "Recuerdo de tu día en la nieve"],
     featuresEn: ["Video feedback", "Memory of your day on the snow"],
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     highlighted: false,
     sortOrder: 8,
-    // pending: product-clase-grabada.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-video.jpg",
   },
   {
     id: "curso-snow",
@@ -278,12 +246,12 @@ export const products: Product[] = [
     category: "course",
     titleEs: "Curso de Snowboard",
     titleEn: "Snowboard Course",
-    shortDescriptionEs: "Rendimiento Asegurado — 60 € / persona.",
-    shortDescriptionEn: "Guaranteed Progress — €60 / person.",
+    shortDescriptionEs: "60 € / persona · mínimo 3 personas.",
+    shortDescriptionEn: "€60 / person · minimum 3 people.",
     descriptionEs:
-      "Curso de snowboard de 3 horas para grupos de 3 a 6 personas. Horario 10:00–13:00.",
+      "Curso de snowboard de 3 horas (10:00–13:00). 60 € por persona. Mínimo 3 personas para realizar el curso; máximo 6.",
     descriptionEn:
-      "3-hour snowboard course for groups of 3 to 6 people. Schedule 10:00–13:00.",
+      "3-hour snowboard course (10:00–13:00). €60 per person. Minimum 3 people required to run the course; maximum 6.",
     disciplines: ["snowboard"],
     fromPrice: 60,
     hours: 3,
@@ -294,20 +262,23 @@ export const products: Product[] = [
     featuresEs: [
       "Rendimiento Asegurado",
       "60 € / persona",
-      "De 3 a 6 personas",
+      "Mínimo 3 personas para realizar el curso",
+      "Máximo 6 personas",
       "3 horas de clase efectivas",
+      "Horario 10:00–13:00",
     ],
     featuresEn: [
       "Guaranteed Progress",
       "€60 / person",
-      "3 to 6 people",
+      "Minimum 3 people required to run the course",
+      "Maximum 6 people",
       "3 hours of effective lesson time",
+      "Schedule 10:00–13:00",
     ],
-    season: "current-2025-26",
+    season: CURRENT_SEASON.key,
     highlighted: true,
     sortOrder: 9,
-    // pending: product-curso-snow.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-snowboard-course.jpg",
   },
   {
     id: "particular",
@@ -321,7 +292,8 @@ export const products: Product[] = [
       "Clases particulares de 1 a 4 personas con mínimo de 2 horas. Todos los niveles. Elige instructor/a y horario.",
     descriptionEn:
       "Private lessons for 1 to 4 people with a 2-hour minimum. All levels. Choose your instructor and schedule.",
-    disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado", "freestyle", "freeride"],
+    disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado"],
+    fromPrice: 65,
     minPeople: 1,
     maxPeople: 4,
     minAge: 3,
@@ -338,11 +310,10 @@ export const products: Product[] = [
       "All levels",
       "Children from 3 years",
     ],
-    season: "legacy-2022",
-    highlighted: false,
+    season: CURRENT_SEASON.key,
+    highlighted: true,
     sortOrder: 10,
-    // pending: product-particular.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-private.jpg",
   },
   {
     id: "curso-empresa",
@@ -371,11 +342,10 @@ export const products: Product[] = [
       "Maximum 8 people",
       "Qualified INEF, TECO, TAFAD instructors",
     ],
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     highlighted: false,
     sortOrder: 11,
-    // pending: product-curso-empresa.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-corporate.jpg",
   },
   {
     id: "grupal",
@@ -406,11 +376,11 @@ export const products: Product[] = [
       "All levels",
       "Children from 6 years",
     ],
-    season: "legacy-2022",
+    fromPrice: 160,
+    season: CURRENT_SEASON.key,
     highlighted: false,
     sortOrder: 12,
-    // pending: product-grupal.webp
-    image: "/images/gallery-01.svg",
+    image: "/images/stock/product-group.jpg",
   },
 ];
 

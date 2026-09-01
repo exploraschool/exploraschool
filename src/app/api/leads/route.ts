@@ -6,10 +6,11 @@ const leadSchema = z.object({
   name: z.string().min(2).max(120),
   email: z.string().email(),
   phone: z.string().max(30).optional(),
-  message: z.string().min(10).max(5000),
+  message: z.string().min(10).max(15000),
   privacy: z.literal(true),
   website: z.string().max(0).optional(),
   locale: z.string().optional(),
+  source: z.string().max(50).optional(),
 });
 
 export async function POST(request: Request) {
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
       phone: parsed.data.phone ?? "",
       message: parsed.data.message,
       locale: parsed.data.locale ?? "es",
-      source: "contact-form",
+      source: parsed.data.source ?? "contact-form",
       createdAt: new Date().toISOString(),
     };
 

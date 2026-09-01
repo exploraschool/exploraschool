@@ -11,7 +11,9 @@ const instructors = [
   { slug: "aitana", initials: "AI", color: "#C4A574" },
   { slug: "estrella", initials: "ES", color: "#1F4E5F" },
   { slug: "ale", initials: "AL", color: "#E4572E" },
-  { slug: "benja", initials: "BE", color: "#2A6B7C" },
+  { slug: "badillo", initials: "BA", color: "#2A6B7C" },
+  { slug: "maria", initials: "MA", color: "#C4A574" },
+  { slug: "eva", initials: "EV", color: "#3D7A8C" },
   { slug: "ferran", initials: "FE", color: "#0E1A24" },
 ];
 

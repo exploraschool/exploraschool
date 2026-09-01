@@ -1,4 +1,6 @@
-export type PriceSeason = "current-2025-26" | "legacy-2022";
+import { CURRENT_SEASON } from "./season";
+
+export type PriceSeason = typeof CURRENT_SEASON.key | "legacy-2022";
 
 export type PriceRow = {
   schedule: string;
@@ -31,15 +33,16 @@ export type CurrentProductPrice = {
   featuresEn: string[];
 };
 
-/** Current offer visible on home/clases 2025/26 (brief §1.4A) */
+/** Current offer visible on home/clases — temporada 2026/27 */
 export const currentPrices: CurrentProductPrice[] = [
   {
     id: "full-day-current",
     productId: "full-day",
     titleEs: "Full Day",
     titleEn: "Full Day",
-    season: "current-2025-26",
+    season: CURRENT_SEASON.key,
     unit: "day",
+    fromPrice: 160,
     hours: 5,
     extras: [
       {
@@ -68,66 +71,54 @@ export const currentPrices: CurrentProductPrice[] = [
     productId: "curso-snow",
     titleEs: "Curso de Snowboard",
     titleEn: "Snowboard Course",
-    season: "current-2025-26",
+    season: CURRENT_SEASON.key,
     fromPrice: 60,
     unit: "person",
     hours: 3,
     featuresEs: [
       "Rendimiento Asegurado",
       "60 € / persona",
-      "De 3 a 6 personas",
+      "Mínimo 3 personas para realizar el curso",
+      "Máximo 6 personas",
       "3 horas de clase efectivas",
       "Horario 10:00–13:00",
     ],
     featuresEn: [
       "Guaranteed Progress",
       "€60 / person",
-      "3 to 6 people",
+      "Minimum 3 people required to run the course",
+      "Maximum 6 people",
       "3 hours of effective lesson time",
       "Schedule 10:00–13:00",
     ],
   },
 ];
 
-/** Legacy detailed tables — agosto 2022 (brief §1.4D). Confirm 2025/26 prices via WhatsApp. */
-export const legacyPriceTables: PriceTable[] = [
+/** Tarifas temporada 2026/27 — mismas tablas usadas por el motor de reservas */
+export const seasonPriceTables: PriceTable[] = [
   {
-    id: "full-day-legacy",
+    id: "full-day-1-4",
     titleEs: "FULL-DAY",
     titleEn: "FULL-DAY",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "1–4 personas",
     headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
-    rows: [
-      {
-        schedule: "FULL-DAY",
-        prices: [160, 180, 200, 220],
-      },
-    ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
+    rows: [{ schedule: "10:00 – 16:00", prices: [160, 180, 200, 220] }],
   },
   {
-    id: "full-day-legacy-group",
+    id: "full-day-5-8",
     titleEs: "FULL-DAY",
     titleEn: "FULL-DAY",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "5–8 personas",
     headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
-    rows: [
-      {
-        schedule: "FULL-DAY",
-        prices: [240, 260, 280, 300],
-      },
-    ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
+    rows: [{ schedule: "10:00 – 16:00", prices: [240, 260, 280, 300] }],
   },
   {
     id: "clases-2h-1-4",
     titleEs: "CLASES DE 2 HORAS",
     titleEn: "2-HOUR LESSONS",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "1–4 personas",
     headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
     rows: [
@@ -135,14 +126,12 @@ export const legacyPriceTables: PriceTable[] = [
       { schedule: "12:00–14:00", prices: [70, 80, 90, 100] },
       { schedule: "14:00–16:00", prices: [65, 75, 85, 95] },
     ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
   },
   {
     id: "clases-2h-5-8",
     titleEs: "CLASES GRUPALES – 2 HORAS",
     titleEn: "GROUP LESSONS – 2 HOURS",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "5–8 personas",
     headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
     rows: [
@@ -150,31 +139,26 @@ export const legacyPriceTables: PriceTable[] = [
       { schedule: "12:00–14:00", prices: [110, 120, 130, 140] },
       { schedule: "14:00–16:00", prices: [105, 115, 125, 135] },
     ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
   },
   {
     id: "clases-3h-1-4",
     titleEs: "CLASES DE 3 HORAS",
     titleEn: "3-HOUR LESSONS",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "1–4 personas",
     headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
     rows: [
-      { schedule: "09:00–12:00", prices: [110, 125, 140, 155] },
       { schedule: "10:00–13:00", prices: [120, 135, 150, 165] },
       { schedule: "10:00–12:00 y 14:00–15:00", prices: [110, 125, 140, 155] },
       { schedule: "12:00–15:00", prices: [110, 125, 140, 155] },
       { schedule: "14:00–17:00", prices: [100, 115, 130, 145] },
     ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
   },
   {
     id: "clases-3h-5-8",
     titleEs: "CLASES GRUPALES – 3 HORAS",
     titleEn: "GROUP LESSONS – 3 HOURS",
-    season: "legacy-2022",
+    season: CURRENT_SEASON.key,
     groupSizeLabel: "5–8 personas",
     headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
     rows: [
@@ -184,10 +168,11 @@ export const legacyPriceTables: PriceTable[] = [
       { schedule: "12:00–15:00", prices: [170, 185, 200, 215] },
       { schedule: "14:00–17:00", prices: [160, 175, 190, 205] },
     ],
-    noteEs: "Temporada anterior — confirma precio 2025/26",
-    noteEn: "Previous season — confirm 2025/26 price",
   },
 ];
+
+/** @deprecated Use seasonPriceTables */
+export const legacyPriceTables = seasonPriceTables;
 
 /** Legacy home product starting prices (brief §1.4B) */
 export const legacyFromPrices = [
@@ -198,14 +183,6 @@ export const legacyFromPrices = [
     labelEn: "Full Day — from €160",
     descriptionEs: "5 h + 1 h comodín. Experiencia personalizada. Recogida en hotel.",
     descriptionEn: "5 h lesson + 1 h buffer. Personalised experience. Hotel pick-up.",
-  },
-  {
-    productId: "primeras-huellas",
-    fromPrice: 110,
-    labelEs: "Primeras Huellas — desde 110 €",
-    labelEn: "Primeras Huellas — from €110",
-    descriptionEs: "3 h, 9:00–12:00. Pista recién pisada, sin colas.",
-    descriptionEn: "3 h, 9:00–12:00. Fresh slopes, no queues.",
   },
   {
     productId: "medio-dia",

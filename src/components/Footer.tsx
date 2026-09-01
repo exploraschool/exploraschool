@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+import { media } from "@/lib/media";
 import { site } from "@/data/site";
 
 export async function Footer() {
@@ -7,63 +9,71 @@ export async function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-hielo/10 bg-pizarra text-nieve">
-      <div className="container-page section-padding pb-8">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <p className="font-display text-xl font-semibold">Explora School & Club</p>
-            <p className="mt-2 text-sm text-nieve/70">
+    <footer className="relative border-t border-white/10 bg-pizarra text-nieve">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-oro/40 to-transparent" aria-hidden />
+
+      <div className="container-page py-10 sm:py-12 md:py-14 lg:py-16">
+        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-12">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-4">
+              <Image
+                src={media.logo}
+                alt="Explora School & Club"
+                width={160}
+                height={160}
+                className="h-20 w-20 shrink-0 object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.12)] sm:h-24 sm:w-24"
+              />
+              <div>
+                <p className="font-display text-lg font-semibold leading-tight sm:text-xl">
+                  Explora School & Club
+                </p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-oro-light">Sierra Nevada</p>
+              </div>
+            </div>
+            <p className="mt-5 text-sm leading-relaxed text-nieve/85">
               {site.nap.streetAddress}, {site.nap.addressLocality}
               <br />
               {site.nap.addressRegion} {site.nap.postalCode}, {site.nap.addressCountry}
             </p>
-            <p className="mt-3 text-sm">
-              <a href={`tel:${site.phone}`} className="hover:text-oro">
+            <p className="mt-3 text-sm text-nieve/90">
+              <a href={`tel:${site.phone}`} className="transition hover:text-oro-light">
                 {site.phoneDisplay}
               </a>
               <br />
-              <a href={`mailto:${site.email}`} className="hover:text-oro">
+              <a href={`mailto:${site.email}`} className="transition hover:text-oro-light">
                 {site.email}
               </a>
             </p>
           </div>
 
           <div>
-            <p className="eyebrow text-oro/80">{t("legal")}</p>
-            <ul className="mt-4 space-y-2 text-sm">
-              <li>
-                <Link href="/aviso-legal" className="text-nieve/80 hover:text-oro">
-                  {t("avisoLegal")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/politica-de-privacidad" className="text-nieve/80 hover:text-oro">
-                  {t("privacidad")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/politica-de-cookies" className="text-nieve/80 hover:text-oro">
-                  {t("cookies")}
-                </Link>
-              </li>
-              <li>
-                <Link href="/como-llegar" className="text-nieve/80 hover:text-oro">
-                  {t("comoLlegar")}
-                </Link>
-              </li>
+            <p className="eyebrow-dark">{t("legal")}</p>
+            <ul className="mt-3 space-y-2 text-sm sm:mt-4">
+              {[
+                { href: "/aviso-legal", label: t("avisoLegal") },
+                { href: "/politica-de-privacidad", label: t("privacidad") },
+                { href: "/politica-de-cookies", label: t("cookies") },
+                { href: "/como-llegar", label: t("comoLlegar") },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-nieve/85 transition hover:text-oro-light hover:pl-1">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           <div>
-            <p className="eyebrow text-oro/80">{t("social")}</p>
-            <ul className="mt-4 space-y-2 text-sm">
+            <p className="eyebrow-dark">{t("social")}</p>
+            <ul className="mt-3 space-y-2 text-sm sm:mt-4">
               {site.social.map((s) => (
                 <li key={s.platform}>
                   <a
                     href={s.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-nieve/80 hover:text-oro"
+                    className="text-nieve/85 transition hover:text-oro-light hover:pl-1"
                   >
                     {s.label}
                   </a>
@@ -72,13 +82,13 @@ export async function Footer() {
             </ul>
           </div>
 
-          <div>
-            <p className="text-sm text-nieve/70">{t("vat")}</p>
-            <p className="mt-4 text-xs leading-relaxed text-nieve/50">{t("cetursa")}</p>
+          <div className="sm:col-span-2 lg:col-span-1">
+            <p className="text-sm text-nieve/80">{t("vat")}</p>
+            <p className="mt-3 text-xs leading-relaxed text-nieve/65 sm:mt-4">{t("cetursa")}</p>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-nieve/10 pt-8 text-xs text-nieve/50 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-2 border-t border-white/8 pt-6 text-xs text-nieve/65 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:pt-8">
           <p>
             © {year} {site.legalName}. {t("rights")}
           </p>

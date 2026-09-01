@@ -9,7 +9,9 @@ export type InstructorSlug =
   | "aitana"
   | "estrella"
   | "ale"
-  | "benja"
+  | "badillo"
+  | "maria"
+  | "eva"
   | "ferran";
 
 export type Instructor = {
@@ -37,8 +39,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 1,
-    // pending: instructor-reche.webp
-    photo: "/images/instructors/reche.svg",
+    photo: "/images/instructors/reche.jpg",
   },
   {
     slug: "patri",
@@ -51,8 +52,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 2,
-    // pending: instructor-patri.webp
-    photo: "/images/instructors/patri.svg",
+    photo: "/images/instructors/patri.jpg",
   },
   {
     slug: "lalo",
@@ -65,8 +65,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 3,
-    // pending: instructor-lalo.webp
-    photo: "/images/instructors/lalo.svg",
+    photo: "/images/instructors/lalo.jpg",
   },
   {
     slug: "jorge",
@@ -79,8 +78,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 4,
-    // pending: instructor-jorge.webp
-    photo: "/images/instructors/jorge.svg",
+    photo: "/images/instructors/jorge.jpg",
   },
   {
     slug: "esau",
@@ -93,8 +91,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 5,
-    // pending: instructor-esau.webp
-    photo: "/images/instructors/esau.svg",
+    photo: "/images/instructors/esau.jpg",
   },
   {
     slug: "aitana",
@@ -107,8 +104,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 6,
-    // pending: instructor-aitana.webp
-    photo: "/images/instructors/aitana.svg",
+    photo: "/images/instructors/aitana.jpg",
   },
   {
     slug: "estrella",
@@ -121,8 +117,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 7,
-    // pending: instructor-estrella.webp — bio pending live scrape confirmation
-    photo: "/images/instructors/estrella.svg",
+    photo: "/images/instructors/estrella.jpg",
   },
   {
     slug: "ale",
@@ -135,12 +130,11 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 8,
-    // pending: instructor-ale.webp
-    photo: "/images/instructors/ale.svg",
+    photo: "/images/instructors/ale.jpg",
   },
   {
-    slug: "benja",
-    name: "Benja",
+    slug: "badillo",
+    name: "Badillo",
     disciplines: ["esqui", "snowboard"],
     bioEs:
       "Instructor del equipo Explora. Clases seguras y divertidas para disfrutar de la nieve en Sierra Nevada.",
@@ -149,8 +143,33 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 9,
-    // pending: instructor-benja.webp — bio pending live scrape confirmation
-    photo: "/images/instructors/benja.svg",
+    photo: "/images/instructors/badillo.svg",
+  },
+  {
+    slug: "maria",
+    name: "María",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructora del equipo Explora. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
+    bioEn:
+      "Explora team instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 10,
+    photo: "/images/instructors/maria.svg",
+  },
+  {
+    slug: "eva",
+    name: "Eva",
+    disciplines: ["esqui", "snowboard"],
+    bioEs:
+      "Instructora del equipo Explora. Clases dinámicas y divertidas para todas las edades y niveles en Sierra Nevada.",
+    bioEn:
+      "Explora team instructor. Dynamic, fun lessons for all ages and levels in Sierra Nevada.",
+    languages: ["es", "en"],
+    active: true,
+    sortOrder: 11,
+    photo: "/images/instructors/eva.svg",
   },
   {
     slug: "ferran",
@@ -162,9 +181,8 @@ export const instructors: Instructor[] = [
       "Explora team instructor. Guides you in ski and snowboard with the club's energy and professionalism.",
     languages: ["es", "en"],
     active: true,
-    sortOrder: 10,
-    // pending: instructor-ferran.webp — bio pending live scrape confirmation
-    photo: "/images/instructors/ferran.svg",
+    sortOrder: 12,
+    photo: "/images/instructors/ferran.jpg",
   },
 ];
 

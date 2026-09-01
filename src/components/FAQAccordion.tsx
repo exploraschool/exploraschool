@@ -36,7 +36,7 @@ export function FAQAccordion({ locale, limit }: FAQAccordionProps) {
               </span>
             </button>
             {isOpen && (
-              <div className="px-6 pb-5 text-sm leading-relaxed text-muted">
+              <div className="px-6 pb-5 text-sm leading-relaxed text-pizarra/85">
                 {pickLocale(locale, faq.answerEs, faq.answerEn)}
               </div>
             )}

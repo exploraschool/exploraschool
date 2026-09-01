@@ -1,4 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
+import { PageHeader } from "@/components/PageHeader";
+import { Link } from "@/i18n/routing";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
@@ -25,17 +27,13 @@ export default async function ComoLlegarPage({ params }: Props) {
 
   return (
     <>
-      <section className="border-b border-hielo/10 bg-white py-16">
-        <div className="container-page max-w-3xl">
-          <p className="eyebrow">{pickLocale(locale, "Ubicación", "Location")}</p>
-          <h1 className="mt-3 font-display text-4xl font-semibold">
-            {pickLocale(locale, "Cómo llegar", "Getting here")}
-          </h1>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow={pickLocale(locale, "Ubicación", "Location")}
+        title={pickLocale(locale, "Cómo llegar", "Getting here")}
+      />
 
       <section className="section-padding">
-        <div className="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div className="container-page grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
           <div className="prose-page">
             <h2>{pickLocale(locale, "Dirección", "Address")}</h2>
             <p>
@@ -61,18 +59,21 @@ export default async function ComoLlegarPage({ params }: Props) {
             <p>
               {pickLocale(
                 locale,
-                "¿Necesitas indicaciones concretas para tu día? Escríbenos por WhatsApp y te orientamos.",
-                "Need specific directions for your day? Message us on WhatsApp and we will guide you.",
+                "¿Necesitas indicaciones concretas para tu día? Escríbenos por email y te orientamos.",
+                "Need specific directions for your day? Email us and we will guide you.",
               )}
             </p>
 
-            <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary mt-6 inline-flex">
-              WhatsApp
+            <a href={`mailto:${site.email}`} className="btn-primary mt-6 !w-auto">
+              {site.email}
             </a>
+            <Link href="/clases" className="btn-secondary mt-4 !w-auto">
+              {pickLocale(locale, "Elegir clases", "Choose lessons")}
+            </Link>
           </div>
 
-          <div className="space-y-4">
-            <div className="aspect-[4/3] overflow-hidden rounded-2xl border border-hielo/10 shadow-lg">
+          <div className="space-y-3 sm:space-y-4">
+            <div className="aspect-[4/3] overflow-hidden rounded-xl border border-hielo/10 shadow-lg sm:rounded-2xl">
               <iframe
                 title={pickLocale(locale, "Mapa de Borreguiles, Sierra Nevada", "Map of Borreguiles, Sierra Nevada")}
                 src={MAP_EMBED}
@@ -82,7 +83,7 @@ export default async function ComoLlegarPage({ params }: Props) {
                 allowFullScreen
               />
             </div>
-            <p className="text-sm text-hielo/70">
+            <p className="text-xs text-hielo/70 sm:text-sm">
               {pickLocale(
                 locale,
                 "Punto de encuentro: salida del telecabina Al-Andalus, área de Borreguiles.",

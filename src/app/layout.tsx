@@ -1,12 +1,13 @@
-import { DM_Sans, Fraunces } from "next/font/google";
+import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { site } from "@/data/site";
+import { media } from "@/lib/media";
 import "@/app/globals.css";
 
-const dmSans = DM_Sans({
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-dm-sans",
+  variable: "--font-plus-jakarta",
   display: "swap",
 });
 
@@ -19,8 +20,12 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(site.domain),
   icons: {
-    icon: "/images/logo-mark.svg",
-    apple: "/images/logo-mark.svg",
+    icon: [
+      { url: media.favicon, sizes: "48x48", type: "image/png" },
+      { url: media.logoMark, sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: media.appleTouchIcon, sizes: "180x180", type: "image/png" }],
+    shortcut: media.favicon,
   },
 };
 
@@ -30,8 +35,8 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${dmSans.variable} ${fraunces.variable}`}>
-      <body className="min-h-screen antialiased">{children}</body>
+    <html lang="es" suppressHydrationWarning className={`${plusJakarta.variable} ${fraunces.variable}`}>
+      <body className="min-h-screen bg-nieve text-pizarra antialiased">{children}</body>
     </html>
   );
 }

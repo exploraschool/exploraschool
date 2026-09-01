@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { WhatsAppFAB } from "@/components/WhatsAppFAB";
 import { CookieBanner } from "@/components/CookieBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { LocaleHtmlLang } from "@/components/LocaleHtmlLang";
+import { CartProvider } from "@/context/CartContext";
 
 type Props = {
   children: React.ReactNode;
@@ -32,21 +32,22 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <div className="flex min-h-screen flex-col">
       <LocaleHtmlLang locale={locale} />
-      <NextIntlClientProvider messages={messages}>
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
-        >
-          {t("skipToContent")}
-        </a>
-        <Header locale={locale} />
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
-        <Footer />
-        <WhatsAppFAB />
-        <CookieBanner />
-        <JsonLd />
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <CartProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
+          >
+            {t("skipToContent")}
+          </a>
+          <Header locale={locale} />
+          <main id="main-content" className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <CookieBanner />
+          <JsonLd />
+        </CartProvider>
       </NextIntlClientProvider>
     </div>
   );

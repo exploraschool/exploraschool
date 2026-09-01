@@ -1,56 +1,97 @@
-import { disciplines } from "@/data/disciplines";
+import { getMainDisciplines } from "@/data/disciplines";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import { Reveal } from "@/components/Reveal";
+import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
 
 type DisciplinesGridProps = {
   locale: string;
+  compact?: boolean;
 };
 
-export function DisciplinesGrid({ locale }: DisciplinesGridProps) {
-  return (
-    <section className="section-padding bg-nieve">
-      <div className="container-page">
-        <div className="max-w-2xl">
-          <p className="eyebrow">{pickLocale(locale, "Modalidades", "Disciplines")}</p>
-          <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
-            {pickLocale(locale, "Elige cómo quieres bajar la montaña", "Choose how you want to ride the mountain")}
-          </h2>
-          <p className="mt-4 text-muted">
-            {pickLocale(
-              locale,
-              "Esquí, Snowboard, Telemark, Esquí adaptado, Freestyle y Freeride. Descubre con nosotros todo lo que Sierra Nevada te ofrece.",
-              "Ski, snowboard, telemark, adaptive skiing, freestyle and freeride. Discover everything Sierra Nevada has to offer with us.",
-            )}
-          </p>
-        </div>
+export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProps) {
+  const disciplines = getMainDisciplines();
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {disciplines.map((d) => (
-            <Link
-              key={d.id}
-              href={`/clases/${d.slug}`}
-              className="card group block hover:border-accent/30 hover:shadow-lg transition"
-            >
-              <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-lg bg-hielo/5">
-                <Image
-                  src={d.image}
-                  alt={pickLocale(locale, d.nameEs, d.nameEn)}
-                  fill
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                />
-              </div>
-              <h3 className="font-display text-lg font-semibold text-hielo group-hover:text-accent">
-                {pickLocale(locale, d.nameEs, d.nameEn)}
-              </h3>
-              <p className="mt-2 text-sm text-muted">
-                {pickLocale(locale, d.descriptionEs, d.descriptionEn)}
-              </p>
-              <span className="mt-4 inline-flex text-sm font-semibold text-accent">
-                {pickLocale(locale, "Ver clases →", "View lessons →")}
-              </span>
-            </Link>
+  if (compact) {
+    return (
+      <section className="section-padding-sm bg-nieve">
+        <div className="container-page">
+          <Reveal>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <SectionHeader
+                eyebrow={pickLocale(locale, "Disciplinas", "Disciplines")}
+                title={pickLocale(locale, "¿Qué quieres practicar?", "What do you want to ride?")}
+              />
+              <Link href="/clases" className="text-sm font-semibold text-hielo hover:text-accent">
+                {pickLocale(locale, "Ver todas →", "View all →")}
+              </Link>
+            </div>
+          </Reveal>
+
+          <div className="mt-5 flex gap-3 overflow-x-auto pb-2 scrollbar-none sm:mt-6 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
+            {disciplines.map((d, i) => (
+              <Reveal key={d.id} delay={i * 50}>
+                <Link
+                  href={`/clases/${d.slug}`}
+                  className="group flex w-[140px] shrink-0 flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md sm:w-auto"
+                >
+                  <div className="relative aspect-[4/3] bg-hielo/5">
+                    <Image
+                      src={d.image}
+                      alt={pickLocale(locale, d.nameEs, d.nameEn)}
+                      fill
+                      className="object-cover transition duration-500 group-hover:scale-105"
+                      sizes="160px"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 to-transparent" />
+                  </div>
+                  <p className="px-3 py-2.5 text-center text-xs font-semibold text-hielo group-hover:text-accent sm:text-sm">
+                    {pickLocale(locale, d.nameEs, d.nameEn)}
+                  </p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="section-padding ski-pattern mesh-light">
+      <div className="container-page">
+        <Reveal>
+          <SectionHeader
+            eyebrow={pickLocale(locale, "Modalidades", "Disciplines")}
+            title={pickLocale(locale, "Elige cómo quieres bajar la montaña", "Choose how you want to ride the mountain")}
+          />
+        </Reveal>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+          {disciplines.map((d, i) => (
+            <Reveal key={d.id} delay={i * 80}>
+              <Link href={`/clases/${d.slug}`} className="card-interactive group block h-full overflow-hidden p-0">
+                <div className="relative aspect-[16/10] overflow-hidden bg-hielo/5">
+                  <Image
+                    src={d.image}
+                    alt={pickLocale(locale, d.nameEs, d.nameEn)}
+                    fill
+                    className="object-cover transition duration-700 group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="font-display text-lg font-semibold text-white">
+                      {pickLocale(locale, d.nameEs, d.nameEn)}
+                    </h3>
+                  </div>
+                </div>
+                <p className="p-4 text-sm text-muted line-clamp-2">
+                  {pickLocale(locale, d.descriptionEs, d.descriptionEn)}
+                </p>
+              </Link>
+            </Reveal>
           ))}
         </div>
       </div>

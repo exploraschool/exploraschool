@@ -2,16 +2,15 @@ import type { MetadataRoute } from "next";
 import { site } from "@/data/site";
 import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
-import { disciplines } from "@/data/disciplines";
-import { getActiveInstructors } from "@/data/instructors";
+import { getMainDisciplines } from "@/data/disciplines";
 
 const staticPaths = [
   "",
   "/clases",
-  "/equipo",
   "/blog",
   "/preguntas-frecuentes",
   "/contacto",
+  "/reserva",
   "/club",
   "/como-llegar",
   "/aviso-legal",
@@ -29,11 +28,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${base}/${locale}${path}`,
         lastModified: new Date(),
         changeFrequency: path === "" ? "weekly" : "monthly",
-        priority: path === "" ? 1 : path === "/clases" ? 0.9 : 0.7,
+        priority: path === "" ? 1 : path === "/clases" || path === "/reserva" ? 0.9 : 0.7,
       });
     }
 
-    for (const d of disciplines) {
+    for (const d of getMainDisciplines()) {
       entries.push({
         url: `${base}/${locale}/clases/${d.slug}`,
         changeFrequency: "monthly",
@@ -45,14 +44,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entries.push({
         url: `${base}/${locale}/blog/${post.slug}`,
         lastModified: new Date(post.date),
-        changeFrequency: "monthly",
-        priority: 0.6,
-      });
-    }
-
-    for (const instructor of getActiveInstructors()) {
-      entries.push({
-        url: `${base}/${locale}/equipo/${instructor.slug}`,
         changeFrequency: "monthly",
         priority: 0.6,
       });

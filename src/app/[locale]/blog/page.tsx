@@ -32,28 +32,45 @@ export default async function BlogPage({ params }: Props) {
       </section>
 
       <section className="section-padding">
-        <div className="container-page grid gap-8 md:grid-cols-2">
-          {blogPosts.map((post) => (
-            <article key={post.slug} className="card hover:border-hielo/25">
-              <time className="text-xs font-medium uppercase tracking-wider text-oro">
-                {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
-              </time>
-              <h2 className="mt-3 font-display text-xl font-semibold">
-                <Link href={`/blog/${post.slug}`} className="hover:text-accent">
-                  {pickLocale(locale, post.titleEs, post.titleEn)}
-                </Link>
-              </h2>
-              <p className="mt-3 text-sm text-muted">
-                {pickLocale(locale, post.excerptEs, post.excerptEn)}
+        <div className="container-page">
+          {blogPosts.length === 0 ? (
+            <div className="card mx-auto max-w-xl text-center">
+              <p className="text-sm text-muted">
+                {pickLocale(
+                  locale,
+                  "Próximamente publicaremos consejos y novedades sobre esquí y snowboard en Sierra Nevada.",
+                  "We will soon publish tips and news about skiing and snowboarding in Sierra Nevada.",
+                )}
               </p>
-              <Link
-                href={`/blog/${post.slug}`}
-                className="mt-4 inline-block text-sm font-semibold text-hielo hover:text-accent"
-              >
-                {pickLocale(locale, "Leer más →", "Read more →")}
+              <Link href="/clases" className="btn-primary mt-6 inline-flex !w-auto">
+                {pickLocale(locale, "Ver clases", "View lessons")}
               </Link>
-            </article>
-          ))}
+            </div>
+          ) : (
+            <div className="grid gap-8 md:grid-cols-2">
+              {blogPosts.map((post) => (
+                <article key={post.slug} className="card hover:border-hielo/25">
+                  <time className="text-xs font-medium uppercase tracking-wider text-oro">
+                    {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
+                  </time>
+                  <h2 className="mt-3 font-display text-xl font-semibold">
+                    <Link href={`/blog/${post.slug}`} className="hover:text-accent">
+                      {pickLocale(locale, post.titleEs, post.titleEn)}
+                    </Link>
+                  </h2>
+                  <p className="mt-3 text-sm text-muted">
+                    {pickLocale(locale, post.excerptEs, post.excerptEn)}
+                  </p>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="mt-4 inline-block text-sm font-semibold text-hielo hover:text-accent"
+                  >
+                    {pickLocale(locale, "Leer más →", "Read more →")}
+                  </Link>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

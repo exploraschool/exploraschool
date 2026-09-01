@@ -115,7 +115,7 @@ In **Vercel** → Project → Settings → Environment Variables: add all `NEXT_
 1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new).
 2. Framework preset: **Next.js**.
 3. Add environment variables from the table above.
-4. Deploy. Custom domain: `www.sierranevadaclases.es` (DNS CNAME to Vercel).
+4. Deploy. **Custom domain (`sierranevadaclases.es`) is deferred** — use the default `.vercel.app` URL until you set `NEXT_PUBLIC_SITE_URL` and configure DNS in Vercel.
 
 Vercel serves the Next.js app. Firebase handles Firestore, Storage, Auth, and Functions — not Firebase Hosting in v1.
 

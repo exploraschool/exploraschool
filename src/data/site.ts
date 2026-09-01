@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/site-url";
+
 export type SocialLink = {
   platform: "instagram" | "facebook" | "tripadvisor";
   label: string;
@@ -46,7 +48,7 @@ export type SiteConfig = {
 export const site: SiteConfig = {
   name: "Explora School & Club",
   legalName: "Explora School & Club",
-  domain: "https://www.sierranevadaclases.es",
+  domain: getSiteUrl(),
   foundedYear: 2010,
   taglineEs:
     "Tu escuela de esquí, snowboard y telemark en Sierra Nevada. Clases personalizadas y diversión garantizada en la nieve.",
@@ -97,7 +99,6 @@ export const site: SiteConfig = {
     reviewCount: 18,
     url: "https://www.tripadvisor.es/Attraction_Review-g609099-d20368491-Reviews-Explora_School-Sierra_Nevada_Sierra_Nevada_National_Park_Province_of_Granada_And.html",
   },
-  preseasonCopyEs:
-    "CONGELAMOS EL PRECIO DE TU RESERVA HASTA EL INICIO DE LA TEMPORADA",
-  preseasonCopyEn: "WE FREEZE YOUR BOOKING PRICE UNTIL THE SEASON OPENS",
+  preseasonCopyEs: "10% DE DESCUENTO RESERVANDO ANTES DEL 1 DE NOVIEMBRE",
+  preseasonCopyEn: "10% OFF WHEN YOU BOOK BEFORE 1 NOVEMBER",
 };
