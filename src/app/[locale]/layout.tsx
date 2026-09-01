@@ -22,6 +22,17 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+import type { Metadata } from "next";
+import { site } from "@/data/site";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(site.domain),
+  icons: {
+    icon: "/images/logo-mark.svg",
+    apple: "/images/logo-mark.svg",
+  },
+};
+
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
@@ -52,7 +63,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           >
             {t("skipToContent")}
           </a>
-          <Header />
+          <Header locale={locale} />
           <main id="main-content" className="flex-1">
             {children}
           </main>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sierra Nevada, clases de esquí">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a3a4a"/>
+      <stop offset="45%" stop-color="#2d5f73"/>
+      <stop offset="100%" stop-color="#0e1a24"/>
+    </linearGradient>
+    <linearGradient id="snow" x1="0" y1="0.5" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4f7fa"/>
+      <stop offset="100%" stop-color="#c8d4dc"/>
+    </linearGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e4572e" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#c4a574" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+  <ellipse cx="1600" cy="180" rx="420" ry="280" fill="url(#sun)"/>
+  <path d="M0 720 L320 520 L560 640 L820 380 L1100 560 L1380 300 L1680 480 L1920 360 L1920 1080 L0 1080 Z" fill="#1f4e5f" opacity="0.9"/>
+  <path d="M0 820 L280 680 L520 760 L780 580 L1040 720 L1320 520 L1580 680 L1920 560 L1920 1080 L0 1080 Z" fill="url(#snow)"/>
+  <path d="M0 920 L240 840 L480 880 L720 780 L960 860 L1200 760 L1440 840 L1920 760 L1920 1080 L0 1080 Z" fill="#f4f7fa" opacity="0.95"/>
+  <g opacity="0.15" stroke="#f4f7fa" stroke-width="2">
+    <path d="M400 920 Q520 800 640 920"/>
+    <path d="M900 880 Q1020 760 1140 880"/>
+    <path d="M1400 900 Q1520 780 1640 900"/>
+  </g>
+</svg>

@@ -27,7 +27,7 @@ export function CookieBanner() {
     <div
       role="dialog"
       aria-live="polite"
-      className="fixed bottom-0 left-0 right-0 z-50 border-t border-hielo/10 bg-white p-4 shadow-lg sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md sm:rounded-xl sm:border"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-hielo/10 bg-white p-4 pb-24 shadow-lg sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md sm:rounded-xl sm:border sm:pb-4"
     >
       <p className="text-sm text-muted">{t("message")}</p>
       <div className="mt-3 flex flex-wrap gap-3">

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none" role="img" aria-label="Explora School and Club - Clases en Sierra Nevada">
+  <rect width="1200" height="630" fill="#0e1a24"/>
+  <path d="M0 420 L200 280 L380 360 L560 200 L760 320 L980 160 L1200 280 L1200 630 L0 630Z" fill="#1f4e5f"/>
+  <path d="M0 500 L180 400 L360 460 L540 340 L720 420 L900 300 L1080 380 L1200 320 L1200 630 L0 630Z" fill="#f4f7fa" opacity="0.9"/>
+  <text x="80" y="180" font-family="Georgia, serif" font-size="56" font-weight="600" fill="#f4f7fa">Explora School &amp; Club</text>
+  <text x="80" y="240" font-family="system-ui, sans-serif" font-size="28" fill="#c4a574">Clases de esquí y snowboard · Sierra Nevada</text>
+</svg>

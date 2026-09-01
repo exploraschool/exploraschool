@@ -30,7 +30,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "Private and group lessons for all ages and levels in Sierra Nevada.",
     // pending: icon-ski.png from legacy scrape
-    image: "/images/legacy/icon-ski.webp",
+    image: "/images/gallery-01.svg",
     sortOrder: 1,
   },
   {
@@ -43,7 +43,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "From first turns to technical coaching with specialist instructors.",
     // pending: icon-glasses-snow.png from legacy scrape
-    image: "/images/legacy/icon-glasses-snow.webp",
+    image: "/images/gallery-02.svg",
     sortOrder: 2,
   },
   {
@@ -56,7 +56,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "Discover Nordic-style skiing in the resort with instructors who master the discipline.",
     // pending: discipline photo not yet scraped
-    image: "/images/legacy/discipline-telemark.webp",
+    image: "/images/gallery-03.svg",
     sortOrder: 3,
   },
   {
@@ -69,7 +69,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "Inclusive, personalised lessons to enjoy the snow safely.",
     // pending: discipline photo not yet scraped
-    image: "/images/legacy/discipline-esqui-adaptado.webp",
+    image: "/images/gallery-04.svg",
     sortOrder: 4,
   },
   {
@@ -82,7 +82,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "Tricks, jumps and snowpark progression with a safe, technical approach.",
     // pending: discipline photo not yet scraped
-    image: "/images/legacy/discipline-freestyle.webp",
+    image: "/images/gallery-01.svg",
     sortOrder: 5,
   },
   {
@@ -95,7 +95,7 @@ export const disciplines: Discipline[] = [
     descriptionEn:
       "Explore off-piste terrain and discover what Sierra Nevada's high mountains have to offer.",
     // pending: discipline photo not yet scraped
-    image: "/images/legacy/discipline-freeride.webp",
+    image: "/images/gallery-02.svg",
     sortOrder: 6,
   },
   {
@@ -107,7 +107,7 @@ export const disciplines: Discipline[] = [
       "Particulares desde 3 años, grupales desde 6. Clases dinámicas y divertidas para aprender jugando.",
     descriptionEn:
       "Private from age 3, group from age 6. Fun, dynamic lessons where children learn through play.",
-    image: "/images/legacy/discipline-ninos.webp",
+    image: "/images/gallery-03.svg",
     sortOrder: 7,
   },
 ];

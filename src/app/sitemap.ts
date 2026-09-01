@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/data/site";
 import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
+import { disciplines } from "@/data/disciplines";
 import { getActiveInstructors } from "@/data/instructors";
 
 const staticPaths = [
@@ -28,7 +29,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: `${base}/${locale}${path}`,
         lastModified: new Date(),
         changeFrequency: path === "" ? "weekly" : "monthly",
-        priority: path === "" ? 1 : 0.7,
+        priority: path === "" ? 1 : path === "/clases" ? 0.9 : 0.7,
+      });
+    }
+
+    for (const d of disciplines) {
+      entries.push({
+        url: `${base}/${locale}/clases/${d.slug}`,
+        changeFrequency: "monthly",
+        priority: 0.8,
       });
     }
 

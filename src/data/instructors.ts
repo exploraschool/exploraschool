@@ -38,7 +38,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 1,
     // pending: instructor-reche.webp
-    photo: "/images/legacy/instructor-reche.webp",
+    photo: "/images/instructors/reche.svg",
   },
   {
     slug: "patri",
@@ -52,7 +52,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 2,
     // pending: instructor-patri.webp
-    photo: "/images/legacy/instructor-patri.webp",
+    photo: "/images/instructors/patri.svg",
   },
   {
     slug: "lalo",
@@ -66,7 +66,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 3,
     // pending: instructor-lalo.webp
-    photo: "/images/legacy/instructor-lalo.webp",
+    photo: "/images/instructors/lalo.svg",
   },
   {
     slug: "jorge",
@@ -80,7 +80,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 4,
     // pending: instructor-jorge.webp
-    photo: "/images/legacy/instructor-jorge.webp",
+    photo: "/images/instructors/jorge.svg",
   },
   {
     slug: "esau",
@@ -94,7 +94,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 5,
     // pending: instructor-esau.webp
-    photo: "/images/legacy/instructor-esau.webp",
+    photo: "/images/instructors/esau.svg",
   },
   {
     slug: "aitana",
@@ -108,7 +108,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 6,
     // pending: instructor-aitana.webp
-    photo: "/images/legacy/instructor-aitana.webp",
+    photo: "/images/instructors/aitana.svg",
   },
   {
     slug: "estrella",
@@ -122,7 +122,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 7,
     // pending: instructor-estrella.webp — bio pending live scrape confirmation
-    photo: "/images/legacy/instructor-estrella.webp",
+    photo: "/images/instructors/estrella.svg",
   },
   {
     slug: "ale",
@@ -136,7 +136,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 8,
     // pending: instructor-ale.webp
-    photo: "/images/legacy/instructor-ale.webp",
+    photo: "/images/instructors/ale.svg",
   },
   {
     slug: "benja",
@@ -150,7 +150,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 9,
     // pending: instructor-benja.webp — bio pending live scrape confirmation
-    photo: "/images/legacy/instructor-benja.webp",
+    photo: "/images/instructors/benja.svg",
   },
   {
     slug: "ferran",
@@ -164,7 +164,7 @@ export const instructors: Instructor[] = [
     active: true,
     sortOrder: 10,
     // pending: instructor-ferran.webp — bio pending live scrape confirmation
-    photo: "/images/legacy/instructor-ferran.webp",
+    photo: "/images/instructors/ferran.svg",
   },
 ];
 

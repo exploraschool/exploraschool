@@ -1,15 +1,20 @@
 import { setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/routing";
 import { Hero } from "@/components/Hero";
 import { TrustBar } from "@/components/TrustBar";
+import { AboutVisual } from "@/components/AboutVisual";
+import { HowItWorks } from "@/components/HowItWorks";
 import { DisciplinesGrid } from "@/components/DisciplinesGrid";
 import { ProductsSection } from "@/components/ProductsSection";
+import { VideoShowcase } from "@/components/VideoShowcase";
+import { PhotoGallery } from "@/components/PhotoGallery";
 import { TeamStrip } from "@/components/TeamStrip";
 import { Testimonials } from "@/components/Testimonials";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { CTASection } from "@/components/CTASection";
 import { pickLocale } from "@/lib/locale";
 import { site } from "@/data/site";
+import { buildPageMetadata } from "@/lib/metadata";
+import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 
 type Props = {
@@ -18,14 +23,20 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title: "Explora School & Club — Clases de esquí y snowboard en Sierra Nevada",
-    description: pickLocale(locale, site.taglineEs, site.taglineEn),
-    alternates: {
-      canonical: `${site.domain}/${locale}`,
-      languages: { es: `${site.domain}/es`, en: `${site.domain}/en` },
-    },
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/",
+    title: pickLocale(
+      locale,
+      "Clases de esquí y snowboard en Sierra Nevada",
+      "Ski and snowboard lessons in Sierra Nevada",
+    ),
+    description: pickLocale(
+      locale,
+      "Clases de esquí, snowboard y telemark en Sierra Nevada. Instructores con nombre y cara desde 2010. Reserva por WhatsApp.",
+      "Ski, snowboard and telemark lessons in Sierra Nevada. Named instructors since 2010. Book via WhatsApp.",
+    ),
+  });
 }
 
 export default async function HomePage({ params }: Props) {
@@ -36,52 +47,21 @@ export default async function HomePage({ params }: Props) {
     <>
       <Hero locale={locale} />
       <TrustBar locale={locale} />
-
-      <section className="section-padding bg-white">
-        <div className="container-page grid gap-10 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="eyebrow">{pickLocale(locale, "¿Quiénes somos?", "Who we are")}</p>
-            <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
-              {pickLocale(locale, "Experiencia única en la nieve", "A unique experience on the snow")}
-            </h2>
-          </div>
-          <div className="space-y-4 text-muted leading-relaxed">
-            <p>
-              {pickLocale(
-                locale,
-                "Explora School & Club es una agrupación de instructores/as, fundada en 2010 para ofrecerte una experiencia única en la enseñanza de los deportes de invierno en Sierra Nevada.",
-                "Explora School & Club is a group of instructors founded in 2010 to offer you a unique experience teaching winter sports in Sierra Nevada.",
-              )}
-            </p>
-            <p>
-              {pickLocale(
-                locale,
-                "Desde Explora School & Club queremos dar accesibilidad a la contratación de clases y garantizar un entorno seguro. La diversión y el aprendizaje están garantizados.",
-                "At Explora School & Club we want to make booking lessons accessible and guarantee a safe environment. Fun and learning are assured.",
-              )}
-            </p>
-            <p>
-              {pickLocale(
-                locale,
-                "Te ofrecemos clases dinámicas y divertidas para que disfrutes del esquí, esquí adaptado, snowboard y telemark. Pregúntanos y te asesoraremos en todo lo relativo a tus vacaciones en Sierra Nevada.",
-                "We offer dynamic, fun lessons so you can enjoy ski, adaptive skiing, snowboard and telemark. Ask us anything about your Sierra Nevada holiday.",
-              )}
-            </p>
-          </div>
-        </div>
-      </section>
-
+      <AboutVisual locale={locale} />
+      <HowItWorks locale={locale} />
       <DisciplinesGrid locale={locale} />
       <ProductsSection locale={locale} />
+      <VideoShowcase locale={locale} />
+      <PhotoGallery locale={locale} />
       <TeamStrip locale={locale} />
       <Testimonials locale={locale} />
 
       <section className="section-padding bg-nieve">
         <div className="container-page">
           <div className="max-w-2xl">
-            <p className="eyebrow">{pickLocale(locale, "Preguntas frecuentes", "FAQs")}</p>
+            <p className="eyebrow">{pickLocale(locale, "Antes de atarte las botas", "Before you buckle up")}</p>
             <h2 className="mt-3 font-display text-3xl font-semibold md:text-4xl">
-              {pickLocale(locale, "Resolvemos tus dudas", "We answer your questions")}
+              {pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
             </h2>
           </div>
           <div className="mt-10">

@@ -48,14 +48,14 @@ export async function Footer() {
               </li>
               <li>
                 <Link href="/como-llegar" className="text-nieve/80 hover:text-oro">
-                  Cómo llegar
+                  {t("comoLlegar")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="eyebrow text-oro/80">Social</p>
+            <p className="eyebrow text-oro/80">{t("social")}</p>
             <ul className="mt-4 space-y-2 text-sm">
               {site.social.map((s) => (
                 <li key={s.platform}>
@@ -82,7 +82,7 @@ export async function Footer() {
           <p>
             © {year} {site.legalName}. {t("rights")}
           </p>
-          <p>Desde {site.foundedYear} en Sierra Nevada</p>
+          <p>{t("since", { year: site.foundedYear })}</p>
         </div>
       </div>
     </footer>

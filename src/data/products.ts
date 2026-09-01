@@ -45,7 +45,7 @@ export type Product = {
   season: "current-2025-26" | "legacy-2022" | "both";
   highlighted: boolean;
   sortOrder: number;
-  /** @pending Photo pending — upload to public/images/legacy/product-{slug}.webp */
+  /** @pending Photo pending — upload to public/images/gallery-01.svg */
   image: string;
 };
 
@@ -85,7 +85,7 @@ export const products: Product[] = [
     highlighted: true,
     sortOrder: 1,
     // pending: product-full-day.webp
-    image: "/images/legacy/product-full-day.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "full-day-ninos",
@@ -116,7 +116,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 2,
     // pending: product-full-day-ninos.webp
-    image: "/images/legacy/product-full-day-ninos.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "full-day-tour",
@@ -138,7 +138,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 3,
     // pending: product-full-day-tour.webp
-    image: "/images/legacy/product-full-day-tour.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "full-day-iniciacion",
@@ -168,7 +168,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 4,
     // pending: product-full-day-iniciacion.webp
-    image: "/images/legacy/product-full-day-iniciacion.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "full-day-tecnico",
@@ -198,7 +198,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 5,
     // pending: product-full-day-tecnico.webp
-    image: "/images/legacy/product-full-day-tecnico.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "primeras-huellas",
@@ -223,7 +223,7 @@ export const products: Product[] = [
     highlighted: true,
     sortOrder: 6,
     // pending: product-primeras-huellas.webp
-    image: "/images/legacy/product-primeras-huellas.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "medio-dia",
@@ -248,7 +248,7 @@ export const products: Product[] = [
     highlighted: true,
     sortOrder: 7,
     // pending: product-medio-dia.webp
-    image: "/images/legacy/product-medio-dia.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "clase-grabada",
@@ -270,7 +270,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 8,
     // pending: product-clase-grabada.webp
-    image: "/images/legacy/product-clase-grabada.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "curso-snow",
@@ -307,7 +307,7 @@ export const products: Product[] = [
     highlighted: true,
     sortOrder: 9,
     // pending: product-curso-snow.webp
-    image: "/images/legacy/product-curso-snow.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "particular",
@@ -342,7 +342,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 10,
     // pending: product-particular.webp
-    image: "/images/legacy/product-particular.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "curso-empresa",
@@ -375,7 +375,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 11,
     // pending: product-curso-empresa.webp
-    image: "/images/legacy/product-curso-empresa.webp",
+    image: "/images/gallery-01.svg",
   },
   {
     id: "grupal",
@@ -410,7 +410,7 @@ export const products: Product[] = [
     highlighted: false,
     sortOrder: 12,
     // pending: product-grupal.webp
-    image: "/images/legacy/product-grupal.webp",
+    image: "/images/gallery-01.svg",
   },
 ];
 

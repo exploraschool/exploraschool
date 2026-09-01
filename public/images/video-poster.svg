@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" fill="none" role="img" aria-label="Vídeo Explora School">
+  <rect width="1280" height="720" fill="#0e1a24"/>
+  <path d="M0 480 L240 340 L480 420 L720 260 L960 380 L1200 220 L1280 300 L1280 720 L0 720Z" fill="#1f4e5f"/>
+  <path d="M0 560 L200 460 L400 520 L600 400 L800 500 L1000 380 L1280 440 L1280 720 L0 720Z" fill="#f4f7fa" opacity="0.85"/>
+  <circle cx="640" cy="360" r="64" fill="#e4572e" opacity="0.9"/>
+  <path d="M620 320 L680 360 L620 400Z" fill="#fff"/>
+  <text x="640" y="520" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" fill="#c4a574">@explora.school</text>
+</svg>

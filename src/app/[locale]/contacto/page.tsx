@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/ContactForm";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -10,7 +11,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "contact" });
-  return { title: t("title"), description: t("subtitle") };
+  return buildPageMetadata({
+    locale,
+    path: "/contacto",
+    title: t("title"),
+    description: t("subtitle"),
+  });
 }
 
 export default async function ContactoPage({ params }: Props) {

@@ -1,23 +1,26 @@
 import { setRequestLocale } from "next-intl/server";
 import { FAQAccordion } from "@/components/FAQAccordion";
-import { JsonLd } from "@/components/JsonLd";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { CTASection } from "@/components/CTASection";
 import { faqs } from "@/data/faqs";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
+  return buildPageMetadata({
+    locale,
+    path: "/preguntas-frecuentes",
     title: pickLocale(locale, "Preguntas frecuentes", "FAQs"),
     description: pickLocale(
       locale,
       "Resuelve tus dudas sobre clases, forfait, material y reservas en Explora School & Club.",
       "Answers about lessons, lift passes, equipment and bookings at Explora School & Club.",
     ),
-  };
+  });
 }
 
 export default async function FaqsPage({ params }: Props) {
@@ -31,7 +34,7 @@ export default async function FaqsPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd type="FAQPage" faqItems={faqItems} />
+      <FaqJsonLd items={faqItems} />
 
       <section className="border-b border-hielo/10 bg-white py-16">
         <div className="container-page">
