@@ -1,5 +1,8 @@
+export type FaqCategory = "reservas" | "estacion" | "clase";
+
 export type Faq = {
   id: string;
+  category: FaqCategory;
   questionEs: string;
   answerEs: string;
   questionEn: string;
@@ -7,9 +10,40 @@ export type Faq = {
   sortOrder: number;
 };
 
+export const FAQ_CATEGORIES: {
+  id: FaqCategory;
+  labelEs: string;
+  labelEn: string;
+  descriptionEs: string;
+  descriptionEn: string;
+}[] = [
+  {
+    id: "reservas",
+    labelEs: "Reservas y precios",
+    labelEn: "Bookings & prices",
+    descriptionEs: "Cómo reservar, qué incluye el precio y condiciones generales.",
+    descriptionEn: "How to book, what is included and general conditions.",
+  },
+  {
+    id: "estacion",
+    labelEs: "Antes de subir",
+    labelEn: "Before you go up",
+    descriptionEs: "Forfait, material, casco y cómo llegar al punto de encuentro.",
+    descriptionEn: "Lift pass, equipment, helmet and how to reach the meeting point.",
+  },
+  {
+    id: "clase",
+    labelEs: "El día de la clase",
+    labelEn: "On lesson day",
+    descriptionEs: "Imprevistos, horarios, idiomas y qué hacer si algo cambia.",
+    descriptionEn: "Changes, schedules, languages and what to do if plans shift.",
+  },
+];
+
 export const faqs: Faq[] = [
   {
     id: "como-reservo",
+    category: "reservas",
     sortOrder: 1,
     questionEs: "¿Cómo reservo mi clase?",
     answerEs:
@@ -20,6 +54,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "forfait",
+    category: "estacion",
     sortOrder: 2,
     questionEs: "¿Necesito comprar forfait para realizar las clases?",
     answerEs:
@@ -30,6 +65,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "material",
+    category: "estacion",
     sortOrder: 3,
     questionEs: "¿Necesito material de esquí, snowboard o telemark?",
     answerEs:
@@ -40,6 +76,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "casco",
+    category: "estacion",
     sortOrder: 4,
     questionEs: "¿El casco es obligatorio?",
     answerEs:
@@ -50,26 +87,29 @@ export const faqs: Faq[] = [
   },
   {
     id: "punto-encuentro",
+    category: "estacion",
     sortOrder: 5,
     questionEs: "¿Dónde está el punto de encuentro?",
     answerEs:
-      "En la salida del telecabina Al-Andalus, área de Borreguiles. El/la instructor/a va con uniforme. En Full-Day: recogida y entrega donde se solicite; en el resto de formatos, según disponibilidad.",
+      "Explora School & Club en la estación de esquí de Sierra Nevada — ubicación oficial en Google Maps. El/la instructor/a va con uniforme Explora. En Full-Day: recogida y entrega donde se solicite; en el resto de formatos, según disponibilidad.",
     questionEn: "Where is the meeting point?",
     answerEn:
-      "At the exit of the Al-Andalus gondola, Borreguiles area. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request; for other formats, subject to availability.",
+      "Explora School & Club at Sierra Nevada ski resort — official location on Google Maps. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request; for other formats, subject to availability.",
   },
   {
     id: "cierre-estacion",
+    category: "clase",
     sortOrder: 6,
     questionEs: "¿Qué ocurre si cierra la estación?",
     answerEs:
-      "Si Cetursa cierra obligatoriamente, la clase queda suspendida con reembolso. Si hay retraso en la apertura, la clase se retrasa 1 hora desde la apertura para llegar al punto de encuentro.",
+      "Si Cetursa cierra la estación de forma obligatoria, la clase quedará suspendida y te reembolsaremos el importe. Si la apertura se retrasa, el inicio de la clase se desplazará una hora respecto a la apertura oficial, para que puedas llegar con tranquilidad al punto de encuentro. En cualquier caso, haremos todo lo posible por reajustar la sesión y que aproveches al máximo tu tiempo en la nieve.",
     questionEn: "What happens if the resort closes?",
     answerEn:
-      "If Cetursa closes mandatorily, the lesson is cancelled with a refund. If opening is delayed, the lesson starts 1 hour after opening so you can reach the meeting point.",
+      "If Cetursa closes the resort mandatorily, the lesson will be cancelled and you will receive a full refund. If opening is delayed, the lesson will start one hour after the official opening time, giving you enough time to reach the meeting point. Whatever happens, we will do our best to rearrange the session so you can make the most of your time on the snow.",
   },
   {
     id: "llego-tarde",
+    category: "clase",
     sortOrder: 7,
     questionEs: "¿Qué ocurre si llego tarde?",
     answerEs:
@@ -80,6 +120,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "idiomas",
+    category: "clase",
     sortOrder: 8,
     questionEs: "¿En qué idiomas se imparten las clases?",
     answerEs:
@@ -90,6 +131,7 @@ export const faqs: Faq[] = [
   },
   {
     id: "iva",
+    category: "reservas",
     sortOrder: 9,
     questionEs: "¿Los precios incluyen IVA?",
     answerEs: "Sí, todos los precios tienen el IVA incluido.",
@@ -98,36 +140,40 @@ export const faqs: Faq[] = [
   },
   {
     id: "edades-minimas",
+    category: "reservas",
     sortOrder: 10,
     questionEs: "¿Desde qué edad se pueden contratar clases?",
     answerEs:
-      "Clases particulares: niños desde 3 años. Clases grupales: niños desde 6 años.",
+      "Clases con instructor/a: niños desde 3 años. Máximo 8 participantes por sesión.",
     questionEn: "What is the minimum age for lessons?",
     answerEn:
-      "Private lessons: children from 3 years old. Group lessons: children from 6 years old.",
+      "Lessons with an instructor: children from 3 years old. Maximum 8 participants per session.",
   },
   {
     id: "tamano-grupo",
+    category: "reservas",
     sortOrder: 11,
-    questionEs: "¿Cuál es el tamaño máximo de grupo?",
+    questionEs: "¿Cuál es el máximo de participantes por clase?",
     answerEs:
-      "En clases grupales el grupo nunca excede de 8 personas para garantizar calidad.",
-    questionEn: "What is the maximum group size?",
+      "Máximo 8 participantes por clase para garantizar calidad y atención personalizada.",
+    questionEn: "What is the maximum number of participants per lesson?",
     answerEn:
-      "In group lessons the group never exceeds 8 people to ensure quality.",
+      "Maximum 8 participants per lesson to ensure quality and personalised attention.",
   },
   {
     id: "como-llegar",
+    category: "estacion",
     sortOrder: 12,
     questionEs: "¿Cómo llego a Explora School & Club en Sierra Nevada?",
     answerEs:
-      "Nos encontramos en Sierra Nevada, Granada (CP 18196). El punto de encuentro habitual es la salida del telecabina Al-Andalus, área de Borreguiles. Escríbenos por email si necesitas indicaciones concretas para tu día.",
+      "Nos encontramos en la estación de esquí de Sierra Nevada (CP 18196). Punto de encuentro oficial: Explora School & Club — consulta la ubicación exacta en Google Maps o en la página Cómo llegar.",
     questionEn: "How do I get to Explora School & Club in Sierra Nevada?",
     answerEn:
-      "We are in Sierra Nevada, Granada (postal code 18196). The usual meeting point is the exit of the Al-Andalus gondola, Borreguiles area. Email us if you need specific directions for your day.",
+      "We are at Sierra Nevada ski resort (postal code 18196). Official meeting point: Explora School & Club — see the exact location on Google Maps or on the Getting here page.",
   },
   {
     id: "que-incluye",
+    category: "reservas",
     sortOrder: 13,
     questionEs: "¿Qué incluye y qué no incluye el precio de la clase?",
     answerEs:

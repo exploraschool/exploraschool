@@ -8,12 +8,21 @@ type HomeSocialProofProps = {
 };
 
 export function HomeSocialProof({ locale }: HomeSocialProofProps) {
-  const gallery = media.gallery.slice(0, 4);
+  const gallery = [
+    media.gallery[0],
+    media.gallery[3],
+    {
+      src: "/images/stock/home-gallery-snow.jpg",
+      altEs: "Pistas de la estación de esquí de Sierra Nevada",
+      altEn: "Slopes at Sierra Nevada ski resort",
+    },
+    media.gallery[5],
+  ];
 
   return (
     <section className="section-padding-sm mesh-dark overflow-hidden text-nieve">
       <div className="container-page">
-        <div className="grid gap-8 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-10">
+        <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <Reveal>
             <a
               href={media.video.instagramProfile}
@@ -47,16 +56,16 @@ export function HomeSocialProof({ locale }: HomeSocialProofProps) {
               <h2 className="mt-2 font-display text-2xl font-semibold text-nieve sm:text-3xl">
                 {pickLocale(locale, "La estación, en directo", "The resort, live")}
               </h2>
-              <p className="mt-2 text-sm text-on-dark-muted">
+              <p className="mt-3 text-sm text-on-dark-muted">
                 {pickLocale(
                   locale,
-          "Pistas de Borreguiles, Sierra Nevada (Granada). Síguenos en Instagram.",
-          "Borreguiles slopes, Sierra Nevada (Granada). Follow us on Instagram.",
+          "Pistas de la estación de esquí de Sierra Nevada (Granada). Síguenos en Instagram.",
+          "Sierra Nevada ski resort slopes (Granada). Follow us on Instagram.",
                 )}
               </p>
             </Reveal>
 
-            <div className="mt-5 grid grid-cols-4 gap-2 sm:gap-3">
+            <div className="mt-6 grid grid-cols-4 gap-2.5 sm:mt-8 sm:gap-3">
               {gallery.map((item, i) => (
                 <Reveal key={item.src} delay={100 + i * 50}>
                   <figure className="relative aspect-square overflow-hidden rounded-xl">
@@ -77,7 +86,7 @@ export function HomeSocialProof({ locale }: HomeSocialProofProps) {
                 href={media.video.instagramProfile}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex text-sm font-semibold text-oro-light hover:underline"
+                className="mt-7 inline-flex text-sm font-semibold text-oro-light hover:underline sm:mt-8"
               >
                 @explora.school →
               </a>
@@ -85,4 +94,6 @@ export function HomeSocialProof({ locale }: HomeSocialProofProps) {
           </div>
         </div>
       </div>
-    </secti
+    </section>
+  );
+}

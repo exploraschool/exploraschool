@@ -1,7 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { PageHeader } from "@/components/PageHeader";
 import { BookingCheckout } from "@/components/cart/BookingCheckout";
-import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -27,23 +25,20 @@ export default async function ReservaPage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <>
-      <PageHeader
-        eyebrow={pickLocale(locale, "Reservas", "Bookings")}
-        title={pickLocale(locale, "Tu reserva", "Your booking")}
-        description={pickLocale(
-          locale,
-          "Añade clases al carrito, elige fechas y envía tu solicitud. Te confirmaremos por email lo antes posible.",
-          "Add lessons to your cart, pick dates and send your request. We will confirm by email as soon as possible.",
-        )}
-      />
-
-      <section className="section-padding">
-        <div className="container-page space-y-6">
-          <EarlyBirdBanner locale={locale} />
-          <BookingCheckout />
+    <section className="section-padding">
+      <div className="container-page">
+        <div className="mb-8 max-w-2xl">
+          <h1 className="page-title">{pickLocale(locale, "Tu reserva", "Your booking")}</h1>
+          <p className="page-lead mt-3">
+            {pickLocale(
+              locale,
+              "Revisa las clases añadidas, completa tus datos y envía la solicitud. Te confirmamos por email sin pago online.",
+              "Review your lessons, fill in your details and send the request. We confirm by email with no online payment.",
+            )}
+          </p>
         </div>
-      </section>
-    </>
+        <BookingCheckout />
+      </div>
+    </section>
   );
 }

@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 const navItems = [
   { href: "clases", labelKey: "clases" as const },
+  { href: "club", labelKey: "club" as const },
   { href: "blog", labelKey: "blog" as const },
   { href: "preguntas-frecuentes", labelKey: "faqs" as const },
   { href: "contacto", labelKey: "contacto" as const },
@@ -32,7 +34,7 @@ export function HeaderLangSwitch({ locale, className = "", onNavigate }: HeaderL
     <Link
       href={`/${switchLocale}${pathWithoutLocale}`}
       onClick={onNavigate}
-      className={`inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-hielo/15 bg-white/80 px-2.5 text-[0.65rem] font-bold uppercase tracking-wider text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent sm:h-10 sm:min-w-10 sm:px-3 sm:text-xs ${className}`}
+      className={`inline-flex h-10 min-w-10 items-center justify-center rounded-full border border-hielo/30 bg-white px-3 text-xs font-bold uppercase tracking-wider text-hielo shadow-sm transition hover:border-hielo/45 hover:text-accent ${className}`}
       aria-label={switchLocale === "es" ? "Cambiar a español" : "Switch to English"}
     >
       {switchLocale.toUpperCase()}
@@ -86,17 +88,17 @@ export function HeaderMenuButton({ open, onClick, locale }: HeaderMenuButtonProp
   return (
     <button
       type="button"
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hielo/12 bg-white/80 text-pizarra shadow-sm transition hover:border-hielo/25 hover:bg-white hover:text-hielo lg:hidden"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hielo/30 bg-white text-hielo shadow-[0_2px_10px_rgba(10,18,25,0.12)] transition hover:border-hielo/45 hover:bg-white hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
       aria-expanded={open}
       aria-controls="mobile-nav"
       aria-label={open ? t("close") : t("menu")}
       onClick={onClick}
     >
-      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25} aria-hidden>
         {open ? (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
         ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7h16M4 12h16M4 17h16" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
         )}
       </svg>
     </button>
@@ -112,6 +114,11 @@ type HeaderMobileMenuProps = {
 export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProps) {
   const t = useTranslations("nav");
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     onClose();
@@ -135,10 +142,10 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-40 lg:hidden" role="presentation">
+  return createPortal(
+    <div className="fixed inset-0 z-[120] lg:hidden" role="presentation">
       <button
         type="button"
         className="site-header__overlay"
@@ -151,22 +158,22 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
         className="site-header__drawer"
         aria-label="Mobile"
       >
-        <div className="flex items-center justify-between border-b border-hielo/8 px-4 py-4">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-hielo">{t("menu")}</p>
+        <div className="flex items-center justify-between border-b border-hielo/15 bg-white px-4 py-4">
+          <p className="font-display text-base font-semibold text-pizarra">{t("menu")}</p>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition hover:bg-hielo/5 hover:text-hielo"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hielo/20 bg-nieve text-hielo transition hover:border-hielo/35 hover:bg-white hover:text-accent"
             aria-label={t("close")}
           >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25} aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3 py-3">
-          <ul className="space-y-1">
+        <div className="flex-1 overflow-y-auto bg-white px-3 py-4">
+          <ul className="space-y-1.5">
             {navItems.map((item) => {
               const active = isPathActive(pathname, locale, item.href);
               return (
@@ -174,14 +181,14 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
                   <Link
                     href={`/${locale}/${item.href}`}
                     onClick={onClose}
-                    className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition ${
+                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold transition ${
                       active
-                        ? "bg-hielo/10 text-hielo"
-                        : "text-pizarra hover:bg-hielo/5 hover:text-hielo"
+                        ? "bg-hielo text-white shadow-sm"
+                        : "text-pizarra hover:bg-nieve hover:text-hielo"
                     }`}
                   >
                     <span>{t(item.labelKey)}</span>
-                    {active && <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />}
+                    {active && <span className="h-2 w-2 rounded-full bg-oro" aria-hidden />}
                   </Link>
                 </li>
               );
@@ -189,13 +196,16 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
           </ul>
         </div>
 
-        <div className="border-t border-hielo/8 p-4">
+        <div className="border-t border-hielo/15 bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-sm text-muted">{locale === "es" ? "Idioma" : "Language"}</span>
+            <span className="text-sm font-semibold text-pizarra">
+              {locale === "es" ? "Idioma" : "Language"}
+            </span>
             <HeaderLangSwitch locale={locale} onNavigate={onClose} />
           </div>
         </div>
       </nav>
-    </div>
+    </div>,
+    document.body,
   );
 }

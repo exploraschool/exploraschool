@@ -33,14 +33,14 @@ export function ProductsSection({
                 title={pickLocale(locale, "Los más reservados", "Most booked")}
               />
               {showAllLink && (
-                <Link href="/clases" className="shrink-0 text-sm font-semibold text-hielo hover:text-accent">
-                  {pickLocale(locale, "Ver todos →", "View all →")}
+                <Link href="/clases" className="btn-secondary shrink-0 !w-auto">
+                  {pickLocale(locale, "Ver todos", "View all")}
                 </Link>
               )}
             </div>
           </Reveal>
 
-          <div className="mt-5 grid gap-4 sm:mt-6 lg:grid-cols-3">
+          <div className="mt-6 grid gap-5 sm:mt-8 lg:grid-cols-3">
             {products.map((product, i) => (
               <Reveal key={product.id} delay={i * 80}>
                 <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-hielo/8 bg-white transition hover:border-accent/20 hover:shadow-[0_12px_32px_rgba(10,18,25,0.08)]">
@@ -99,7 +99,7 @@ export function ProductsSection({
           </div>
         </Reveal>
 
-        <div className="mt-8 grid gap-5 lg:grid-cols-2">
+        <div className="section-body grid gap-6 lg:grid-cols-2">
           {products.map((product, i) => (
             <Reveal key={product.id} delay={i * 100}>
               <article className="card-interactive group h-full overflow-hidden p-0">

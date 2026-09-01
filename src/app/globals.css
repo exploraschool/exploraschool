@@ -67,15 +67,43 @@
 
 @layer components {
   .container-page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 md:px-8 lg:max-w-7xl lg:px-10 xl:px-12;
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-5 md:px-6 lg:max-w-7xl lg:px-8 xl:px-10;
   }
 
   .section-padding {
-    @apply py-10 sm:py-14 md:py-20 lg:py-24;
+    @apply py-8 sm:py-10 md:py-12 lg:py-16;
   }
 
   .section-padding-sm {
-    @apply py-8 sm:py-10 md:py-12 lg:py-14;
+    @apply py-6 sm:py-8 md:py-10 lg:py-12;
+  }
+
+  .section-band {
+    @apply border-b border-hielo/10 py-6 sm:py-8 md:py-10;
+  }
+
+  .section-body {
+    @apply mt-6 sm:mt-7 md:mt-8;
+  }
+
+  .section-body-sm {
+    @apply mt-4 sm:mt-5;
+  }
+
+  .stack-md {
+    @apply space-y-4 sm:space-y-5;
+  }
+
+  .stack-lg {
+    @apply space-y-6 sm:space-y-8;
+  }
+
+  .grid-gap {
+    @apply gap-4 sm:gap-5 lg:gap-6;
+  }
+
+  .grid-gap-lg {
+    @apply gap-5 sm:gap-6 lg:gap-8;
   }
 
   .section-header {
@@ -83,12 +111,12 @@
   }
 
   .section-title {
-    @apply text-[1.75rem] font-semibold leading-[1.12] sm:text-3xl md:text-4xl lg:text-[2.75rem];
+    @apply text-[1.625rem] font-semibold leading-[1.15] sm:text-2xl md:text-3xl lg:text-[2.375rem];
     font-family: var(--font-display);
   }
 
   .section-intro {
-    @apply text-sm leading-relaxed text-muted sm:text-base;
+    @apply mt-2 text-sm leading-relaxed text-muted sm:mt-2.5 sm:text-base;
   }
 
   .text-on-dark {
@@ -100,7 +128,7 @@
   }
 
   .page-header {
-    @apply relative overflow-hidden border-b border-hielo/10 bg-white py-10 sm:py-12 md:py-16 lg:py-20;
+    @apply relative overflow-hidden border-b border-hielo/10 bg-white py-8 sm:py-10 md:py-12 lg:py-14;
   }
 
   .page-header::before {
@@ -112,12 +140,16 @@
   }
 
   .page-title {
-    @apply relative text-3xl font-semibold leading-tight sm:text-4xl md:text-5xl;
+    @apply relative text-2xl font-semibold leading-tight sm:text-3xl md:text-4xl;
     font-family: var(--font-display);
   }
 
   .page-lead {
-    @apply relative mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:mt-4 sm:text-base md:max-w-xl lg:max-w-2xl;
+    @apply relative mt-2.5 max-w-2xl text-sm leading-relaxed text-muted sm:mt-3 sm:text-base md:max-w-xl lg:max-w-2xl;
+  }
+
+  .page-actions {
+    @apply relative mt-5 flex flex-wrap gap-2.5 sm:mt-6;
   }
 
   .glass-nav {
@@ -169,17 +201,17 @@
   }
 
   .site-header__overlay {
-    @apply absolute inset-0 bg-pizarra/45 backdrop-blur-[2px];
+    @apply absolute inset-0 bg-pizarra/60 backdrop-blur-sm;
     animation: header-overlay-in 0.2s ease both;
   }
 
   .site-header__drawer {
-    @apply absolute right-0 top-0 flex h-full w-[min(100%,20rem)] flex-col border-l border-hielo/10 bg-white shadow-[-12px_0_48px_rgba(10,18,25,0.14)] sm:w-80;
+    @apply absolute right-0 top-0 flex h-full w-[min(100%,21rem)] flex-col border-l border-hielo/20 bg-white shadow-[-16px_0_48px_rgba(10,18,25,0.22)] sm:w-[22rem];
     animation: header-drawer-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   .btn-primary {
-    @apply inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white sm:w-auto sm:px-6 sm:py-3;
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white sm:w-auto sm:px-5 sm:py-2.5;
     background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
     box-shadow: 0 4px 16px rgb(232 90 53 / 0.32);
     transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
@@ -196,7 +228,7 @@
   }
 
   .btn-secondary {
-    @apply inline-flex w-full items-center justify-center gap-2 rounded-full border border-hielo/25 bg-white px-5 py-2.5 text-sm font-semibold text-hielo backdrop-blur-sm sm:w-auto sm:px-6 sm:py-3;
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-full border border-hielo/25 bg-white px-4 py-2 text-sm font-semibold text-hielo backdrop-blur-sm sm:w-auto sm:px-5 sm:py-2.5;
     box-shadow: 0 2px 8px rgb(10 18 25 / 0.04);
     transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
   }
@@ -209,7 +241,7 @@
   }
 
   .btn-glass {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-md;
     transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
   }
 
@@ -220,20 +252,20 @@
   }
 
   .btn-stack {
-    @apply flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-4;
+    @apply flex w-full flex-col gap-2.5 sm:w-auto sm:flex-row sm:flex-wrap sm:gap-3;
   }
 
   .card {
-    @apply rounded-2xl border border-hielo/8 bg-white p-4 shadow-[0_2px_16px_rgba(10,18,25,0.04)] sm:p-5 md:p-6;
+    @apply rounded-2xl border border-hielo/8 bg-white p-4 shadow-[0_2px_16px_rgba(10,18,25,0.04)] sm:p-5;
   }
 
   .card-interactive {
-    @apply rounded-2xl border border-hielo/8 bg-white p-4 shadow-[0_2px_16px_rgba(10,18,25,0.04)] sm:p-5 md:p-6;
+    @apply rounded-2xl border border-hielo/8 bg-white p-4 shadow-[0_2px_16px_rgba(10,18,25,0.04)] sm:p-5;
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
   }
 
   .card-interactive:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     border-color: rgb(232 90 53 / 0.22);
     box-shadow: 0 20px 48px -12px rgb(10 18 25 / 0.14);
   }
@@ -251,7 +283,7 @@
   }
 
   .prose-page {
-    @apply max-w-none text-sm leading-relaxed text-muted sm:text-base [&_h2]:mb-3 [&_h2]:mt-6 [&_h2]:text-xl [&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-lg [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-5 md:[&_h2]:mb-4 md:[&_h2]:mt-8 md:[&_h2]:text-2xl md:[&_h3]:mb-3 md:[&_h3]:mt-6 md:[&_h3]:text-xl;
+    @apply max-w-none text-sm leading-relaxed text-muted sm:text-base [&_h1]:mb-4 [&_h1]:text-2xl [&_h1]:font-semibold [&_h1]:text-pizarra sm:[&_h1]:mb-5 sm:[&_h1]:text-3xl [&_h2]:mb-3 [&_h2]:mt-6 [&_h2]:text-xl [&_h3]:mb-2 [&_h3]:mt-5 [&_h3]:text-lg [&_p]:mb-4 [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5 md:[&_h2]:mb-4 md:[&_h2]:mt-8 md:[&_h2]:text-2xl md:[&_h3]:mb-3 md:[&_h3]:mt-6 md:[&_h3]:text-xl;
   }
 
   .mesh-dark {
@@ -259,6 +291,10 @@
       radial-gradient(ellipse 60% 50% at 20% 40%, rgb(232 90 53 / 0.15), transparent),
       radial-gradient(ellipse 50% 60% at 80% 60%, rgb(42 122 148 / 0.2), transparent),
       linear-gradient(160deg, var(--color-pizarra) 0%, #0f1e2a 100%);
+  }
+
+  .mesh-dark :where(h1, h2, h3, h4) {
+    @apply text-nieve;
   }
 
   .mesh-light {
@@ -283,7 +319,7 @@
 
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(16px);
   transition:
     opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1),
     transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);

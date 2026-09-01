@@ -106,3 +106,27 @@ export function formatCartDate(date: string, locale: string): string {
     return date;
   }
 }
+
+/** Inclusive range of YYYY-MM-DD keys from start to end. */
+export function fillDateRange(start: string, end: string): string[] {
+  const dates: string[] = [];
+  const current = new Date(`${start}T12:00:00`);
+  const endDate = new Date(`${end}T12:00:00`);
+  while (current <= endDate) {
+    dates.push(current.toISOString().split("T")[0]!);
+    current.setDate(current.getDate() + 1);
+  }
+  return dates;
+}
+
+export function areConsecutiveDates(dates: string[]): boolean {
+  if (dates.length <= 1) return true;
+  const sorted = [...dates].sort();
+  for (let i = 1; i < sorted.length; i++) {
+    const prev = new Date(`${sorted[i - 1]}T12:00:00`);
+    const next = new Date(`${sorted[i]}T12:00:00`);
+    prev.setDate(prev.getDate() + 1);
+    if (prev.toISOString().split("T")[0] !== sorted[i]) return false;
+  }
+  return true;
+}

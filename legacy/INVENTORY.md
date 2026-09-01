@@ -2,7 +2,7 @@
 
 **Fecha:** 2026-09-01  
 **Fuente primaria:** Wayback Machine (sitio live caído — `fetch failed` / 503)  
-**Dominio:** https://www.sierranevadaclases.es/
+**Dominio (producción):** https://www.explora-school.es/
 
 ---
 
@@ -115,4 +115,4 @@ npm run seed            # Seed Firestore
 
 1. Scrape Wayback (4 páginas) — prioridad cuando contradice KB
 2. Brief maestro §1 — fallback para FAQs, equipo, reseñas, tarifas
-3. Live — pendiente revalidación cuando `sierranevadaclases.es` responda
+3. Live — `https://www.explora-school.es`

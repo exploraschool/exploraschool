@@ -30,11 +30,11 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
     <section className="section-padding">
       <div className="container-page">
         <Reveal>
-          <div className="relative overflow-hidden rounded-2xl mesh-dark px-5 py-10 text-nieve sm:px-8 sm:py-12 md:px-12 md:py-14 lg:px-16 lg:py-16">
+          <div className="relative overflow-hidden rounded-2xl mesh-dark px-5 py-8 text-nieve sm:px-7 sm:py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
             <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-accent/25 blur-[80px] animate-pulse-glow" aria-hidden />
             <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-frost/15 blur-[60px]" aria-hidden />
 
-            <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-12">
+            <div className="relative grid grid-gap-lg lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
               <div>
                 <SectionHeader
                   dark
@@ -46,7 +46,7 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                     "Choose products, dates and group size. Your booking arrives in our inbox ready to confirm.",
                   )}
                 />
-                <ul className="mt-5 flex flex-wrap gap-2 sm:mt-6">
+                <ul className="mt-4 flex flex-wrap gap-2 sm:mt-5">
                   {reassurances.map((r) => (
                     <li
                       key={r.textEs}
@@ -59,7 +59,7 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                     </li>
                   ))}
                 </ul>
-                <div className="btn-stack mt-6 sm:mt-8">
+                <div className="btn-stack mt-5 sm:mt-6">
                   {onClassesPage ? (
                     <Link href="/reserva" className="btn-primary">
                       {pickLocale(locale, "Ir a mi reserva", "Go to my booking")}
@@ -84,14 +84,14 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                 <p className="eyebrow-dark">
                   {pickLocale(locale, "¿Prefieres hablar?", "Prefer to talk?")}
                 </p>
-                <p className="mt-2 text-sm text-on-dark-muted">
+                <p className="mt-3 text-sm text-on-dark-muted">
                   {pickLocale(
                     locale,
                     "Escríbenos por WhatsApp o llámanos. Respondemos en horario de estación.",
                     "Message us on WhatsApp or call. We reply during resort hours.",
                   )}
                 </p>
-                <div className="mt-4 flex flex-col gap-2">
+                <div className="mt-5 flex flex-col gap-2.5">
                   <a
                     href={site.whatsappUrl}
                     target="_blank"

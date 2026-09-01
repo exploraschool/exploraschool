@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * FASE 0 — Scrape legacy sierranevadaclases.es
+ * FASE 0 — Scrape legacy WordPress (archivo histórico; dominio antiguo ya no en uso)
  * Live first, Wayback Machine fallback.
  */
 import * as fs from "node:fs/promises";
@@ -399,7 +399,7 @@ async function saveImage(buf, originalUrl, alt, pagePath, contentType) {
 }
 
 async function main() {
-  console.log("=== FASE 0: Scrape sierranevadaclases.es ===\n");
+  console.log("=== FASE 0: Scrape legacy WordPress (archivo) ===\n");
 
   await fs.mkdir(HTML_DIR, { recursive: true });
   await fs.mkdir(IMAGES_DIR, { recursive: true });

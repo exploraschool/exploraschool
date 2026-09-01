@@ -62,7 +62,7 @@ export function HowItWorks({ locale }: HowItWorksProps) {
           />
         </Reveal>
 
-        <div className="relative mt-8 sm:mt-10 md:mt-12">
+        <div className="section-body relative">
           <div className="step-connector" aria-hidden />
           <ol className="grid gap-4 sm:gap-5 md:grid-cols-3 md:gap-6">
             {steps.map((step, i) => (
@@ -87,7 +87,7 @@ export function HowItWorks({ locale }: HowItWorksProps) {
         </div>
 
         <Reveal delay={200}>
-          <div className="mt-8 flex flex-col items-center gap-4 rounded-2xl border border-hielo/8 bg-white px-5 py-5 text-center sm:mt-10 sm:flex-row sm:justify-between sm:px-6 sm:text-left">
+          <div className="section-body-sm flex flex-col items-center gap-4 rounded-2xl border border-hielo/8 bg-white px-5 py-5 text-center sm:flex-row sm:justify-between sm:px-6 sm:py-5 sm:text-left">
             <p className="text-sm text-muted">
               {pickLocale(locale, "IVA incluido en todos los precios.", "VAT included in all prices.")}
             </p>

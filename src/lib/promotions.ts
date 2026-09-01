@@ -1,9 +1,11 @@
 export const EARLY_BIRD_DISCOUNT_PERCENT = 10;
 
-/** Bookings made before 1 November (local time) get the early-bird discount. */
+/** Last moment the early-bird discount applies (exclusive): 1 Nov 2026 00:00 local. */
+export const EARLY_BIRD_DEADLINE = new Date(2026, 10, 1, 0, 0, 0, 0);
+
+/** Active until 1 November 2026 — banner and discounts hidden from that date onward. */
 export function isEarlyBirdActive(now = new Date()): boolean {
-  const deadline = new Date(now.getFullYear(), 10, 1, 0, 0, 0, 0);
-  return now < deadline;
+  return now < EARLY_BIRD_DEADLINE;
 }
 
 export function applyEarlyBirdDiscount(listPrice: number): number {
@@ -32,12 +34,12 @@ export function earlyBirdBannerCopy(locale: string): { title: string; body: stri
   if (locale === "es") {
     return {
       title: "10% de descuento en reservas anticipadas",
-      body: "Reserva antes del 1 de noviembre y consigue un 10% de descuento en todas las clases. Precios con IVA incluido.",
+      body: "Reserva antes del 1 de noviembre de 2026 y consigue un 10% de descuento en todas las clases. Precios con IVA incluido.",
     };
   }
   return {
     title: "10% off early bookings",
-    body: "Book before 1 November and get 10% off all lessons. Prices include VAT.",
+    body: "Book before 1 November 2026 and get 10% off all lessons. Prices include VAT.",
   };
 }
 

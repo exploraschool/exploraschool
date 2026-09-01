@@ -1,26 +1,40 @@
-import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/routing";
-import { CTASection } from "@/components/CTASection";
 import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeader } from "@/components/SectionHeader";
+import {
+  club,
+  clubConditions,
+  clubFaqs,
+  clubNotIncluded,
+  clubObjectives,
+  clubOfferings,
+  clubSchedule,
+  membershipBenefits,
+} from "@/data/club";
+import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 type Props = { params: Promise<{ locale: string }> };
+
+const navLinks = [
+  { href: "#ofertas", labelEs: "Ofertas", labelEn: "Offers" },
+  { href: "#membresia", labelEs: "Membresía", labelEn: "Membership" },
+  { href: "#jornada", labelEs: "Jornada tipo", labelEn: "Typical day" },
+  { href: "#info", labelEs: "Información", labelEn: "Information" },
+  { href: "#faq", labelEs: "FAQ", labelEn: "FAQ" },
+];
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   return buildPageMetadata({
     locale,
     path: "/club",
-    title: pickLocale(locale, "Club Explora", "Explora Club"),
-    description: pickLocale(
-      locale,
-      "Únete al club Explora School & Club: comunidad, eventos y ventajas para esquiadores y snowboarders en Sierra Nevada.",
-      "Join Explora School & Club: community, events and perks for skiers and snowboarders in Sierra Nevada.",
-    ),
+    title: pickLocale(locale, "Club Creando Aventuras", "Creando Aventuras Club"),
+    description: pickLocale(locale, club.taglineEs, club.taglineEn),
   });
 }
 
@@ -28,85 +42,353 @@ export default async function ClubPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const perks = [
-    {
-      titleEs: "Grupos y empresas",
-      titleEn: "Groups & corporate",
-      descEs: "Cursos de 2 a 5 días. Grupo máximo 8 personas. Licenciados INEF, TECO, TAFAD.",
-      descEn: "2 to 5-day courses. Maximum 8 people. Qualified INEF, TECO, TAFAD instructors.",
-      icon: "🏢",
-    },
-    {
-      titleEs: "Clubes deportivos",
-      titleEn: "Sports clubs",
-      descEs: "Programas a medida para federaciones y clubes que quieren progresar en la estación.",
-      descEn: "Tailored programmes for federations and clubs who want to progress at the resort.",
-      icon: "⛷",
-    },
-    {
-      titleEs: "Comunidad",
-      titleEn: "Community",
-      descEs: "Síguenos en Instagram y Facebook para novedades, consejos y momentos en la nieve.",
-      descEn: "Follow us on Instagram and Facebook for news, tips and moments on the snow.",
-      icon: "❄",
-    },
-  ];
-
   return (
     <>
       <PageHeader
         eyebrow="Club"
-        title="Explora School & Club"
-        description={pickLocale(
-          locale,
-          "No somos solo una escuela de esquí: somos una agrupación de instructores apasionados por la nieve y por Sierra Nevada. Cursos de 2 a 5 días para clubes deportivos, viajes de empresa y grupos que buscan una experiencia personalizada.",
-          "We are not just a ski school: we are a group of instructors passionate about snow and Sierra Nevada. Two to five-day courses for sports clubs, corporate trips and groups seeking a personalised experience.",
-        )}
-      />
-
-      <section className="section-padding bg-nieve">
-        <div className="container-page grid gap-6 md:grid-cols-3 md:gap-8">
-          {perks.map((item, i) => (
-            <Reveal key={item.titleEs} delay={i * 80}>
-              <article className="card-interactive h-full">
-                <span className="text-3xl" aria-hidden>{item.icon}</span>
-                <h2 className="mt-4 font-display text-xl font-semibold text-hielo">
-                  {pickLocale(locale, item.titleEs, item.titleEn)}
-                </h2>
-                <p className="mt-3 text-sm text-muted">
-                  {pickLocale(locale, item.descEs, item.descEn)}
-                </p>
-              </article>
-            </Reveal>
+        title={club.name}
+        description={pickLocale(locale, club.taglineEs, club.taglineEn)}
+      >
+        <nav
+          className="flex flex-wrap gap-2.5"
+          aria-label={pickLocale(locale, "Secciones de la página", "Page sections")}
+        >
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="inline-flex items-center rounded-full border border-hielo/15 bg-white px-4 py-2 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-nieve"
+            >
+              {pickLocale(locale, link.labelEs, link.labelEn)}
+            </a>
           ))}
-        </div>
+        </nav>
+      </PageHeader>
 
-        <Reveal>
-          <div className="container-page mt-12 rounded-2xl border border-hielo/10 bg-white p-8 text-center shadow-sm md:p-10">
-            <h2 className="font-display text-2xl font-semibold text-hielo">
-              {pickLocale(locale, "¿Organizas un viaje de empresa o club?", "Planning a corporate or club trip?")}
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted">
-              {pickLocale(
-                locale,
-                "Añade el curso para empresas a tu reserva o escríbenos con las fechas, número de participantes y nivel del grupo. Te preparamos una propuesta personalizada.",
-                "Add the corporate course to your booking or email us with dates, group size and level. We will prepare a tailored proposal.",
-              )}
+      {/* Sobre el club */}
+      <section className="section-padding bg-nieve">
+        <div className="container-page grid items-center grid-gap-lg lg:grid-cols-2">
+          <Reveal>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Sobre el club", "About the club")}
+              title={pickLocale(locale, "Una familia en la montaña", "A mountain family")}
+              description={pickLocale(locale, club.aboutLeadEs, club.aboutLeadEn)}
+            />
+            <p className="mt-5 text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
+              {pickLocale(locale, club.aboutBodyEs, club.aboutBodyEn)}
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <AddToCartButton
-                productId="curso-empresa"
-                label={pickLocale(locale, "Añadir curso de empresa", "Add corporate course")}
+            <p className="mt-5 text-sm font-medium text-hielo">
+              {pickLocale(locale, club.federativeNoteEs, club.federativeNoteEn)}
+            </p>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
+              <Image
+                src={media.clubAbout.src}
+                alt={pickLocale(locale, media.clubAbout.altEs, media.clubAbout.altEn)}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <Link href="/contacto" className="btn-secondary !w-auto">
-                {pickLocale(locale, "Solicitar propuesta", "Request a quote")}
-              </Link>
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </section>
 
-      <CTASection locale={locale} />
+      {/* Ofertas */}
+      <section id="ofertas" className="section-padding scroll-mt-24">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Servicios", "Services")}
+              title={pickLocale(locale, "Cómo disfrutar del club", "How to enjoy the club")}
+              description={pickLocale(
+                locale,
+                "Elige la modalidad que mejor se adapte a ti: desde un día suelto hasta la membresía completa.",
+                "Choose the option that suits you best: from a single day to full membership.",
+              )}
+            />
+          </Reveal>
+          <div className="section-body grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {clubOfferings.map((item, i) => (
+              <Reveal key={item.id} delay={i * 60}>
+                <article className="card-interactive relative h-full">
+                  {item.noteEs ? (
+                    <span className="absolute right-4 top-4 rounded-full bg-oro/15 px-2.5 py-0.5 text-xs font-semibold text-hielo">
+                      {pickLocale(locale, item.noteEs, item.noteEn!)}
+                    </span>
+                  ) : null}
+                  <span className="text-3xl" aria-hidden>
+                    {item.icon}
+                  </span>
+                  <h2 className="mt-4 font-display text-lg font-semibold text-hielo">
+                    {pickLocale(locale, item.titleEs, item.titleEn)}
+                  </h2>
+                  <p className="mt-3 text-sm text-muted">
+                    {pickLocale(locale, item.descriptionEs, item.descriptionEn)}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p className="section-body-sm text-center text-sm text-muted">
+              {pickLocale(
+                locale,
+                "Consulta precios actualizados y reserva en la web oficial del club.",
+                "Check current prices and book on the club's official website.",
+              )}{" "}
+              <a
+                href={club.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-hielo underline decoration-hielo/30 underline-offset-2 hover:decoration-hielo"
+              >
+                creandoaventuras.com
+              </a>
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Membresía */}
+      <section id="membresia" className="section-padding scroll-mt-24 bg-nieve">
+        <div className="container-page">
+          <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-start">
+            <Reveal>
+              <SectionHeader
+                eyebrow={pickLocale(locale, "Membresía", "Membership")}
+                title={pickLocale(locale, "Beneficios para socios", "Member benefits")}
+                description={pickLocale(
+                  locale,
+                  "Únete a nuestra comunidad y disfruta de todos los beneficios del club deportivo.",
+                  "Join our community and enjoy all the benefits of the sports club.",
+                )}
+              />
+            </Reveal>
+            <Reveal delay={80}>
+              <ul className="grid gap-4 sm:grid-cols-2">
+                {membershipBenefits.map((benefit) => (
+                  <li
+                    key={benefit.textEs}
+                    className="flex items-start gap-3 rounded-xl border border-hielo/10 bg-white px-5 py-4 text-sm text-pizarra"
+                  >
+                    <svg
+                      className="mt-0.5 h-4 w-4 shrink-0 text-oro"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2.5}
+                      aria-hidden
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                    {pickLocale(locale, benefit.textEs, benefit.textEn)}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Jornada tipo */}
+      <section id="jornada" className="section-padding scroll-mt-24">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Un día en el club", "A day at the club")}
+              title={pickLocale(locale, "Desarrollo de una jornada", "How a club day works")}
+            />
+          </Reveal>
+          <div className="section-body grid gap-5 md:grid-cols-2">
+            {clubSchedule.map((item, i) => (
+              <Reveal key={item.timeEs} delay={i * 60}>
+                <div className="flex gap-4 rounded-2xl border border-hielo/10 bg-white p-6 shadow-sm">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-hielo/10 font-display text-sm font-bold text-hielo">
+                    {i + 1}
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-oro">
+                      {pickLocale(locale, item.timeEs, item.timeEn)}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-pizarra">
+                      {pickLocale(locale, item.titleEs, item.titleEn)}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <Reveal>
+            <p className="section-body-sm text-center text-sm italic text-muted">
+              {pickLocale(locale, club.scheduleNoteEs, club.scheduleNoteEn)}
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Objetivos */}
+      <section className="section-padding bg-nieve">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Valores", "Values")}
+              title={pickLocale(locale, "Nuestros objetivos", "Our goals")}
+              description={pickLocale(
+                locale,
+                "Lo que nos mueve cada día para ofrecerte la mejor experiencia.",
+                "What drives us every day to offer you the best experience.",
+              )}
+            />
+          </Reveal>
+          <div className="section-body grid gap-6 md:grid-cols-3">
+            {clubObjectives.map((item, i) => (
+              <Reveal key={item.titleEs} delay={i * 80}>
+                <article className="card-interactive h-full text-center">
+                  <span className="text-3xl" aria-hidden>
+                    {item.icon}
+                  </span>
+                  <h2 className="mt-4 font-display text-xl font-semibold text-hielo">
+                    {pickLocale(locale, item.titleEs, item.titleEn)}
+                  </h2>
+                  <p className="mt-3 text-sm text-muted">
+                    {pickLocale(locale, item.descEs, item.descEn)}
+                  </p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Información importante */}
+      <section id="info" className="section-padding scroll-mt-24">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeader
+              eyebrow={pickLocale(locale, "Antes de reservar", "Before you book")}
+              title={pickLocale(locale, "Información importante", "Important information")}
+            />
+          </Reveal>
+          <div className="section-body grid gap-6 md:grid-cols-2">
+            <Reveal>
+              <div className="h-full rounded-2xl border border-hielo/10 bg-white p-6 shadow-sm md:p-8">
+                <h3 className="font-display text-lg font-semibold text-hielo">
+                  {pickLocale(locale, "No incluido en los precios", "Not included in prices")}
+                </h3>
+                <ul className="mt-4 space-y-2.5">
+                  {clubNotIncluded.map((item) => (
+                    <li key={item.textEs} className="flex items-start gap-2.5 text-sm text-muted">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hielo/40" aria-hidden />
+                      {pickLocale(locale, item.textEs, item.textEn)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+            <Reveal delay={80}>
+              <div className="h-full rounded-2xl border border-hielo/10 bg-white p-6 shadow-sm md:p-8">
+                <h3 className="font-display text-lg font-semibold text-hielo">
+                  {pickLocale(locale, "Condiciones generales", "General conditions")}
+                </h3>
+                <ul className="mt-4 space-y-2.5">
+                  {clubConditions.map((item) => (
+                    <li key={item.textEs} className="flex items-start gap-2.5 text-sm text-muted">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-oro/60" aria-hidden />
+                      {pickLocale(locale, item.textEs, item.textEn)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="section-padding scroll-mt-24 bg-nieve">
+        <div className="container-page">
+          <Reveal>
+            <SectionHeader
+              eyebrow="FAQ"
+              title={pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
+              description={pickLocale(
+                locale,
+                "Resolvemos las dudas más comunes sobre el club.",
+                "Answers to the most common questions about the club.",
+              )}
+            />
+          </Reveal>
+          <Reveal>
+            <div className="section-body-sm overflow-hidden rounded-2xl border border-hielo/10 bg-white">
+              {clubFaqs.map((faq, i) => (
+                <details
+                  key={faq.id}
+                  className="group border-b border-hielo/10 last:border-b-0"
+                  open={i === 0}
+                >
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 transition hover:bg-nieve/80 sm:px-6 sm:py-5 [&::-webkit-details-marker]:hidden">
+                    <span className="pr-2 font-semibold text-pizarra">
+                      {pickLocale(locale, faq.questionEs, faq.questionEn)}
+                    </span>
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-hielo/15 text-hielo transition group-open:rotate-180">
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-5 pb-5 text-sm leading-relaxed text-muted sm:px-6 sm:pb-6">
+                    {pickLocale(locale, faq.answerEs, faq.answerEn)}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* CTA unirse */}
+      <section className="section-padding">
+        <div className="container-page">
+          <Reveal>
+            <div className="relative overflow-hidden rounded-2xl mesh-dark px-5 py-8 text-nieve sm:px-7 sm:py-10 md:px-10 md:py-12">
+              <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-accent/25 blur-[80px]" aria-hidden />
+              <div className="relative mx-auto max-w-2xl text-center">
+                <h2 className="font-display text-2xl font-semibold sm:text-3xl">
+                  {pickLocale(locale, "¿Quieres unirte al club?", "Want to join the club?")}
+                </h2>
+                <p className="mt-5 text-sm text-on-dark-muted sm:mt-6 sm:text-base">
+                  {pickLocale(
+                    locale,
+                    "Consulta precios, calendario y reserva tu plaza en la web del Club Deportivo Creando Aventuras.",
+                    "Check prices, calendar and book your spot on the Creando Aventuras sports club website.",
+                  )}
+                </p>
+                <div className="mt-8 flex flex-wrap justify-center gap-4 sm:mt-10">
+                  <a
+                    href={club.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary !w-auto"
+                  >
+                    {pickLocale(locale, "Ir a creandoaventuras.com", "Go to creandoaventuras.com")}
+                  </a>
+                  <a href={club.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-glass !w-auto">
+                    WhatsApp
+                  </a>
+                  <a href={`mailto:${club.email}`} className="btn-secondary !w-auto">
+                    {club.email}
+                  </a>
+                </div>
+                <p className="mt-7 text-xs text-on-dark-muted sm:mt-8">
+                  {club.phoneDisplay} · {pickLocale(locale, "Lunes a domingo 8:00–21:00", "Monday to Sunday 8:00–21:00")}
+                </p>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
     </>
   );
 }

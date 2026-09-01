@@ -20,8 +20,8 @@ export function VideoShowcase({ locale }: VideoShowcaseProps) {
               title={pickLocale(locale, "Síguenos y mira la acción", "Follow us and see the action")}
               description={pickLocale(
                 locale,
-                "Clases dinámicas, grupos, niños y perfeccionamiento en Borreguiles. Publicamos vídeos y fotos reales de temporada en Instagram y Facebook.",
-                "Dynamic lessons, groups, kids and coaching in Borreguiles. We post real season videos and photos on Instagram and Facebook.",
+                "Clases dinámicas, grupos, niños y perfeccionamiento en la estación de Sierra Nevada. Publicamos vídeos y fotos reales de temporada en Instagram y Facebook.",
+                "Dynamic lessons, groups, kids and coaching at Sierra Nevada ski resort. We post real season videos and photos on Instagram and Facebook.",
               )}
             />
             <div className="btn-stack mt-6 sm:mt-8">

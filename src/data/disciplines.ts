@@ -55,10 +55,10 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Esquí alpino",
     nameEn: "Alpine skiing",
     descriptionEs:
-      "Clases particulares y grupales para todas las edades y niveles en pista, freeride y freestyle. Instructores titulados en Borreguiles.",
+      "Clases de 1 a 8 participantes para todas las edades y niveles en pista, freeride y freestyle. Instructores titulados en Sierra Nevada.",
     descriptionEn:
-      "Private and group lessons for all ages and levels on piste, freeride and freestyle. Qualified instructors in Borreguiles.",
-    image: "/images/stock/discipline-esqui.jpg",
+      "Lessons for 1 to 8 participants for all ages and levels on piste, freeride and freestyle. Qualified instructors at Sierra Nevada ski resort.",
+    image: "/images/stock/discipline-esqui-pista.jpg",
     sortOrder: 1,
   },
   {
@@ -103,10 +103,10 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Clases para niños",
     nameEn: "Kids lessons",
     descriptionEs:
-      "Particulares desde 3 años, grupales desde 6. Clases dinámicas y divertidas para aprender jugando.",
+      "Clases de 1 a 8 participantes. Niños desde 3 años. Clases dinámicas y divertidas para aprender jugando.",
     descriptionEn:
-      "Private from age 3, group from age 6. Fun, dynamic lessons where children learn through play.",
-    image: "/images/stock/discipline-ninos.jpg",
+      "Lessons for 1 to 8 participants. Children from 3 years. Fun, dynamic lessons where children learn through play.",
+    image: "/images/stock/discipline-ninos-explora.jpg",
     sortOrder: 5,
   },
 ];
@@ -132,12 +132,12 @@ export const modalities: Modality[] = [
         descriptionEn:
           "Leave the groomed runs safely. We work on turn technique, terrain reading and off-piste snow in Sierra Nevada.",
         highlightsEs: [
-          "Líneas fuera de pista en Borreguiles y alrededores",
+          "Líneas fuera de pista en Sierra Nevada y alrededores",
           "Técnica adaptada a nieve polvo y variable",
           "Enfoque en seguridad y progresión gradual",
         ],
         highlightsEn: [
-          "Off-piste lines in Borreguiles and surrounding areas",
+          "Off-piste lines in Sierra Nevada and surrounding areas",
           "Technique adapted to powder and variable snow",
           "Safety-first approach with gradual progression",
         ],
@@ -181,9 +181,9 @@ export const modalities: Modality[] = [
       esqui: {
         sortOrder: 2,
         descriptionEs:
-          "Progresión en snowpark: saltos, boxes y rails con instructores que conocen las instalaciones de Borreguiles.",
+          "Progresión en snowpark: saltos, boxes y rails con instructores que conocen las instalaciones de la estación.",
         descriptionEn:
-          "Snowpark progression: jumps, boxes and rails with instructors who know the Borreguiles features.",
+          "Snowpark progression: jumps, boxes and rails with instructors who know the resort features.",
         highlightsEs: [
           "Iniciación y perfeccionamiento en snowpark",
           "Trabajo de saltos, deslizamientos y aterrizajes",
@@ -204,12 +204,12 @@ export const modalities: Modality[] = [
         descriptionEn:
           "Learn tricks, butters and jumps in the snowpark. From first box drops to line perfection.",
         highlightsEs: [
-          "Snowpark de Borreguiles y progresión por features",
+          "Snowpark de Sierra Nevada y progresión por features",
           "Trucos, saltos y estilo en línea",
           "Clases dinámicas adaptadas a tu nivel",
         ],
         highlightsEn: [
-          "Borreguiles snowpark and feature-by-feature progression",
+          "Sierra Nevada snowpark and feature-by-feature progression",
           "Tricks, jumps and style on a line",
           "Dynamic lessons adapted to your level",
         ],

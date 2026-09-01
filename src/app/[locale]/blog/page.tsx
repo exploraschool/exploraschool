@@ -24,10 +24,10 @@ export default async function BlogPage({ params }: Props) {
 
   return (
     <>
-      <section className="border-b border-hielo/10 bg-white py-16">
+      <section className="page-header">
         <div className="container-page">
           <p className="eyebrow">Blog</p>
-          <h1 className="mt-3 font-display text-4xl font-semibold">Blog</h1>
+          <h1 className="page-title mt-2 sm:mt-2.5">Blog</h1>
         </div>
       </section>
 
@@ -47,7 +47,7 @@ export default async function BlogPage({ params }: Props) {
               </Link>
             </div>
           ) : (
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid grid-gap md:grid-cols-2">
               {blogPosts.map((post) => (
                 <article key={post.slug} className="card hover:border-hielo/25">
                   <time className="text-xs font-medium uppercase tracking-wider text-oro">

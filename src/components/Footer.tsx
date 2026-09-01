@@ -6,14 +6,23 @@ import { site } from "@/data/site";
 
 export async function Footer() {
   const t = await getTranslations("footer");
+  const nav = await getTranslations("nav");
   const year = new Date().getFullYear();
+
+  const siteLinks = [
+    { href: "/clases", label: nav("clases") },
+    { href: "/club", label: nav("club") },
+    { href: "/blog", label: nav("blog") },
+    { href: "/preguntas-frecuentes", label: nav("faqs") },
+    { href: "/contacto", label: nav("contacto") },
+  ] as const;
 
   return (
     <footer className="relative border-t border-white/10 bg-pizarra text-nieve">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-oro/40 to-transparent" aria-hidden />
 
-      <div className="container-page py-10 sm:py-12 md:py-14 lg:py-16">
-        <div className="grid gap-8 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4 lg:gap-12">
+      <div className="container-page py-8 sm:py-10 md:py-12">
+        <div className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-5 lg:gap-8">
           <div className="sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-4">
               <Image
@@ -21,7 +30,7 @@ export async function Footer() {
                 alt="Explora School & Club"
                 width={160}
                 height={160}
-                className="h-20 w-20 shrink-0 object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.12)] sm:h-24 sm:w-24"
+                className="h-16 w-16 shrink-0 object-contain drop-shadow-[0_0_24px_rgba(255,255,255,0.12)] sm:h-20 sm:w-20"
               />
               <div>
                 <p className="font-display text-lg font-semibold leading-tight sm:text-xl">
@@ -30,7 +39,7 @@ export async function Footer() {
                 <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-oro-light">Sierra Nevada</p>
               </div>
             </div>
-            <p className="mt-5 text-sm leading-relaxed text-nieve/85">
+            <p className="mt-4 text-sm leading-relaxed text-nieve/85">
               {site.nap.streetAddress}, {site.nap.addressLocality}
               <br />
               {site.nap.addressRegion} {site.nap.postalCode}, {site.nap.addressCountry}
@@ -44,6 +53,19 @@ export async function Footer() {
                 {site.email}
               </a>
             </p>
+          </div>
+
+          <div>
+            <p className="eyebrow-dark">{t("explora")}</p>
+            <ul className="mt-3 space-y-2 text-sm sm:mt-4">
+              {siteLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="text-nieve/85 transition hover:text-oro-light hover:pl-1">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           <div>

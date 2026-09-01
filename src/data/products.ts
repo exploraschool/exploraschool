@@ -1,5 +1,13 @@
 import type { DisciplineId } from "./disciplines";
 import { CURRENT_SEASON } from "./season";
+import { site } from "./site";
+import {
+  CURSO_SNOW_PER_PERSON_EUR,
+  HOURLY_ANCHOR_EUR,
+  SESSION_2H_AFTERNOON,
+  SESSION_2H_STANDARD,
+  SESSION_FULL_DAY,
+} from "@/lib/lesson-pricing";
 
 export type ProductId =
   | "full-day"
@@ -8,7 +16,6 @@ export type ProductId =
   | "full-day-iniciacion"
   | "full-day-tecnico"
   | "medio-dia"
-  | "clase-grabada"
   | "curso-snow"
   | "particular"
   | "curso-empresa"
@@ -19,8 +26,7 @@ export type ProductCategory =
   | "half-day"
   | "course"
   | "private"
-  | "group"
-  | "extra";
+  | "group";
 
 export type Product = {
   id: ProductId;
@@ -63,12 +69,14 @@ export const products: Product[] = [
     descriptionEn:
       "Full-day activity with 5 hours of effective lesson time and 1 hour buffer for hotel pick-up, delays, breaks and meals. Schedule tailored to your needs with a personalised meeting point.",
     disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado"],
-    fromPrice: 160,
+    fromPrice: SESSION_FULL_DAY[0],
     hours: 6,
+    minPeople: 1,
+    maxPeople: 8,
     featuresEs: [
       "5 horas de clase efectivas",
       "1 hora de descanso / comodín",
-      "+25 € por persona extra",
+      "De 1 a 8 participantes",
       "Horario ajustado a tus necesidades",
       "Punto de encuentro personalizado",
       "Recogida en hotel (Full-Day)",
@@ -76,7 +84,7 @@ export const products: Product[] = [
     featuresEn: [
       "5 hours of effective lesson time",
       "1 hour break / buffer",
-      "+€25 per extra person",
+      "1 to 8 participants",
       "Schedule tailored to your needs",
       "Personalised meeting point",
       "Hotel pick-up (Full-Day)",
@@ -84,7 +92,7 @@ export const products: Product[] = [
     season: "both",
     highlighted: true,
     sortOrder: 1,
-    image: "/images/stock/product-full-day.jpg",
+    image: "/images/stock/product-full-day-panorama.jpg",
   },
   {
     id: "full-day-ninos",
@@ -208,8 +216,10 @@ export const products: Product[] = [
     descriptionEn:
       "If you arrive late or prefer not to get up early, this is your option. 2-hour lessons from the afternoon.",
     disciplines: ["esqui", "snowboard", "telemark"],
-    fromPrice: 65,
+    fromPrice: SESSION_2H_AFTERNOON[0],
     hours: 2,
+    minPeople: 1,
+    maxPeople: 8,
     scheduleEs: "A partir de las 13:00",
     scheduleEn: "From 1:00 pm",
     featuresEs: ["2 horas de clase", "Turno de tarde", "Ideal si llegas tarde"],
@@ -220,58 +230,37 @@ export const products: Product[] = [
     image: "/images/stock/product-afternoon.jpg",
   },
   {
-    id: "clase-grabada",
-    slug: "clase-grabada",
-    category: "extra",
-    titleEs: "Clase grabada",
-    titleEn: "Recorded lesson",
-    shortDescriptionEs: "Vídeo correcciones. Llévate un recuerdo de tu día.",
-    shortDescriptionEn: "Video feedback. Take home a memory of your day.",
-    descriptionEs:
-      "Sesión con vídeo correcciones para analizar tu técnica y llevarte un recuerdo de tu día en la nieve.",
-    descriptionEn:
-      "Session with video feedback to analyse your technique and take home a memory of your day on the snow.",
-    disciplines: ["esqui", "snowboard", "telemark"],
-    fromPrice: 20,
-    featuresEs: ["Vídeo correcciones", "Recuerdo de tu día en la nieve"],
-    featuresEn: ["Video feedback", "Memory of your day on the snow"],
-    season: CURRENT_SEASON.key,
-    highlighted: false,
-    sortOrder: 8,
-    image: "/images/stock/product-video.jpg",
-  },
-  {
     id: "curso-snow",
     slug: "curso-snow",
     category: "course",
     titleEs: "Curso de Snowboard",
     titleEn: "Snowboard Course",
-    shortDescriptionEs: "60 € / persona · mínimo 3 personas.",
-    shortDescriptionEn: "€60 / person · minimum 3 people.",
+    shortDescriptionEs: `${CURSO_SNOW_PER_PERSON_EUR} € / persona · mínimo 3 personas.`,
+    shortDescriptionEn: `€${CURSO_SNOW_PER_PERSON_EUR} / person · minimum 3 people.`,
     descriptionEs:
-      "Curso de snowboard de 3 horas (10:00–13:00). 60 € por persona. Mínimo 3 personas para realizar el curso; máximo 6.",
+      `Curso de snowboard de 3 horas (10:00–13:00). ${CURSO_SNOW_PER_PERSON_EUR} € por persona. Mínimo 3 personas para realizar el curso; máximo 8.`,
     descriptionEn:
-      "3-hour snowboard course (10:00–13:00). €60 per person. Minimum 3 people required to run the course; maximum 6.",
+      `3-hour snowboard course (10:00–13:00). €${CURSO_SNOW_PER_PERSON_EUR} per person. Minimum 3 people required to run the course; maximum 8.`,
     disciplines: ["snowboard"],
-    fromPrice: 60,
+    fromPrice: CURSO_SNOW_PER_PERSON_EUR,
     hours: 3,
     minPeople: 3,
-    maxPeople: 6,
+    maxPeople: 8,
     scheduleEs: "10:00–13:00",
     scheduleEn: "10:00 am–1:00 pm",
     featuresEs: [
       "Rendimiento Asegurado",
-      "60 € / persona",
+      `${CURSO_SNOW_PER_PERSON_EUR} € / persona`,
       "Mínimo 3 personas para realizar el curso",
-      "Máximo 6 personas",
+      "Máximo 8 personas",
       "3 horas de clase efectivas",
       "Horario 10:00–13:00",
     ],
     featuresEn: [
       "Guaranteed Progress",
-      "€60 / person",
+      `€${CURSO_SNOW_PER_PERSON_EUR} / person`,
       "Minimum 3 people required to run the course",
-      "Maximum 6 people",
+      "Maximum 8 people",
       "3 hours of effective lesson time",
       "Schedule 10:00–13:00",
     ],
@@ -286,26 +275,28 @@ export const products: Product[] = [
     category: "private",
     titleEs: "Clases particulares",
     titleEn: "Private lessons",
-    shortDescriptionEs: "1 a 4 personas. Mínimo 2 horas. Niños desde 3 años.",
-    shortDescriptionEn: "1 to 4 people. 2-hour minimum. Children from 3 years.",
+    shortDescriptionEs: `1 a 8 personas · desde ${HOURLY_ANCHOR_EUR} €/h (2 h estándar).`,
+    shortDescriptionEn: `1 to 8 people · from €${HOURLY_ANCHOR_EUR}/h (standard 2 h).`,
     descriptionEs:
-      "Clases particulares de 1 a 4 personas con mínimo de 2 horas. Todos los niveles. Elige instructor/a y horario.",
+      "Clases con instructor/a de 1 a 8 participantes. Formato estándar de 2 horas (55 €/h por persona en mañana). Elige horario y disciplina.",
     descriptionEn:
-      "Private lessons for 1 to 4 people with a 2-hour minimum. All levels. Choose your instructor and schedule.",
+      "Lessons with your instructor for 1 to 8 participants. Standard 2-hour format (€55/h per person in the morning). Choose schedule and discipline.",
     disciplines: ["esqui", "snowboard", "telemark", "esqui-adaptado"],
-    fromPrice: 65,
+    fromPrice: SESSION_2H_STANDARD[0],
     minPeople: 1,
-    maxPeople: 4,
+    maxPeople: 8,
     minAge: 3,
     hours: 2,
     featuresEs: [
-      "1 a 4 personas",
+      "1 a 8 participantes",
+      "55 €/h en clase estándar de 2 h",
       "Mínimo 2 horas",
       "Todos los niveles",
       "Niños desde 3 años",
     ],
     featuresEn: [
-      "1 to 4 people",
+      "1 to 8 participants",
+      "€55/h for the standard 2-hour lesson",
       "2-hour minimum",
       "All levels",
       "Children from 3 years",
@@ -313,7 +304,7 @@ export const products: Product[] = [
     season: CURRENT_SEASON.key,
     highlighted: true,
     sortOrder: 10,
-    image: "/images/stock/product-private.jpg",
+    image: "/images/stock/product-private-zona.jpg",
   },
   {
     id: "curso-empresa",
@@ -321,66 +312,37 @@ export const products: Product[] = [
     category: "course",
     titleEs: "Cursos de 2 a 5 días",
     titleEn: "2 to 5-day courses",
-    shortDescriptionEs: "Viajes de empresa, clubes deportivos y grupos.",
-    shortDescriptionEn: "Corporate trips, sports clubs and groups.",
+    shortDescriptionEs: "Viajes de empresa, clubes deportivos y grupos. Jornada completa cada día.",
+    shortDescriptionEn: "Corporate trips, sports clubs and groups. Full day each day.",
     descriptionEs:
-      "Cursos de 2 a 5 días especialmente diseñados para viajes de empresa, clubes deportivos y grupos. Grupo máximo 8 personas.",
+      "Cursos de 2 a 5 días en jornada completa (10:00–16:00), especialmente diseñados para viajes de empresa, clubes deportivos y grupos. Grupo máximo 8 personas.",
     descriptionEn:
-      "2 to 5-day courses designed for corporate trips, sports clubs and groups. Maximum group size 8.",
+      "2 to 5-day full-day courses (10:00 am–4:00 pm), designed for corporate trips, sports clubs and groups. Maximum group size 8.",
     disciplines: ["esqui", "snowboard", "telemark"],
+    fromPrice: SESSION_FULL_DAY[1],
+    hours: 6,
     minPeople: 2,
     maxPeople: 8,
+    scheduleEs: "10:00 – 16:00 (jornada completa)",
+    scheduleEn: "10:00 am – 4:00 pm (full day)",
     featuresEs: [
-      "De 2 a 5 días",
+      "Jornada completa cada día (10:00–16:00)",
+      "De 2 a 5 días consecutivos",
       "Viajes de empresa y clubes",
       "Grupo máximo 8 personas",
-      "Licenciados INEF, TECO, TAFAD",
+      site.instructorQualificationsEs,
     ],
     featuresEn: [
-      "2 to 5 days",
+      "Full day each day (10:00 am–4:00 pm)",
+      "2 to 5 consecutive days",
       "Corporate trips and clubs",
       "Maximum 8 people",
-      "Qualified INEF, TECO, TAFAD instructors",
+      site.instructorQualificationsEn,
     ],
     season: CURRENT_SEASON.key,
     highlighted: false,
     sortOrder: 11,
     image: "/images/stock/product-corporate.jpg",
-  },
-  {
-    id: "grupal",
-    slug: "grupal",
-    category: "group",
-    titleEs: "Clases grupales",
-    titleEn: "Group lessons",
-    shortDescriptionEs: "5 a 8 personas. Mínimo aconsejado 3 horas. Niños desde 6 años.",
-    shortDescriptionEn: "5 to 8 people. 3-hour minimum recommended. Children from 6.",
-    descriptionEs:
-      "Clases grupales de 5 a 8 personas. Queremos ofrecerte clases de calidad, por lo que el grupo nunca excederá de 8 personas.",
-    descriptionEn:
-      "Group lessons for 5 to 8 people. We never exceed 8 people to ensure quality.",
-    disciplines: ["esqui", "snowboard", "telemark"],
-    minPeople: 5,
-    maxPeople: 8,
-    minAge: 6,
-    hours: 3,
-    featuresEs: [
-      "5 a 8 personas",
-      "Mínimo aconsejado 3 horas",
-      "Todos los niveles",
-      "Niños desde 6 años",
-    ],
-    featuresEn: [
-      "5 to 8 people",
-      "3-hour minimum recommended",
-      "All levels",
-      "Children from 6 years",
-    ],
-    fromPrice: 160,
-    season: CURRENT_SEASON.key,
-    highlighted: false,
-    sortOrder: 12,
-    image: "/images/stock/product-group.jpg",
   },
 ];
 

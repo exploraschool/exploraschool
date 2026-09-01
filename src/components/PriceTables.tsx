@@ -1,8 +1,7 @@
-import { Link } from "@/i18n/routing";
-import { CurrentPriceCards } from "@/components/cart/CurrentPriceCards";
-import { PriceProductCards } from "@/components/cart/PriceProductCards";
+import { LessonProductCatalog } from "@/components/cart/LessonProductCatalog";
 import { SeasonPriceTables } from "@/components/cart/SeasonPriceTables";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
+import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
 import { priceNotes } from "@/data/prices";
 import { CURRENT_SEASON } from "@/data/season";
@@ -13,46 +12,43 @@ type PriceTablesProps = {
 
 export function PriceTables({ locale }: PriceTablesProps) {
   return (
-    <div className="space-y-16">
-      <EarlyBirdBanner locale={locale} />
-
-      <section>
-        <h2 className="font-display text-2xl font-semibold text-hielo">
-          {pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `Season ${CURRENT_SEASON.label}`)}
-        </h2>
-        <p className="mt-2 text-sm text-muted">
-          {pickLocale(locale, priceNotes.vatEs, priceNotes.vatEn)}{" "}
-          {pickLocale(locale, priceNotes.extraPersonCurrentEs, priceNotes.extraPersonCurrentEn)}
-        </p>
-        <CurrentPriceCards locale={locale} />
-      </section>
-
-      <section>
-        <h2 className="font-display text-2xl font-semibold text-hielo">
-          {pickLocale(locale, "Tarifas por horario y grupo", "Rates by schedule and group size")}
-        </h2>
-        <p className="mt-2 text-sm text-muted">
-          {pickLocale(
+    <>
+      <section id="formatos" className="scroll-mt-24">
+        <SectionHeader
+          eyebrow={pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `Season ${CURRENT_SEASON.label}`)}
+          title={pickLocale(locale, "Elige tu formato", "Choose your format")}
+          description={pickLocale(
             locale,
-            "Precios por sesión según horario y número de personas. El total en la reserva se calcula automáticamente.",
-            "Price per session by schedule and group size. Your booking total is calculated automatically.",
+            "Estos son nuestros servicios actuales. Elige el que mejor encaje con tu día y añádelo a la reserva.",
+            "These are our current services. Pick the one that fits your day and add it to your booking.",
           )}
+        />
+        <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">
+          {pickLocale(locale, priceNotes.vatEs, priceNotes.vatEn)}
         </p>
-        <SeasonPriceTables locale={locale} />
+        <EarlyBirdBanner locale={locale} className="mt-6 sm:mt-8" />
+        <div className="section-body-sm">
+          <LessonProductCatalog locale={locale} />
+        </div>
       </section>
 
-      <section>
-        <h2 className="font-display text-2xl font-semibold text-hielo">
-          {pickLocale(locale, "Todos los productos", "All products")}
-        </h2>
-        <PriceProductCards locale={locale} />
+      <section id="tarifas" className="scroll-mt-24 border-t border-hielo/10 pt-10 sm:pt-12 md:pt-14">
+        <SectionHeader
+          eyebrow={pickLocale(locale, "Consulta detallada", "Detailed lookup")}
+          title={pickLocale(locale, "Tarifas por horario", "Prices by time slot")}
+          description={pickLocale(
+            locale,
+            "¿Necesitas comparar horarios o ver el precio según el tamaño del grupo? Usa esta tabla antes de reservar clases particulares o de medio día.",
+            "Need to compare time slots or see the price for your group size? Use this table before booking private or half-day lessons.",
+          )}
+        />
+        <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">
+          {pickLocale(locale, priceNotes.groupTotalEs, priceNotes.groupTotalEn)}
+        </p>
+        <div className="section-body-sm">
+          <SeasonPriceTables locale={locale} />
+        </div>
       </section>
-
-      <div className="text-center">
-        <Link href="/reserva" className="btn-primary inline-flex !w-auto">
-          {pickLocale(locale, "Ir a mi reserva", "Go to my booking")}
-        </Link>
-      </div>
-    </div>
+    </>
   );
 }

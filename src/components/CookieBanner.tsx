@@ -28,6 +28,7 @@ export function CookieBanner() {
 
   function accept() {
     localStorage.setItem(COOKIE_KEY, "1");
+    window.dispatchEvent(new Event("explora-cookies-accepted"));
     setMounted(false);
     window.setTimeout(() => setVisible(false), 200);
   }

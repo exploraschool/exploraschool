@@ -13,7 +13,7 @@ import {
 import { getProductBySlug, type ProductId } from "@/data/products";
 import { getActiveInstructors } from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
-import { buildCartItem } from "@/lib/cart";
+import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
 import {
   calculateSessionPrice,
   getProductBookingConfig,
@@ -96,10 +96,19 @@ export function AddToCartModal({
 
   const minPeople = bookingConfig.minPeople ?? product.minPeople ?? 1;
   const maxPeople = bookingConfig.maxPeople ?? product.maxPeople ?? 8;
+  const minDays = bookingConfig.minDays;
+  const maxDays = bookingConfig.maxDays;
+  const requireConsecutiveDays = bookingConfig.requireConsecutiveDays ?? false;
+
+  const datesValid =
+    dates.length > 0 &&
+    (!minDays || dates.length >= minDays) &&
+    (!maxDays || dates.length <= maxDays) &&
+    (!requireConsecutiveDays || areConsecutiveDates(dates));
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (dates.length === 0 || sessionPrice === null) return;
+    if (!datesValid || sessionPrice === null) return;
     if (participants < minPeople || participants > maxPeople) return;
 
     const instructor = instructors.find((i) => i.slug === instructorSlug);
@@ -185,22 +194,31 @@ export function AddToCartModal({
               locale={locale}
               dates={dates}
               onChange={setDates}
+              minDays={minDays}
+              maxDays={maxDays}
+              requireConsecutiveDays={requireConsecutiveDays}
               labels={{
-                title: t("dates"),
-                hint: t("datesHint"),
-                add: t("addDate"),
-                empty: t("datesEmpty"),
+                title: minDays && maxDays ? t("courseDates") : t("dates"),
+                hint:
+                  minDays && maxDays
+                    ? t("courseDatesHint", { min: minDays, max: maxDays })
+                    : t("datesHint"),
+                empty:
+                  minDays && maxDays
+                    ? t("courseDatesEmpty", { min: minDays, max: maxDays })
+                    : t("datesEmpty"),
               }}
             />
 
-            <TimeSlotPicker
-              locale={locale}
-              slots={slots}
-              value={timeSlotId}
-              onChange={(id) => setTimeSlotId(id as TimeSlotId)}
-              title={t("timeSlot")}
-            />
-
+            {slots.length > 0 && (
+              <TimeSlotPicker
+                locale={locale}
+                slots={slots}
+                value={timeSlotId}
+                onChange={(id) => setTimeSlotId(id as TimeSlotId)}
+                title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+              />
+            )}
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="cart-participants" className="mb-1.5 block text-sm font-medium">
@@ -223,12 +241,6 @@ export function AddToCartModal({
                       locale,
                       ` · Mínimo ${minPeople} para realizar el curso`,
                       ` · Minimum ${minPeople} required to run the course`,
-                    )}
-                  {productId === "grupal" &&
-                    pickLocale(
-                      locale,
-                      ` · Mínimo ${minPeople} personas`,
-                      ` · Minimum ${minPeople} people`,
                     )}
                 </p>
               </div>
@@ -346,7 +358,7 @@ export function AddToCartModal({
             <div className="flex flex-col gap-3 pt-2 sm:flex-row">
               <button
                 type="submit"
-                disabled={dates.length === 0 || sessionPrice === null}
+                disabled={!datesValid || sessionPrice === null}
                 className="btn-primary flex-1 disabled:opacity-50"
               >
                 {dates.length > 1

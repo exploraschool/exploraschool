@@ -1,4 +1,15 @@
 import type { ProductId } from "@/data/products";
+import {
+  CURSO_SNOW_PER_PERSON_EUR,
+  SESSION_2H_AFTERNOON,
+  SESSION_2H_STANDARD,
+  SESSION_3H_AFTERNOON,
+  SESSION_3H_MIDDAY,
+  SESSION_3H_MORNING,
+  SESSION_3H_SPLIT,
+  SESSION_FULL_DAY,
+  sessionPriceForParticipants,
+} from "@/lib/lesson-pricing";
 
 export type TimeSlotId =
   | "fd-10-16"
@@ -12,7 +23,7 @@ export type TimeSlotId =
   | "3h-14-17"
   | "flexible";
 
-export type PricingProfile = "full-day" | "lesson-2h" | "lesson-3h" | "flat" | "addon";
+export type PricingProfile = "session" | "flat";
 
 export type TimeSlot = {
   id: TimeSlotId;
@@ -84,6 +95,27 @@ export const TIME_SLOTS: Record<TimeSlotId, TimeSlot> = {
   },
 };
 
+const SESSION_PRICES_BY_SLOT: Partial<Record<TimeSlotId, readonly number[]>> = {
+  "fd-10-16": SESSION_FULL_DAY,
+  "2h-10-12": SESSION_2H_STANDARD,
+  "2h-12-14": SESSION_2H_STANDARD,
+  "2h-14-16": SESSION_2H_AFTERNOON,
+  "3h-10-13": SESSION_3H_MORNING,
+  "3h-10-12-14-15": SESSION_3H_SPLIT,
+  "3h-12-15": SESSION_3H_MIDDAY,
+  "3h-14-17": SESSION_3H_AFTERNOON,
+};
+
+const LESSON_SLOTS: TimeSlotId[] = [
+  "2h-10-12",
+  "2h-12-14",
+  "2h-14-16",
+  "3h-10-13",
+  "3h-10-12-14-15",
+  "3h-12-15",
+  "3h-14-17",
+];
+
 export type ProductBookingConfig = {
   profile: PricingProfile;
   slotIds: TimeSlotId[];
@@ -91,56 +123,54 @@ export type ProductBookingConfig = {
   flatPricePerPerson?: number;
   minPeople?: number;
   maxPeople?: number;
+  /** Minimum calendar days to select (e.g. 2-day course). */
+  minDays?: number;
+  /** Maximum calendar days to select (e.g. 5-day course). */
+  maxDays?: number;
+  /** When true, selected days must form one consecutive block. */
+  requireConsecutiveDays?: boolean;
 };
 
 export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
   "full-day": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 1,
     maxPeople: 8,
   },
   "full-day-ninos": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 1,
     maxPeople: 8,
   },
   "full-day-tour": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 1,
     maxPeople: 8,
   },
   "full-day-iniciacion": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 1,
     maxPeople: 8,
   },
   "full-day-tecnico": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 1,
     maxPeople: 8,
   },
   "medio-dia": {
-    profile: "lesson-2h",
+    profile: "session",
     slotIds: ["2h-12-14", "2h-14-16"],
     defaultSlotId: "2h-14-16",
-    minPeople: 1,
-    maxPeople: 8,
-  },
-  "clase-grabada": {
-    profile: "addon",
-    slotIds: ["flexible"],
-    defaultSlotId: "flexible",
-    flatPricePerPerson: 20,
     minPeople: 1,
     maxPeople: 8,
   },
@@ -148,72 +178,36 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
     profile: "flat",
     slotIds: ["3h-10-13"],
     defaultSlotId: "3h-10-13",
-    flatPricePerPerson: 60,
+    flatPricePerPerson: CURSO_SNOW_PER_PERSON_EUR,
     minPeople: 3,
-    maxPeople: 6,
+    maxPeople: 8,
   },
   particular: {
-    profile: "lesson-2h",
-    slotIds: ["2h-10-12", "2h-12-14", "2h-14-16", "3h-10-13", "3h-12-15", "3h-14-17"],
+    profile: "session",
+    slotIds: LESSON_SLOTS,
     defaultSlotId: "2h-10-12",
     minPeople: 1,
-    maxPeople: 4,
+    maxPeople: 8,
   },
   "curso-empresa": {
-    profile: "full-day",
+    profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
     minPeople: 2,
     maxPeople: 8,
+    minDays: 2,
+    maxDays: 5,
+    requireConsecutiveDays: true,
   },
+  /** @deprecated Legacy cart lines — same pricing as `particular`. */
   grupal: {
-    profile: "lesson-3h",
-    slotIds: ["3h-09-12", "3h-10-13", "3h-10-12-14-15", "3h-12-15", "3h-14-17"],
+    profile: "session",
+    slotIds: LESSON_SLOTS,
     defaultSlotId: "3h-10-13",
-    minPeople: 5,
+    minPeople: 1,
     maxPeople: 8,
   },
 };
-
-/** Tarifas temporada 2026/27 — usadas por el motor de reservas */
-const PRICES_FULL_DAY_1_4 = [160, 180, 200, 220];
-const PRICES_FULL_DAY_5_8 = [240, 260, 280, 300];
-
-const PRICES_2H_1_4: Record<string, number[]> = {
-  "2h-10-12": [75, 85, 95, 105],
-  "2h-12-14": [70, 80, 90, 100],
-  "2h-14-16": [65, 75, 85, 95],
-};
-
-const PRICES_2H_5_8: Record<string, number[]> = {
-  "2h-10-12": [115, 125, 135, 145],
-  "2h-12-14": [110, 120, 130, 140],
-  "2h-14-16": [105, 115, 125, 135],
-};
-
-const PRICES_3H_1_4: Record<string, number[]> = {
-  "3h-10-13": [120, 135, 150, 165],
-  "3h-10-12-14-15": [110, 125, 140, 155],
-  "3h-12-15": [110, 125, 140, 155],
-  "3h-14-17": [100, 115, 130, 145],
-};
-
-const PRICES_3H_5_8: Record<string, number[]> = {
-  "3h-09-12": [170, 185, 200, 215],
-  "3h-10-13": [180, 195, 210, 225],
-  "3h-10-12-14-15": [170, 185, 200, 215],
-  "3h-12-15": [170, 185, 200, 215],
-  "3h-14-17": [160, 175, 190, 205],
-};
-
-function priceIndex(participants: number, tier: "1-4" | "5-8"): number {
-  if (tier === "1-4") return Math.min(4, Math.max(1, participants)) - 1;
-  return Math.min(8, Math.max(5, participants)) - 5;
-}
-
-function tierForParticipants(participants: number): "1-4" | "5-8" {
-  return participants <= 4 ? "1-4" : "5-8";
-}
 
 export function getProductBookingConfig(productId: ProductId): ProductBookingConfig {
   return PRODUCT_BOOKING_CONFIG[productId];
@@ -224,18 +218,6 @@ export function getSlotsForProduct(productId: ProductId): TimeSlot[] {
   return config.slotIds.map((id) => TIME_SLOTS[id]);
 }
 
-export function resolvePricingProfile(
-  productId: ProductId,
-  slotId: TimeSlotId,
-): PricingProfile {
-  const config = PRODUCT_BOOKING_CONFIG[productId];
-  if (config.profile === "flat" || config.profile === "addon") return config.profile;
-  if (config.profile === "full-day") return "full-day";
-  if (slotId.startsWith("3h-")) return "lesson-3h";
-  if (slotId.startsWith("2h-")) return "lesson-2h";
-  return config.profile;
-}
-
 export function calculateSessionPrice(
   productId: ProductId,
   participants: number,
@@ -243,40 +225,22 @@ export function calculateSessionPrice(
 ): number | null {
   const config = PRODUCT_BOOKING_CONFIG[productId];
   const minPeople = config.minPeople ?? 1;
-  if (participants < minPeople) return null;
+  const maxPeople = config.maxPeople ?? 8;
+  if (participants < minPeople || participants > maxPeople) return null;
 
-  if (config.profile === "flat" || config.profile === "addon") {
+  if (config.profile === "flat") {
     const unit = config.flatPricePerPerson ?? 0;
     return unit * participants;
   }
 
-  const people = participants;
-
-  const profile = resolvePricingProfile(productId, slotId);
-  const tier = tierForParticipants(people);
-  const idx = priceIndex(people, tier);
-
-  if (profile === "full-day") {
-    const table = tier === "1-4" ? PRICES_FULL_DAY_1_4 : PRICES_FULL_DAY_5_8;
-    return table[idx] ?? null;
-  }
-
-  if (profile === "lesson-2h") {
-    const table = tier === "1-4" ? PRICES_2H_1_4[slotId] : PRICES_2H_5_8[slotId];
-    return table?.[idx] ?? null;
-  }
-
-  if (profile === "lesson-3h") {
-    const table = tier === "1-4" ? PRICES_3H_1_4[slotId] : PRICES_3H_5_8[slotId];
-    return table?.[idx] ?? null;
-  }
-
-  return null;
+  const table = SESSION_PRICES_BY_SLOT[slotId];
+  if (!table) return null;
+  return sessionPriceForParticipants(table, participants);
 }
 
 export function getFlatUnitPrice(productId: ProductId): number | null {
   const config = PRODUCT_BOOKING_CONFIG[productId];
-  if (config.profile !== "flat" && config.profile !== "addon") return null;
+  if (config.profile !== "flat") return null;
   return config.flatPricePerPerson ?? null;
 }
 

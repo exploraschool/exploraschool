@@ -1,9 +1,12 @@
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { site } from "@/data/site";
 import { media } from "@/lib/media";
 import "@/app/globals.css";
+
+const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -19,6 +22,9 @@ const fraunces = Fraunces({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.domain),
+  ...(googleSiteVerification
+    ? { verification: { google: googleSiteVerification } }
+    : {}),
   icons: {
     icon: [
       { url: media.favicon, sizes: "48x48", type: "image/png" },
@@ -36,7 +42,10 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="es" suppressHydrationWarning className={`${plusJakarta.variable} ${fraunces.variable}`}>
-      <body className="min-h-screen bg-nieve text-pizarra antialiased">{children}</body>
+      <body className="min-h-screen bg-nieve text-pizarra antialiased">
+        <GoogleAnalytics />
+        {children}
+      </body>
     </html>
   );
 }

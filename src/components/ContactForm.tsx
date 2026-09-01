@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
+import { site } from "@/data/site";
 import { z } from "zod";
 
 const schema = z.object({
@@ -66,60 +67,87 @@ export function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="card border-hielo/20 bg-hielo/5 text-center">
-        <p className="font-semibold text-hielo">{tc("success")}</p>
+      <div className="card border-hielo/20 bg-gradient-to-br from-hielo/5 to-transparent text-center">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-hielo/10 text-hielo">
+          <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+          </svg>
+        </div>
+        <p className="mt-4 font-display text-xl font-semibold text-hielo">{t("formSuccessTitle")}</p>
+        <p className="mt-2 text-sm text-muted">{t("formSuccessDesc")}</p>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !w-auto">
+            WhatsApp
+          </a>
+          <Link href="/reserva" className="btn-secondary !w-auto">
+            {t("bookingTitle")}
+          </Link>
+        </div>
       </div>
     );
   }
 
+  const inputClass =
+    "w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm text-pizarra placeholder:text-muted focus:border-hielo focus:outline-none";
+
   return (
     <form onSubmit={handleSubmit} className="card space-y-5" noValidate>
+      <div>
+        <h2 className="font-display text-xl font-semibold text-hielo sm:text-2xl">{t("formTitle")}</h2>
+        <p className="mt-2 text-sm text-muted">{t("formDesc")}</p>
+      </div>
+
       <div className="absolute -left-[9999px]" aria-hidden>
         <label htmlFor="website">Website</label>
         <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
       <div>
-        <label htmlFor="name" className="mb-1 block text-sm font-medium text-pizarra">
+        <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-pizarra">
           {t("name")} *
         </label>
         <input
           id="name"
           name="name"
           required
-          className="w-full rounded-lg border border-hielo/20 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+          placeholder={t("namePlaceholder")}
+          className={inputClass}
         />
         {errors.name && <p className="mt-1 text-xs text-accent">{errors.name}</p>}
       </div>
 
-      <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium text-pizarra">
-          {t("email")} *
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="w-full rounded-lg border border-hielo/20 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
-        />
-        {errors.email && <p className="mt-1 text-xs text-accent">{errors.email}</p>}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-pizarra">
+            {t("email")} *
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            placeholder={t("emailPlaceholder")}
+            className={inputClass}
+          />
+          {errors.email && <p className="mt-1 text-xs text-accent">{errors.email}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="phone" className="mb-1.5 block text-sm font-medium text-pizarra">
+            {t("phone")}
+          </label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder={t("phonePlaceholder")}
+            className={inputClass}
+          />
+        </div>
       </div>
 
       <div>
-        <label htmlFor="phone" className="mb-1 block text-sm font-medium text-pizarra">
-          {t("phone")}
-        </label>
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          className="w-full rounded-lg border border-hielo/20 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
-        />
-      </div>
-
-      <div>
-        <label htmlFor="message" className="mb-1 block text-sm font-medium text-pizarra">
+        <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-pizarra">
           {t("message")} *
         </label>
         <textarea
@@ -127,17 +155,18 @@ export function ContactForm() {
           name="message"
           required
           rows={5}
-          className="w-full rounded-lg border border-hielo/20 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+          placeholder={t("messagePlaceholder")}
+          className={inputClass}
         />
         {errors.message && <p className="mt-1 text-xs text-accent">{errors.message}</p>}
       </div>
 
       <label className="flex items-start gap-3 text-sm text-muted">
-        <input name="privacy" type="checkbox" required className="mt-1" />
+        <input name="privacy" type="checkbox" required className="mt-1 rounded border-hielo/20" />
         <span>
           {t("privacy")}{" "}
-          <Link href="/politica-de-privacidad" className="text-hielo underline">
-            →
+          <Link href="/politica-de-privacidad" className="font-medium text-hielo underline">
+            {t("privacyLink")}
           </Link>
         </span>
       </label>

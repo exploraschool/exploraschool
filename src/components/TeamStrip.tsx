@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import { site } from "@/data/site";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getActiveInstructors } from "@/data/instructors";
@@ -22,8 +23,8 @@ export function TeamStrip({ locale }: TeamStripProps) {
               title={pickLocale(locale, "Instructores titulados", "Qualified instructors")}
               description={pickLocale(
                 locale,
-                "Nuestro equipo te guiará en todo lo que necesites. Licenciados INEF, TECO y TAFAD.",
-                "Our team will guide you through everything you need. Qualified INEF, TECO and TAFAD professionals.",
+                `Nuestro equipo te guiará en todo lo que necesites. ${site.instructorQualificationsEs}.`,
+                `Our team will guide you through everything you need. ${site.instructorQualificationsEn}.`,
               )}
             />
             <Link href="/equipo" className="btn-secondary shrink-0 md:!w-auto">

@@ -1,7 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { ContactForm } from "@/components/ContactForm";
-import { PageHeader } from "@/components/PageHeader";
+import { ContactInfoPanel } from "@/components/ContactInfoPanel";
+import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
@@ -28,57 +29,61 @@ export default async function ContactoPage({ params }: Props) {
 
   return (
     <>
-      <PageHeader
-        eyebrow={pickLocale(locale, "Contacto", "Contact")}
-        title={t("title")}
-        description={t("subtitle")}
-      />
+      <section className="page-header">
+        <div className="container-page relative">
+          <p className="eyebrow">{pickLocale(locale, "Contacto", "Contact")}</p>
+          <h1 className="page-title mt-2 sm:mt-2.5">{t("title")}</h1>
+          <p className="page-lead">{t("subtitle")}</p>
+
+          <div className="page-actions">
+            <a
+              href={site.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary !w-auto"
+            >
+              WhatsApp
+            </a>
+            <a href={`tel:${site.phone}`} className="btn-secondary !w-auto">
+              {site.phoneDisplay}
+            </a>
+            <Link href="/reserva" className="btn-secondary !w-auto">
+              {pickLocale(locale, "Ir a mi reserva", "Go to my booking")}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <section className="section-padding">
-        <div className="container-page grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-12">
-          <ContactForm />
-
-          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-1 md:gap-5">
-            <div className="card border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-              <h2 className="font-display text-base font-semibold text-hielo sm:text-lg">{t("bookingTitle")}</h2>
-              <p className="mt-2 text-sm text-muted">{t("bookingDesc")}</p>
-              <Link href="/reserva" className="btn-primary mt-4 !w-auto">
-                {pickLocale(locale, "Ir a mi reserva", "Go to my booking")}
-              </Link>
+        <div className="container-page">
+          <Reveal>
+            <div className="grid grid-gap-lg lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+              <ContactForm />
+              <ContactInfoPanel
+                locale={locale}
+                bookingTitle={t("bookingTitle")}
+                bookingDesc={t("bookingDesc")}
+                emailTitle={t("emailTitle")}
+                phoneTitle={t("phoneTitle")}
+                hoursTitle={t("hoursTitle")}
+              />
             </div>
+          </Reveal>
 
-            <div className="card">
-              <h2 className="font-display text-base font-semibold text-hielo sm:text-lg">{t("emailTitle")}</h2>
-              <a href={`mailto:${site.email}`} className="mt-2 block text-sm text-hielo hover:text-accent sm:text-base">
-                {site.email}
-              </a>
-              <p className="mt-3 text-sm text-muted">
-                {pickLocale(locale, "Para reservas, consultas y confirmaciones.", "For bookings, enquiries and confirmations.")}
-              </p>
-            </div>
-
-            <div className="card">
-              <h2 className="font-display text-base font-semibold text-hielo sm:text-lg">{t("phoneTitle")}</h2>
-              <a href={`tel:${site.phone}`} className="mt-2 block text-base font-semibold text-accent sm:text-lg">
-                {site.phoneDisplay}
-              </a>
-              <p className="mt-3 text-sm text-muted sm:mt-4">{t("hoursTitle")}: {site.openingHours}</p>
-            </div>
-
-            <div className="card">
-              <h2 className="font-display text-base font-semibold text-hielo sm:text-lg">
-                {pickLocale(locale, "Ubicación", "Location")}
-              </h2>
-              <p className="mt-2 text-sm text-muted">
-                {site.nap.addressLocality}, {site.nap.addressRegion} {site.nap.postalCode}
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                {pickLocale(locale, site.meetingPointEs, site.meetingPointEn)}
-              </p>
-              <Link href="/como-llegar" className="mt-3 inline-flex text-sm font-semibold text-hielo hover:text-accent">
-                {pickLocale(locale, "Cómo llegar →", "Getting here →")}
-              </Link>
-            </div>
+          <div className="section-body-sm rounded-2xl border border-hielo/10 bg-nieve px-6 py-5 text-center text-sm text-muted sm:px-8 sm:py-6">
+            {pickLocale(
+              locale,
+              "¿Tienes dudas antes de escribirnos? Consulta las ",
+              "Have questions before writing to us? Check the ",
+            )}
+            <Link href="/preguntas-frecuentes" className="font-semibold text-hielo hover:text-accent">
+              {pickLocale(locale, "preguntas frecuentes", "FAQs")}
+            </Link>
+            {pickLocale(locale, " o las ", " or ")}
+            <Link href="/clases" className="font-semibold text-hielo hover:text-accent">
+              {pickLocale(locale, "clases y tarifas", "lessons & prices")}
+            </Link>
+            .
           </div>
         </div>
       </section>

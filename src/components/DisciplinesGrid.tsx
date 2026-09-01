@@ -23,13 +23,13 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                 eyebrow={pickLocale(locale, "Disciplinas", "Disciplines")}
                 title={pickLocale(locale, "¿Qué quieres practicar?", "What do you want to ride?")}
               />
-              <Link href="/clases" className="text-sm font-semibold text-hielo hover:text-accent">
-                {pickLocale(locale, "Ver todas →", "View all →")}
+              <Link href="/clases" className="btn-secondary shrink-0 !w-auto">
+                {pickLocale(locale, "Ver todas", "View all")}
               </Link>
             </div>
           </Reveal>
 
-          <div className="mt-5 flex gap-3 overflow-x-auto pb-2 scrollbar-none sm:mt-6 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
+          <div className="section-body-sm flex gap-3 overflow-x-auto pb-2 scrollbar-none sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
             {disciplines.map((d, i) => (
               <Reveal key={d.id} delay={i * 50}>
                 <Link
@@ -68,7 +68,7 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
           />
         </Reveal>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div className="section-body grid gap-5 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {disciplines.map((d, i) => (
             <Reveal key={d.id} delay={i * 80}>
               <Link href={`/clases/${d.slug}`} className="card-interactive group block h-full overflow-hidden p-0">

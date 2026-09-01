@@ -12,10 +12,10 @@ const props = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342" />
       </svg>
     ),
-    titleEs: "Titulados INEF",
-    titleEn: "INEF qualified",
-    descEs: "Instructores con nombre y cara",
-    descEn: "Instructors you can name and recognise",
+    titleEs: "Titulados TD I–III",
+    titleEn: "TD I–III certified",
+    descEs: "INEF, TECO, TAFAD y más",
+    descEn: "INEF, TECO, TAFAD and more",
   },
   {
     icon: (
@@ -36,8 +36,8 @@ const props = [
     ),
     titleEs: "Horarios flexibles",
     titleEn: "Flexible schedules",
-    descEs: "Full Day, medio día y particulares",
-    descEn: "Full day, half day and private",
+    descEs: "Full Day, 2 h y 3 h · 1–8 participantes",
+    descEn: "Full day, 2 h and 3 h · 1–8 participants",
   },
   {
     icon: (
@@ -54,20 +54,20 @@ const props = [
 
 export function ValueProps({ locale }: ValuePropsProps) {
   return (
-    <section className="border-b border-hielo/6 bg-white py-8 sm:py-10">
+    <section className="section-band bg-white">
       <div className="container-page">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 sm:gap-8 lg:grid-cols-4">
           {props.map((prop, i) => (
             <Reveal key={prop.titleEs} delay={i * 60}>
-              <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:gap-3 sm:text-left">
+              <div className="flex flex-col items-center text-center sm:flex-row sm:items-start sm:gap-4 sm:text-left">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-hielo/8 text-hielo transition-colors hover:bg-accent/10 hover:text-accent">
                   {prop.icon}
                 </div>
-                <div className="mt-2 sm:mt-0">
+                <div className="mt-3 sm:mt-0">
                   <p className="text-sm font-semibold text-pizarra">
                     {pickLocale(locale, prop.titleEs, prop.titleEn)}
                   </p>
-                  <p className="mt-0.5 text-xs text-muted">
+                  <p className="mt-1 text-xs text-muted">
                     {pickLocale(locale, prop.descEs, prop.descEn)}
                   </p>
                 </div>

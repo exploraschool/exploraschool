@@ -41,9 +41,10 @@ export function JsonLd() {
       },
       geo: {
         "@type": "GeoCoordinates",
-        latitude: 37.0954,
-        longitude: -3.3948,
+        latitude: site.meetingPoint.latitude,
+        longitude: site.meetingPoint.longitude,
       },
+      hasMap: site.meetingPoint.googleMapsUrl,
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],

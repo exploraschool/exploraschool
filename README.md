@@ -1,6 +1,6 @@
 # Explora School & Club
 
-Next.js 15 site for [sierranevadaclases.es](https://www.sierranevadaclases.es) — ski, snowboard and telemark lessons in Sierra Nevada. Frontend on **Vercel**, data on **Firebase** (Firestore, Storage, Auth, Cloud Functions) in **europe-west1**.
+Next.js 15 site for [explora-school.es](https://www.explora-school.es) — ski, snowboard and telemark lessons in Sierra Nevada. Frontend on **Vercel**, data on **Firebase** (Firestore, Storage, Auth, Cloud Functions) in **europe-west1**.
 
 ---
 
@@ -70,20 +70,15 @@ Cloud Functions run in **europe-west1** (see `functions/src/index.ts`).
 
 Firestore and Storage rules grant full write access to authenticated users with `admin: true` or email `explora.sclub@gmail.com`.
 
-### Resend (lead emails)
+### Resend (lead + booking emails)
 
-1. Create an account at [resend.com](https://resend.com) and verify your sending domain.
-2. Set `RESEND_API_KEY` in Firebase Functions config:
+See [`docs/SECRETOS.md`](docs/SECRETOS.md) for where each key lives.
 
-```bash
-firebase functions:secrets:set RESEND_API_KEY
-# or for local emulator:
-firebase functions:config:set resend.api_key="re_xxxx"
-```
-
-3. Set `RESEND_FROM` to a verified sender (e.g. `Explora School <reservas@sierranevadaclases.es>`).
-
-When a document is created in the `leads` collection, `onLeadCreated` sends an email to `explora.sclub@gmail.com` (override with `LEAD_NOTIFICATION_EMAIL`). If `RESEND_API_KEY` is missing, the function logs and skips email — the lead is still saved.
+1. Create a [Resend](https://resend.com) account and API key.
+2. Store `RESEND_API_KEY` and `LEAD_CONFIRM_SECRET` in **Firebase Functions secrets**.
+3. Store `LEAD_CONFIRM_SECRET` in **Vercel** (same value).
+4. Team notifications go to `explora.sclub@gmail.com`.
+5. When a booking is confirmed (admin panel or email link), the customer receives an automatic confirmation email.
 
 ---
 
@@ -97,14 +92,15 @@ cp .env.example .env
 
 | Variable | Where | Purpose |
 |----------|-------|---------|
+| `NEXT_PUBLIC_SITE_URL` | Vercel (Production) | Canonical URL (`https://www.explora-school.es`) |
 | `NEXT_PUBLIC_FIREBASE_*` | Vercel (all envs) | Client-side Firebase SDK |
 | `FIREBASE_PROJECT_ID` | Vercel (server), local scripts | Admin SDK project |
 | `FIREBASE_CLIENT_EMAIL` | Vercel (server), local scripts | Service account email |
 | `FIREBASE_PRIVATE_KEY` | Vercel (server), local scripts | Service account key (use `\n` for newlines in Vercel) |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Local only | Path to `serviceAccount.json` (alternative to key env vars) |
-| `RESEND_API_KEY` | Firebase Functions secret | Lead notification emails |
-| `LEAD_NOTIFICATION_EMAIL` | Firebase Functions (optional) | Override recipient |
-| `RESEND_FROM` | Firebase Functions (optional) | Verified sender address |
+| `RESEND_API_KEY` | Firebase Functions | Resend API key for lead notifications |
+| `LEAD_NOTIFICATION_EMAIL` | Firebase Functions (optional) | Recipient (default: `explora.sclub@gmail.com`) |
+| `RESEND_FROM` | Firebase Functions (optional) | Verified sender address in Resend |
 
 In **Vercel** → Project → Settings → Environment Variables: add all `NEXT_PUBLIC_*` and server-side `FIREBASE_*` vars for Production, Preview, and Development.
 
@@ -115,7 +111,7 @@ In **Vercel** → Project → Settings → Environment Variables: add all `NEXT_
 1. Import the GitHub repo at [vercel.com/new](https://vercel.com/new).
 2. Framework preset: **Next.js**.
 3. Add environment variables from the table above.
-4. Deploy. **Custom domain (`sierranevadaclases.es`) is deferred** — use the default `.vercel.app` URL until you set `NEXT_PUBLIC_SITE_URL` and configure DNS in Vercel.
+4. Deploy and add custom domain `explora-school.es` (see `docs/CUENTA-EXPLORA.md` for DNS). Set `NEXT_PUBLIC_SITE_URL=https://www.explora-school.es` in Production.
 
 Vercel serves the Next.js app. Firebase handles Firestore, Storage, Auth, and Functions — not Firebase Hosting in v1.
 

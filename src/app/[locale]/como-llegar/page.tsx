@@ -3,13 +3,11 @@ import { PageHeader } from "@/components/PageHeader";
 import { Link } from "@/i18n/routing";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
+import { getMeetingPointEmbedUrl } from "@/lib/maps";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
-
-const MAP_EMBED =
-  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3178.8!2d-3.3978!3d37.0944!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd71f8b8c8c8c8c8%3A0x0!2sBorreguiles%2C%20Sierra%20Nevada!5e0!3m2!1ses!2ses!4v1";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -25,6 +23,8 @@ export default async function ComoLlegarPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const mapEmbed = getMeetingPointEmbedUrl(locale);
+
   return (
     <>
       <PageHeader
@@ -33,15 +33,15 @@ export default async function ComoLlegarPage({ params }: Props) {
       />
 
       <section className="section-padding">
-        <div className="container-page grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-14">
+        <div className="container-page grid grid-gap-lg md:grid-cols-2">
           <div className="prose-page">
             <h2>{pickLocale(locale, "Dirección", "Address")}</h2>
             <p>
-              {site.nap.name}
+              {site.meetingPoint.name}
               <br />
-              {site.nap.addressLocality}, {site.nap.addressRegion} {site.nap.postalCode}
+              {site.nap.streetAddress}, {site.nap.addressLocality}
               <br />
-              {site.nap.addressCountry}
+              {site.nap.addressRegion} {site.nap.postalCode}, {site.nap.addressCountry}
             </p>
 
             <h2>{pickLocale(locale, "Punto de encuentro", "Meeting point")}</h2>
@@ -51,20 +51,27 @@ export default async function ComoLlegarPage({ params }: Props) {
             <p>
               {pickLocale(
                 locale,
-                "Sierra Nevada se encuentra a unos 30 km de Granada. Puedes llegar en coche, autobús desde Granada o servicios de transfer. El forfait se adquiere en Plaza de Andalucía o en sierranevada.es.",
-                "Sierra Nevada is about 30 km from Granada. You can arrive by car, bus from Granada or transfer services. Lift passes are purchased at Plaza de Andalucía or sierranevada.es.",
+                "Sierra Nevada está a unos 30 km de Granada. Puedes llegar en coche, autobús desde Granada o servicios de transfer. Sube en telecabina a la estación y acude al punto de encuentro de Explora School & Club (mapa adjunto).",
+                "Sierra Nevada is about 30 km from Granada. You can arrive by car, bus from Granada or transfer services. Take the gondola up to the resort and head to the Explora School & Club meeting point (map below).",
               )}
             </p>
-
             <p>
               {pickLocale(
                 locale,
-                "¿Necesitas indicaciones concretas para tu día? Escríbenos por email y te orientamos.",
-                "Need specific directions for your day? Email us and we will guide you.",
+                "El forfait se adquiere en Plaza de Andalucía (Pradollano) o en sierranevada.es. Si necesitas indicaciones concretas para tu día, escríbenos por email.",
+                "Lift passes are purchased at Plaza de Andalucía (Pradollano) or at sierranevada.es. Email us if you need specific directions for your day.",
               )}
             </p>
 
-            <a href={`mailto:${site.email}`} className="btn-primary mt-6 !w-auto">
+            <a
+              href={site.meetingPoint.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-6 !w-auto"
+            >
+              {pickLocale(locale, "Abrir en Google Maps", "Open in Google Maps")}
+            </a>
+            <a href={`mailto:${site.email}`} className="btn-secondary mt-4 !w-auto">
               {site.email}
             </a>
             <Link href="/clases" className="btn-secondary mt-4 !w-auto">
@@ -75,8 +82,12 @@ export default async function ComoLlegarPage({ params }: Props) {
           <div className="space-y-3 sm:space-y-4">
             <div className="aspect-[4/3] overflow-hidden rounded-xl border border-hielo/10 shadow-lg sm:rounded-2xl">
               <iframe
-                title={pickLocale(locale, "Mapa de Borreguiles, Sierra Nevada", "Map of Borreguiles, Sierra Nevada")}
-                src={MAP_EMBED}
+                title={pickLocale(
+                  locale,
+                  `Mapa — ${site.meetingPoint.name}`,
+                  `Map — ${site.meetingPoint.name}`,
+                )}
+                src={mapEmbed}
                 className="h-full w-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -86,8 +97,8 @@ export default async function ComoLlegarPage({ params }: Props) {
             <p className="text-xs text-hielo/70 sm:text-sm">
               {pickLocale(
                 locale,
-                "Punto de encuentro: salida del telecabina Al-Andalus, área de Borreguiles.",
-                "Meeting point: exit of the Al-Andalus gondola, Borreguiles area.",
+                `Punto de encuentro oficial: ${site.meetingPoint.name} (estación de esquí de Sierra Nevada).`,
+                `Official meeting point: ${site.meetingPoint.name} (Sierra Nevada ski resort).`,
               )}
             </p>
           </div>

@@ -3,14 +3,16 @@
 El primer deploy se hizo con la sesión local de **amsnowboardcoach** (incorrecta).
 Todo debe vivir en la cuenta de **explora.sclub@gmail.com**.
 
-## Estado actual (cuenta incorrecta)
+## Estado actual (configurado)
 
-| Servicio | Dónde quedó | URL |
-|----------|-------------|-----|
-| GitHub | `amsnowboardcoach/exploraschool` | https://github.com/amsnowboardcoach/exploraschool |
-| Vercel | `am-snowboard-coach-s-projects` | https://exploraschool.vercel.app |
+| Servicio | Proyecto | URL |
+|----------|----------|-----|
+| **Vercel** | `exploraschool` | https://explora-school.es |
+| **Firebase** | `exploraschool-9ea82` | [Console](https://console.firebase.google.com/project/exploraschool-9ea82) |
+| **Dominio** | `explora-school.es` + `www` | En Vercel (eliminado `sierranevadaclases.es`) |
+| **Emails** | Resend vía Vercel | Notificaciones a `explora.sclub@gmail.com` |
 
-Puedes eliminar ese proyecto en Vercel y borrar/transferir el repo en GitHub cuando el de Explora esté listo.
+Variables de entorno, Firebase Admin y deploy de producción: **listos**.
 
 ---
 
@@ -60,19 +62,78 @@ Cada push a `main` generará preview + producción automática.
 
 Copiar desde `.env.example`:
 
-- `NEXT_PUBLIC_FIREBASE_*` (proyecto GCP de Explora)
-- `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`
-- `ADMIN_PASSWORD`
-- `RESEND_API_KEY` (Functions)
+- `RESEND_API_KEY`, `LEAD_CONFIRM_SECRET`, `ADMIN_PASSWORD` (Vercel)
+- `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (Vercel)
 
-### 5. Dominio sierranevadaclases.es (pendiente — no configurar aún)
+### 5. Dominio explora-school.es (producción)
 
-**No asociar el dominio todavía.** Usar solo la URL de Vercel (`https://exploraschool.vercel.app` o similar) hasta que el sitio esté listo para producción.
+Dominio oficial: **https://www.explora-school.es**
 
-Cuando llegue el momento:
+#### Paso A — Añadir dominios en Vercel
 
-1. Vercel → Project → **Settings → Domains** → añadir `www.sierranevadaclases.es` y `sierranevadaclases.es` → actualizar DNS en el registrador.
-2. En Vercel, definir `NEXT_PUBLIC_SITE_URL=https://www.sierranevadaclases.es` (Production).
+1. [vercel.com](https://vercel.com) → tu proyecto **exploraschool** → **Settings → Domains**
+2. Añade estos dos dominios:
+   - `explora-school.es` (raíz / apex)
+   - `www.explora-school.es`
+3. Vercel mostrará los registros DNS que debes crear. Anótalos (pueden variar ligeramente según el registrador).
+
+#### Paso B — Configurar DNS en tu registrador
+
+Entra en el panel DNS de donde compraste `explora-school.es` (DonDominio, GoDaddy, Cloudflare, etc.) y crea:
+
+| Tipo | Host | Valor |
+|------|------|-------|
+| **A** | `@` | `216.198.79.1` |
+| **A** | `@` | `64.29.17.1` |
+| **CNAME** | `www` | `75fa1090096c1630.vercel-dns-017.com` |
+
+Alternativa (también válida): `A @ → 76.76.21.21` y `CNAME www → cname.vercel-dns.com`.
+
+**Importante:** si los nameservers son `cosmos.dns-parking.com` / `nova.dns-parking.com`, cámbialos en Hostinger a los DNS reales del dominio (no parking), o usa los de Vercel: `ns1.vercel-dns.com` y `ns2.vercel-dns.com`.
+
+#### Paso C — Redirección recomendada en Vercel
+
+En **Settings → Domains**, marca `www.explora-school.es` como dominio **principal** y configura que `explora-school.es` redirija a `www` (o al revés — lo importante es que solo haya una URL canónica).
+
+Recomendación del proyecto: **`https://www.explora-school.es`** como canónica.
+
+#### Paso D — Variable de entorno en Vercel
+
+**Settings → Environment Variables** → Production:
+
+```
+NEXT_PUBLIC_SITE_URL=https://www.explora-school.es
+```
+
+Redeploy después de guardar (Deployments → ⋯ → Redeploy).
+
+#### Paso E — Verificar
+
+1. Espera 5–60 minutos (propagación DNS).
+2. En Vercel, los dominios deben mostrar ✓ **Valid**.
+3. Abre `https://www.explora-school.es` — debe cargar el sitio con certificado SSL.
+4. Comprueba `https://explora-school.es` — debe redirigir a `www` si lo configuraste así.
+
+#### Paso F — Email con Resend + confirmación de reservas
+
+Guía completa de secretos: [`docs/SECRETOS.md`](SECRETOS.md)
+
+1. [resend.com](https://resend.com) → API Key
+2. Firebase:
+   ```powershell
+   firebase functions:secrets:set RESEND_API_KEY
+   firebase functions:secrets:set LEAD_CONFIRM_SECRET
+   ```
+3. Vercel → `LEAD_CONFIRM_SECRET` (mismo valor que Firebase)
+4. `firebase deploy --only functions`
+
+Flujo:
+- Nueva reserva → email a `explora.sclub@gmail.com` con botón **Confirmar**
+- Al confirmar (enlace o `/admin/leads`) → email automático al cliente
+
+#### Dominio antiguo (sierranevadaclases.es)
+
+Ya no se usa. Si aún apunta al hosting antiguo, deja de renovarlo o redirígelo manualmente a `https://www.explora-school.es` desde el registrador de ese dominio (no hace falta añadirlo en Vercel).
 
 ---
 

@@ -1,115 +1,34 @@
 import { initializeApp } from "firebase-admin/app";
-import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { defineString } from "firebase-functions/params";
+import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
+import { defineSecret, defineString } from "firebase-functions/params";
 import { logger } from "firebase-functions";
+import {
+  buildCustomerConfirmationEmail,
+  buildTeamNotificationEmail,
+  sendResendEmail,
+} from "./email.js";
 
 initializeApp();
 
-const resendApiKeyParam = defineString("RESEND_API_KEY", { default: "" });
+const resendApiKeyParam = defineSecret("RESEND_API_KEY");
+const leadConfirmSecretParam = defineSecret("LEAD_CONFIRM_SECRET");
 const notificationEmailParam = defineString("LEAD_NOTIFICATION_EMAIL", {
   default: "explora.sclub@gmail.com",
 });
 const resendFromParam = defineString("RESEND_FROM", {
   default: "Explora School <onboarding@resend.dev>",
 });
-
-const LEAD_FIELDS = [
-  "name",
-  "email",
-  "phone",
-  "message",
-  "locale",
-  "productId",
-  "discipline",
-  "participants",
-  "preferredDates",
-  "source",
-] as const;
-
-function formatLeadBody(
-  leadId: string,
-  data: Record<string, unknown>,
-): { text: string; html: string } {
-  const lines = [`Nuevo lead (${leadId})`, ""];
-
-  for (const key of LEAD_FIELDS) {
-    const value = data[key];
-    if (value !== undefined && value !== null && value !== "") {
-      lines.push(`${key}: ${String(value)}`);
-    }
-  }
-
-  for (const [key, value] of Object.entries(data)) {
-    if (
-      (LEAD_FIELDS as readonly string[]).includes(key) ||
-      key === "createdAt"
-    ) {
-      continue;
-    }
-    if (value !== undefined && value !== null && value !== "") {
-      lines.push(`${key}: ${String(value)}`);
-    }
-  }
-
-  const text = lines.join("\n");
-  const html = lines
-    .map((line) => (line === "" ? "<br>" : `<p>${escapeHtml(line)}</p>`))
-    .join("\n");
-
-  return { text, html };
-}
-
-function escapeHtml(value: string): string {
-  return value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
-
-async function sendLeadEmail(
-  apiKey: string,
-  to: string,
-  from: string,
-  leadId: string,
-  data: Record<string, unknown>,
-): Promise<void> {
-  const subject = `[Explora School] Nuevo lead — ${data.name ?? leadId}`;
-  const { text, html } = formatLeadBody(leadId, data);
-
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      subject,
-      text,
-      html,
-    }),
-  });
-
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Resend API ${response.status}: ${body}`);
-  }
-}
+const siteUrlParam = defineString("SITE_URL", {
+  default: "https://www.explora-school.es",
+});
 
 export const onLeadCreated = onDocumentCreated(
   {
     document: "leads/{leadId}",
     region: "europe-west1",
+    secrets: [resendApiKeyParam, leadConfirmSecretParam],
   },
   async (event) => {
-    const apiKey = process.env.RESEND_API_KEY || resendApiKeyParam.value();
-    if (!apiKey) {
-      logger.info("RESEND_API_KEY not set — skipping lead notification email");
-      return;
-    }
-
     const snapshot = event.data;
     if (!snapshot) {
       logger.warn("Lead created event without snapshot");
@@ -118,14 +37,77 @@ export const onLeadCreated = onDocumentCreated(
 
     const leadId = event.params.leadId;
     const data = snapshot.data();
+    const apiKey = resendApiKeyParam.value();
+    const siteUrl = siteUrlParam.value().replace(/\/$/, "");
+    const confirmSecret = leadConfirmSecretParam.value();
     const to = notificationEmailParam.value();
     const from = resendFromParam.value();
+    const { subject, text, html } = buildTeamNotificationEmail({
+      leadId,
+      data,
+      siteUrl,
+      confirmSecret,
+    });
 
     try {
-      await sendLeadEmail(apiKey, to, from, leadId, data);
-      logger.info("Lead notification sent", { leadId, to });
+      await sendResendEmail(apiKey, { from, to: [to], subject, text, html });
+      logger.info("Team notification sent", { leadId, to });
     } catch (error) {
-      logger.error("Failed to send lead notification", { leadId, error });
+      logger.error("Failed to send team notification", { leadId, error });
+      throw error;
+    }
+  },
+);
+
+export const onLeadUpdated = onDocumentUpdated(
+  {
+    document: "leads/{leadId}",
+    region: "europe-west1",
+    secrets: [resendApiKeyParam],
+  },
+  async (event) => {
+    const before = event.data?.before.data();
+    const after = event.data?.after.data();
+    if (!before || !after) return;
+
+    const previousStatus = String(before.status ?? "");
+    const nextStatus = String(after.status ?? "");
+    if (previousStatus === nextStatus || nextStatus !== "confirmed") return;
+
+    const isBooking = after.type === "booking" || after.source === "booking-cart";
+    if (!isBooking) return;
+
+    const customerEmail = String(after.email ?? "");
+    if (!customerEmail) {
+      logger.warn("Confirmed booking without customer email", { leadId: event.params.leadId });
+      return;
+    }
+
+    const apiKey = resendApiKeyParam.value();
+    const from = resendFromParam.value();
+    const siteUrl = siteUrlParam.value().replace(/\/$/, "");
+    const { subject, text, html } = buildCustomerConfirmationEmail({
+      data: after,
+      siteUrl,
+    });
+
+    try {
+      await sendResendEmail(apiKey, {
+        from,
+        to: [customerEmail],
+        subject,
+        text,
+        html,
+      });
+      logger.info("Customer confirmation sent", {
+        leadId: event.params.leadId,
+        to: customerEmail,
+      });
+    } catch (error) {
+      logger.error("Failed to send customer confirmation", {
+        leadId: event.params.leadId,
+        error,
+      });
       throw error;
     }
   },

@@ -9,6 +9,7 @@ import { HomeSocialProof } from "@/components/HomeSocialProof";
 import { Testimonials } from "@/components/Testimonials";
 import { HomeClosing } from "@/components/HomeClosing";
 import { pickLocale } from "@/lib/locale";
+import { site } from "@/data/site";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
@@ -26,11 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Clases de esquí y snowboard en Sierra Nevada",
       "Ski and snowboard lessons in Sierra Nevada",
     ),
-    description: pickLocale(
-      locale,
-      "Clases de esquí, snowboard y telemark en Sierra Nevada. Instructores con nombre y cara desde 2010. Reserva online por email.",
-      "Ski, snowboard and telemark lessons in Sierra Nevada. Named instructors since 2010. Book online by email.",
-    ),
+    description: pickLocale(locale, site.homeMetaDescriptionEs, site.homeMetaDescriptionEn),
   });
 }
 

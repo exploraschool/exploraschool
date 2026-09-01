@@ -1,4 +1,18 @@
 import { CURRENT_SEASON } from "./season";
+import {
+  CURSO_SNOW_PER_PERSON_EUR,
+  PEOPLE_COUNT_HEADERS_EN,
+  PEOPLE_COUNT_HEADERS_ES,
+  SESSION_2H_AFTERNOON,
+  SESSION_2H_STANDARD,
+  SESSION_3H_AFTERNOON,
+  SESSION_3H_MIDDAY,
+  SESSION_3H_MORNING,
+  SESSION_3H_SPLIT,
+  SESSION_FULL_DAY,
+  UNIFIED_SIZE_LABEL_EN,
+  UNIFIED_SIZE_LABEL_ES,
+} from "@/lib/lesson-pricing";
 
 export type PriceSeason = typeof CURRENT_SEASON.key | "legacy-2022";
 
@@ -33,6 +47,9 @@ export type CurrentProductPrice = {
   featuresEn: string[];
 };
 
+const unifiedHeadersEs = ["Horario", ...PEOPLE_COUNT_HEADERS_ES];
+const unifiedHeadersEn = ["Schedule", ...PEOPLE_COUNT_HEADERS_EN];
+
 /** Current offer visible on home/clases — temporada 2026/27 */
 export const currentPrices: CurrentProductPrice[] = [
   {
@@ -42,26 +59,19 @@ export const currentPrices: CurrentProductPrice[] = [
     titleEn: "Full Day",
     season: CURRENT_SEASON.key,
     unit: "day",
-    fromPrice: 160,
+    fromPrice: SESSION_FULL_DAY[0],
     hours: 5,
-    extras: [
-      {
-        labelEs: "Persona extra",
-        labelEn: "Extra person",
-        value: "+25 €",
-      },
-    ],
     featuresEs: [
       "5 horas de clase efectivas",
       "1 hora de descanso",
-      "+25 € por persona extra",
+      "De 1 a 8 participantes",
       "Horario ajustado a sus necesidades",
       "Punto de encuentro personalizado",
     ],
     featuresEn: [
       "5 hours of effective lesson time",
       "1 hour break",
-      "+25 € per extra person",
+      "1 to 8 participants",
       "Schedule tailored to your needs",
       "Personalised meeting point",
     ],
@@ -72,22 +82,22 @@ export const currentPrices: CurrentProductPrice[] = [
     titleEs: "Curso de Snowboard",
     titleEn: "Snowboard Course",
     season: CURRENT_SEASON.key,
-    fromPrice: 60,
+    fromPrice: CURSO_SNOW_PER_PERSON_EUR,
     unit: "person",
     hours: 3,
     featuresEs: [
       "Rendimiento Asegurado",
-      "60 € / persona",
+      `${CURSO_SNOW_PER_PERSON_EUR} € / persona`,
       "Mínimo 3 personas para realizar el curso",
-      "Máximo 6 personas",
+      "Máximo 8 personas",
       "3 horas de clase efectivas",
       "Horario 10:00–13:00",
     ],
     featuresEn: [
       "Guaranteed Progress",
-      "€60 / person",
+      `€${CURSO_SNOW_PER_PERSON_EUR} / person`,
       "Minimum 3 people required to run the course",
-      "Maximum 6 people",
+      "Maximum 8 people",
       "3 hours of effective lesson time",
       "Schedule 10:00–13:00",
     ],
@@ -97,77 +107,43 @@ export const currentPrices: CurrentProductPrice[] = [
 /** Tarifas temporada 2026/27 — mismas tablas usadas por el motor de reservas */
 export const seasonPriceTables: PriceTable[] = [
   {
-    id: "full-day-1-4",
-    titleEs: "FULL-DAY",
-    titleEn: "FULL-DAY",
-    season: CURRENT_SEASON.key,
-    groupSizeLabel: "1–4 personas",
-    headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
-    rows: [{ schedule: "10:00 – 16:00", prices: [160, 180, 200, 220] }],
-  },
-  {
-    id: "full-day-5-8",
-    titleEs: "FULL-DAY",
-    titleEn: "FULL-DAY",
-    season: CURRENT_SEASON.key,
-    groupSizeLabel: "5–8 personas",
-    headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
-    rows: [{ schedule: "10:00 – 16:00", prices: [240, 260, 280, 300] }],
-  },
-  {
-    id: "clases-2h-1-4",
+    id: "clases-2h",
     titleEs: "CLASES DE 2 HORAS",
     titleEn: "2-HOUR LESSONS",
     season: CURRENT_SEASON.key,
-    groupSizeLabel: "1–4 personas",
-    headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
+    groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
+    headers: unifiedHeadersEs,
     rows: [
-      { schedule: "10:00–12:00", prices: [75, 85, 95, 105] },
-      { schedule: "12:00–14:00", prices: [70, 80, 90, 100] },
-      { schedule: "14:00–16:00", prices: [65, 75, 85, 95] },
+      {
+        schedule: "10:00–12:00",
+        prices: [...SESSION_2H_STANDARD],
+      },
+      { schedule: "12:00–14:00", prices: [...SESSION_2H_STANDARD] },
+      { schedule: "14:00–16:00", prices: [...SESSION_2H_AFTERNOON] },
     ],
   },
   {
-    id: "clases-2h-5-8",
-    titleEs: "CLASES GRUPALES – 2 HORAS",
-    titleEn: "GROUP LESSONS – 2 HOURS",
-    season: CURRENT_SEASON.key,
-    groupSizeLabel: "5–8 personas",
-    headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
-    rows: [
-      { schedule: "10:00–12:00", prices: [115, 125, 135, 145] },
-      { schedule: "12:00–14:00", prices: [110, 120, 130, 140] },
-      { schedule: "14:00–16:00", prices: [105, 115, 125, 135] },
-    ],
-  },
-  {
-    id: "clases-3h-1-4",
+    id: "clases-3h",
     titleEs: "CLASES DE 3 HORAS",
     titleEn: "3-HOUR LESSONS",
     season: CURRENT_SEASON.key,
-    groupSizeLabel: "1–4 personas",
-    headers: ["Horario", "1 persona", "2 personas", "3 personas", "4 personas"],
+    groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
+    headers: unifiedHeadersEs,
     rows: [
-      { schedule: "10:00–13:00", prices: [120, 135, 150, 165] },
-      { schedule: "10:00–12:00 y 14:00–15:00", prices: [110, 125, 140, 155] },
-      { schedule: "12:00–15:00", prices: [110, 125, 140, 155] },
-      { schedule: "14:00–17:00", prices: [100, 115, 130, 145] },
+      { schedule: "10:00–13:00", prices: [...SESSION_3H_MORNING] },
+      { schedule: "10:00–12:00 y 14:00–15:00", prices: [...SESSION_3H_SPLIT] },
+      { schedule: "12:00–15:00", prices: [...SESSION_3H_MIDDAY] },
+      { schedule: "14:00–17:00", prices: [...SESSION_3H_AFTERNOON] },
     ],
   },
   {
-    id: "clases-3h-5-8",
-    titleEs: "CLASES GRUPALES – 3 HORAS",
-    titleEn: "GROUP LESSONS – 3 HOURS",
+    id: "full-day",
+    titleEs: "FULL DAY",
+    titleEn: "FULL DAY",
     season: CURRENT_SEASON.key,
-    groupSizeLabel: "5–8 personas",
-    headers: ["Horario", "5 personas", "6 personas", "7 personas", "8 personas"],
-    rows: [
-      { schedule: "09:00–12:00", prices: [170, 185, 200, 215] },
-      { schedule: "10:00–13:00", prices: [180, 195, 210, 225] },
-      { schedule: "10:00–12:00 y 14:00–15:00", prices: [170, 185, 200, 215] },
-      { schedule: "12:00–15:00", prices: [170, 185, 200, 215] },
-      { schedule: "14:00–17:00", prices: [160, 175, 190, 205] },
-    ],
+    groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
+    headers: unifiedHeadersEs,
+    rows: [{ schedule: "10:00 – 16:00", prices: [...SESSION_FULL_DAY] }],
   },
 ];
 
@@ -178,35 +154,29 @@ export const legacyPriceTables = seasonPriceTables;
 export const legacyFromPrices = [
   {
     productId: "full-day",
-    fromPrice: 160,
-    labelEs: "Full Day — desde 160 €",
-    labelEn: "Full Day — from €160",
+    fromPrice: SESSION_FULL_DAY[0],
+    labelEs: `Full Day — desde ${SESSION_FULL_DAY[0]} €`,
+    labelEn: `Full Day — from €${SESSION_FULL_DAY[0]}`,
     descriptionEs: "5 h + 1 h comodín. Experiencia personalizada. Recogida en hotel.",
     descriptionEn: "5 h lesson + 1 h buffer. Personalised experience. Hotel pick-up.",
   },
   {
     productId: "medio-dia",
-    fromPrice: 65,
-    labelEs: "Clases Forfait medio día — desde 65 €",
-    labelEn: "Half-day lift pass lessons — from €65",
-    descriptionEs: "2 h a partir de las 13:00.",
-    descriptionEn: "2 h from 1:00 pm.",
-  },
-  {
-    productId: "clase-grabada",
-    fromPrice: 20,
-    labelEs: "Clase grabada — desde 20 €",
-    labelEn: "Recorded lesson — from €20",
-    descriptionEs: "Vídeo correcciones.",
-    descriptionEn: "Video feedback.",
+    fromPrice: SESSION_2H_AFTERNOON[0],
+    labelEs: `Clases de 2 h — desde ${SESSION_2H_AFTERNOON[0]} €`,
+    labelEn: `2-hour lessons — from €${SESSION_2H_AFTERNOON[0]}`,
+    descriptionEs: "2 h en franja de tarde.",
+    descriptionEn: "2 h afternoon slot.",
   },
 ] as const;
 
 export const priceNotes = {
   vatEs: "Todos los precios tienen el IVA incluido.",
   vatEn: "All prices include VAT.",
-  extraPersonLegacyEs: "Incremento típico legado: +10/15 € por persona extra.",
-  extraPersonLegacyEn: "Typical legacy surcharge: +€10/15 per extra person.",
-  extraPersonCurrentEs: "Full Day actual: +25 € por persona extra.",
-  extraPersonCurrentEn: "Current Full Day: +€25 per extra person.",
+  groupTotalEs: "Importe total del grupo (no por persona).",
+  groupTotalEn: "Total price for the group (not per person).",
+  tablesIntroEs:
+    "Para clases particulares y medio día. Elige cuántas personas sois y consulta el precio según el horario.",
+  tablesIntroEn:
+    "For private and half-day lessons. Select your group size and check the price for each time slot.",
 };

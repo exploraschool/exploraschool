@@ -57,13 +57,13 @@ export default async function DisciplinePage({ params }: Props) {
               {showModalities
                 ? pickLocale(
                     locale,
-                    "Clases en pista, freeride y freestyle con instructores titulados. Punto de encuentro en Borreguiles, salida Al-Andalus.",
-                    "Piste, freeride and freestyle lessons with qualified instructors. Meeting point at Borreguiles, Al-Andalus gondola exit.",
+                    "Clases en pista, freeride y freestyle con instructores titulados. Punto de encuentro oficial en la estación de Sierra Nevada (Google Maps).",
+                    "Piste, freeride and freestyle lessons with qualified instructors. Official meeting point at Sierra Nevada ski resort (Google Maps).",
                   )
                 : pickLocale(
                     locale,
-                    "Clases particulares y grupales con instructores con nombre y cara. Punto de encuentro en Borreguiles.",
-                    "Private and group lessons with named instructors. Meeting point at Borreguiles.",
+                    "Clases de 1 a 8 participantes con instructores con nombre y cara. Punto de encuentro en la estación de Sierra Nevada.",
+                    "Lessons for 1 to 8 participants with named instructors. Meeting point at Sierra Nevada ski resort.",
                   )}
             </p>
             <a href="#clases-disponibles" className="btn-primary mt-8 inline-flex !w-auto">
