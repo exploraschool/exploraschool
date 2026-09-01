@@ -21,7 +21,7 @@ export function CartBadge() {
         <circle cx="18" cy="20" r="1.5" fill="currentColor" stroke="none" />
       </svg>
       {isReady && count > 0 && (
-        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[0.65rem] font-bold text-white shadow-md">
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent-dark px-1 text-[0.65rem] font-bold text-white shadow-md">
           {count > 9 ? "9+" : count}
         </span>
       )}

@@ -33,13 +33,13 @@ export function TrustBar({ locale }: TrustBarProps) {
       value: `${years}+`,
       label: pickLocale(locale, "Años en Sierra Nevada", "Years in Sierra Nevada"),
       sub: `${pickLocale(locale, "Desde", "Since")} ${site.foundedYear}`,
-      accent: "text-accent",
+      accent: "text-hielo",
     },
     {
       value: "ES / EN",
       label: pickLocale(locale, "Idiomas", "Languages"),
       sub: pickLocale(locale, "Clases bilingües", "Bilingual lessons"),
-      accent: "text-hielo-light",
+      accent: "text-hielo",
     },
   ];
 

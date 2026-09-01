@@ -61,7 +61,7 @@ export function BookingPriceSummary({
               {unitPrice.discountActive && (
                 <p className="text-[0.625rem] text-muted line-through">{unitPrice.listPrice} €</p>
               )}
-              <p className="font-display text-base font-semibold text-accent">{unitPrice.finalPrice} €</p>
+              <p className="font-display text-base font-semibold text-accent-dark">{unitPrice.finalPrice} €</p>
             </>
           ) : (
             <>
@@ -71,7 +71,7 @@ export function BookingPriceSummary({
               {display.discountActive && !hasDates && (
                 <p className="text-[0.625rem] text-muted line-through">{display.listPrice} €</p>
               )}
-              <p className="font-display text-base font-semibold text-accent">
+              <p className="font-display text-base font-semibold text-accent-dark">
                 {hasDates ? `${total} €` : `${perSession} €`}
               </p>
             </>
@@ -106,7 +106,7 @@ export function BookingPriceSummary({
               {unitPrice.discountActive ? (
                 <>
                   <p className="text-xs text-muted line-through">{unitPrice.listPrice} €</p>
-                  <p className="font-display text-lg font-semibold text-accent">{unitPrice.finalPrice} €</p>
+                  <p className="font-display text-lg font-semibold text-accent-dark">{unitPrice.finalPrice} €</p>
                 </>
               ) : (
                 <p className="font-display text-lg font-semibold text-hielo">{unitPrice.finalPrice} €</p>
@@ -115,7 +115,7 @@ export function BookingPriceSummary({
           ) : display.discountActive ? (
             <div>
               <p className="text-xs text-muted line-through">{hasDates ? `${listTotal} €` : `${display.listPrice} €`}</p>
-              <p className="font-display text-lg font-semibold text-accent">
+              <p className="font-display text-lg font-semibold text-accent-dark">
                 {hasDates ? `${total} €` : `${perSession} €`}
               </p>
             </div>

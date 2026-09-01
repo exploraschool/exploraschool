@@ -364,7 +364,7 @@ export function MultiDatePicker({
                   aria-label={formatCartDate(dateKey, locale)}
                   className={`flex h-9 w-full items-center justify-center rounded-lg text-sm font-semibold leading-none transition sm:h-11 sm:rounded-xl sm:text-[0.9375rem] ${
                     isCommitted
-                      ? "bg-accent text-white shadow-md shadow-accent/25"
+                      ? "bg-accent-dark text-white shadow-md shadow-accent-dark/25"
                       : isPreview
                         ? "bg-accent/20 text-accent"
                         : disabled || atMax

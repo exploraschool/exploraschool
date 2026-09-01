@@ -55,10 +55,10 @@ export function ProductsSection({
                     {product.fromPrice && (() => {
                       const price = resolvePriceDisplay(product.fromPrice);
                       return (
-                        <span className="absolute right-3 top-3 rounded-full bg-accent px-2.5 py-0.5 text-xs font-bold text-white">
+                        <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-2.5 py-0.5 text-xs font-bold text-white">
                           {pickLocale(locale, "desde", "from")} {price.finalPrice} €
                           {price.discountActive && (
-                            <span className="ml-1 opacity-80">(-{price.discountPercent}%)</span>
+                            <span className="ml-1 text-white">(-{price.discountPercent}%)</span>
                           )}
                         </span>
                       );
@@ -115,10 +115,10 @@ export function ProductsSection({
                   {product.fromPrice && (() => {
                     const price = resolvePriceDisplay(product.fromPrice);
                     return (
-                      <span className="absolute right-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-bold text-white">
+                      <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-3 py-1 text-xs font-bold text-white">
                         {pickLocale(locale, "desde", "from")} {price.finalPrice} €
                         {price.discountActive && (
-                          <span className="ml-1 opacity-80">(-{price.discountPercent}%)</span>
+                          <span className="ml-1 text-white">(-{price.discountPercent}%)</span>
                         )}
                       </span>
                     );

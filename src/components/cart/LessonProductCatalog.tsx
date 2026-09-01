@@ -49,7 +49,7 @@ function ProductCard({
       <div className="flex items-start justify-between gap-3">
         <div>
           {featured && (
-            <span className="mb-2 inline-block rounded-full bg-accent/10 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-accent">
+            <span className="mb-2 inline-block rounded-full bg-accent-dark/10 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-accent-dark">
               {pickLocale(locale, "Popular", "Popular")}
             </span>
           )}

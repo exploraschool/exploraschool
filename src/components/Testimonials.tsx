@@ -26,7 +26,7 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
               href={site.tripAdvisor.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-oro-light"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-semibold text-white"
             >
               {site.tripAdvisor.rating} ★ TripAdvisor
             </a>
@@ -45,7 +45,7 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
                 <p className="flex-1 text-sm leading-relaxed text-on-dark line-clamp-4">
                   &ldquo;{pickLocale(locale, review.textEs, review.textEn)}&rdquo;
                 </p>
-                <footer className="mt-3 border-t border-white/10 pt-3 text-xs text-oro-light">
+                <footer className="mt-3 border-t border-white/10 pt-3 text-xs text-nieve/85">
                   <cite className="not-italic font-semibold">{review.author}</cite>
                 </footer>
               </blockquote>

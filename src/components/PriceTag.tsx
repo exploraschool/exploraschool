@@ -28,7 +28,7 @@ export function PriceTag({
 
   if (!display.discountActive) {
     return (
-      <span className={`text-accent ${sizes.price} ${className}`}>
+      <span className={`text-accent-dark ${sizes.price} ${className}`}>
         {prefix}
         {display.finalPrice} €{suffix}
       </span>
@@ -41,7 +41,7 @@ export function PriceTag({
         {prefix}
         {display.listPrice} €{suffix}
       </span>
-      <span className={`text-accent ${sizes.price}`}>
+      <span className={`text-accent-dark ${sizes.price}`}>
         {display.finalPrice} €{suffix}
       </span>
       <span
