@@ -294,9 +294,9 @@ export function MultiDatePicker({
         </div>
       )}
 
-      <div className="mx-auto w-full max-w-[21.5rem]">
+      <div className="mx-auto w-full max-w-full sm:max-w-[21.5rem]">
         <div className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(10,18,25,0.04)]">
-          <div className="flex items-center justify-between border-b border-hielo/10 bg-nieve/60 px-3 py-3">
+          <div className="flex items-center justify-between border-b border-hielo/10 bg-nieve/60 px-2.5 py-2.5 sm:px-3 sm:py-3">
             <button
               type="button"
               onClick={goToPrevMonth}
@@ -323,14 +323,13 @@ export function MultiDatePicker({
           </div>
 
           <div
-            className="grid grid-cols-7 gap-1.5 p-3"
-            style={{ gridTemplateRows: `auto repeat(${CALENDAR_ROWS}, 2.75rem)` }}
+            className="grid grid-cols-7 gap-1 p-2.5 sm:gap-1.5 sm:p-3"
             onMouseLeave={() => setHoverDate(null)}
           >
             {weekdays.map((label) => (
               <div
                 key={label}
-                className="flex h-8 items-center justify-center text-[0.6875rem] font-bold uppercase tracking-wide text-muted"
+                className="flex h-7 items-center justify-center text-[0.625rem] font-bold uppercase tracking-wide text-muted sm:h-8 sm:text-[0.6875rem]"
               >
                 {label}
               </div>
@@ -338,7 +337,7 @@ export function MultiDatePicker({
 
             {calendarDays.map((cell, index) => {
               if (!cell) {
-                return <div key={`empty-${index}`} className="h-11" aria-hidden />;
+                return <div key={`empty-${index}`} className="h-9 sm:h-11" aria-hidden />;
               }
 
               const { day, dateKey } = cell;
@@ -363,7 +362,7 @@ export function MultiDatePicker({
                   }}
                   aria-pressed={inRange}
                   aria-label={formatCartDate(dateKey, locale)}
-                  className={`flex h-11 w-full items-center justify-center rounded-xl text-[0.9375rem] font-semibold leading-none transition ${
+                  className={`flex h-9 w-full items-center justify-center rounded-lg text-sm font-semibold leading-none transition sm:h-11 sm:rounded-xl sm:text-[0.9375rem] ${
                     isCommitted
                       ? "bg-accent text-white shadow-md shadow-accent/25"
                       : isPreview

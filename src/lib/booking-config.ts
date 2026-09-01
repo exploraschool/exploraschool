@@ -169,8 +169,8 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
   },
   "medio-dia": {
     profile: "session",
-    slotIds: ["2h-12-14", "2h-14-16"],
-    defaultSlotId: "2h-14-16",
+    slotIds: ["3h-14-17"],
+    defaultSlotId: "3h-14-17",
     minPeople: 1,
     maxPeople: 8,
   },

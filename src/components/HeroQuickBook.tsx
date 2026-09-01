@@ -29,7 +29,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-xl sm:p-5"
+      className="w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-xl sm:p-5"
     >
       <p className="mb-3 text-xs font-bold uppercase tracking-wider text-oro-light">
         {pickLocale(locale, "Reserva rápida", "Quick booking")}

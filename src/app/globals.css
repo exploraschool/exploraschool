@@ -152,6 +152,14 @@
     @apply relative mt-5 flex flex-wrap gap-2.5 sm:mt-6;
   }
 
+  .back-link {
+    @apply relative inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition hover:underline;
+  }
+
+  .content-narrow {
+    @apply mx-auto w-full max-w-3xl;
+  }
+
   .glass-nav {
     @apply border-b border-white/20 bg-white/75 shadow-[0_4px_30px_rgba(10,18,25,0.06)] backdrop-blur-xl;
   }
@@ -473,4 +481,20 @@
 
 .group:hover .image-shine::after {
   transform: translateX(100%);
+}
+
+/* Booking modal: lock page scroll and hide bottom overlays */
+body.modal-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.modal-open [data-cookie-banner] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body.modal-open [data-sticky-book-bar] {
+  visibility: hidden;
+  pointer-events: none;
 }

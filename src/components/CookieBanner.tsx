@@ -40,6 +40,7 @@ export function CookieBanner() {
       role="dialog"
       aria-labelledby="cookie-banner-title"
       aria-live="polite"
+      data-cookie-banner
       className={`fixed inset-x-0 bottom-0 z-50 border-t border-hielo/10 bg-white/90 shadow-[0_-8px_32px_rgba(14,26,36,0.08)] backdrop-blur-xl transition-all duration-300 ease-out sm:inset-x-4 sm:bottom-4 sm:rounded-2xl sm:border ${
         mounted ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 sm:translate-y-4"
       }`}

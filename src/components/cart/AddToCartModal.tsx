@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import {
@@ -22,6 +23,7 @@ import {
   type TimeSlotId,
 } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { MultiDatePicker } from "@/components/cart/MultiDatePicker";
 import { TimeSlotPicker } from "@/components/cart/TimeSlotPicker";
 import { BookingPriceSummary } from "@/components/cart/BookingPriceSummary";
@@ -59,6 +61,13 @@ export function AddToCartModal({
   const [notes, setNotes] = useState("");
   const [added, setAdded] = useState(false);
   const [addedCount, setAddedCount] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useBodyScrollLock(open && !!product);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -74,12 +83,23 @@ export function AddToCartModal({
     }
   }, [open, product, defaultDiscipline, defaultInstructorSlug, bookingConfig]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, onClose]);
+
   const sessionPrice = useMemo(
     () => calculateSessionPrice(productId, participants, timeSlotId),
     [productId, participants, timeSlotId],
   );
 
-  if (!open || !product) return null;
+  if (!mounted || !open || !product) return null;
 
   const availableDisciplines = getMainDisciplines().filter((d) =>
     product.disciplines.includes(d.id),
@@ -141,8 +161,8 @@ export function AddToCartModal({
     setTimeout(() => onClose(), 1400);
   }
 
-  return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center p-0 sm:items-center sm:p-4">
+  const modal = (
+    <div className="fixed inset-0 z-[110] flex items-end justify-center sm:items-center sm:p-4">
       <button
         type="button"
         className="absolute inset-0 bg-pizarra/60 backdrop-blur-sm"
@@ -153,11 +173,11 @@ export function AddToCartModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-to-cart-title"
-        className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl"
+        className="relative flex w-full max-w-2xl max-h-[min(92dvh,100%)] flex-col rounded-t-2xl bg-white shadow-2xl sm:max-h-[min(90dvh,100%)] sm:rounded-2xl"
       >
-        <div className="sticky top-0 z-10 border-b border-hielo/10 bg-white/95 px-5 py-4 backdrop-blur-md sm:px-6">
+        <div className="shrink-0 border-b border-hielo/10 bg-white px-5 py-4 sm:px-6">
           <div className="flex items-start justify-between gap-4">
-            <div>
+            <div className="min-w-0">
               <p className="eyebrow">{t("addToCart")}</p>
               <h2 id="add-to-cart-title" className="font-display text-xl font-semibold text-pizarra">
                 {pickLocale(locale, product.titleEs, product.titleEn)}
@@ -185,97 +205,141 @@ export function AddToCartModal({
             </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-5 px-5 py-5 sm:px-6 sm:py-6">
-            <p className="text-sm text-muted">
-              {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
-            </p>
+          <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
+            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto overscroll-contain px-5 py-5 sm:px-6">
+              <p className="text-sm text-muted">
+                {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
+              </p>
 
-            <MultiDatePicker
-              locale={locale}
-              dates={dates}
-              onChange={setDates}
-              minDays={minDays}
-              maxDays={maxDays}
-              requireConsecutiveDays={requireConsecutiveDays}
-              labels={{
-                title: minDays && maxDays ? t("courseDates") : t("dates"),
-                hint:
-                  minDays && maxDays
-                    ? t("courseDatesHint", { min: minDays, max: maxDays })
-                    : t("datesHint"),
-                empty:
-                  minDays && maxDays
-                    ? t("courseDatesEmpty", { min: minDays, max: maxDays })
-                    : t("datesEmpty"),
-              }}
-            />
-
-            {slots.length > 0 && (
-              <TimeSlotPicker
+              <MultiDatePicker
                 locale={locale}
-                slots={slots}
-                value={timeSlotId}
-                onChange={(id) => setTimeSlotId(id as TimeSlotId)}
-                title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+                dates={dates}
+                onChange={setDates}
+                minDays={minDays}
+                maxDays={maxDays}
+                requireConsecutiveDays={requireConsecutiveDays}
+                labels={{
+                  title: minDays && maxDays ? t("courseDates") : t("dates"),
+                  hint:
+                    minDays && maxDays
+                      ? t("courseDatesHint", { min: minDays, max: maxDays })
+                      : t("datesHint"),
+                  empty:
+                    minDays && maxDays
+                      ? t("courseDatesEmpty", { min: minDays, max: maxDays })
+                      : t("datesEmpty"),
+                }}
               />
-            )}
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label htmlFor="cart-participants" className="mb-1.5 block text-sm font-medium">
-                  {t("participants")} *
-                </label>
-                <input
-                  id="cart-participants"
-                  type="number"
-                  required
-                  min={minPeople}
-                  max={maxPeople}
-                  value={participants}
-                  onChange={(e) => setParticipants(Number(e.target.value))}
-                  className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+
+              {slots.length > 0 && (
+                <TimeSlotPicker
+                  locale={locale}
+                  slots={slots}
+                  value={timeSlotId}
+                  onChange={(id) => setTimeSlotId(id as TimeSlotId)}
+                  title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
                 />
-                <p className="mt-1 text-xs text-muted">
-                  {minPeople}–{maxPeople} {t("peopleRange")}
-                  {productId === "curso-snow" &&
-                    pickLocale(
-                      locale,
-                      ` · Mínimo ${minPeople} para realizar el curso`,
-                      ` · Minimum ${minPeople} required to run the course`,
-                    )}
-                </p>
+              )}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="cart-participants" className="mb-1.5 block text-sm font-medium">
+                    {t("participants")} *
+                  </label>
+                  <input
+                    id="cart-participants"
+                    type="number"
+                    required
+                    min={minPeople}
+                    max={maxPeople}
+                    value={participants}
+                    onChange={(e) => setParticipants(Number(e.target.value))}
+                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                  />
+                  <p className="mt-1 text-xs text-muted">
+                    {minPeople}–{maxPeople} {t("peopleRange")}
+                    {productId === "curso-snow" &&
+                      pickLocale(
+                        locale,
+                        ` · Mínimo ${minPeople} para realizar el curso`,
+                        ` · Minimum ${minPeople} required to run the course`,
+                      )}
+                  </p>
+                </div>
+
+                {availableDisciplines.length > 1 ? (
+                  <div>
+                    <label htmlFor="cart-discipline" className="mb-1.5 block text-sm font-medium">
+                      {t("discipline")}
+                    </label>
+                    <select
+                      id="cart-discipline"
+                      value={discipline}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDiscipline(value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "");
+                        setModality("");
+                        setInstructorSlug("");
+                      }}
+                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                    >
+                      <option value="">{t("selectDiscipline")}</option>
+                      {availableDisciplines.map((d) => (
+                        <option key={d.id} value={d.id}>
+                          {pickLocale(locale, d.nameEs, d.nameEn)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ) : (
+                  <div>
+                    <label htmlFor="cart-instructor" className="mb-1.5 block text-sm font-medium">
+                      {t("instructor")}
+                    </label>
+                    <select
+                      id="cart-instructor"
+                      value={instructorSlug}
+                      onChange={(e) => setInstructorSlug(e.target.value)}
+                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                    >
+                      <option value="">{t("anyInstructor")}</option>
+                      {instructors.map((i) => (
+                        <option key={i.slug} value={i.slug}>
+                          {i.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
               </div>
 
-              {availableDisciplines.length > 1 ? (
+              {availableModalities.length > 0 && (
                 <div>
-                  <label htmlFor="cart-discipline" className="mb-1.5 block text-sm font-medium">
-                    {t("discipline")}
+                  <label htmlFor="cart-modality" className="mb-1.5 block text-sm font-medium">
+                    {t("modality")}
                   </label>
                   <select
-                    id="cart-discipline"
-                    value={discipline}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDiscipline(value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "");
-                      setModality("");
-                      setInstructorSlug("");
-                    }}
+                    id="cart-modality"
+                    value={modality}
+                    onChange={(e) => setModality(e.target.value as ModalityId | "")}
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
                   >
-                    <option value="">{t("selectDiscipline")}</option>
-                    {availableDisciplines.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {pickLocale(locale, d.nameEs, d.nameEn)}
+                    <option value="">{t("selectModality")}</option>
+                    {availableModalities.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {pickLocale(locale, m.nameEs, m.nameEn)}
                       </option>
                     ))}
                   </select>
                 </div>
-              ) : (
+              )}
+
+              {availableDisciplines.length > 1 && (
                 <div>
-                  <label htmlFor="cart-instructor" className="mb-1.5 block text-sm font-medium">
+                  <label htmlFor="cart-instructor-2" className="mb-1.5 block text-sm font-medium">
                     {t("instructor")}
                   </label>
                   <select
-                    id="cart-instructor"
+                    id="cart-instructor-2"
                     value={instructorSlug}
                     onChange={(e) => setInstructorSlug(e.target.value)}
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
@@ -289,89 +353,51 @@ export function AddToCartModal({
                   </select>
                 </div>
               )}
+
+              <div>
+                <label htmlFor="cart-notes" className="mb-1.5 block text-sm font-medium">
+                  {t("notes")}
+                </label>
+                <textarea
+                  id="cart-notes"
+                  rows={2}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder={t("notesPlaceholder")}
+                  className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                />
+              </div>
             </div>
 
-            {availableModalities.length > 0 && (
-              <div>
-                <label htmlFor="cart-modality" className="mb-1.5 block text-sm font-medium">
-                  {t("modality")}
-                </label>
-                <select
-                  id="cart-modality"
-                  value={modality}
-                  onChange={(e) => setModality(e.target.value as ModalityId | "")}
-                  className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
-                >
-                  <option value="">{t("selectModality")}</option>
-                  {availableModalities.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {pickLocale(locale, m.nameEs, m.nameEn)}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {availableDisciplines.length > 1 && (
-              <div>
-                <label htmlFor="cart-instructor-2" className="mb-1.5 block text-sm font-medium">
-                  {t("instructor")}
-                </label>
-                <select
-                  id="cart-instructor-2"
-                  value={instructorSlug}
-                  onChange={(e) => setInstructorSlug(e.target.value)}
-                  className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
-                >
-                  <option value="">{t("anyInstructor")}</option>
-                  {instructors.map((i) => (
-                    <option key={i.slug} value={i.slug}>
-                      {i.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="cart-notes" className="mb-1.5 block text-sm font-medium">
-                {t("notes")}
-              </label>
-              <textarea
-                id="cart-notes"
-                rows={2}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={t("notesPlaceholder")}
-                className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+            <div className="shrink-0 space-y-3 border-t border-hielo/10 bg-white px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
+              <BookingPriceSummary
+                locale={locale}
+                productId={productId}
+                sessionPrice={sessionPrice}
+                datesCount={dates.length}
+                participants={participants}
               />
-            </div>
 
-            <BookingPriceSummary
-              locale={locale}
-              productId={productId}
-              sessionPrice={sessionPrice}
-              datesCount={dates.length}
-              participants={participants}
-            />
-
-            <div className="flex flex-col gap-3 pt-2 sm:flex-row">
-              <button
-                type="submit"
-                disabled={!datesValid || sessionPrice === null}
-                className="btn-primary flex-1 disabled:opacity-50"
-              >
-                {dates.length > 1
-                  ? t("addDaysToCart", { count: dates.length })
-                  : t("addToCart")}
-              </button>
-              <button type="button" onClick={onClose} className="btn-secondary flex-1">
-                {t("cancel")}
-              </button>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="submit"
+                  disabled={!datesValid || sessionPrice === null}
+                  className="btn-primary flex-1 disabled:opacity-50"
+                >
+                  {dates.length > 1
+                    ? t("addDaysToCart", { count: dates.length })
+                    : t("addToCart")}
+                </button>
+                <button type="button" onClick={onClose} className="btn-secondary flex-1">
+                  {t("cancel")}
+                </button>
+              </div>
             </div>
           </form>
         )}
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

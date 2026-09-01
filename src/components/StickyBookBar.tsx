@@ -23,6 +23,7 @@ export function StickyBookBar({ locale }: StickyBookBarProps) {
 
   return (
     <div
+      data-sticky-book-bar
       className="fixed bottom-0 left-0 right-0 z-40 border-t border-hielo/10 bg-white/95 px-4 py-3 shadow-[0_-8px_32px_rgba(10,18,25,0.12)] backdrop-blur-xl md:hidden"
       role="region"
       aria-label={pickLocale(locale, "Reserva rápida", "Quick booking")}

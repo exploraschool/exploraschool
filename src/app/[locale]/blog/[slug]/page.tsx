@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { Link } from "@/i18n/routing";
+import { BackLink } from "@/components/BackLink";
 import { blogPosts, getBlogPost } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
 import type { Metadata } from "next";
@@ -53,19 +53,26 @@ export default async function BlogPostPage({ params }: Props) {
   const content = pickLocale(locale, post.contentEs, post.contentEn);
 
   return (
-    <article className="section-padding">
-      <div className="container-page max-w-3xl">
-        <Link href="/blog" className="text-sm font-medium text-hielo hover:text-accent">
-          ← {pickLocale(locale, "Volver al blog", "Back to blog")}
-        </Link>
-        <time className="mt-6 block text-xs font-medium uppercase tracking-wider text-oro">
-          {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
-        </time>
-        <h1 className="mt-3 font-display text-4xl font-semibold">
-          {pickLocale(locale, post.titleEs, post.titleEn)}
-        </h1>
-        <div className="mt-8">{renderMarkdown(content)}</div>
-      </div>
-    </article>
+    <>
+      <section className="page-header">
+        <div className="container-page">
+          <BackLink href="/blog">
+            {pickLocale(locale, "Volver al blog", "Back to blog")}
+          </BackLink>
+          <time className="mt-4 block text-xs font-medium uppercase tracking-wider text-oro">
+            {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
+          </time>
+          <h1 className="page-title mt-2 sm:mt-2.5">
+            {pickLocale(locale, post.titleEs, post.titleEn)}
+          </h1>
+        </div>
+      </section>
+
+      <article className="section-padding">
+        <div className="container-page content-narrow">
+          {renderMarkdown(content)}
+        </div>
+      </article>
+    </>
   );
 }

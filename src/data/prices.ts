@@ -162,11 +162,11 @@ export const legacyFromPrices = [
   },
   {
     productId: "medio-dia",
-    fromPrice: SESSION_2H_AFTERNOON[0],
-    labelEs: `Clases de 2 h — desde ${SESSION_2H_AFTERNOON[0]} €`,
-    labelEn: `2-hour lessons — from €${SESSION_2H_AFTERNOON[0]}`,
-    descriptionEs: "2 h en franja de tarde.",
-    descriptionEn: "2 h afternoon slot.",
+    fromPrice: SESSION_3H_AFTERNOON[0],
+    labelEs: `Forfait medio día — desde ${SESSION_3H_AFTERNOON[0]} €`,
+    labelEn: `Half-day lift pass lessons — from €${SESSION_3H_AFTERNOON[0]}`,
+    descriptionEs: "3 h de 14:00 a 17:00.",
+    descriptionEn: "3 h from 2:00 to 5:00 pm.",
   },
 ] as const;
 
@@ -176,7 +176,7 @@ export const priceNotes = {
   groupTotalEs: "Importe total del grupo (no por persona).",
   groupTotalEn: "Total price for the group (not per person).",
   tablesIntroEs:
-    "Para clases particulares y medio día. Elige cuántas personas sois y consulta el precio según el horario.",
+    "Para clases particulares. Elige cuántas personas sois y consulta el precio según el horario.",
   tablesIntroEn:
-    "For private and half-day lessons. Select your group size and check the price for each time slot.",
+    "For private lessons. Select your group size and check the price for each time slot.",
 };

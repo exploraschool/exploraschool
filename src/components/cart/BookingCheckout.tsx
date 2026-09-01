@@ -218,8 +218,11 @@ export function BookingCheckout() {
           ))}
         </div>
 
-        <div className="xl:sticky xl:top-24 xl:self-start">
-          <form onSubmit={handleSend} className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)]">
+        <div className="xl:sticky xl:top-20 xl:max-h-[calc(100dvh-5.5rem)] xl:self-start">
+          <form
+            onSubmit={handleSend}
+            className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)] xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-y-auto xl:overscroll-contain"
+          >
             <div className="border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
               <h2 className="font-display text-xl font-semibold text-hielo">{t("checkout")}</h2>
               <p className="mt-1.5 text-sm text-muted">{t("checkoutDesc")}</p>

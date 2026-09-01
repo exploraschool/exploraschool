@@ -38,8 +38,8 @@ export function PriceTables({ locale }: PriceTablesProps) {
           title={pickLocale(locale, "Tarifas por horario", "Prices by time slot")}
           description={pickLocale(
             locale,
-            "¿Necesitas comparar horarios o ver el precio según el tamaño del grupo? Usa esta tabla antes de reservar clases particulares o de medio día.",
-            "Need to compare time slots or see the price for your group size? Use this table before booking private or half-day lessons.",
+            "¿Necesitas comparar horarios o ver el precio según el tamaño del grupo? Usa esta tabla antes de reservar clases particulares.",
+            "Need to compare time slots or see the price for your group size? Use this table before booking private lessons.",
           )}
         />
         <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">

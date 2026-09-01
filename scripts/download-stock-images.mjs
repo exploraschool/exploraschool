@@ -74,7 +74,7 @@ const images = {
   "stock/discipline-telemark.jpg": sierraNevada.borreguiles7,
   "stock/discipline-adaptado.jpg": sierraNevada.borreguilesArea1,
   "stock/discipline-freestyle.jpg": sierraNevada.borreguiles1,
-  "stock/discipline-freeride.jpg": sierraNevada.laVisera,
+  "stock/discipline-freeride.jpg": sierraNevada.fueraDePista,
   "stock/discipline-ninos.jpg": sierraNevada.borreguilesArea2,
   "stock/product-full-day-panorama.jpg": sierraNevada.vistaBorreguiles3,
   "stock/product-kids.jpg": sierraNevada.borreguilesArea2,

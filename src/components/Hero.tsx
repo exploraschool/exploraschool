@@ -15,7 +15,7 @@ export function Hero({ locale }: HeroProps) {
   const showEarlyBird = isEarlyBirdActive();
 
   return (
-    <section className="relative min-h-[68svh] overflow-hidden bg-pizarra text-nieve sm:min-h-[72svh] lg:min-h-[76vh]">
+    <section className="relative min-h-[64svh] overflow-hidden bg-pizarra text-nieve sm:min-h-[72svh] lg:min-h-[76vh]">
       <Image
         src={media.hero}
         alt={pickLocale(
@@ -25,22 +25,22 @@ export function Hero({ locale }: HeroProps) {
         )}
         fill
         priority
-        className="object-cover object-[center_30%]"
+        className="object-cover object-[center_22%] sm:object-[center_30%]"
         sizes="100vw"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-br from-pizarra/90 via-pizarra/60 to-hielo/20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-pizarra/80 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pizarra/90 via-pizarra/55 to-hielo/15" />
+      <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/15 to-pizarra/35 sm:from-pizarra/80 sm:via-transparent sm:to-transparent" />
 
-      <div className="container-page relative flex min-h-[68svh] flex-col justify-center py-14 sm:min-h-[72svh] sm:py-16 lg:min-h-[76vh] lg:py-20">
-        <div className="grid items-center gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+      <div className="container-page relative flex min-h-[64svh] flex-col justify-start pt-5 pb-8 sm:min-h-[72svh] sm:justify-center sm:py-16 lg:min-h-[76vh] lg:py-20">
+        <div className="grid items-start gap-5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           <div className="max-w-xl animate-fade-up">
             <p className="eyebrow-pill">
               <span className="h-1.5 w-1.5 rounded-full bg-oro-light" aria-hidden />
               Sierra Nevada · Granada
             </p>
 
-            <h1 className="mt-4 font-display text-[1.75rem] font-semibold leading-[1.1] text-nieve sm:mt-5 sm:text-3xl md:text-[2.5rem] lg:text-4xl">
+            <h1 className="mt-3 font-display text-[1.65rem] font-semibold leading-[1.12] text-nieve sm:mt-5 sm:text-3xl md:text-[2.5rem] lg:text-4xl">
               {pickLocale(locale, "Clases de ", "Ski, snowboard & ")}
               <span className="text-oro-light">
                 {pickLocale(locale, "esquí y snowboard", "lessons")}
@@ -48,7 +48,7 @@ export function Hero({ locale }: HeroProps) {
               {pickLocale(locale, " en Sierra Nevada", " in Sierra Nevada")}
             </h1>
 
-            <p className="mt-3 text-sm leading-relaxed text-nieve/90 sm:mt-4 sm:text-base">
+            <p className="mt-2.5 text-sm leading-relaxed text-nieve/90 sm:mt-4 sm:text-base">
               {pickLocale(locale, site.heroLeadEs, site.heroLeadEn)}
             </p>
 
@@ -59,7 +59,7 @@ export function Hero({ locale }: HeroProps) {
               </p>
             )}
 
-            <div className="btn-stack mt-6 sm:mt-7">
+            <div className="btn-stack mt-5 sm:mt-7">
               <Link href="/clases" className="btn-primary">
                 {pickLocale(locale, "Elegir clases", "Choose lessons")}
               </Link>

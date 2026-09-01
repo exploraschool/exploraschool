@@ -33,7 +33,7 @@ export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSl
   return (
     <div>
       <p className="mb-2 text-sm font-medium">{title}</p>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-2 min-[480px]:grid-cols-2">
         {slots.map((slot) => {
           const selected = value === slot.id;
           return (
