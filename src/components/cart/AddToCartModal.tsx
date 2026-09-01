@@ -25,6 +25,7 @@ import { useCart } from "@/context/CartContext";
 import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
 import {
   calculateSessionPrice,
+  clampParticipantCount,
   getProductBookingConfig,
   getSlotLabel,
   getSlotsForProduct,
@@ -332,8 +333,15 @@ export function AddToCartModal({
                     required
                     min={minPeople}
                     max={maxPeople}
+                    step={1}
+                    inputMode="numeric"
                     value={participants}
-                    onChange={(e) => setParticipants(Number(e.target.value))}
+                    onChange={(e) =>
+                      setParticipants(clampParticipantCount(Number(e.target.value), productId))
+                    }
+                    onBlur={(e) =>
+                      setParticipants(clampParticipantCount(Number(e.target.value), productId))
+                    }
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
                   />
                   <p className="mt-1 text-xs text-muted">

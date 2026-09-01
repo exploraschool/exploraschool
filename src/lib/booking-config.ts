@@ -214,6 +214,17 @@ export function getProductBookingConfig(productId: ProductId): ProductBookingCon
   return PRODUCT_BOOKING_CONFIG[productId];
 }
 
+export function clampParticipantCount(
+  participants: number,
+  productId: ProductId,
+): number {
+  const config = PRODUCT_BOOKING_CONFIG[productId];
+  const minPeople = config.minPeople ?? 1;
+  const maxPeople = config.maxPeople ?? 8;
+  if (!Number.isFinite(participants)) return minPeople;
+  return Math.min(maxPeople, Math.max(minPeople, Math.round(participants)));
+}
+
 export function getSlotsForProduct(productId: ProductId): TimeSlot[] {
   const config = PRODUCT_BOOKING_CONFIG[productId];
   return config.slotIds.map((id) => TIME_SLOTS[id]);
