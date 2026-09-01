@@ -1,4 +1,3 @@
-import { initializeApp } from "firebase-admin/app";
 import { onDocumentCreated, onDocumentUpdated } from "firebase-functions/v2/firestore";
 import { defineSecret, defineString } from "firebase-functions/params";
 import { logger } from "firebase-functions";
@@ -7,8 +6,6 @@ import {
   buildTeamNotificationEmail,
   sendResendEmail,
 } from "./email.js";
-
-initializeApp();
 
 const resendApiKeyParam = defineSecret("RESEND_API_KEY");
 const leadConfirmSecretParam = defineSecret("LEAD_CONFIRM_SECRET");
