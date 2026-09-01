@@ -1,0 +1,61 @@
+import { setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/routing";
+import { blogPosts } from "@/data/blog";
+import { pickLocale } from "@/lib/locale";
+import type { Metadata } from "next";
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: pickLocale(locale, "Blog", "Blog"),
+    description: pickLocale(
+      locale,
+      "Consejos, novedades y experiencias de Explora School & Club en Sierra Nevada.",
+      "Tips, news and stories from Explora School & Club in Sierra Nevada.",
+    ),
+  };
+}
+
+export default async function BlogPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  return (
+    <>
+      <section className="border-b border-hielo/10 bg-white py-16">
+        <div className="container-page">
+          <p className="eyebrow">Blog</p>
+          <h1 className="mt-3 font-display text-4xl font-semibold">Blog</h1>
+        </div>
+      </section>
+
+      <section className="section-padding">
+        <div className="container-page grid gap-8 md:grid-cols-2">
+          {blogPosts.map((post) => (
+            <article key={post.slug} className="card hover:border-hielo/25">
+              <time className="text-xs font-medium uppercase tracking-wider text-oro">
+                {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
+              </time>
+              <h2 className="mt-3 font-display text-xl font-semibold">
+                <Link href={`/blog/${post.slug}`} className="hover:text-accent">
+                  {pickLocale(locale, post.titleEs, post.titleEn)}
+                </Link>
+              </h2>
+              <p className="mt-3 text-sm text-muted">
+                {pickLocale(locale, post.excerptEs, post.excerptEn)}
+              </p>
+              <Link
+                href={`/blog/${post.slug}`}
+                className="mt-4 inline-block text-sm font-semibold text-hielo hover:text-accent"
+              >
+                {pickLocale(locale, "Leer más →", "Read more →")}
+              </Link>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}

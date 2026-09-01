@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "clases": "Clases",
+    "equipo": "Equipo",
+    "blog": "Blog",
+    "faqs": "FAQs",
+    "contacto": "Contacto",
+    "reservar": "Reservar",
+    "club": "Club",
+    "comoLlegar": "Cómo llegar",
+    "menu": "Menú",
+    "close": "Cerrar"
+  },
+  "footer": {
+    "legal": "Legal",
+    "avisoLegal": "Aviso legal",
+    "privacidad": "Política de privacidad",
+    "cookies": "Política de cookies",
+    "vat": "Todos los precios incluyen IVA.",
+    "cetursa": "Explora School & Club no está afiliada a Cetursa Sierra Nevada, S.A. Forfait y seguro se contratan aparte en sierranevada.es o Plaza de Andalucía.",
+    "rights": "Todos los derechos reservados."
+  },
+  "common": {
+    "readMore": "Ver más",
+    "bookWhatsApp": "Reservar por WhatsApp",
+    "contactUs": "Contactar",
+    "viewAll": "Ver todo",
+    "from": "desde",
+    "perPerson": "/ persona",
+    "perDay": "/ día",
+    "hours": "horas",
+    "skipToContent": "Saltar al contenido",
+    "loading": "Cargando…",
+    "error": "Ha ocurrido un error",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "success": "Mensaje enviado. Te contactaremos pronto.",
+    "backHome": "Volver al inicio"
+  },
+  "cookies": {
+    "message": "Usamos cookies esenciales para el funcionamiento del sitio.",
+    "accept": "Aceptar",
+    "policy": "Política de cookies"
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Estamos a tu disposición. Escríbenos y te respondemos lo antes posible.",
+    "name": "Nombre",
+    "email": "Email",
+    "phone": "Teléfono",
+    "message": "Mensaje",
+    "privacy": "He leído y acepto la política de privacidad",
+    "whatsappTitle": "WhatsApp",
+    "whatsappDesc": "Respuesta rápida para reservas y consultas.",
+    "emailTitle": "Email",
+    "phoneTitle": "Teléfono",
+    "hoursTitle": "Horario"
+  },
+  "admin": {
+    "login": "Acceso admin",
+    "password": "Contraseña",
+    "enter": "Entrar",
+    "logout": "Salir",
+    "leads": "Leads",
+    "noLeads": "No hay leads todavía.",
+    "invalidPassword": "Contraseña incorrecta"
+  }
+}

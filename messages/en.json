@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "clases": "Lessons",
+    "equipo": "Team",
+    "blog": "Blog",
+    "faqs": "FAQs",
+    "contacto": "Contact",
+    "reservar": "Book",
+    "club": "Club",
+    "comoLlegar": "Getting here",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "footer": {
+    "legal": "Legal",
+    "avisoLegal": "Legal notice",
+    "privacidad": "Privacy policy",
+    "cookies": "Cookie policy",
+    "vat": "All prices include VAT.",
+    "cetursa": "Explora School & Club is not affiliated with Cetursa Sierra Nevada, S.A. Lift passes and insurance are purchased separately at sierranevada.es or Plaza de Andalucía.",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "readMore": "Read more",
+    "bookWhatsApp": "Book via WhatsApp",
+    "contactUs": "Contact us",
+    "viewAll": "View all",
+    "from": "from",
+    "perPerson": "/ person",
+    "perDay": "/ day",
+    "hours": "hours",
+    "skipToContent": "Skip to content",
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "send": "Send",
+    "sending": "Sending…",
+    "success": "Message sent. We will contact you soon.",
+    "backHome": "Back to home"
+  },
+  "cookies": {
+    "message": "We use essential cookies for site functionality.",
+    "accept": "Accept",
+    "policy": "Cookie policy"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "We are here for you. Write to us and we will reply as soon as possible.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "privacy": "I have read and accept the privacy policy",
+    "whatsappTitle": "WhatsApp",
+    "whatsappDesc": "Fast response for bookings and enquiries.",
+    "emailTitle": "Email",
+    "phoneTitle": "Phone",
+    "hoursTitle": "Opening hours"
+  },
+  "admin": {
+    "login": "Admin login",
+    "password": "Password",
+    "enter": "Sign in",
+    "logout": "Sign out",
+    "leads": "Leads",
+    "noLeads": "No leads yet.",
+    "invalidPassword": "Incorrect password"
+  }
+}
