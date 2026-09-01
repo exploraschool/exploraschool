@@ -1,7 +1,7 @@
 import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { getMainDisciplines } from "@/data/disciplines";
-import { site } from "@/data/site";
+import { getSiteUrl } from "@/lib/site-url";
 
 export type SitemapChangeFrequency =
   | "always"
@@ -58,7 +58,7 @@ export function getSitemapRoutes(): SitemapRoute[] {
 /** Build absolute URL for a locale + path (default locale is Spanish). */
 export function buildLocalizedUrl(locale: string, path: string): string {
   const normalized = path.startsWith("/") ? path : path ? `/${path}` : "";
-  return `${site.domain}/${locale}${normalized}`;
+  return `${getSiteUrl()}/${locale}${normalized}`;
 }
 
 /** hreflang map for all configured locales plus x-default. */

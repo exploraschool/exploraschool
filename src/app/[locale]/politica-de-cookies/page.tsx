@@ -1,12 +1,23 @@
 import { setRequestLocale } from "next-intl/server";
+import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return { title: pickLocale(locale, "Política de cookies", "Cookie policy") };
+  return buildPageMetadata({
+    locale,
+    path: "/politica-de-cookies",
+    title: pickLocale(locale, "Política de cookies", "Cookie policy"),
+    description: pickLocale(
+      locale,
+      `Política de cookies de ${site.name}. Información sobre el uso de cookies en el sitio web.`,
+      `Cookie policy for ${site.name}. Information about cookie use on this website.`,
+    ),
+  });
 }
 
 export default async function CookiesPage({ params }: Props) {

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { blogPosts, getBlogPost } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -12,10 +13,15 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = getBlogPost(slug);
   if (!post) return { title: "Blog" };
-  return { title: post.titleEs };
+  return buildPageMetadata({
+    locale,
+    path: `/blog/${slug}`,
+    title: pickLocale(locale, post.titleEs, post.titleEn),
+    description: pickLocale(locale, post.excerptEs, post.excerptEn),
+  });
 }
 
 function renderMarkdown(content: string) {

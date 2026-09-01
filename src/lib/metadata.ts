@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { routing } from "@/i18n/routing";
 import { site } from "@/data/site";
+import { getSiteUrl } from "@/lib/site-url";
 
 const DEFAULT_OG = "/images/logo-512.png";
 
@@ -12,6 +14,12 @@ type PageMeta = {
   noIndex?: boolean;
 };
 
+function buildLocalizedPageUrl(siteUrl: string, locale: string, path: string): string {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const pathSuffix = normalizedPath === "/" ? "" : normalizedPath;
+  return `${siteUrl}/${locale}${pathSuffix}`;
+}
+
 export function buildPageMetadata({
   locale,
   path,
@@ -20,21 +28,21 @@ export function buildPageMetadata({
   ogImage = DEFAULT_OG,
   noIndex = false,
 }: PageMeta): Metadata {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  const canonical = `${site.domain}/${locale}${normalizedPath === "/" ? "" : normalizedPath}`;
+  const siteUrl = getSiteUrl();
+  const canonical = buildLocalizedPageUrl(siteUrl, locale, path);
+  const languages = Object.fromEntries(
+    routing.locales.map((loc) => [loc, buildLocalizedPageUrl(siteUrl, loc, path)]),
+  ) as Record<string, string>;
+  languages["x-default"] = buildLocalizedPageUrl(siteUrl, routing.defaultLocale, path);
   const fullTitle = title.includes("Explora") ? title : `${title} | Explora School & Club`;
 
   return {
     title: fullTitle,
     description,
-    metadataBase: new URL(site.domain),
+    metadataBase: new URL(siteUrl),
     alternates: {
       canonical,
-      languages: {
-        es: `${site.domain}/es${normalizedPath === "/" ? "" : normalizedPath}`,
-        en: `${site.domain}/en${normalizedPath === "/" ? "" : normalizedPath}`,
-        "x-default": `${site.domain}/es${normalizedPath === "/" ? "" : normalizedPath}`,
-      },
+      languages,
     },
     openGraph: {
       type: "website",

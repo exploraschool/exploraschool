@@ -28,6 +28,11 @@ export function HomeSocialProof({ locale }: HomeSocialProofProps) {
               href={media.video.instagramProfile}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={pickLocale(
+                locale,
+                "Ver vídeos de Explora School en Instagram",
+                "Watch Explora School videos on Instagram",
+              )}
               className="group relative block aspect-video overflow-hidden rounded-2xl border border-white/10"
             >
               <Image

@@ -1,13 +1,23 @@
 import { setRequestLocale } from "next-intl/server";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return { title: pickLocale(locale, "Aviso legal", "Legal notice") };
+  return buildPageMetadata({
+    locale,
+    path: "/aviso-legal",
+    title: pickLocale(locale, "Aviso legal", "Legal notice"),
+    description: pickLocale(
+      locale,
+      `Aviso legal de ${site.name}. Información del titular del sitio web y condiciones de uso.`,
+      `Legal notice for ${site.name}. Website owner information and terms of use.`,
+    ),
+  });
 }
 
 export default async function AvisoLegalPage({ params }: Props) {

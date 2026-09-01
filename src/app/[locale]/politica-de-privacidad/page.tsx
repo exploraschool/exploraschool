@@ -1,13 +1,23 @@
 import { setRequestLocale } from "next-intl/server";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return { title: pickLocale(locale, "Política de privacidad", "Privacy policy") };
+  return buildPageMetadata({
+    locale,
+    path: "/politica-de-privacidad",
+    title: pickLocale(locale, "Política de privacidad", "Privacy policy"),
+    description: pickLocale(
+      locale,
+      `Política de privacidad de ${site.name}. Cómo tratamos tus datos personales y reservas.`,
+      `Privacy policy for ${site.name}. How we handle your personal data and bookings.`,
+    ),
+  });
 }
 
 export default async function PrivacidadPage({ params }: Props) {

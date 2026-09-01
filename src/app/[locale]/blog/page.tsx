@@ -2,20 +2,23 @@ import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
+import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
+  return buildPageMetadata({
+    locale,
+    path: "/blog",
     title: pickLocale(locale, "Blog", "Blog"),
     description: pickLocale(
       locale,
       "Consejos, novedades y experiencias de Explora School & Club en Sierra Nevada.",
       "Tips, news and stories from Explora School & Club in Sierra Nevada.",
     ),
-  };
+  });
 }
 
 export default async function BlogPage({ params }: Props) {

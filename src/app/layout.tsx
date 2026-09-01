@@ -2,7 +2,7 @@ import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { site } from "@/data/site";
+import { getSiteUrl } from "@/lib/site-url";
 import { media } from "@/lib/media";
 import "@/app/globals.css";
 
@@ -21,7 +21,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.domain),
+  metadataBase: new URL(getSiteUrl()),
   ...(googleSiteVerification
     ? { verification: { google: googleSiteVerification } }
     : {}),
