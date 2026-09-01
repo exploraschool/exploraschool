@@ -36,11 +36,11 @@ export const instructors: Instructor[] = [
   {
     slug: "reche",
     name: "Reche",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructora de esquí alpino y snowboard. Clases dinámicas y cercanas para que disfrutes de Sierra Nevada desde el primer día.",
+      "Instructora de esquí alpino. Clases dinámicas y cercanas para que disfrutes de Sierra Nevada desde el primer día.",
     bioEn:
-      "Alpine ski and snowboard instructor. Dynamic, friendly lessons so you enjoy Sierra Nevada from day one.",
+      "Alpine ski instructor. Dynamic, friendly lessons so you enjoy Sierra Nevada from day one.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 1,
@@ -49,11 +49,11 @@ export const instructors: Instructor[] = [
   {
     slug: "patri",
     name: "Patri",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Profesional, paciente y cercana. Especialista en esquí alpino y snowboard para adultos, adolescentes y familias.",
+      "Profesional, paciente y cercana. Especialista en esquí alpino para adultos, adolescentes y familias.",
     bioEn:
-      "Professional, patient and approachable. Specialist in alpine skiing and snowboard for adults, teens and families.",
+      "Professional, patient and approachable. Specialist in alpine skiing for adults, teens and families.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 2,
@@ -62,11 +62,11 @@ export const instructors: Instructor[] = [
   {
     slug: "lalo",
     name: "Lalo",
-    disciplines: ["esqui", "snowboard", "telemark"],
+    disciplines: ["esqui", "telemark"],
     bioEs:
-      "Perfil internacional en esquí, snowboard y telemark. Sesiones técnicas y amenas: pregunta tus objetivos y organiza la clase a tu medida.",
+      "Instructor de esquí alpino y telemark. Sesiones técnicas y amenas: pregunta tus objetivos y organiza la clase a tu medida.",
     bioEn:
-      "International profile across ski, snowboard and telemark. Technical yet fun sessions tailored to your goals.",
+      "Alpine ski and telemark instructor. Technical yet fun sessions tailored to your goals.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 3,
@@ -75,7 +75,7 @@ export const instructors: Instructor[] = [
   {
     slug: "jorge",
     name: "Jorge",
-    disciplines: ["esqui", "snowboard", "esqui-adaptado", "telemark"],
+    disciplines: ["esqui", "snowboard"],
     bioEs:
       "Instructor de esquí y snowboard con trato personal y clases amenas. Ideal para iniciación y para quien quiere seguir progresando con confianza.",
     bioEn:
@@ -88,11 +88,11 @@ export const instructors: Instructor[] = [
   {
     slug: "esau",
     name: "Esaú",
-    disciplines: ["esqui", "esqui-adaptado"],
+    disciplines: ["esqui", "telemark", "esqui-adaptado"],
     bioEs:
-      "Instructor de esquí alpino con enfoque cercano y didáctico. Te acompaña desde los primeros pasos hasta esquiar con autonomía.",
+      "Instructor de esquí alpino, telemark y esquí adaptado. Te acompaña desde los primeros pasos hasta esquiar con autonomía.",
     bioEn:
-      "Alpine ski instructor with a close, teaching-focused approach. Guides you from first steps to skiing independently.",
+      "Alpine ski, telemark and adaptive ski instructor. Guides you from first steps to skiing independently.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 5,
@@ -114,11 +114,11 @@ export const instructors: Instructor[] = [
   {
     slug: "estrella",
     name: "Estrella",
-    disciplines: ["esqui"],
+    disciplines: ["snowboard"],
     bioEs:
-      "Instructora del equipo Explora. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
+      "Instructora de snowboard. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
     bioEn:
-      "Explora team instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
+      "Snowboard instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 7,
@@ -127,11 +127,11 @@ export const instructors: Instructor[] = [
   {
     slug: "ale",
     name: "Ale",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["snowboard"],
     bioEs:
-      "Instructor de esquí y snowboard. Clases dinámicas para iniciación y perfeccionamiento en las pistas de Sierra Nevada.",
+      "Instructor de snowboard. Clases dinámicas para iniciación y perfeccionamiento en las pistas de Sierra Nevada.",
     bioEn:
-      "Ski and snowboard instructor. Dynamic lessons for beginners and improvers on Sierra Nevada's slopes.",
+      "Snowboard instructor. Dynamic lessons for beginners and improvers on Sierra Nevada's slopes.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 8,
@@ -140,11 +140,11 @@ export const instructors: Instructor[] = [
   {
     slug: "badillo",
     name: "Badillo",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["snowboard"],
     bioEs:
-      "Instructor del equipo Explora. Clases seguras y divertidas para disfrutar de la nieve en Sierra Nevada.",
+      "Instructor de snowboard. Clases seguras y divertidas para disfrutar de la nieve en Sierra Nevada.",
     bioEn:
-      "Explora team instructor. Safe, fun lessons to enjoy the snow in Sierra Nevada.",
+      "Snowboard instructor. Safe, fun lessons to enjoy the snow in Sierra Nevada.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 9,
@@ -153,11 +153,11 @@ export const instructors: Instructor[] = [
   {
     slug: "maria",
     name: "María",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructora del equipo Explora. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
+      "Instructora de esquí alpino. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
     bioEn:
-      "Explora team instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
+      "Alpine ski instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 10,
@@ -168,9 +168,9 @@ export const instructors: Instructor[] = [
     name: "Eva",
     disciplines: ["esqui", "snowboard"],
     bioEs:
-      "Instructora del equipo Explora. Clases dinámicas y divertidas para todas las edades y niveles en Sierra Nevada.",
+      "Instructora de esquí y snowboard. Clases dinámicas y divertidas para todas las edades y niveles en Sierra Nevada.",
     bioEn:
-      "Explora team instructor. Dynamic, fun lessons for all ages and levels in Sierra Nevada.",
+      "Ski and snowboard instructor. Dynamic, fun lessons for all ages and levels in Sierra Nevada.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 11,
@@ -179,11 +179,11 @@ export const instructors: Instructor[] = [
   {
     slug: "ferran",
     name: "Ferran",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructor del equipo Explora. Te guía en esquí y snowboard con la energía y profesionalidad del club.",
+      "Instructor de esquí alpino. Te guía en la nieve con la energía y profesionalidad del club.",
     bioEn:
-      "Explora team instructor. Guides you in ski and snowboard with the club's energy and professionalism.",
+      "Alpine ski instructor. Guides you on the snow with the club's energy and professionalism.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 12,
@@ -192,11 +192,11 @@ export const instructors: Instructor[] = [
   {
     slug: "luis",
     name: "Luis",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui", "telemark", "esqui-adaptado"],
     bioEs:
-      "Instructor del equipo Explora. Clases dinámicas y cercanas para disfrutar de Sierra Nevada desde el primer día.",
+      "Instructor de esquí alpino, telemark y esquí adaptado. Clases dinámicas y cercanas para disfrutar de Sierra Nevada desde el primer día.",
     bioEn:
-      "Explora team instructor. Dynamic, friendly lessons to enjoy Sierra Nevada from day one.",
+      "Alpine ski, telemark and adaptive ski instructor. Dynamic, friendly lessons to enjoy Sierra Nevada from day one.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 13,
@@ -205,11 +205,11 @@ export const instructors: Instructor[] = [
   {
     slug: "rocio",
     name: "Rocío",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructora del equipo Explora. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
+      "Instructora de esquí alpino. Clases personalizadas en Sierra Nevada con el trato cercano que nos caracteriza.",
     bioEn:
-      "Explora team instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
+      "Alpine ski instructor. Personalised lessons in Sierra Nevada with our signature friendly approach.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 14,
@@ -218,11 +218,11 @@ export const instructors: Instructor[] = [
   {
     slug: "violeta",
     name: "Violeta",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructora del equipo Explora. Clases seguras y divertidas para todas las edades y niveles en Sierra Nevada.",
+      "Instructora de esquí alpino. Clases seguras y divertidas para todas las edades y niveles en Sierra Nevada.",
     bioEn:
-      "Explora team instructor. Safe, fun lessons for all ages and levels in Sierra Nevada.",
+      "Alpine ski instructor. Safe, fun lessons for all ages and levels in Sierra Nevada.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 15,
@@ -231,11 +231,11 @@ export const instructors: Instructor[] = [
   {
     slug: "joan",
     name: "Joan",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructor del equipo Explora. Te guía en esquí y snowboard con energía y profesionalidad en Sierra Nevada.",
+      "Instructor de esquí alpino. Te guía en la nieve con energía y profesionalidad en Sierra Nevada.",
     bioEn:
-      "Explora team instructor. Guides you in ski and snowboard with energy and professionalism in Sierra Nevada.",
+      "Alpine ski instructor. Guides you on the snow with energy and professionalism in Sierra Nevada.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 16,
@@ -244,17 +244,23 @@ export const instructors: Instructor[] = [
   {
     slug: "benja",
     name: "Benja",
-    disciplines: ["esqui", "snowboard"],
+    disciplines: ["esqui"],
     bioEs:
-      "Instructor del equipo Explora. Clases amenas y técnicas para iniciación y perfeccionamiento en la nieve.",
+      "Instructor de esquí alpino. Clases amenas y técnicas para iniciación y perfeccionamiento en la nieve.",
     bioEn:
-      "Explora team instructor. Engaging, technical lessons for beginners and improvers on the snow.",
+      "Alpine ski instructor. Engaging, technical lessons for beginners and improvers on the snow.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 17,
     photo: "/images/instructors/benja.svg",
   },
 ];
+
+export const SNOWBOARD_ONLY_INSTRUCTOR_SLUGS = ["estrella", "badillo", "ale"] as const satisfies readonly InstructorSlug[];
+
+export function isSnowboardOnlyInstructor(slug: string): boolean {
+  return (SNOWBOARD_ONLY_INSTRUCTOR_SLUGS as readonly string[]).includes(slug);
+}
 
 export function getInstructorBySlug(slug: InstructorSlug): Instructor | undefined {
   return instructors.find((i) => i.slug === slug);

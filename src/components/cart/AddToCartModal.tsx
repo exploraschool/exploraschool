@@ -12,7 +12,7 @@ import {
   type ModalityId,
 } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
-import { getActiveInstructors } from "@/data/instructors";
+import { getActiveInstructors, isSnowboardOnlyInstructor } from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
 import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
 import {
@@ -91,9 +91,16 @@ export function AddToCartModal({
       setDates([]);
       setTimeSlotId(slotId);
       setParticipants(people);
-      setDiscipline(defaultDiscipline ?? "");
+      const preferredInstructor = defaultInstructorSlug ?? "";
+      const initialDiscipline =
+        preferredInstructor &&
+        isSnowboardOnlyInstructor(preferredInstructor) &&
+        product?.disciplines.includes("snowboard")
+          ? "snowboard"
+          : (defaultDiscipline ?? "");
+      setDiscipline(initialDiscipline);
       setModality("");
-      setInstructorSlug(defaultInstructorSlug ?? "");
+      setInstructorSlug(preferredInstructor);
       setNotes("");
       setAdded(false);
       setAddedCount(0);
@@ -126,8 +133,10 @@ export function AddToCartModal({
 
   if (!mounted || !open || !product) return null;
 
+  const resolvedProduct = product;
+
   const availableDisciplines = getMainDisciplines().filter((d) =>
-    product.disciplines.includes(d.id),
+    resolvedProduct.disciplines.includes(d.id),
   );
 
   const availableModalities =
@@ -138,6 +147,29 @@ export function AddToCartModal({
   const instructors = getActiveInstructors().filter((i) =>
     !discipline || i.disciplines.includes(discipline),
   );
+
+  const disciplineLocked =
+    !!instructorSlug &&
+    isSnowboardOnlyInstructor(instructorSlug) &&
+    resolvedProduct.disciplines.includes("snowboard");
+
+  function handleDisciplineChange(value: string) {
+    const next =
+      value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "";
+    setDiscipline(next);
+    setModality("");
+    if (next !== "snowboard" && instructorSlug && isSnowboardOnlyInstructor(instructorSlug)) {
+      setInstructorSlug("");
+    }
+  }
+
+  function handleInstructorChange(slug: string) {
+    setInstructorSlug(slug);
+    if (slug && isSnowboardOnlyInstructor(slug) && resolvedProduct.disciplines.includes("snowboard")) {
+      setDiscipline("snowboard");
+      setModality("");
+    }
+  }
 
   const minPeople = bookingConfig.minPeople ?? product.minPeople ?? 1;
   const maxPeople = bookingConfig.maxPeople ?? product.maxPeople ?? 8;
@@ -157,6 +189,10 @@ export function AddToCartModal({
     if (participants < minPeople || participants > maxPeople) return;
 
     const instructor = instructors.find((i) => i.slug === instructorSlug);
+    const effectiveDiscipline =
+      instructor && isSnowboardOnlyInstructor(instructor.slug)
+        ? "snowboard"
+        : discipline || undefined;
     const slotLabel = getSlotLabel(timeSlotId, locale);
     const trimmedNotes = notes.trim() || undefined;
 
@@ -164,7 +200,7 @@ export function AddToCartModal({
       .map((date) =>
         buildCartItem({
           productId,
-          discipline: discipline || undefined,
+          discipline: effectiveDiscipline,
           modality: modality || undefined,
           instructorSlug: instructor?.slug,
           instructorName: instructor?.name ?? defaultInstructorName,
@@ -300,13 +336,9 @@ export function AddToCartModal({
                     <select
                       id="cart-discipline"
                       value={discipline}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDiscipline(value && isMainDiscipline(value as MainDisciplineId) ? (value as MainDisciplineId) : "");
-                        setModality("");
-                        setInstructorSlug("");
-                      }}
-                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                      onChange={(e) => handleDisciplineChange(e.target.value)}
+                      disabled={disciplineLocked}
+                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                     >
                       <option value="">{t("selectDiscipline")}</option>
                       {availableDisciplines.map((d) => (
@@ -315,6 +347,15 @@ export function AddToCartModal({
                         </option>
                       ))}
                     </select>
+                    {disciplineLocked && (
+                      <p className="mt-1 text-xs text-muted">
+                        {pickLocale(
+                          locale,
+                          "Este instructor solo imparte clases de snowboard.",
+                          "This instructor only teaches snowboard lessons.",
+                        )}
+                      </p>
+                    )}
                   </div>
                 ) : (
                   <div>
@@ -324,7 +365,7 @@ export function AddToCartModal({
                     <select
                       id="cart-instructor"
                       value={instructorSlug}
-                      onChange={(e) => setInstructorSlug(e.target.value)}
+                      onChange={(e) => handleInstructorChange(e.target.value)}
                       className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
                     >
                       <option value="">{t("anyInstructor")}</option>
@@ -367,7 +408,7 @@ export function AddToCartModal({
                   <select
                     id="cart-instructor-2"
                     value={instructorSlug}
-                    onChange={(e) => setInstructorSlug(e.target.value)}
+                    onChange={(e) => handleInstructorChange(e.target.value)}
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
                   >
                     <option value="">{t("anyInstructor")}</option>

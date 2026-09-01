@@ -135,9 +135,9 @@ export const site: SiteConfig = {
   heroLeadEn:
     "Qualified instructors with over 20 years of experience. Explora since 2010. Book online in minutes.",
   aboutLeadEs:
-    "Agrupación de instructores titulados con décadas de oficio en la nieve. Explora School & Club desde 2010. Clases de 1 a 8 participantes y cursos en esquí, snowboard, telemark y más. Punto de encuentro en la estación de esquí de Sierra Nevada.",
+    "Agrupación de instructores titulados con años de experiencia en la nieve. Explora School & Club desde 2010. Clases de 1 a 8 participantes y cursos en esquí, snowboard, telemark y más. Punto de encuentro en la estación de esquí de Sierra Nevada.",
   aboutLeadEn:
-    "A group of qualified instructors with decades on the snow. Explora School & Club since 2010. Lessons for 1 to 8 participants and courses in ski, snowboard, telemark and more. Meeting point at Sierra Nevada ski resort.",
+    "A group of qualified instructors with years of experience on the snow. Explora School & Club since 2010. Lessons for 1 to 8 participants and courses in ski, snowboard, telemark and more. Meeting point at Sierra Nevada ski resort.",
   homeMetaDescriptionEs:
     "Clases de esquí, snowboard y telemark en Sierra Nevada. Instructores titulados con más de 20 años de experiencia. Explora desde 2010. Reserva online por email.",
   homeMetaDescriptionEn:
