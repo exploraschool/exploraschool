@@ -13,9 +13,9 @@ Nunca subas claves al repositorio. GitHub solo aloja código; los secretos viven
 | `ADMIN_PASSWORD` | Vercel | Panel `/admin` |
 | `LEAD_CONFIRM_SECRET` | Vercel **y** Firebase | Enlace de confirmación en emails al equipo |
 | `NEXT_PUBLIC_SITE_URL` | Vercel | URLs canónicas |
-| `RESEND_API_KEY` | Firebase Functions | Envío de emails |
-| `LEAD_NOTIFICATION_EMAIL` | Firebase Functions | Destino alertas equipo (`explora.sclub@gmail.com`) |
-| `RESEND_FROM` | Firebase Functions | Remitente Resend |
+| `RESEND_API_KEY` | Vercel **y** Firebase Functions | Envío de emails (mismo valor en ambos) |
+| `LEAD_NOTIFICATION_EMAIL` | Vercel **y** Firebase Functions | Destino alertas equipo (`explora.sclub@gmail.com`) |
+| `RESEND_FROM` | Vercel **y** Firebase Functions | Remitente verificado en Resend |
 | `SITE_URL` | Firebase Functions | Enlaces en emails |
 
 ---
@@ -41,6 +41,10 @@ FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY----
 
 ADMIN_PASSWORD=tu-password-seguro
 LEAD_CONFIRM_SECRET=genera-un-string-aleatorio-largo
+
+RESEND_API_KEY=re_...clave-valida-de-resend.com
+LEAD_NOTIFICATION_EMAIL=explora.sclub@gmail.com
+RESEND_FROM=Explora School <onboarding@resend.dev>
 ```
 
 **`LEAD_CONFIRM_SECRET`:** genera uno con:
@@ -79,6 +83,8 @@ También en **Firebase Console → Functions → Environment variables**:
 | `SITE_URL` | `https://www.explora-school.es` |
 
 `LEAD_CONFIRM_SECRET` debe ser **el mismo valor** que en Vercel.
+
+**Importante:** si el email al cliente no llega, revisa los logs de Firebase (`onLeadUpdated`) y confirma que `RESEND_API_KEY` en Vercel y Firebase es una clave **válida** de [resend.com/api-keys](https://resend.com/api-keys). Un error típico es `API key is invalid`.
 
 Despliega:
 

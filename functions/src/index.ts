@@ -74,6 +74,13 @@ export const onLeadUpdated = onDocumentUpdated(
     const isBooking = after.type === "booking" || after.source === "booking-cart";
     if (!isBooking) return;
 
+    if (after.confirmationEmailSentAt) {
+      logger.info("Customer confirmation already sent from API", {
+        leadId: event.params.leadId,
+      });
+      return;
+    }
+
     const customerEmail = String(after.email ?? "");
     if (!customerEmail) {
       logger.warn("Confirmed booking without customer email", { leadId: event.params.leadId });

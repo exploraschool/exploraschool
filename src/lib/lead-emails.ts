@@ -11,8 +11,7 @@ type ResendPayload = {
 export async function sendResendEmail(email: ResendPayload): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.info("[resend] RESEND_API_KEY not set — skipping email");
-    return;
+    throw new Error("RESEND_API_KEY is not configured");
   }
 
   const response = await fetch("https://api.resend.com/emails", {

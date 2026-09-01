@@ -12,6 +12,7 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
   const [currentStatus, setCurrentStatus] = useState(status);
   const [loading, setLoading] = useState<"confirmed" | "cancelled" | null>(null);
   const [error, setError] = useState("");
+  const [emailWarning, setEmailWarning] = useState("");
 
   if (!isBooking || currentStatus === "confirmed" || currentStatus === "cancelled") {
     return (
@@ -24,6 +25,7 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
   async function updateStatus(next: "confirmed" | "cancelled") {
     setLoading(next);
     setError("");
+    setEmailWarning("");
 
     try {
       const response = await fetch("/api/bookings/confirm", {
@@ -32,13 +34,27 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
         body: JSON.stringify({ leadId, status: next }),
       });
 
+      const payload = (await response.json().catch(() => null)) as {
+        emailSent?: boolean;
+        emailError?: string;
+        error?: string;
+      } | null;
+
       if (!response.ok) {
-        throw new Error("No se pudo actualizar");
+        throw new Error(payload?.error ?? "No se pudo actualizar");
       }
 
       setCurrentStatus(next);
-    } catch {
-      setError("Error al actualizar");
+
+      if (next === "confirmed" && !payload?.emailSent) {
+        setEmailWarning(
+          payload?.emailError
+            ? `Reserva confirmada, pero el email al cliente falló: ${payload.emailError}`
+            : "Reserva confirmada, pero no se envió el email al cliente. Revisa RESEND_API_KEY en Vercel.",
+        );
+      }
+    } catch (updateError) {
+      setError(updateError instanceof Error ? updateError.message : "Error al actualizar");
     } finally {
       setLoading(null);
     }
@@ -65,6 +81,7 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
         </button>
       </div>
       {error && <p className="text-xs text-accent">{error}</p>}
+      {emailWarning && <p className="text-xs font-medium text-oro">{emailWarning}</p>}
     </div>
   );
 }

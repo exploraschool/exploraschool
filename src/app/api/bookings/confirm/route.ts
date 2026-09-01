@@ -27,25 +27,37 @@ async function updateLeadStatus(leadId: string, status: LeadStatus) {
   const leadData = snapshot.data() ?? {};
   const currentStatus = String(leadData.status ?? "");
   if (currentStatus === status) {
-    return { ok: true as const, already: true, data: leadData };
+    return {
+      ok: true as const,
+      already: true,
+      data: leadData,
+      emailSent: Boolean(leadData.confirmationEmailSentAt),
+    };
   }
 
   await ref.update({
     status,
     confirmedAt: status === "confirmed" ? new Date().toISOString() : FieldValue.delete(),
+    ...(status === "confirmed" ? { confirmationEmailSentAt: FieldValue.delete() } : {}),
   });
 
   const updated = { ...leadData, status };
 
+  let emailSent = false;
+  let emailError: string | undefined;
+
   if (status === "confirmed") {
     try {
       await sendCustomerBookingConfirmation(updated);
-    } catch (emailError) {
+      emailSent = true;
+      await ref.update({ confirmationEmailSentAt: new Date().toISOString() });
+    } catch (error) {
+      emailError = error instanceof Error ? error.message : "Email send failed";
       console.error("[bookings/confirm] Customer email failed:", emailError);
     }
   }
 
-  return { ok: true as const, already: false, data: updated };
+  return { ok: true as const, already: false, data: updated, emailSent, emailError };
 }
 
 export async function GET(request: Request) {
@@ -67,6 +79,14 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
 
+  const emailNote = result.emailSent
+    ? "<p>El cliente recibirá un email de confirmación automáticamente.</p>"
+    : `<p><strong>Atención:</strong> la reserva se marcó como confirmada pero el email al cliente no se envió. Revisa RESEND_API_KEY en Vercel.</p>${
+        result.emailError
+          ? `<p style="font-size:0.875rem;color:#666">${result.emailError.replace(/</g, "&lt;")}</p>`
+          : ""
+      }`;
+
   const html = `<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -80,7 +100,7 @@ export async function GET(request: Request) {
 </head>
 <body>
   <h1>Reserva confirmada</h1>
-  <p>El cliente recibirá un email de confirmación automáticamente.</p>
+  ${emailNote}
   <p><a href="/admin/leads">Volver al panel de leads</a></p>
 </body>
 </html>`;
@@ -109,5 +129,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: result.error }, { status: result.status });
   }
 
-  return NextResponse.json({ ok: true, already: result.already });
+  return NextResponse.json({ ok: true, already: result.already, emailSent: result.emailSent, emailError: result.emailError });
 }

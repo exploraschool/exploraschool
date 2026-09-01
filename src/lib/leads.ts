@@ -30,6 +30,7 @@ export type StoredLead = {
   bookingItems?: StoredBookingItem[];
   estimatedTotal?: number;
   confirmedAt?: string;
+  confirmationEmailSentAt?: string;
 };
 
 export function isBookingLead(lead: { type?: string; source?: string }): boolean {
