@@ -63,11 +63,11 @@ export const instructors: Instructor[] = [
   {
     slug: "lalo",
     name: "Lalo",
-    disciplines: ["esqui", "telemark"],
+    disciplines: ["esqui", "snowboard", "telemark"],
     bioEs:
-      "Instructor de esquí alpino y telemark. Sesiones técnicas y amenas: pregunta tus objetivos y organiza la clase a tu medida.",
+      "Instructor de esquí alpino, snowboard y telemark. Sesiones técnicas y amenas: pregunta tus objetivos y organiza la clase a tu medida.",
     bioEn:
-      "Alpine ski and telemark instructor. Technical yet fun sessions tailored to your goals.",
+      "Alpine ski, snowboard and telemark instructor. Technical yet fun sessions tailored to your goals.",
     languages: ["es", "en"],
     active: true,
     sortOrder: 3,

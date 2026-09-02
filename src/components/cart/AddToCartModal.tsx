@@ -219,8 +219,10 @@ export function AddToCartModal({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const people = clampParticipantCount(participants, productId, effectiveDiscipline);
+    setParticipants(people);
     if (!datesValid || sessionPrice === null) return;
-    if (participants < minPeople || participants > maxPeople) return;
+    if (people < minPeople || people > maxPeople) return;
 
     const instructor = instructors.find((i) => i.slug === instructorSlug);
     const resolvedDiscipline =
@@ -241,7 +243,7 @@ export function AddToCartModal({
           date,
           timeSlotId,
           timeSlotLabel: slotLabel,
-          participants,
+          participants: people,
           notes: trimmedNotes,
           locale,
         }),
@@ -349,18 +351,23 @@ export function AddToCartModal({
                     max={maxPeople}
                     step={1}
                     inputMode="numeric"
-                    value={participants}
+                    value={Number.isFinite(participants) ? participants : ""}
                     disabled={isIndividualized}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      if (raw === "") {
+                        setParticipants(Number.NaN);
+                        return;
+                      }
+                      const next = Number(raw);
+                      if (!Number.isFinite(next)) return;
+                      setParticipants(Math.trunc(next));
+                    }}
+                    onBlur={() => {
                       setParticipants(
-                        clampParticipantCount(Number(e.target.value), productId, effectiveDiscipline),
-                      )
-                    }
-                    onBlur={(e) =>
-                      setParticipants(
-                        clampParticipantCount(Number(e.target.value), productId, effectiveDiscipline),
-                      )
-                    }
+                        clampParticipantCount(participants, productId, effectiveDiscipline),
+                      );
+                    }}
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
                   />
                   <p className="mt-1 text-xs text-muted">
