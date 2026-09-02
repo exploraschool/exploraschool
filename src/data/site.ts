@@ -83,7 +83,7 @@ export const site: SiteConfig = {
   whatsappUrl:
     "https://api.whatsapp.com/send?phone=34660262790&text=%C2%A1Hola!%20Quiero%20reservar%20clases%20en%20Explora%20School",
   whatsappPrefill: "¡Hola! Quiero reservar clases en Explora School",
-  openingHours: "Lunes–Domingo 9:00–18:00",
+  openingHours: "Lunes–Domingo 9:00–20:00",
   meetingPoint: {
     name: "Explora School & Club",
     latitude: 37.0711362,

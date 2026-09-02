@@ -20,8 +20,8 @@ export function FAQQuickHelp({ locale }: FAQQuickHelpProps) {
     {
       titleEs: "WhatsApp",
       titleEn: "WhatsApp",
-      descEs: "Respuesta rápida en horario de estación.",
-      descEn: "Quick reply during resort hours.",
+      descEs: "Respuesta rápida a reservas de 9:00 a 20:00.",
+      descEn: "Quick booking replies from 9:00 am to 8:00 pm.",
       href: site.whatsappUrl,
       internal: false,
       accent: false,

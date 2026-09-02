@@ -87,8 +87,8 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                 <p className="mt-3 text-sm text-on-dark-muted">
                   {pickLocale(
                     locale,
-                    "Escríbenos por WhatsApp o llámanos. Respondemos en horario de estación.",
-                    "Message us on WhatsApp or call. We reply during resort hours.",
+                    "Escríbenos por WhatsApp o llámanos. Respondemos a las reservas de 9:00 a 20:00.",
+                    "Message us on WhatsApp or call. We reply to bookings from 9:00 am to 8:00 pm.",
                   )}
                 </p>
                 <div className="mt-5 flex flex-col gap-2.5">
