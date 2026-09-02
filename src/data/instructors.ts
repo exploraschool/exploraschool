@@ -12,7 +12,7 @@ export type InstructorSlug =
   | "ale"
   | "badillo"
   | "maria"
-  | "eva"
+  | "eba"
   | "ferran"
   | "luis"
   | "rocio"
@@ -165,8 +165,8 @@ export const instructors: Instructor[] = [
     photo: "/images/instructors/maria.svg",
   },
   {
-    slug: "eva",
-    name: "Eva",
+    slug: "eba",
+    name: "Eba",
     disciplines: ["esqui", "snowboard"],
     bioEs:
       "Instructora de esquí y snowboard. Clases dinámicas y divertidas para todas las edades y niveles en Sierra Nevada.",
@@ -175,7 +175,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 11,
-    photo: "/images/instructors/eva.svg",
+    photo: "/images/instructors/eba.svg",
   },
   {
     slug: "ferran",
