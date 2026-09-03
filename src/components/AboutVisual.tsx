@@ -40,6 +40,20 @@ export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
             <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
               {pickLocale(locale, site.aboutLeadEs, site.aboutLeadEn)}
             </p>
+            <p className="mt-3 text-sm text-muted">
+              {pickLocale(
+                locale,
+                "Para jóvenes de 5 a 18 años, también está el ",
+                "For young people aged 5 to 18, there's also ",
+              )}
+              <Link
+                href="/club"
+                className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo"
+              >
+                {pickLocale(locale, "Club Creando Aventuras", "Creando Aventuras Club")}
+              </Link>
+              .
+            </p>
             <div className="mt-5">
               <Link href="/como-llegar" className="btn-secondary !w-auto text-sm">
                 {pickLocale(locale, "Cómo llegar", "How to get here")}

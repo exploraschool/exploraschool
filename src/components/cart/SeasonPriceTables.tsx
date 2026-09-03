@@ -7,6 +7,7 @@ import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import { getBookingFromSeasonRow, type TimeSlotId } from "@/lib/booking-config";
 import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
+import { resolvePriceDisplay } from "@/lib/promotions";
 
 type SeasonPriceTablesProps = {
   locale: string;
@@ -62,6 +63,13 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
         </div>
         <p className="mt-3 text-xs text-muted">
           {peopleHeaders[participants - 1]}
+          {participants <= 2
+            ? pickLocale(
+                locale,
+                " · 1 y 2 personas pagan el mismo precio",
+                " · 1 and 2 people pay the same price",
+              )
+            : null}
         </p>
       </div>
 
@@ -90,9 +98,11 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
 
             <div className="divide-y divide-hielo/8">
               {table.rows.map((row) => {
-                const price = row.prices[participants - 1];
+                const listPrice = row.prices[participants - 1];
+                const display = resolvePriceDisplay(listPrice);
                 const isRecommended = table.id === "clases-2h" && row.schedule === "10:00–12:00";
                 const isFullDay = table.id === "full-day";
+                const isAfternoonFlat = table.id === "clases-2h" && row.schedule === "14:00–16:00" && participants <= 4;
 
                 return (
                   <div
@@ -108,6 +118,11 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                           {pickLocale(locale, "Horario más solicitado", "Most requested slot")}
                         </span>
                       )}
+                      {isAfternoonFlat && (
+                        <span className="mt-0.5 block text-xs text-muted">
+                          {pickLocale(locale, "Tarifa plana 1–4 personas", "Flat rate for 1–4 people")}
+                        </span>
+                      )}
                       {isFullDay && (
                         <span className="mt-0.5 block text-xs text-muted">
                           {pickLocale(locale, "5 h de clase + 1 h de comodín", "5 h lesson + 1 h buffer")}
@@ -120,13 +135,22 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                       className="group/price shrink-0 rounded-xl px-2 py-1 text-right transition hover:bg-accent/8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                       aria-label={pickLocale(
                         locale,
-                        `Reservar ${row.schedule} por ${price} €`,
-                        `Book ${row.schedule} for €${price}`,
+                        `Reservar ${row.schedule} por ${display.finalPrice} €`,
+                        `Book ${row.schedule} for €${display.finalPrice}`,
                       )}
                     >
-                      <span className="text-lg font-bold text-accent transition group-hover/price:text-accent-dark">
-                        {price} €
-                      </span>
+                      {display.discountActive ? (
+                        <>
+                          <span className="block text-xs text-muted line-through">{display.listPrice} €</span>
+                          <span className="text-lg font-bold text-accent transition group-hover/price:text-accent-dark">
+                            {display.finalPrice} €
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-lg font-bold text-accent transition group-hover/price:text-accent-dark">
+                          {display.finalPrice} €
+                        </span>
+                      )}
                       <span className="mt-0.5 block text-[0.65rem] text-muted">
                         {pickLocale(locale, "total grupo · reservar", "group total · book")}
                       </span>

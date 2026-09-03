@@ -1,6 +1,6 @@
 import { CURRENT_SEASON } from "./season";
 import {
-  CURSO_SNOW_PER_PERSON_EUR,
+  CURSO_COLECTIVO_PER_PERSON_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
   SESSION_2H_AFTERNOON,
@@ -10,7 +10,6 @@ import {
   SESSION_3H_MORNING,
   SESSION_3H_SPLIT,
   SESSION_FULL_DAY,
-  UNIFIED_SIZE_LABEL_EN,
   UNIFIED_SIZE_LABEL_ES,
 } from "@/lib/lesson-pricing";
 
@@ -64,14 +63,14 @@ export const currentPrices: CurrentProductPrice[] = [
     featuresEs: [
       "5 horas de clase efectivas",
       "1 hora de descanso",
-      "De 1 a 8 participantes",
+      "1 y 2 personas: mismo precio total",
       "Horario ajustado a sus necesidades",
       "Punto de encuentro personalizado",
     ],
     featuresEn: [
       "5 hours of effective lesson time",
       "1 hour break",
-      "1 to 8 participants",
+      "1 and 2 people: same total price",
       "Schedule tailored to your needs",
       "Personalised meeting point",
     ],
@@ -79,24 +78,24 @@ export const currentPrices: CurrentProductPrice[] = [
   {
     id: "curso-snow-current",
     productId: "curso-snow",
-    titleEs: "Curso de Snowboard",
-    titleEn: "Snowboard Course",
+    titleEs: "Curso colectivo",
+    titleEn: "Group course",
     season: CURRENT_SEASON.key,
-    fromPrice: CURSO_SNOW_PER_PERSON_EUR,
+    fromPrice: CURSO_COLECTIVO_PER_PERSON_EUR,
     unit: "person",
     hours: 3,
     featuresEs: [
       "Rendimiento Asegurado",
-      `${CURSO_SNOW_PER_PERSON_EUR} € / persona`,
-      "Mínimo 3 personas para realizar el curso",
+      `${CURSO_COLECTIVO_PER_PERSON_EUR} € / persona`,
+      "Mínimo 4 personas para realizar el curso",
       "Máximo 8 personas",
       "3 horas de clase efectivas",
       "Horario 10:00–13:00",
     ],
     featuresEn: [
       "Guaranteed Progress",
-      `€${CURSO_SNOW_PER_PERSON_EUR} / person`,
-      "Minimum 3 people required to run the course",
+      `€${CURSO_COLECTIVO_PER_PERSON_EUR} / person`,
+      "Minimum 4 people required to run the course",
       "Maximum 8 people",
       "3 hours of effective lesson time",
       "Schedule 10:00–13:00",
@@ -173,10 +172,12 @@ export const legacyFromPrices = [
 export const priceNotes = {
   vatEs: "Todos los precios tienen el IVA incluido.",
   vatEn: "All prices include VAT.",
-  groupTotalEs: "Importe total del grupo (no por persona).",
-  groupTotalEn: "Total price for the group (not per person).",
+  groupTotalEs:
+    "Importe total del grupo (no por persona). 1 y 2 personas pagan el mismo precio. Duración mínima: 2 horas.",
+  groupTotalEn:
+    "Total price for the group (not per person). 1 and 2 people pay the same price. Minimum duration: 2 hours.",
   tablesIntroEs:
-    "Para clases particulares. Elige cuántas personas sois y consulta el precio según el horario.",
+    "Para clases particulares. Duración mínima 2 horas. Elige cuántas personas sois y consulta el precio según el horario.",
   tablesIntroEn:
-    "For private lessons. Select your group size and check the price for each time slot.",
+    "For private lessons. 2-hour minimum. Select your group size and check the price for each time slot.",
 };

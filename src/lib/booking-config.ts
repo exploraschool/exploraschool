@@ -3,13 +3,15 @@ import type { MainDisciplineId } from "@/data/disciplines";
 import { isIndividualizedDiscipline } from "@/data/disciplines";
 import type { PriceTable } from "@/data/prices";
 import {
-  CURSO_SNOW_PER_PERSON_EUR,
+  CURSO_COLECTIVO_PER_PERSON_EUR,
+  MIN_LESSON_HOURS,
   SESSION_2H_AFTERNOON,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
   SESSION_3H_MIDDAY,
   SESSION_3H_MORNING,
   SESSION_3H_SPLIT,
+  SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   sessionPriceForParticipants,
 } from "@/lib/lesson-pricing";
@@ -19,7 +21,6 @@ export type TimeSlotId =
   | "2h-10-12"
   | "2h-12-14"
   | "2h-14-16"
-  | "3h-09-12"
   | "3h-10-13"
   | "3h-10-12-14-15"
   | "3h-12-15"
@@ -59,12 +60,6 @@ export const TIME_SLOTS: Record<TimeSlotId, TimeSlot> = {
     labelEs: "14:00 – 16:00",
     labelEn: "2:00 – 4:00 pm",
     hours: 2,
-  },
-  "3h-09-12": {
-    id: "3h-09-12",
-    labelEs: "09:00 – 12:00",
-    labelEn: "9:00 am – 12:00 pm",
-    hours: 3,
   },
   "3h-10-13": {
     id: "3h-10-13",
@@ -124,6 +119,8 @@ export type ProductBookingConfig = {
   slotIds: TimeSlotId[];
   defaultSlotId: TimeSlotId;
   flatPricePerPerson?: number;
+  /** Overrides slot table (e.g. club/empresa vs Full Day). */
+  sessionPrices?: readonly number[];
   minPeople?: number;
   maxPeople?: number;
   /** Minimum calendar days to select (e.g. 2-day course). */
@@ -181,8 +178,8 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
     profile: "flat",
     slotIds: ["3h-10-13"],
     defaultSlotId: "3h-10-13",
-    flatPricePerPerson: CURSO_SNOW_PER_PERSON_EUR,
-    minPeople: 3,
+    flatPricePerPerson: CURSO_COLECTIVO_PER_PERSON_EUR,
+    minPeople: 4,
     maxPeople: 8,
   },
   particular: {
@@ -196,7 +193,8 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
     profile: "session",
     slotIds: ["fd-10-16"],
     defaultSlotId: "fd-10-16",
-    minPeople: 2,
+    sessionPrices: SESSION_CLUB_EMPRESA,
+    minPeople: 1,
     maxPeople: 8,
     minDays: 2,
     maxDays: 5,
@@ -214,6 +212,10 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
 
 export function getProductBookingConfig(productId: ProductId): ProductBookingConfig {
   return PRODUCT_BOOKING_CONFIG[productId];
+}
+
+export function usesPairBasePricing(productId: ProductId): boolean {
+  return PRODUCT_BOOKING_CONFIG[productId].profile === "session";
 }
 
 export function getParticipantLimits(
@@ -244,7 +246,9 @@ export function clampParticipantCount(
 
 export function getSlotsForProduct(productId: ProductId): TimeSlot[] {
   const config = PRODUCT_BOOKING_CONFIG[productId];
-  return config.slotIds.map((id) => TIME_SLOTS[id]);
+  return config.slotIds
+    .map((id) => TIME_SLOTS[id])
+    .filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS);
 }
 
 export function calculateSessionPrice(
@@ -262,7 +266,7 @@ export function calculateSessionPrice(
     return unit * participants;
   }
 
-  const table = SESSION_PRICES_BY_SLOT[slotId];
+  const table = config.sessionPrices ?? SESSION_PRICES_BY_SLOT[slotId];
   if (!table) return null;
   return sessionPriceForParticipants(table, participants);
 }

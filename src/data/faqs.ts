@@ -155,10 +155,10 @@ export const faqs: Faq[] = [
     sortOrder: 11,
     questionEs: "¿Cuál es el máximo de participantes por clase?",
     answerEs:
-      "Máximo 8 participantes por clase para garantizar calidad y atención personalizada.",
+      "Máximo 8 participantes por clase. En particulares, 1 y 2 personas pagan el mismo precio total; a partir de la 3.ª se aplica un extra por persona. Duración mínima: 2 horas.",
     questionEn: "What is the maximum number of participants per lesson?",
     answerEn:
-      "Maximum 8 participants per lesson to ensure quality and personalised attention.",
+      "Maximum 8 participants per lesson. In private lessons, 1 and 2 people pay the same total; from the 3rd person an extra applies. Minimum duration: 2 hours.",
   },
   {
     id: "como-llegar",

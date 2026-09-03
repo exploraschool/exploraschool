@@ -1,6 +1,7 @@
 /** Central media paths — Sierra Nevada (Granada) photography in /images/stock/. */
 export const media = {
   logo: "/images/logo-explora.png",
+  logoEmail: "/images/logo-email.png",
   logoMark: "/images/logo-mark.png",
   favicon: "/images/favicon.png",
   appleTouchIcon: "/images/apple-touch-icon.png",

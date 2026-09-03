@@ -6,6 +6,10 @@ export type BlogPost = {
   excerptEn: string;
   date: string;
   author: string;
+  coverImage: string;
+  coverAltEs: string;
+  coverAltEn: string;
+  relatedSlugs: string[];
   contentEs: string;
   contentEn: string;
   migrated: boolean;
@@ -17,21 +21,25 @@ export const blogPosts: BlogPost[] = [
     titleEs: "Primera vez en Sierra Nevada: 8 consejos para disfrutar al máximo",
     titleEn: "First time in Sierra Nevada: 8 tips to make the most of your trip",
     excerptEs:
-      "Llegas a la estación con ilusión, pero también con dudas. Te contamos cómo prepararte, qué llevar y cómo aprovechar tu primer día en la nieve sin sorpresas.",
+      "Guía práctica para tu primera vez en Sierra Nevada: qué reservar, cómo vestirte, punto de encuentro y por qué unas clases de esquí o snowboard cambian el día.",
     excerptEn:
-      "You arrive at the resort excited but full of questions. Here is how to prepare, what to pack, and how to enjoy your first day on the snow without surprises.",
+      "Practical guide for your first time in Sierra Nevada: what to book, what to wear, meeting point and why ski or snowboard lessons change the day.",
     date: "2026-01-15",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-primera-vez.jpg",
+    coverAltEs: "Principiante en su primera vez esquiando en Sierra Nevada",
+    coverAltEn: "Beginner on a first ski day in Sierra Nevada",
+    relatedSlugs: ["que-llevar-primer-dia-nieve","por-que-contratar-clases-esqui-snowboard","como-llegar-sierra-nevada-guia"],
     migrated: false,
     contentEs: `Sierra Nevada es una de las estaciones más accesibles de España y, para muchos visitantes, la primera vez que ponen los pies en la nieve. Esa mezcla de emoción y nervios es completamente normal. Con un poco de planificación, tu experiencia puede pasar de "sobrevivir al día" a "quiero volver mañana".
 
 ## 1. Reserva con antelación, sobre todo en temporada alta
 
-Fines de semana, puentes y vacaciones escolares concentran mucha demanda en forfaits, alojamiento y clases. Si sabes las fechas de tu viaje, reserva lo antes posible. En Explora School & Club puedes elegir tu tipo de clase online y confirmar por email, sin pagar por adelantado.
+Fines de semana, puentes y vacaciones escolares concentran mucha demanda en forfaits, alojamiento y clases. Si sabes las fechas de tu viaje, reserva lo antes posible. En Explora School & Club puedes [elegir tu tipo de clase](/clases) online y [reservar](/reserva) confirmando por email, sin pagar por adelantado. También te conviene revisar [qué llevar el primer día](/blog/que-llevar-primer-dia-nieve).
 
 ## 2. Contrata clases si es tu primera vez (de verdad)
 
-Aprender solo o con un amigo que "ya sabe" suele traducirse en caídas innecesarias, miedo y frustración. Un instructor titulado te enseña la postura correcta, cómo frenar con seguridad y cómo leer la montaña desde el primer día. En dos horas notarás una diferencia enorme respecto a intentarlo por tu cuenta.
+Aprender solo o con un amigo que "ya sabe" suele traducirse en caídas innecesarias, miedo y frustración. Un instructor titulado te enseña la postura correcta, cómo frenar con seguridad y cómo leer la montaña desde el primer día. En dos horas notarás una diferencia enorme respecto a intentarlo por tu cuenta. Si dudas, lee [por qué contratar clases de esquí o snowboard](/blog/por-que-contratar-clases-esqui-snowboard).
 
 ## 3. Lleva ropa en capas y protección solar
 
@@ -43,7 +51,7 @@ Esquiar y hacer snowboard son deportes exigentes, aunque no lo parezca. Un desay
 
 ## 5. Llega con tiempo al punto de encuentro
 
-En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcula al menos 45 minutos extra si necesitas recoger forfait o equipamiento. En Explora el punto de encuentro habitual es la zona de Borreguiles, y te lo confirmamos al reservar.
+En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcula al menos 45 minutos extra si necesitas recoger forfait o equipamiento. En Explora el punto de encuentro habitual es la zona de Borreguiles; consulta también [cómo llegar a Sierra Nevada](/como-llegar) y te lo confirmamos al [reservar](/reserva).
 
 ## 6. No subestimes el forfait y el material
 
@@ -59,16 +67,16 @@ Sierra Nevada no es solo esquí: es paisaje, gastronomía andaluza en la montañ
 
 ### ¿Listo para tu primera aventura en la nieve?
 
-Si quieres empezar con buen pie, en Explora School & Club llevamos más de 15 años enseñando en Sierra Nevada. Ofrecemos clases particulares y en grupo, en español e inglés, para esquí, snowboard y telemark. Reserva tu clase y te acompañamos desde el primer giro.`,
+Si quieres empezar con buen pie, en Explora School & Club llevamos más de 15 años enseñando en Sierra Nevada. Ofrecemos [clases de esquí](/clases/esqui), [snowboard](/clases/snowboard) y [telemark](/clases/telemark), en español e inglés. [Reserva tu clase](/reserva) y te acompañamos desde el primer giro.`,
     contentEn: `Sierra Nevada is one of the most accessible ski resorts in Spain, and for many visitors it is their first time on snow. That mix of excitement and nerves is completely normal. With a little planning, your experience can go from "just surviving the day" to "I want to come back tomorrow".
 
 ## 1. Book ahead, especially in peak season
 
-Weekends, public holidays and school breaks bring high demand for lift passes, accommodation and lessons. If you know your travel dates, book as early as you can. At Explora School & Club you can choose your lesson type online and confirm by email, with no upfront payment.
+Weekends, public holidays and school breaks bring high demand for lift passes, accommodation and lessons. If you know your travel dates, book as early as you can. At Explora School & Club you can [choose your lesson type](/clases) online and [book](/reserva) confirming by email, with no upfront payment. It also helps to check [what to pack for your first day](/blog/que-llevar-primer-dia-nieve).
 
 ## 2. Take lessons if it is genuinely your first time
 
-Learning alone or with a friend who "already knows how" often means unnecessary falls, fear and frustration. A qualified instructor teaches you the right stance, how to stop safely and how to read the mountain from day one. In two hours you will notice a huge difference compared to trying on your own.
+Learning alone or with a friend who "already knows how" often means unnecessary falls, fear and frustration. A qualified instructor teaches you the right stance, how to stop safely and how to read the mountain from day one. In two hours you will notice a huge difference compared to trying on your own. If you are unsure, read [why book ski or snowboard lessons](/blog/por-que-contratar-clases-esqui-snowboard).
 
 ## 3. Wear layers and sun protection
 
@@ -80,7 +88,7 @@ Skiing and snowboarding are demanding sports, even when they do not look like it
 
 ## 5. Arrive early at the meeting point
 
-In peak season there are queues at lifts, gondolas and rental shops. Allow at least 45 extra minutes if you need to collect a lift pass or equipment. At Explora our usual meeting point is the Borreguiles area, and we confirm it when you book.
+In peak season there are queues at lifts, gondolas and rental shops. Allow at least 45 extra minutes if you need to collect a lift pass or equipment. At Explora our usual meeting point is the Borreguiles area; also see [how to get to Sierra Nevada](/como-llegar) and we confirm it when you [book](/reserva).
 
 ## 6. Do not underestimate the lift pass and equipment
 
@@ -96,20 +104,24 @@ Sierra Nevada is not only about skiing: it is landscape, mountain food with an A
 
 ### Ready for your first snow adventure?
 
-If you want to start on the right foot, Explora School & Club has been teaching in Sierra Nevada for over 15 years. We offer private and group lessons in Spanish and English for ski, snowboard and telemark. Book your lesson and we will guide you from your very first turn.`,
+If you want to start on the right foot, Explora School & Club has been teaching in Sierra Nevada for over 15 years. We offer [ski lessons](/clases/esqui), [snowboard](/clases/snowboard) and [telemark](/clases/telemark) in Spanish and English. [Book your lesson](/reserva) and we will guide you from your very first turn.`,
   },
   {
     slug: "por-que-contratar-clases-esqui-snowboard",
     titleEs: "¿Por qué contratar clases de esquí o snowboard? 6 razones que lo cambian todo",
     titleEn: "Why book ski or snowboard lessons? 6 reasons that change everything",
     excerptEs:
-      "Mucha gente duda si merece la pena pagar por clases. Te explicamos por qué aprender con un profesional titulado es la inversión más inteligente de tu viaje a la nieve.",
+      "¿Merecen la pena las clases de esquí o snowboard en Sierra Nevada? Seis razones: más progreso, menos caídas, más seguridad y mejor aprovechamiento del forfait.",
     excerptEn:
-      "Many people wonder whether lessons are worth the cost. Here is why learning with a qualified instructor is the smartest investment on your snow trip.",
+      "Are ski or snowboard lessons in Sierra Nevada worth it? Six reasons: faster progress, fewer falls, more safety and better use of your lift pass.",
     date: "2026-02-03",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-por-que-clases.jpg",
+    coverAltEs: "Instructor de esquí dando clase particular en Sierra Nevada",
+    coverAltEn: "Ski instructor giving a private lesson in Sierra Nevada",
+    relatedSlugs: ["que-tipo-clases-elegir-sierra-nevada","consejos-primera-vez-sierra-nevada","esqui-o-snowboard-cual-elegir"],
     migrated: false,
-    contentEs: `"¿De verdad necesito clases?" Es una de las preguntas que más escuchamos en Explora School & Club. La respuesta corta: no es obligatorio, pero casi siempre es la mejor decisión. Sobre todo si quieres disfrutar, progresar y volver a casa sin lesiones evitables.
+    contentEs: `"¿De verdad necesito clases?" Es una de las preguntas que más escuchamos en Explora School & Club. La respuesta corta: no es obligatorio, pero casi siempre es la mejor decisión—sobre todo si quieres disfrutar, progresar y volver a casa sin lesiones evitables. Puedes comparar formatos en nuestra [guía de tipos de clase](/blog/que-tipo-clases-elegir-sierra-nevada).
 
 ## Aprendes más rápido y con menos frustración
 
@@ -133,12 +145,12 @@ Cada día de esquí tiene un coste: forfait, alojamiento, desplazamiento. Si pas
 
 ## Disfrutas más, incluso si ya tienes algo de nivel
 
-Las clases no son solo para principiantes. Muchos esquiadores intermedios se estancan durante años sin saber qué les frena. Un instructor con ojo entrenado detecta ese detalle de técnica que desbloquea tu progreso. También es la mejor forma de iniciarte en telemark, freestyle o perfeccionar tu carving.
+Las clases no son solo para principiantes. Muchos esquiadores intermedios se estancan durante años sin saber qué les frena. Un instructor con ojo entrenado detecta ese detalle de técnica que desbloquea tu progreso. También es la mejor forma de iniciarte en [telemark](/clases/telemark), [freestyle o freeride](/blog/freeride-freestyle-telemark-sierra-nevada) o perfeccionar tu carving en [esquí alpino](/clases/esqui).
 
 ### La inversión que más se nota en la montaña
 
-En Explora School & Club llevamos desde 2010 en Sierra Nevada con instructores titulados, clases en español e inglés y grupos reducidos de hasta 8 personas. Desde clases de medio día hasta jornadas completas con recogida en hotel: elige el formato que encaje con tu viaje y reserva online. Tu yo del futuro en la nieve te lo agradecerá.`,
-    contentEn: `"Do I really need lessons?" It is one of the questions we hear most often at Explora School & Club. The short answer: they are not mandatory, but they are almost always the best decision—especially if you want to enjoy yourself, progress and go home without avoidable injuries.
+En Explora School & Club llevamos desde 2010 en Sierra Nevada con instructores titulados, clases en español e inglés y grupos reducidos de hasta 8 personas. Consulta todas las [clases disponibles](/clases) y [reserva online](/reserva) el formato que encaje con tu viaje. Tu yo del futuro en la nieve te lo agradecerá.`,
+    contentEn: `"Do I really need lessons?" It is one of the questions we hear most often at Explora School & Club. The short answer: they are not mandatory, but they are almost always the best decision—especially if you want to enjoy yourself, progress and go home without avoidable injuries. You can compare formats in our [lesson type guide](/blog/que-tipo-clases-elegir-sierra-nevada).
 
 ## You learn faster with less frustration
 
@@ -162,24 +174,28 @@ Every ski day has a cost: lift pass, accommodation, travel. If you spend the mor
 
 ## You enjoy yourself more, even if you already have some level
 
-Lessons are not just for beginners. Many intermediate skiers plateau for years without knowing what is holding them back. A trained instructor spots the technique detail that unlocks your progress. It is also the best way to start telemark, freestyle or refine your carving.
+Lessons are not just for beginners. Many intermediate skiers plateau for years without knowing what is holding them back. A trained instructor spots the technique detail that unlocks your progress. It is also the best way to start [telemark](/clases/telemark), [freestyle or freeride](/blog/freeride-freestyle-telemark-sierra-nevada) or refine your carving in [alpine skiing](/clases/esqui).
 
 ### The investment you feel most on the mountain
 
-At Explora School & Club we have been in Sierra Nevada since 2010 with qualified instructors, lessons in Spanish and English, and small groups of up to 8 people. From half-day sessions to full days with hotel pick-up: choose the format that fits your trip and book online. Your future self on the snow will thank you.`,
+At Explora School & Club we have been in Sierra Nevada since 2010 with qualified instructors, lessons in Spanish and English, and small groups of up to 8 people. Browse all [available lessons](/clases) and [book online](/reserva) the format that fits your trip. Your future self on the snow will thank you.`,
   },
   {
     slug: "que-tipo-clases-elegir-sierra-nevada",
     titleEs: "¿Qué tipo de clases elegir en Sierra Nevada? Guía para acertar a la primera",
     titleEn: "Which lesson type should you choose in Sierra Nevada? A guide to getting it right",
     excerptEs:
-      "Clase particular, medio día o jornada completa: cada formato tiene su momento. Te ayudamos a elegir la opción perfecta según tu nivel, grupo y planes en la estación.",
+      "Clase particular, medio día, jornada completa o curso de snowboard en Sierra Nevada: elige el formato según tu nivel, grupo, presupuesto y días en la estación.",
     excerptEn:
-      "Private lessons, half-day or full day: each format has its moment. We help you pick the perfect option for your level, group and plans at the resort.",
+      "Private, half-day, full-day or snowboard course in Sierra Nevada: choose the format for your level, group, budget and days at the resort.",
     date: "2026-03-10",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-tipo-clases.jpg",
+    coverAltEs: "Grupo en clase de esquí eligiendo formato en Sierra Nevada",
+    coverAltEn: "Ski lesson group choosing a format in Sierra Nevada",
+    relatedSlugs: ["por-que-contratar-clases-esqui-snowboard","clases-esqui-ninos-sierra-nevada","cursos-esqui-empresas-sierra-nevada"],
     migrated: false,
-    contentEs: `Una de las dudas más habituales al reservar en Explora School & Club es elegir el tipo de clase adecuado. No existe una respuesta única: depende de tu experiencia, con quién viajas y cuántos días tienes en la estación. Esta guía te ayuda a decidir con criterio.
+    contentEs: `Una de las dudas más habituales al [reservar](/reserva) en Explora School & Club es elegir el tipo de clase adecuado. No existe una respuesta única: depende de tu experiencia, con quién viajas y cuántos días tienes en la estación. Si aún dudas si merecen la pena, lee [por qué contratar clases](/blog/por-que-contratar-clases-esqui-snowboard).
 
 ## Clase particular: máxima personalización
 
@@ -201,7 +217,7 @@ Recomendada para principiantes que vienen pocos días al año y quieren progresa
 
 ## Curso de snowboard: aprende con tu grupo
 
-Si sois tres o más amigos con ganas de aprender snowboard, el curso de 3 horas en grupo es una opción social y económica. Compartís instructor, progresáis juntos y el ambiente de grupo motiva mucho, sobre todo entre jóvenes y adultos que empiezan de cero.
+Si sois cuatro o más amigos con ganas de aprender snowboard, el curso de 3 horas en grupo es una opción social y económica. Compartís instructor, progresáis juntos y el ambiente de grupo motiva mucho, sobre todo entre jóvenes y adultos que empiezan de cero.
 
 ## Cursos de varios días: para empresas y clubs deportivos
 
@@ -209,12 +225,12 @@ Si organizas una salida corporativa o un viaje con tu club, los cursos de 2 a 5 
 
 ### ¿Cómo elegir según tu situación?
 
-Si es tu primera vez en la nieve y vienes solo o en pareja, empieza con una clase particular de 2 horas. Si viajas en familia con niños, pregunta por nuestras clases infantiles desde los 3 años. Si tienes experiencia pero llevas tiempo sin esquiar, una sesión particular te devuelve la confianza en poco tiempo. Si vienes un solo día y quieres exprimirlo al máximo, la jornada completa es tu mejor aliada.
+Si es tu primera vez en la nieve y vienes solo o en pareja, empieza con una clase particular de 2 horas. Si viajas en familia con niños, consulta nuestras [clases de esquí para niños](/clases/ninos) desde los 3 años. Si organizas un grupo de empresa, mira los [cursos corporativos](/blog/cursos-esqui-empresas-sierra-nevada). Si vienes un solo día y quieres exprimirlo al máximo, la jornada completa es tu mejor aliada.
 
 ### Reserva con tranquilidad
 
-En Explora School & Club reservas online, confirmamos por email y no cobramos por adelantado. Además, si reservas antes del 1 de noviembre de 2026, disfrutas de un 10% de descuento en temporada. Elige tu clase, dinos tus fechas y nosotros nos encargamos del resto.`,
-    contentEn: `One of the most common questions when booking with Explora School & Club is choosing the right lesson type. There is no single answer: it depends on your experience, who you are travelling with and how many days you have at the resort. This guide helps you decide with confidence.
+En Explora School & Club [reservas online](/reserva), confirmamos por email y no cobramos por adelantado. Además, si reservas antes del 1 de noviembre de 2026, disfrutas de un 10% de descuento en temporada. Elige tu clase en [nuestra oferta](/clases), dinos tus fechas y nosotros nos encargamos del resto.`,
+    contentEn: `One of the most common questions when [booking](/reserva) with Explora School & Club is choosing the right lesson type. There is no single answer: it depends on your experience, who you are travelling with and how many days you have at the resort. If you still wonder whether lessons are worth it, read [why book lessons](/blog/por-que-contratar-clases-esqui-snowboard).
 
 ## Private lessons: maximum personalisation
 
@@ -234,9 +250,9 @@ The Full Day option includes 5 hours of lessons plus 1 hour buffer, with hotel p
 
 Recommended for beginners who visit only a few days a year and want real progress in a single trip, or for those who prefer to leave the day in professional hands and focus only on enjoying themselves.
 
-## Snowboard course: learn with your group
+## Group course: learn with your group
 
-If you are three or more friends keen to learn snowboard, the 3-hour group course is a social and affordable option. You share an instructor, progress together and the group atmosphere motivates—especially among young people and adults starting from scratch.
+If you are four or more friends keen to learn snowboard, the 3-hour group course is a social and affordable option. You share an instructor, progress together and the group atmosphere motivates—especially among young people and adults starting from scratch.
 
 ## Multi-day courses: for companies and sports clubs
 
@@ -244,28 +260,32 @@ If you are organising a corporate trip or a club outing, 2- to 5-day courses all
 
 ### How to choose for your situation
 
-If it is your first time on snow and you are travelling alone or as a couple, start with a 2-hour private lesson. If you are travelling with children, ask about our kids' lessons from age 3. If you have experience but have not skied for a while, a private session restores confidence quickly. If you have only one day and want to make the most of it, the full day is your best ally.
+If it is your first time on snow and you are travelling alone or as a couple, start with a 2-hour private lesson. If you are travelling with children, see our [kids' ski lessons](/clases/ninos) from age 3. If you are organising a company group, check our [corporate courses](/blog/cursos-esqui-empresas-sierra-nevada). If you have only one day and want to make the most of it, the full day is your best ally.
 
 ### Book with peace of mind
 
-At Explora School & Club you book online, we confirm by email and we do not charge upfront. Plus, if you book before 1 November 2026, you get 10% off in season. Choose your lesson, tell us your dates and we take care of the rest.`,
+At Explora School & Club you [book online](/reserva), we confirm by email and we do not charge upfront. Plus, if you book before 1 November 2026, you get 10% off in season. Choose your lesson from [our offer](/clases), tell us your dates and we take care of the rest.`,
   },
   {
     slug: "clases-esqui-ninos-sierra-nevada",
     titleEs: "Clases de esquí para niños en Sierra Nevada: desde los 3 años con seguridad y diversión",
     titleEn: "Ski lessons for children in Sierra Nevada: from age 3 with safety and fun",
     excerptEs:
-      "Llevar a los más pequeños a la nieve puede generar dudas. Te explicamos desde qué edad pueden empezar, cómo adaptamos las clases y qué esperar en su primer día.",
+      "Clases de esquí para niños en Sierra Nevada desde los 3 años: seguridad, diversión, tip para padres y cómo conectar con el Club Creando Aventuras.",
     excerptEn:
-      "Taking little ones to the snow can raise questions. We explain from what age they can start, how we adapt lessons and what to expect on their first day.",
+      "Kids' ski lessons in Sierra Nevada from age 3: safety, fun, tips for parents and how to connect with Club Creando Aventuras.",
     date: "2026-03-22",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-clases-ninos.jpg",
+    coverAltEs: "Niño aprendiendo a esquiar con instructor en Sierra Nevada",
+    coverAltEn: "Child learning to ski with an instructor in Sierra Nevada",
+    relatedSlugs: ["club-creando-aventuras-jovenes-sierra-nevada","esquiar-en-familia-sierra-nevada","que-tipo-clases-elegir-sierra-nevada"],
     migrated: false,
     contentEs: `Esquiar en familia es una de las experiencias más bonitas que ofrece Sierra Nevada. Ver a un niño deslizarse por primera vez con una sonrisa enorme compensa cualquier madrugón o cola en el telesquí. Pero es normal que los padres tengan preguntas: ¿desde qué edad puede empezar? ¿Es seguro? ¿Cómo se mantiene su atención?
 
 ## ¿Desde qué edad pueden aprender?
 
-En Explora School & Club aceptamos niños desde los 3 años en clases adaptadas. A esa edad el objetivo no es perfeccionar el carving, sino familiarizarse con la nieve, el equipo y las sensaciones de deslizarse. Entre los 4 y 6 años ya se trabajan postura básica, equilibrio y primeros giros. A partir de los 7 años el progreso se acelera notablemente.
+En Explora School & Club aceptamos niños desde los 3 años en [clases infantiles adaptadas](/clases/ninos). A esa edad el objetivo no es perfeccionar el carving, sino familiarizarse con la nieve, el equipo y las sensaciones de deslizarse. Entre los 4 y 6 años ya se trabajan postura básica, equilibrio y primeros giros. A partir de los 7 años el progreso se acelera notablemente.
 
 ## Clases pensadas para su edad y nivel
 
@@ -285,16 +305,16 @@ Vestid al niño con ropa de abrigo en capas y lleva recambio de guantes por si s
 
 ## El Club Creando Aventuras: continuidad para jóvenes
 
-Si a tu hijo le engancha la nieve, el Club Deportivo Creando Aventuras ofrece progresión continua para niños y jóvenes de 5 a 18 años, con clases técnicas por la mañana y freestyle por la tarde. Es la forma de convertir un día en la nieve en una pasión de largo recorrido.
+Si a tu hijo le engancha la nieve, el [Club Deportivo Creando Aventuras](/club) ofrece progresión continua para niños y jóvenes de 5 a 18 años, con clases técnicas por la mañana y freestyle por la tarde. Más detalles en [nuestra guía del club](/blog/club-creando-aventuras-jovenes-sierra-nevada).
 
 ### Reserva la clase de tus hijos con tranquilidad
 
-En Explora llevamos más de 15 años enseñando a familias en Sierra Nevada. Clases en español e inglés, instructores titulados y la posibilidad de elegir al profesor que prefieras. Reserva online y os confirmamos todos los detalles por email.`,
+En Explora llevamos más de 15 años enseñando a familias en Sierra Nevada. También te puede interesar [esquiar en familia](/blog/esquiar-en-familia-sierra-nevada). [Reserva online](/reserva) y os confirmamos todos los detalles por email.`,
     contentEn: `Skiing as a family is one of the best experiences Sierra Nevada has to offer. Watching a child glide for the first time with a huge smile makes any early start or lift queue worthwhile. But parents often have questions: from what age can they start? Is it safe? How do you keep their attention?
 
 ## From what age can they learn?
 
-At Explora School & Club we welcome children from age 3 in adapted lessons. At that age the goal is not perfect carving but getting used to snow, equipment and the feeling of sliding. Between 4 and 6, we work on basic stance, balance and first turns. From 7 onwards, progress speeds up noticeably.
+At Explora School & Club we welcome children from age 3 in [adapted kids' lessons](/clases/ninos). At that age the goal is not perfect carving but getting used to snow, equipment and the feeling of sliding. Between 4 and 6, we work on basic stance, balance and first turns. From 7 onwards, progress speeds up noticeably.
 
 ## Lessons designed for their age and level
 
@@ -314,11 +334,11 @@ Dress your child in warm layers and bring spare gloves in case they get wet. Hav
 
 ## Club Creando Aventuras: continuity for young skiers
 
-If your child catches the snow bug, Club Deportivo Creando Aventuras offers continuous progression for children and young people aged 5 to 18, with technical lessons in the morning and freestyle in the afternoon. It is the way to turn a day on snow into a long-term passion.
+If your child catches the snow bug, [Club Deportivo Creando Aventuras](/club) offers continuous progression for children and young people aged 5 to 18, with technical lessons in the morning and freestyle in the afternoon. More details in [our club guide](/blog/club-creando-aventuras-jovenes-sierra-nevada).
 
 ### Book your children's lesson with confidence
 
-At Explora we have been teaching families in Sierra Nevada for over 15 years. Lessons in Spanish and English, qualified instructors and the option to choose your preferred teacher. Book online and we confirm all the details by email.`,
+At Explora we have been teaching families in Sierra Nevada for over 15 years. You may also like [family skiing tips](/blog/esquiar-en-familia-sierra-nevada). [Book online](/reserva) and we confirm all the details by email.`,
   },
   {
     slug: "esqui-o-snowboard-cual-elegir",
@@ -330,6 +350,10 @@ At Explora we have been teaching families in Sierra Nevada for over 15 years. Le
       "The big question before your first snow trip. We compare both disciplines so you can choose wisely based on your profile, goals and style.",
     date: "2026-04-10",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-esqui-o-snowboard.jpg",
+    coverAltEs: "Esquís y snowboard en la nieve listos para elegir",
+    coverAltEn: "Skis and snowboard in the snow ready to choose",
+    relatedSlugs: ["por-que-contratar-clases-esqui-snowboard","que-llevar-primer-dia-nieve","consejos-primera-vez-sierra-nevada"],
     migrated: false,
     contentEs: `Esquí o snowboard. Es la eterna conversación en el coche de camino a Sierra Nevada. No hay una respuesta correcta para todo el mundo, pero sí hay factores que te ayudan a decidir antes de alquilar material o reservar clases.
 
@@ -347,7 +371,7 @@ Si te gusta la velocidad en pista y la sensación de carving, el esquí puede se
 
 ## ¿Y si voy con niños o en familia?
 
-Los niños pequeños suelen empezar con esquí porque el aprendizaje es más gradual y el material se adapta mejor a edades tempranas. En familias con adolescentes es habitual que cada uno elija su disciplina. En Explora ofrecemos clases de ambas, así que no tenéis que decidir lo mismo todos.
+Los niños pequeños suelen empezar con [esquí](/clases/esqui) porque el aprendizaje es más gradual y el material se adapta mejor a edades tempranas. En familias con adolescentes es habitual que cada uno elija su disciplina. En Explora ofrecemos [clases de snowboard](/clases/snowboard) y de esquí, así que no tenéis que decidir lo mismo todos.
 
 ## Puedes cambiar de opinión
 
@@ -355,7 +379,7 @@ Muchos clientes prueban una disciplina un año y al siguiente cambian. No es una
 
 ### Prueba con un instructor antes de comprometerte
 
-Si sigues en duda, reserva una clase de iniciación en esquí o snowboard en Explora School & Club. En dos horas tendrás una idea clara de cuál te convence más. Instructores titulados, clases en español e inglés y grupos de hasta 8 personas.`,
+Si sigues en duda, [reserva una clase de iniciación](/reserva) en esquí o snowboard. En dos horas tendrás una idea clara de cuál te convence más. También te ayudará leer [por qué las clases aceleran el aprendizaje](/blog/por-que-contratar-clases-esqui-snowboard) y [qué llevar el primer día](/blog/que-llevar-primer-dia-nieve).`,
     contentEn: `Ski or snowboard. It is the eternal conversation on the drive to Sierra Nevada. There is no single right answer for everyone, but there are factors that help you decide before renting equipment or booking lessons.
 
 ## Skiing: more intuitive at first for many adults
@@ -372,7 +396,7 @@ If you love speed on piste and the feeling of carving, skiing may be your sport.
 
 ## What about children or family trips?
 
-Young children usually start with skiing because learning is more gradual and equipment adapts better to early ages. In families with teenagers it is common for each person to choose their own discipline. At Explora we offer lessons in both, so you do not all have to pick the same thing.
+Young children usually start with [skiing](/clases/esqui) because learning is more gradual and equipment adapts better to early ages. In families with teenagers it is common for each person to choose their own discipline. At Explora we offer [snowboard lessons](/clases/snowboard) and ski lessons, so you do not all have to pick the same thing.
 
 ## You can change your mind
 
@@ -380,7 +404,7 @@ Many clients try one discipline one year and switch the next. It is not a decisi
 
 ### Try with an instructor before committing
 
-If you are still unsure, book an introductory ski or snowboard lesson at Explora School & Club. In two hours you will have a clear idea of which suits you best. Qualified instructors, lessons in Spanish and English, and groups of up to 8 people.`,
+If you are still unsure, [book an introductory lesson](/reserva) in ski or snowboard. In two hours you will have a clear idea of which suits you best. It also helps to read [why lessons speed up learning](/blog/por-que-contratar-clases-esqui-snowboard) and [what to pack for day one](/blog/que-llevar-primer-dia-nieve).`,
   },
   {
     slug: "normas-seguridad-pista-esqui",
@@ -392,6 +416,10 @@ If you are still unsure, book an introductory ski or snowboard lesson at Explora
       "The mountain is wonderful but demands respect. We review the basic slope rules every skier and snowboarder should know before heading down.",
     date: "2026-05-05",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-seguridad-pista.jpg",
+    coverAltEs: "Señalización y seguridad en pista de esquí",
+    coverAltEn: "Piste markings and ski slope safety",
+    relatedSlugs: ["consejos-primera-vez-sierra-nevada","por-que-contratar-clases-esqui-snowboard","que-llevar-primer-dia-nieve"],
     migrated: false,
     contentEs: `Cada temporada vemos situaciones evitables en pista: esquiadores fuera de control, cruces peligrosos o gente en zonas de frenado. Conocer y respetar las normas no es burocracia: es lo que mantiene seguros a todos, desde el principiante hasta el experto.
 
@@ -437,7 +465,7 @@ El casco reduce significativamente lesiones en cabeza. Revisa fijaciones, cantos
 
 ### Aprende seguridad con profesionales
 
-En Explora School & Club las normas de montaña forman parte de cada clase, no son un apunte aparte. Si es tu primera vez o llevas años sin esquiar, una sesión con instructor titulado te devuelve confianza y técnica. Reserva tu clase en Sierra Nevada y baja con criterio.`,
+En Explora School & Club las normas de montaña forman parte de cada [clase](/clases), no son un apunte aparte. Si es tu primera vez, combina esta guía con nuestros [consejos para debutar en Sierra Nevada](/blog/consejos-primera-vez-sierra-nevada) y [reserva tu clase](/reserva) para bajar con criterio.`,
     contentEn: `Every season we see avoidable situations on the slopes: skiers out of control, dangerous crossings or people stopping in braking zones. Knowing and respecting the rules is not bureaucracy: it is what keeps everyone safe, from beginners to experts.
 
 ## 1. Control your speed and line
@@ -482,7 +510,7 @@ A helmet significantly reduces head injuries. Check bindings, edges and boots be
 
 ### Learn safety with professionals
 
-At Explora School & Club mountain rules are part of every lesson, not a separate note. If it is your first time or you have not skied for years, a session with a qualified instructor restores confidence and technique. Book your lesson in Sierra Nevada and descend with sound judgement.`,
+At Explora School & Club mountain rules are part of every [lesson](/clases), not a separate note. If it is your first time, pair this guide with our [first-time Sierra Nevada tips](/blog/consejos-primera-vez-sierra-nevada) and [book your lesson](/reserva) to descend with sound judgement.`,
   },
   {
     slug: "que-llevar-primer-dia-nieve",
@@ -494,6 +522,10 @@ At Explora School & Club mountain rules are part of every lesson, not a separate
       "The wrong clothing can ruin a perfect day at the resort. Here is the definitive list of clothes, accessories and extras for your bag.",
     date: "2026-06-12",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-que-llevar.jpg",
+    coverAltEs: "Equipo esencial para el primer día en la nieve",
+    coverAltEn: "Essential gear for the first day on snow",
+    relatedSlugs: ["como-elegir-gafas-esqui-snowboard","forfait-sierra-nevada-guia-compra","consejos-primera-vez-sierra-nevada"],
     migrated: false,
     contentEs: `Llegar a Sierra Nevada sin el equipo adecuado es uno de los errores más frecuentes entre principiantes. O pasas frío y no disfrutas, o sudas demasiado y acabas mojado. Esta lista te ayuda a preparar tu primer día (y los siguientes) sin olvidar nada importante.
 
@@ -519,7 +551,7 @@ Botella de agua o termo, barritas energéticas, crema hidratante y móvil con ba
 
 ## Lo que puedes dejar en el hotel
 
-No hace falta cargar con todo el día. Deja ropa de calle y maletas en el alojamiento. Si reservas una jornada completa con Explora, la recogida en hotel te simplifica la logística de la mañana.
+No hace falta cargar con todo el día. Deja ropa de calle y maletas en el alojamiento. Si reservas una [jornada completa](/blog/que-tipo-clases-elegir-sierra-nevada) con Explora, la recogida en hotel te simplifica la logística de la mañana. Revisa también [cómo llegar](/como-llegar) y la [guía del forfait](/blog/forfait-sierra-nevada-guia-compra).
 
 ## Errores que vemos cada temporada
 
@@ -527,7 +559,7 @@ Vaqueros o algodón debajo del mono de esquí. Guantes de punto que se empapan e
 
 ### Combina buen equipamiento con buenas clases
 
-Tener lo necesario en la mochila es el primer paso. El segundo es aprender con un instructor titulado que te enseñe a moverte con seguridad. Reserva tu clase en Explora School & Club y empieza tu aventura en Sierra Nevada con todo bajo control.`,
+Tener lo necesario en la mochila es el primer paso—incluyendo buenas [gafas de esquí](/blog/como-elegir-gafas-esqui-snowboard). El segundo es aprender con un instructor titulado. [Reserva tu clase](/reserva) en Explora School & Club y empieza con todo bajo control.`,
     contentEn: `Arriving in Sierra Nevada without the right gear is one of the most common mistakes among beginners. Either you are cold and miserable, or you overheat and end up wet. This list helps you prepare for your first day (and the rest) without forgetting anything important.
 
 ## Warm clothing: the layering rule
@@ -552,7 +584,7 @@ Water bottle or flask, energy bars, moisturiser and a fully charged phone. A sma
 
 ## What you can leave at the hotel
 
-You do not need to carry everything all day. Leave street clothes and suitcases at your accommodation. If you book a full day with Explora, hotel pick-up simplifies your morning logistics.
+You do not need to carry everything all day. Leave street clothes and suitcases at your accommodation. If you book a [full day](/blog/que-tipo-clases-elegir-sierra-nevada) with Explora, hotel pick-up simplifies your morning logistics. Also check [how to get there](/como-llegar) and our [lift pass guide](/blog/forfait-sierra-nevada-guia-compra).
 
 ## Mistakes we see every season
 
@@ -560,7 +592,7 @@ Jeans or cotton under ski pants. Knit gloves that soak through on the first fall
 
 ### Pair good kit with good lessons
 
-Having the right bag is step one. Step two is learning with a qualified instructor who teaches you to move safely. Book your lesson at Explora School & Club and start your Sierra Nevada adventure with everything under control.`,
+Having the right bag is step one—including good [ski goggles](/blog/como-elegir-gafas-esqui-snowboard). Step two is learning with a qualified instructor. [Book your lesson](/reserva) at Explora School & Club and start with everything under control.`,
   },
   {
     slug: "esqui-adaptado-sierra-nevada",
@@ -572,8 +604,12 @@ Having the right bag is step one. Step two is learning with a qualified instruct
       "Snow is for everyone. Learn how adaptive ski lessons work in Sierra Nevada and how Explora tailors the experience to each person.",
     date: "2026-07-20",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-esqui-adaptado.jpg",
+    coverAltEs: "Esquí adaptado inclusivo en Sierra Nevada",
+    coverAltEn: "Inclusive adaptive skiing in Sierra Nevada",
+    relatedSlugs: ["por-que-contratar-clases-esqui-snowboard","que-tipo-clases-elegir-sierra-nevada","como-llegar-sierra-nevada-guia"],
     migrated: false,
-    contentEs: `El esquí adaptado demuestra que las barreras en la montaña muchas veces son de equipamiento y método, no de capacidad. En Sierra Nevada cada vez más personas con diversidad funcional disfrutan de la nieve con el apoyo de instructores especializados y material específico. En Explora School & Club creemos firmemente que la montaña debe ser accesible.
+    contentEs: `El esquí adaptado demuestra que las barreras en la montaña muchas veces son de equipamiento y método, no de capacidad. En Sierra Nevada cada vez más personas con diversidad funcional disfrutan de la nieve con el apoyo de instructores especializados y material específico. En Explora School & Club ofrecemos [esquí adaptado](/clases/esqui-adaptado) porque creemos que la montaña debe ser accesible.
 
 ## ¿Qué es el esquí adaptado?
 
@@ -601,8 +637,8 @@ La estación ofrece remontes accesibles, pistas para distintos niveles y servici
 
 ### Consulta sin compromiso
 
-Si quieres información sobre esquí adaptado en Explora School & Club, escríbenos o llámanos. Cada persona es única y diseñamos la experiencia en función de tus necesidades. La nieve espera a todos.`,
-    contentEn: `Adaptive skiing shows that barriers in the mountains are often about equipment and method, not ability. In Sierra Nevada more and more people with functional diversity enjoy the snow with support from specialised instructors and specific gear. At Explora School & Club we firmly believe the mountains should be accessible.
+Si quieres información sobre [esquí adaptado](/clases/esqui-adaptado), [contáctanos](/contacto) o [reserva una consulta](/reserva). Cada persona es única y diseñamos la experiencia en función de tus necesidades. La nieve espera a todos.`,
+    contentEn: `Adaptive skiing shows that barriers in the mountains are often about equipment and method, not ability. In Sierra Nevada more and more people with functional diversity enjoy the snow with support from specialised instructors and specific gear. At Explora School & Club we offer [adaptive skiing](/clases/esqui-adaptado) because we firmly believe the mountains should be accessible.
 
 ## What is adaptive skiing?
 
@@ -630,7 +666,7 @@ The resort offers accessible lifts, runs for different levels and services that 
 
 ### Ask us with no obligation
 
-If you want information about adaptive skiing at Explora School & Club, email or call us. Every person is unique and we design the experience around your needs. The snow is waiting for everyone.`,
+If you want information about [adaptive skiing](/clases/esqui-adaptado), [contact us](/contacto) or [book a consultation](/reserva). Every person is unique and we design the experience around your needs. The snow is waiting for everyone.`,
   },
   {
     slug: "club-creando-aventuras-jovenes-sierra-nevada",
@@ -642,8 +678,12 @@ If you want information about adaptive skiing at Explora School & Club, email or
       "Beyond a one-off snow day, the club offers progression, community and fun for children and young people aged 5 to 18. Here is how it works.",
     date: "2026-08-05",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-club-jovenes.jpg",
+    coverAltEs: "Jóvenes del club de esquí en Sierra Nevada",
+    coverAltEn: "Young ski club members in Sierra Nevada",
+    relatedSlugs: ["clases-esqui-ninos-sierra-nevada","esquiar-en-familia-sierra-nevada","freeride-freestyle-telemark-sierra-nevada"],
     migrated: false,
-    contentEs: `Un día de esquí puede encender la chispa, pero la pasión se construye con continuidad. El Club Deportivo Creando Aventuras, vinculado a Explora School & Club, nació precisamente para eso: ofrecer a niños y jóvenes un espacio donde crecer en la nieve y en la montaña durante todo el año.
+    contentEs: `Un día de esquí puede encender la chispa, pero la pasión se construye con continuidad. El [Club Deportivo Creando Aventuras](/club), vinculado a Explora School & Club, nació precisamente para eso: ofrecer a niños y jóvenes un espacio donde crecer en la nieve y en la montaña durante todo el año.
 
 ## ¿Para quién es el club?
 
@@ -667,12 +707,12 @@ Al inscribirse y federarse en el club, las familias acceden a ofertas exclusivas
 
 ## Relación con Explora School & Club
 
-Explora aporta la experiencia docente, instructores titulados y el conocimiento profundo de Sierra Nevada. Creando Aventuras aporta la estructura de club, calendario y comunidad. Juntos ofrecen un camino completo: desde la primera clase particular hasta la formación continuada para jóvenes.
+Explora aporta la experiencia docente, instructores titulados y el conocimiento profundo de Sierra Nevada. Creando Aventuras aporta la estructura de club, calendario y comunidad. El camino suele empezar con [clases de esquí para niños](/clases/ninos) o una [primera clase familiar](/blog/clases-esqui-ninos-sierra-nevada).
 
 ### ¿Tu hijo quiere más nieve?
 
-Si después de una clase en Explora tu hijo no para de hablar de esquiar, puede que el club sea el siguiente paso. Consulta fechas, inscripción y actividades en la web de Creando Aventuras o escríbenos para orientarte.`,
-    contentEn: `A day on snow can spark interest, but passion is built through continuity. Club Deportivo Creando Aventuras, linked to Explora School & Club, was created for exactly that: giving children and young people a place to grow in snow and mountains all year round.
+Si después de una clase en Explora tu hijo no para de hablar de esquiar, puede que el [club](/club) sea el siguiente paso. [Contáctanos](/contacto) para orientarte sobre inscripción y actividades, o [reserva una clase de prueba](/reserva).`,
+    contentEn: `A day on snow can spark interest, but passion is built through continuity. [Club Deportivo Creando Aventuras](/club), linked to Explora School & Club, was created for exactly that: giving children and young people a place to grow in snow and mountains all year round.
 
 ## Who is the club for?
 
@@ -696,11 +736,11 @@ By enrolling and registering with the club, families access exclusive offers on 
 
 ## Relationship with Explora School & Club
 
-Explora brings teaching experience, qualified instructors and deep knowledge of Sierra Nevada. Creando Aventuras brings club structure, calendar and community. Together they offer a complete path: from the first private lesson to ongoing training for young people.
+Explora brings teaching experience, qualified instructors and deep knowledge of Sierra Nevada. Creando Aventuras brings club structure, calendar and community. The path often starts with [kids' ski lessons](/clases/ninos) or a [first family lesson](/blog/clases-esqui-ninos-sierra-nevada).
 
 ### Does your child want more snow?
 
-If after a lesson at Explora your child cannot stop talking about skiing, the club may be the next step. Check dates, enrolment and activities on the Creando Aventuras website or contact us for guidance.`,
+If after a lesson at Explora your child cannot stop talking about skiing, the [club](/club) may be the next step. [Contact us](/contacto) for enrolment guidance, or [book a trial lesson](/reserva).`,
   },
   {
     slug: "freeride-freestyle-telemark-sierra-nevada",
@@ -712,8 +752,12 @@ If after a lesson at Explora your child cannot stop talking about skiing, the cl
       "When you have blue and red runs under control, it is time to explore new disciplines. We introduce three ways to experience the mountain with Explora.",
     date: "2026-08-15",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-freeride-freestyle.jpg",
+    coverAltEs: "Freeride en nieve polvo fuera de pista",
+    coverAltEn: "Freeride powder skiing off-piste",
+    relatedSlugs: ["por-que-contratar-clases-esqui-snowboard","normas-seguridad-pista-esqui","que-tipo-clases-elegir-sierra-nevada"],
     migrated: false,
-    contentEs: `Dominar las pistas rojas es un gran logro, pero la montaña ofrece mucho más que descensos marcados. Freeride, freestyle y telemark son tres caminos para quienes quieren seguir aprendiendo en Sierra Nevada. En Explora School & Club las tres modalidades forman parte de nuestra oferta para esquiadores y snowboarders con base sólida.
+    contentEs: `Dominar las pistas rojas es un gran logro, pero la montaña ofrece mucho más que descensos marcados. Freeride, freestyle y telemark son tres caminos para quienes quieren seguir aprendiendo en Sierra Nevada. En Explora School & Club las tres modalidades forman parte de nuestra oferta de [clases de esquí](/clases/esqui), [snowboard](/clases/snowboard) y [telemark](/clases/telemark).
 
 ## Freeride: la nieve fuera de pista con criterio
 
@@ -743,8 +787,8 @@ Todas estas modalidades exigen más que buena voluntad. Avalanchas, caídas en e
 
 ### Lleva tu esquí al siguiente nivel
 
-Reserva una clase de freeride, freestyle o telemark con Explora School & Club. Conoceremos tu nivel, tus objetivos y te propondremos la sesión que mejor encaje. Sierra Nevada tiene mucho más que pistas azules: descúbrelo con criterio.`,
-    contentEn: `Mastering red runs is a great achievement, but the mountain offers far more than marked descents. Freeride, freestyle and telemark are three paths for those who want to keep learning in Sierra Nevada. At Explora School & Club all three are part of our offering for skiers and snowboarders with a solid foundation.
+[Reserva una clase](/reserva) de freeride, freestyle o telemark. Conoceremos tu nivel y te propondremos la sesión que mejor encaje. Antes, repasa también las [normas de seguridad en pista](/blog/normas-seguridad-pista-esqui).`,
+    contentEn: `Mastering red runs is a great achievement, but the mountain offers far more than marked descents. Freeride, freestyle and telemark are three paths for those who want to keep learning in Sierra Nevada. At Explora School & Club all three are part of our [ski](/clases/esqui), [snowboard](/clases/snowboard) and [telemark](/clases/telemark) offering.
 
 ## Freeride: off-piste snow with sound judgement
 
@@ -774,7 +818,7 @@ All these disciplines need more than good intentions. Avalanches, park falls and
 
 ### Take your skiing to the next level
 
-Book a freeride, freestyle or telemark lesson with Explora School & Club. We will assess your level and goals and suggest the best session for you. Sierra Nevada has much more than blue runs: discover it with sound judgement.`,
+[Book a lesson](/reserva) in freeride, freestyle or telemark. We will assess your level and suggest the best session for you. First, also review [slope safety rules](/blog/normas-seguridad-pista-esqui).`,
   },
   {
     slug: "como-elegir-gafas-esqui-snowboard",
@@ -786,6 +830,10 @@ Book a freeride, freestyle or telemark lesson with Explora School & Club. We wil
       "The right goggles make the difference between enjoying the view and squinting all day. A practical guide to lenses, fit and care.",
     date: "2026-08-25",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-gafas-esqui.jpg",
+    coverAltEs: "Gafas de esquí sobre casco en la montaña",
+    coverAltEn: "Ski goggles on a helmet in the mountains",
+    relatedSlugs: ["que-llevar-primer-dia-nieve","consejos-primera-vez-sierra-nevada","normas-seguridad-pista-esqui"],
     migrated: false,
     contentEs: `En Sierra Nevada el sol pegado en la nieve puede ser deslumbrante incluso en pleno invierno. Las gafas de esquí o snowboard no son un accesorio de postureo: protegen tus ojos del UV, del viento y de la nieve que levantan otros esquiadores. Elegir bien evita dolores de cabeza, lágrimas y una jornada incómoda.
 
@@ -819,7 +867,7 @@ Técnicamente sí en días muy nublados, pero no lo recomendamos. Un instructor 
 
 ### Equípate bien y aprende mejor
 
-Las gafas son una pieza del puzzle. La otra es una buena clase con instructor titulado que te ayude a leer el terreno que ves a través de ellas. Reserva en Explora School & Club y combina material adecuado con progresión real en Sierra Nevada.`,
+Las gafas son una pieza del puzzle—completa tu checklist con [qué llevar a la nieve](/blog/que-llevar-primer-dia-nieve). La otra pieza es una buena [clase](/clases). [Reserva](/reserva) y combina material adecuado con progresión real en Sierra Nevada.`,
     contentEn: `In Sierra Nevada the sun on snow can be dazzling even in mid-winter. Ski or snowboard goggles are not a fashion accessory: they protect your eyes from UV, wind and spray from other skiers. Choosing well avoids headaches, watering eyes and an uncomfortable day.
 
 ## UV protection: non-negotiable
@@ -852,7 +900,7 @@ Technically yes on very cloudy days, but we do not recommend it. An instructor w
 
 ### Kit up well and learn better
 
-Goggles are one piece of the puzzle. The other is a good lesson with a qualified instructor who helps you read the terrain you see through them. Book with Explora School & Club and combine proper gear with real progression in Sierra Nevada.`,
+Goggles are one piece of the puzzle—complete your checklist with [what to pack for the snow](/blog/que-llevar-primer-dia-nieve). The other piece is a good [lesson](/clases). [Book](/reserva) and combine proper gear with real progression in Sierra Nevada.`,
   },
   {
     slug: "esquiar-en-familia-sierra-nevada",
@@ -864,6 +912,10 @@ Goggles are one piece of the puzzle. The other is a good lesson with a qualified
       "Travelling with children, your partner or grandparents takes planning. Here are the keys to balanced, low-stress days and great memories.",
     date: "2026-08-30",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-familia.jpg",
+    coverAltEs: "Familia esquiando junta en Sierra Nevada",
+    coverAltEn: "Family skiing together in Sierra Nevada",
+    relatedSlugs: ["clases-esqui-ninos-sierra-nevada","que-tipo-clases-elegir-sierra-nevada","como-llegar-sierra-nevada-guia"],
     migrated: false,
     contentEs: `Esquiar en familia puede ser el mejor viaje del año o un caos de gritos, frío y prisas. La diferencia casi siempre está en la planificación. Sierra Nevada es una estación muy adecuada para familias, con pistas para todos los niveles y servicios accesibles. Estas ideas te ayudan a diseñar un viaje que funcione para todos.
 
@@ -873,7 +925,7 @@ En familia el ritmo lo marca quien menos avanza, no quien más quiere subir de n
 
 ## Combina clases y esquí libre
 
-Una fórmula que funciona muy bien: clases por la mañana con instructor para niños o principiantes, y tarde libre en familia cuando ya tienen más confianza. En Explora podéis reservar clases particulares de hasta 8 personas, ideal para un grupo familiar con niveles parecidos.
+Una fórmula que funciona muy bien: [clases para niños](/clases/ninos) por la mañana y tarde libre en familia cuando ya tienen más confianza. En Explora podéis [reservar clases particulares](/reserva) de hasta 8 personas; más tips en [clases de esquí para niños](/blog/clases-esqui-ninos-sierra-nevada).
 
 ## Alojamiento cerca de la estación
 
@@ -901,7 +953,7 @@ Sierra Nevada ofrez más que pistas: paseos, gastronomía, bolera, actividades p
 
 ### Explora en familia
 
-En Explora School & Club llevamos años acompañando a familias en Sierra Nevada. Clases infantiles desde los 3 años, instructores en español e inglés y la opción de elegir al profesor que prefieras. Reservad online y empezad a crear recuerdos en la nieve.`,
+En Explora School & Club llevamos años acompañando a familias en Sierra Nevada. Consultad [cómo llegar](/como-llegar), elegid [tipo de clase](/blog/que-tipo-clases-elegir-sierra-nevada) y [reservad online](/reserva) para empezar a crear recuerdos en la nieve.`,
     contentEn: `Family skiing can be the best trip of the year or a chaos of shouting, cold and rushing. The difference is almost always planning. Sierra Nevada is a very family-friendly resort, with runs for all levels and accessible services. These ideas help you design a trip that works for everyone.
 
 ## Match expectations to the slowest member
@@ -910,7 +962,7 @@ In a family, pace is set by whoever progresses least, not whoever wants to level
 
 ## Combine lessons and free skiing
 
-A formula that works well: morning lessons with an instructor for children or beginners, and a free family afternoon when confidence is higher. At Explora you can book private lessons for up to 8 people, ideal for a family group at a similar level.
+A formula that works well: morning [kids' lessons](/clases/ninos) and a free family afternoon when confidence is higher. At Explora you can [book private lessons](/reserva) for up to 8 people; more tips in [ski lessons for children](/blog/clases-esqui-ninos-sierra-nevada).
 
 ## Stay close to the resort
 
@@ -938,7 +990,7 @@ Sierra Nevada offers more than slopes: walks, food, bowling, activities for bad 
 
 ### Explore as a family
 
-At Explora School & Club we have been guiding families in Sierra Nevada for years. Children's lessons from age 3, instructors in Spanish and English, and the option to choose your preferred teacher. Book online and start making memories on snow.`,
+At Explora School & Club we have been guiding families in Sierra Nevada for years. Check [how to get there](/como-llegar), pick a [lesson type](/blog/que-tipo-clases-elegir-sierra-nevada) and [book online](/reserva) to start making memories on snow.`,
   },
   {
     slug: "cursos-esqui-empresas-sierra-nevada",
@@ -950,6 +1002,10 @@ At Explora School & Club we have been guiding families in Sierra Nevada for year
       "A company snow trip brings teams together, breaks routines and creates shared memories. Here is how to organise a corporate course with Explora.",
     date: "2026-09-01",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-empresas.jpg",
+    coverAltEs: "Equipo de empresa en curso de esquí en Sierra Nevada",
+    coverAltEn: "Company team on a ski course in Sierra Nevada",
+    relatedSlugs: ["que-tipo-clases-elegir-sierra-nevada","como-llegar-sierra-nevada-guia","forfait-sierra-nevada-guia-compra"],
     migrated: false,
     contentEs: `Los viajes de empresa a la nieve funcionan porque sacan al equipo del despacho y los ponen en un entorno donde todos empiezan de cero o casi. No importa si eres el director o el último en llegar: en la montaña el terreno es el mismo para todos y eso iguala, divierte y fortalece vínculos de una forma que ninguna reunión en sala consigue.
 
@@ -959,7 +1015,7 @@ Sierra Nevada está a solo 30 km de Granada, con buenas conexiones por carretera
 
 ## Qué incluye un curso de empresa con Explora
 
-Ofrecemos cursos de 2 a 5 días consecutivos en jornada completa (de 10:00 a 16:00). Cada día incluye 5 horas de clase con instructor titulado más margen de tiempo. El grupo máximo es de 8 personas por instructor, lo que garantiza atención personalizada. Las disciplinas disponibles son esquí alpino, snowboard y telemark.
+Ofrecemos cursos de 2 a 5 días consecutivos en [jornada completa](/blog/que-tipo-clases-elegir-sierra-nevada) (de 10:00 a 16:00). Cada día incluye 5 horas de clase con instructor titulado. Las disciplinas disponibles son [esquí alpino](/clases/esqui), [snowboard](/clases/snowboard) y [telemark](/clases/telemark).
 
 ## Beneficios reales para tu equipo
 
@@ -979,11 +1035,11 @@ Cena de equipo en Pradollano, tarde libre para quien quiera seguir esquiando por
 
 ## Presupuesto y reserva
 
-Los cursos corporativos parten del precio de jornada completa por persona y día. Para grupos y varios días consecutivos, escríbenos a explora.sclub@gmail.com o llámanos al +34 660 262 790. Te enviamos una propuesta personalizada sin compromiso.
+Los cursos corporativos parten de 195 €/día para 1 o 2 personas, más 25 €/día por persona extra. Para grupos y varios días consecutivos, escríbenos a explora.sclub@gmail.com o llámanos al +34 660 262 790. Te enviamos una propuesta personalizada sin compromiso.
 
 ### Organiza tu salida corporativa con Explora
 
-Más de 15 años enseñando en Sierra Nevada, instructores titulados TD I, II y III, y clases en español e inglés. Convierte tu próximo evento de empresa en una experiencia que el equipo recordará toda la temporada.`,
+Más de 15 años enseñando en Sierra Nevada. [Contáctanos](/contacto) o [reserva](/reserva) y te enviamos una propuesta. También te ayudamos con [cómo llegar](/como-llegar) y el [forfait](/blog/forfait-sierra-nevada-guia-compra).`,
     contentEn: `Company snow trips work because they take the team out of the office and put them in an environment where everyone starts from scratch or nearly so. It does not matter if you are the director or the newest hire: on the mountain the terrain is the same for everyone, and that levels the field, entertains and strengthens bonds in a way no meeting room can.
 
 ## Why Sierra Nevada for a corporate event
@@ -992,7 +1048,7 @@ Sierra Nevada is only 30 km from Granada, with good road links and a nearby airp
 
 ## What a corporate course with Explora includes
 
-We offer 2 to 5 consecutive full-day courses (10:00 am to 4:00 pm). Each day includes 5 hours of lessons with a qualified instructor plus buffer time. Maximum group size is 8 people per instructor, ensuring personal attention. Available disciplines are alpine skiing, snowboard and telemark.
+We offer 2 to 5 consecutive [full-day](/blog/que-tipo-clases-elegir-sierra-nevada) courses (10:00 am to 4:00 pm). Each day includes 5 hours of lessons with a qualified instructor. Available disciplines are [alpine skiing](/clases/esqui), [snowboard](/clases/snowboard) and [telemark](/clases/telemark).
 
 ## Real benefits for your team
 
@@ -1012,11 +1068,11 @@ Team dinner in Pradollano, a free afternoon for those who want to keep skiing on
 
 ## Budget and booking
 
-Corporate courses start from the full-day price per person per day. For groups and several consecutive days, email explora.sclub@gmail.com or call +34 660 262 790. We will send a personalised proposal with no obligation.
+Corporate courses start from €195/day for 1 or 2 people, plus €25/day per extra person. For groups and several consecutive days, email explora.sclub@gmail.com or call +34 660 262 790. We will send a personalised proposal with no obligation.
 
 ### Organise your corporate trip with Explora
 
-Over 15 years teaching in Sierra Nevada, TD I, II and III qualified instructors, and lessons in Spanish and English. Turn your next company event into an experience the team will remember all season.`,
+Over 15 years teaching in Sierra Nevada. [Contact us](/contacto) or [book](/reserva) and we will send a proposal. We also help with [getting there](/como-llegar) and the [lift pass](/blog/forfait-sierra-nevada-guia-compra).`,
   },
   {
     slug: "como-llegar-sierra-nevada-guia",
@@ -1028,8 +1084,12 @@ Over 15 years teaching in Sierra Nevada, TD I, II and III qualified instructors,
       "Car, bus or transfer from Granada: we explain how to reach the resort, take the gondola and find Explora's meeting point.",
     date: "2026-09-01",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-como-llegar.jpg",
+    coverAltEs: "Carretera y telecabina de acceso a Sierra Nevada",
+    coverAltEn: "Road and gondola access to Sierra Nevada",
+    relatedSlugs: ["forfait-sierra-nevada-guia-compra","consejos-primera-vez-sierra-nevada","que-llevar-primer-dia-nieve"],
     migrated: false,
-    contentEs: `Llegar bien a Sierra Nevada es el primer paso para un día redondo en la nieve. La estación está a unos 30 kilómetros de Granada y, aunque el acceso es sencillo, conviene saber qué esperar para no perder tiempo ni la hora de tu clase.
+    contentEs: `Llegar bien a Sierra Nevada es el primer paso para un día redondo en la nieve. La estación está a unos 30 kilómetros de Granada; también tienes un resumen en nuestra página de [cómo llegar](/como-llegar). Conviene planificar para no perder la hora de tu [clase](/reserva).
 
 ## En coche: la opción más flexible
 
@@ -1041,7 +1101,7 @@ Existen servicios de autobús regulares desde Granada hasta Pradollano (la zona 
 
 ## Transfers y servicios privados
 
-Muchos hoteles y empresas de la zona ofrecen transfer desde Granada o desde el aeropuerto de Granada-Jaén. Si reservas una jornada completa con Explora, podemos coordinar la recogida en tu hotel en la estación bajo petición.
+Muchos hoteles y empresas de la zona ofrecen transfer desde Granada o desde el aeropuerto de Granada-Jaén. Si [reservas una jornada completa](/reserva) con Explora, podemos coordinar la recogida en tu hotel en la estación bajo petición. No olvides comprar el [forfait](/blog/forfait-sierra-nevada-guia-compra) por separado.
 
 ## De Pradollano a la estación de esquí
 
@@ -1065,8 +1125,8 @@ Cada viaje es distinto según de dónde vengas y a qué hora sea tu clase. Escr�
 
 ### Reserva tu clase y llega con tranquilidad
 
-En Explora llevamos años recibiendo clientes de toda España y del extranjero. Clases en español e inglés, instructores titulados y reserva online sencilla. Elige tu clase, confirma la fecha y nos vemos en la nieve.`,
-    contentEn: `Getting to Sierra Nevada smoothly is the first step to a great day on snow. The resort is about 30 kilometres from Granada and, although access is straightforward, it helps to know what to expect so you do not waste time or miss your lesson.
+En Explora llevamos años recibiendo clientes de toda España y del extranjero. [Elige tu clase](/clases), [confirma la fecha](/reserva) y, si es tu primera vez, lee nuestros [consejos de debut](/blog/consejos-primera-vez-sierra-nevada).`,
+    contentEn: `Getting to Sierra Nevada smoothly is the first step to a great day on snow. The resort is about 30 kilometres from Granada; you also have a summary on our [how to get there](/como-llegar) page. Plan ahead so you do not miss your [lesson](/reserva).
 
 ## By car: the most flexible option
 
@@ -1078,7 +1138,7 @@ Regular bus services run from Granada to Pradollano (the lower resort area). It 
 
 ## Transfers and private services
 
-Many local hotels and companies offer transfers from Granada or Granada-Jaén airport. If you book a full day with Explora, we can arrange pick-up at your resort hotel on request.
+Many local hotels and companies offer transfers from Granada or Granada-Jaén airport. If you [book a full day](/reserva) with Explora, we can arrange pick-up at your resort hotel on request. Do not forget to buy your [lift pass](/blog/forfait-sierra-nevada-guia-compra) separately.
 
 ## From Pradollano to the ski area
 
@@ -1102,20 +1162,24 @@ Every trip is different depending on where you come from and your lesson time. E
 
 ### Book your lesson and arrive with confidence
 
-At Explora we have been welcoming clients from across Spain and abroad for years. Lessons in Spanish and English, qualified instructors and simple online booking. Choose your lesson, confirm the date and see you on the snow.`,
+At Explora we have been welcoming clients from across Spain and abroad for years. [Choose your lesson](/clases), [confirm the date](/reserva) and, if it is your first time, read our [beginner tips](/blog/consejos-primera-vez-sierra-nevada).`,
   },
   {
     slug: "forfait-sierra-nevada-guia-compra",
     titleEs: "Forfait en Sierra Nevada: todo lo que necesitas saber antes de tu clase",
     titleEn: "Lift passes in Sierra Nevada: everything you need to know before your lesson",
     excerptEs:
-      "El forfait no está incluido en las clases de Explora. Te explicamos dónde comprarlo, qué tipo elegir y cómo evitar las colas en temporada alta.",
+      "Forfait Sierra Nevada: dónde comprarlo (Plaza de Andalucía o online), qué tipo necesitas según tu clase Explora, seguro de accidentes y errores a evitar.",
     excerptEn:
-      "Lift passes are not included in Explora lessons. We explain where to buy, which type to choose and how to avoid queues in peak season.",
+      "Sierra Nevada lift pass: where to buy (Plaza de Andalucía or online), which type you need for your Explora lesson, accident insurance and mistakes to avoid.",
     date: "2026-09-01",
     author: "Explora School & Club",
+    coverImage: "/images/blog/blog-forfait.jpg",
+    coverAltEs: "Forfait y acceso a remontes en Sierra Nevada",
+    coverAltEn: "Lift pass and lift access in Sierra Nevada",
+    relatedSlugs: ["como-llegar-sierra-nevada-guia","que-tipo-clases-elegir-sierra-nevada","que-llevar-primer-dia-nieve"],
     migrated: false,
-    contentEs: `Una de las preguntas más frecuentes que recibimos es si el forfait está incluido en el precio de la clase. La respuesta es no: en Explora School & Club pagas la enseñanza con instructor titulado, y el forfait lo compras aparte. Esta guía te ayuda a resolverlo sin sorpresas.
+    contentEs: `Una de las preguntas más frecuentes que recibimos es si el forfait está incluido en el precio de la clase. La respuesta es no: en Explora pagas la [enseñanza](/clases) con instructor titulado, y el forfait lo compras aparte. Combina esta guía con [cómo llegar a Sierra Nevada](/blog/como-llegar-sierra-nevada-guia).
 
 ## ¿Por qué el forfait va aparte?
 
@@ -1155,8 +1219,8 @@ Forfait: compra en Plaza de Andalucía o sierranevada.es. Seguro de accidentes: 
 
 ### Reserva tu clase en Explora
 
-Una vez tengas claro el forfait, elige tu tipo de clase en nuestra web. Medio día, jornada completa o particular: reserva online, confirmamos por email y no cobramos por adelantado. Si reservas antes del 1 de noviembre de 2026, disfrutas de un 10% de descuento.`,
-    contentEn: `One of the most frequent questions we get is whether the lift pass is included in the lesson price. The answer is no: at Explora School & Club you pay for instruction with a qualified instructor, and you buy your lift pass separately. This guide helps you sort it out without surprises.
+Una vez tengas claro el forfait, [elige tu tipo de clase](/blog/que-tipo-clases-elegir-sierra-nevada) y [reserva online](/reserva). Confirmamos por email y no cobramos por adelantado. Si reservas antes del 1 de noviembre de 2026, disfrutas de un 10% de descuento.`,
+    contentEn: `One of the most frequent questions we get is whether the lift pass is included in the lesson price. The answer is no: at Explora you pay for [instruction](/clases) with a qualified instructor, and you buy your lift pass separately. Pair this guide with [how to get to Sierra Nevada](/blog/como-llegar-sierra-nevada-guia).
 
 ## Why is the lift pass separate?
 
@@ -1196,7 +1260,7 @@ Lift pass: buy at Plaza de Andalucía or sierranevada.es. Accident insurance: re
 
 ### Book your lesson at Explora
 
-Once your lift pass is sorted, choose your lesson type on our website. Half day, full day or private: book online, we confirm by email and we do not charge upfront. Book before 1 November 2026 for 10% off.`,
+Once your lift pass is sorted, [choose your lesson type](/blog/que-tipo-clases-elegir-sierra-nevada) and [book online](/reserva). We confirm by email and we do not charge upfront. Book before 1 November 2026 for 10% off.`,
   },
 ];
 

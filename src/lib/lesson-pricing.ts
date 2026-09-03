@@ -1,22 +1,16 @@
 /**
- * Temporada 2026/27 — tarifas unificadas (1–8 participantes).
+ * Temporada 2026/27 — Tarifa Perfecta.
  *
- * Derivadas de las tablas históricas de Explora (agosto 2022), escaladas para que
- * la clase estándar de 2 h (10:00–12:00, 1 participante) = 110 € → 55 €/h.
+ * Clases particulares: 1 y 2 personas pagan el mismo precio total.
+ * Duración mínima: 2 horas. No hay clases de 1 h ni franja 09:00–12:00.
  *
- * Factor de escala: 110 ÷ 75 (precio legado 2 h mañana, 1 pax) ≈ ×1,47
- *
- * Se conservan las proporciones originales entre franjas horarias, duraciones
- * y número de participantes. Tablas 1–4 y 5–8 fusionadas en una sola de 1–8.
+ * Extra por persona a partir de la 3.ª (salvo 2 h tarde: tarifa plana 1–4).
  */
 
+export const MIN_LESSON_HOURS = 2;
+
+/** Precio 2 h mañana (1–2 pax). Equivale a 55 €/h de grupo. */
 export const HOURLY_ANCHOR_EUR = 55;
-
-/** Precio legado de referencia (2 h · 10:00–12:00 · 1 pax) antes del escalado. */
-export const LEGACY_ANCHOR_EUR = 75;
-
-/** Factor aplicado a todas las celdas de la tabla histórica. */
-export const LEGACY_SCALE_FACTOR = 110 / LEGACY_ANCHOR_EUR;
 
 /** Precio total de sesión por número de participantes (índice 0 = 1 persona). */
 export type SessionPriceRow = readonly [
@@ -30,32 +24,60 @@ export type SessionPriceRow = readonly [
   number,
 ];
 
-/** 2 h — mañana estándar 10:00–12:00 (legado 75 € → 110 €, 55 €/h). */
-export const SESSION_2H_STANDARD: SessionPriceRow = [110, 125, 139, 154, 169, 183, 198, 213];
+function pairBaseRow(base: number, extraPerPerson: number): SessionPriceRow {
+  return [
+    base,
+    base,
+    base + extraPerPerson,
+    base + extraPerPerson * 2,
+    base + extraPerPerson * 3,
+    base + extraPerPerson * 4,
+    base + extraPerPerson * 5,
+    base + extraPerPerson * 6,
+  ];
+}
 
-/** 2 h — mediodía 12:00–14:00 (mismo precio que 10:00–12:00). */
-export const SESSION_2H_MIDDAY: SessionPriceRow = [...SESSION_2H_STANDARD];
+/** 2 h mañana 10:00–12:00 / 12:00–14:00: 110 € (1–2) + 10 € desde la 3.ª. */
+export const SESSION_2H_STANDARD: SessionPriceRow = pairBaseRow(110, 10);
 
-/** 2 h — tarde 14:00–16:00 (legado desde 65 €). */
-export const SESSION_2H_AFTERNOON: SessionPriceRow = [95, 110, 125, 139, 154, 169, 183, 198];
+/** 2 h mediodía — mismo precio que 10:00–12:00. */
+export const SESSION_2H_MIDDAY: SessionPriceRow = SESSION_2H_STANDARD;
 
-/** 3 h — mañana 10:00–13:00 (legado desde 120 €). */
-export const SESSION_3H_MORNING: SessionPriceRow = [176, 198, 220, 242, 264, 286, 308, 330];
+/**
+ * 2 h tarde 14:00–16:00: 89 € plano de 1 a 4 personas.
+ * Desde la 5.ª: 100, 110, 120, 130 €.
+ */
+export const SESSION_2H_AFTERNOON: SessionPriceRow = [89, 89, 89, 89, 100, 110, 120, 130];
 
-/** 3 h — 10:00–12:00 y 14:00–15:00 (legado desde 110 €). */
-export const SESSION_3H_SPLIT: SessionPriceRow = [161, 183, 205, 227, 249, 271, 293, 315];
+/**
+ * Early bird de la tarifa plana de 2 h tarde (89 € → 79 €).
+ * Math.round(89 * 0.9) daría 80; se redondea a 79 como precio comercial.
+ */
+export const SESSION_2H_AFTERNOON_EARLY_BIRD_EUR = 79;
 
-/** 3 h — 12:00–15:00 (legado desde 110 €). */
-export const SESSION_3H_MIDDAY: SessionPriceRow = [161, 183, 205, 227, 249, 271, 293, 315];
+/** 3 h mañana 10:00–13:00: 150 € (1–2) + 15 € desde la 3.ª. */
+export const SESSION_3H_MORNING: SessionPriceRow = pairBaseRow(150, 15);
 
-/** 3 h — tarde 14:00–17:00 (legado desde 100 €). */
-export const SESSION_3H_AFTERNOON: SessionPriceRow = [147, 169, 191, 213, 235, 257, 279, 301];
+/** 3 h split 10:00–12:00 y 14:00–15:00 — misma tarifa que mañana. */
+export const SESSION_3H_SPLIT: SessionPriceRow = SESSION_3H_MORNING;
 
-/** Full Day — 5 h efectivas + 1 h comodín (legado desde 160 €). */
-export const SESSION_FULL_DAY: SessionPriceRow = [235, 264, 293, 323, 352, 381, 411, 440];
+/** 3 h 12:00–15:00 — misma tarifa que mañana. */
+export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_MORNING;
 
-/** Curso snowboard 3 h — legado 60 €/persona escalado. */
-export const CURSO_SNOW_PER_PERSON_EUR = 88;
+/** 3 h medio día 14:00–17:00: 135 € (1–2) + 15 € desde la 3.ª. */
+export const SESSION_3H_AFTERNOON: SessionPriceRow = pairBaseRow(135, 15);
+
+/** Full Day 10:00–16:00: 220 € (1–2) + 25 € desde la 3.ª. */
+export const SESSION_FULL_DAY: SessionPriceRow = pairBaseRow(220, 25);
+
+/** Cursos club/empresa (2–5 días): 195 €/día (1–2) + 25 €/día desde la 3.ª. */
+export const SESSION_CLUB_EMPRESA: SessionPriceRow = pairBaseRow(195, 25);
+
+/** Curso colectivo 3 h (10:00–13:00): 59 €/persona. Mínimo 4, máximo 8. */
+export const CURSO_COLECTIVO_PER_PERSON_EUR = 59;
+
+/** @deprecated Use CURSO_COLECTIVO_PER_PERSON_EUR */
+export const CURSO_SNOW_PER_PERSON_EUR = CURSO_COLECTIVO_PER_PERSON_EUR;
 
 export const PEOPLE_COUNT_HEADERS_ES = [
   "1 persona",

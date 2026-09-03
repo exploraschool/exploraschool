@@ -31,6 +31,7 @@ import {
   getProductBookingConfig,
   getSlotLabel,
   getSlotsForProduct,
+  usesPairBasePricing,
   type TimeSlotId,
 } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
@@ -385,6 +386,20 @@ export function AddToCartModal({
                               locale,
                               ` · Mínimo ${minPeople} para realizar el curso`,
                               ` · Minimum ${minPeople} required to run the course`,
+                            )}
+                          {usesPairBasePricing(productId) &&
+                            timeSlotId === "2h-14-16" &&
+                            pickLocale(
+                              locale,
+                              " · Tarifa plana de 1 a 4 personas",
+                              " · Flat rate for 1 to 4 people",
+                            )}
+                          {usesPairBasePricing(productId) &&
+                            timeSlotId !== "2h-14-16" &&
+                            pickLocale(
+                              locale,
+                              " · 1 y 2 personas: mismo precio",
+                              " · 1 and 2 people: same price",
                             )}
                         </>
                       )}

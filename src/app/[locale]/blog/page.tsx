@@ -1,4 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
+import Image from "next/image";
 import { Link } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
@@ -12,11 +13,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/blog",
-    title: pickLocale(locale, "Blog", "Blog"),
+    title: pickLocale(
+      locale,
+      "Blog de esquí y snowboard en Sierra Nevada",
+      "Ski and snowboard blog for Sierra Nevada",
+    ),
     description: pickLocale(
       locale,
-      "Consejos, novedades y experiencias de Explora School & Club en Sierra Nevada.",
-      "Tips, news and stories from Explora School & Club in Sierra Nevada.",
+      "Guías prácticas de esquí, snowboard y clases en Sierra Nevada: tips para principiantes, familias, forfait, seguridad y más.",
+      "Practical ski and snowboard guides for Sierra Nevada: beginner tips, families, lift passes, safety and more.",
     ),
   });
 }
@@ -25,18 +30,35 @@ export default async function BlogPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const posts = [...blogPosts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
+
   return (
     <>
       <section className="page-header">
         <div className="container-page">
           <p className="eyebrow">Blog</p>
-          <h1 className="page-title mt-2 sm:mt-2.5">Blog</h1>
+          <h1 className="page-title mt-2 sm:mt-2.5">
+            {pickLocale(
+              locale,
+              "Consejos de nieve en Sierra Nevada",
+              "Snow tips for Sierra Nevada",
+            )}
+          </h1>
+          <p className="mt-3 max-w-2xl text-muted">
+            {pickLocale(
+              locale,
+              "Guías para aprovechar tus clases, el forfait y tu primer día en la estación.",
+              "Guides to make the most of your lessons, lift pass and first day at the resort.",
+            )}
+          </p>
         </div>
       </section>
 
       <section className="section-padding">
         <div className="container-page">
-          {blogPosts.length === 0 ? (
+          {posts.length === 0 ? (
             <div className="card mx-auto max-w-xl text-center">
               <p className="text-sm text-muted">
                 {pickLocale(
@@ -51,25 +73,38 @@ export default async function BlogPage({ params }: Props) {
             </div>
           ) : (
             <div className="grid grid-gap md:grid-cols-2">
-              {blogPosts.map((post) => (
-                <article key={post.slug} className="card hover:border-hielo/25">
-                  <time className="text-xs font-medium uppercase tracking-wider text-oro">
-                    {new Date(post.date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
-                  </time>
-                  <h2 className="mt-3 font-display text-xl font-semibold">
-                    <Link href={`/blog/${post.slug}`} className="hover:text-accent">
-                      {pickLocale(locale, post.titleEs, post.titleEn)}
-                    </Link>
-                  </h2>
-                  <p className="mt-3 text-sm text-muted">
-                    {pickLocale(locale, post.excerptEs, post.excerptEn)}
-                  </p>
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="mt-4 inline-block text-sm font-semibold text-hielo hover:text-accent"
-                  >
-                    {pickLocale(locale, "Leer más →", "Read more →")}
+              {posts.map((post) => (
+                <article key={post.slug} className="card overflow-hidden p-0 hover:border-hielo/25">
+                  <Link href={`/blog/${post.slug}`} className="relative block aspect-[16/9]">
+                    <Image
+                      src={post.coverImage}
+                      alt={pickLocale(locale, post.coverAltEs, post.coverAltEn)}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
                   </Link>
+                  <div className="p-5 sm:p-6">
+                    <time className="text-xs font-medium uppercase tracking-wider text-oro">
+                      {new Date(post.date).toLocaleDateString(
+                        locale === "en" ? "en-GB" : "es-ES",
+                      )}
+                    </time>
+                    <h2 className="mt-3 font-display text-xl font-semibold">
+                      <Link href={`/blog/${post.slug}`} className="hover:text-accent">
+                        {pickLocale(locale, post.titleEs, post.titleEn)}
+                      </Link>
+                    </h2>
+                    <p className="mt-3 text-sm text-muted">
+                      {pickLocale(locale, post.excerptEs, post.excerptEn)}
+                    </p>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="mt-4 inline-block text-sm font-semibold text-hielo hover:text-accent"
+                    >
+                      {pickLocale(locale, "Leer más →", "Read more →")}
+                    </Link>
+                  </div>
                 </article>
               ))}
             </div>

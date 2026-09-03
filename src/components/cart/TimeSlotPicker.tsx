@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { TimeSlot } from "@/lib/booking-config";
+import { MIN_LESSON_HOURS } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 
 type TimeSlotPickerProps = {
@@ -13,31 +14,37 @@ type TimeSlotPickerProps = {
 };
 
 function getDurationGroups(slots: TimeSlot[]): number[] {
-  return [...new Set(slots.map((slot) => slot.hours))].filter((hours) => hours > 0).sort((a, b) => a - b);
+  return [...new Set(slots.map((slot) => slot.hours))]
+    .filter((hours) => hours >= MIN_LESSON_HOURS)
+    .sort((a, b) => a - b);
 }
 
 export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSlotPickerProps) {
-  const durations = useMemo(() => getDurationGroups(slots), [slots]);
+  const bookableSlots = useMemo(
+    () => slots.filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS),
+    [slots],
+  );
+  const durations = useMemo(() => getDurationGroups(bookableSlots), [bookableSlots]);
   const hasMultipleDurations = durations.length > 1;
 
   const [durationFilter, setDurationFilter] = useState(() => {
-    const selected = slots.find((slot) => slot.id === value);
-    return selected?.hours ?? durations[0] ?? 0;
+    const selected = bookableSlots.find((slot) => slot.id === value);
+    return selected?.hours ?? durations[0] ?? MIN_LESSON_HOURS;
   });
 
   useEffect(() => {
-    const selected = slots.find((slot) => slot.id === value);
-    if (selected && selected.hours > 0) {
+    const selected = bookableSlots.find((slot) => slot.id === value);
+    if (selected && selected.hours >= MIN_LESSON_HOURS) {
       setDurationFilter(selected.hours);
     }
-  }, [value, slots]);
+  }, [value, bookableSlots]);
 
   const visibleSlots = hasMultipleDurations
-    ? slots.filter((slot) => slot.hours === durationFilter)
-    : slots;
+    ? bookableSlots.filter((slot) => slot.hours === durationFilter)
+    : bookableSlots;
 
-  if (slots.length <= 1) {
-    const slot = slots[0];
+  if (bookableSlots.length <= 1) {
+    const slot = bookableSlots[0];
     if (!slot) return null;
     return (
       <div>
@@ -74,9 +81,9 @@ export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSl
                 aria-selected={selected}
                 onClick={() => {
                   setDurationFilter(hours);
-                  const firstInGroup = slots.find((slot) => slot.hours === hours);
+                  const firstInGroup = bookableSlots.find((slot) => slot.hours === hours);
                   if (firstInGroup && value !== firstInGroup.id) {
-                    const current = slots.find((slot) => slot.id === value);
+                    const current = bookableSlots.find((slot) => slot.id === value);
                     if (!current || current.hours !== hours) {
                       onChange(firstInGroup.id);
                     }

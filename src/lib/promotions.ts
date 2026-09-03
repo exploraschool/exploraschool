@@ -1,3 +1,5 @@
+import { SESSION_2H_AFTERNOON, SESSION_2H_AFTERNOON_EARLY_BIRD_EUR } from "@/lib/lesson-pricing";
+
 export const EARLY_BIRD_DISCOUNT_PERCENT = 10;
 
 /** Last moment the early-bird discount applies (exclusive): 1 Nov 2026 00:00 local. */
@@ -8,8 +10,9 @@ export function isEarlyBirdActive(now = new Date()): boolean {
   return now < EARLY_BIRD_DEADLINE;
 }
 
-export function applyEarlyBirdDiscount(listPrice: number): number {
-  if (!isEarlyBirdActive()) return listPrice;
+export function applyEarlyBirdDiscount(listPrice: number, now = new Date()): number {
+  if (!isEarlyBirdActive(now)) return listPrice;
+  if (listPrice === SESSION_2H_AFTERNOON[0]) return SESSION_2H_AFTERNOON_EARLY_BIRD_EUR;
   return Math.round(listPrice * (1 - EARLY_BIRD_DISCOUNT_PERCENT / 100));
 }
 
@@ -24,7 +27,7 @@ export function resolvePriceDisplay(listPrice: number, now = new Date()): PriceD
   const discountActive = isEarlyBirdActive(now);
   return {
     listPrice,
-    finalPrice: discountActive ? applyEarlyBirdDiscount(listPrice) : listPrice,
+    finalPrice: discountActive ? applyEarlyBirdDiscount(listPrice, now) : listPrice,
     discountActive,
     discountPercent: EARLY_BIRD_DISCOUNT_PERCENT,
   };
