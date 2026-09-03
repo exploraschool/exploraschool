@@ -5,12 +5,14 @@ import { useTranslations } from "next-intl";
 import type { MainDisciplineId } from "@/data/disciplines";
 import type { ProductId } from "@/data/products";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
+import { readPeopleFromLocationSearch } from "@/lib/booking-config";
 
 type AddToCartButtonProps = {
   productId: ProductId;
   defaultDiscipline?: MainDisciplineId;
   defaultInstructorSlug?: string;
   defaultInstructorName?: string;
+  defaultParticipants?: number;
   variant?: "primary" | "secondary" | "ghost";
   className?: string;
   label?: string;
@@ -21,12 +23,19 @@ export function AddToCartButton({
   defaultDiscipline,
   defaultInstructorSlug,
   defaultInstructorName,
+  defaultParticipants,
   variant = "primary",
   className = "",
   label,
 }: AddToCartButtonProps) {
   const t = useTranslations("cart");
   const [open, setOpen] = useState(false);
+  const [resolvedParticipants, setResolvedParticipants] = useState(defaultParticipants);
+
+  function handleOpen() {
+    setResolvedParticipants(defaultParticipants ?? readPeopleFromLocationSearch());
+    setOpen(true);
+  }
 
   const btnClass =
     variant === "primary"
@@ -39,7 +48,7 @@ export function AddToCartButton({
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         className={`${btnClass} ${className}`.trim()}
       >
         {label ?? t("addToCart")}
@@ -51,6 +60,7 @@ export function AddToCartButton({
         defaultDiscipline={defaultDiscipline}
         defaultInstructorSlug={defaultInstructorSlug}
         defaultInstructorName={defaultInstructorName}
+        defaultParticipants={resolvedParticipants}
       />
     </>
   );

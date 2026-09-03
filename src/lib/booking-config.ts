@@ -312,3 +312,18 @@ export function getBookingFromSeasonRow(
   if (!productId || !timeSlotId) return null;
   return { productId, timeSlotId };
 }
+
+/** Maps HeroQuickBook group values (and plain 1–8) to a concrete participant count. */
+export function parseQuickBookPeople(value: string | null | undefined): number | undefined {
+  if (!value) return undefined;
+  if (value === "3-4") return 3;
+  if (value === "5+") return 5;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1 || n > 8) return undefined;
+  return n;
+}
+
+export function readPeopleFromLocationSearch(): number | undefined {
+  if (typeof window === "undefined") return undefined;
+  return parseQuickBookPeople(new URLSearchParams(window.location.search).get("people"));
+}

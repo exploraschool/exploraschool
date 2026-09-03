@@ -8,7 +8,7 @@ const steps = [
     n: "01",
     titleEs: "Elige tus clases",
     titleEn: "Choose your lessons",
-    descEs: "Explora Full Day, cursos y particulares. Filtra por disciplina y nivel.",
+    descEs: "Explora día completo, cursos y particulares. Filtra por disciplina y nivel.",
     descEn: "Browse Full Day, courses and private lessons. Filter by discipline and level.",
     icon: (
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>

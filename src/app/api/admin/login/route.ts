@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { ADMIN_COOKIE, hashSecret } from "@/lib/admin-auth";
+import { ADMIN_PASSWORD_REQUIRED } from "@/lib/admin-auth-config";
 
 export async function POST(request: Request) {
+  if (!ADMIN_PASSWORD_REQUIRED) {
+    return NextResponse.json({ ok: true });
+  }
+
   const { password } = await request.json();
   const secret = process.env.ADMIN_PASSWORD;
 

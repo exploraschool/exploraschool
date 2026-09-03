@@ -3,7 +3,7 @@
     "clases": "Clases",
     "equipo": "Equipo",
     "blog": "Blog",
-    "faqs": "FAQs",
+    "faqs": "Preguntas frecuentes",
     "contacto": "Contacto",
     "reservar": "Reservar",
     "club": "Club",
@@ -44,12 +44,12 @@
   "cookies": {
     "message": "Usamos cookies esenciales.",
     "accept": "Aceptar",
-    "policy": "Más info",
+    "policy": "Política de cookies",
     "close": "Cerrar aviso de cookies"
   },
   "contact": {
-    "title": "Contacto",
-    "subtitle": "Estamos a tu disposición. Escríbenos, llámanos o reserva online: te respondemos lo antes posible.",
+    "title": "Contacto Explora School en Sierra Nevada",
+    "subtitle": "Escríbenos, llámanos o reserva online clases de esquí y snowboard en Sierra Nevada. Te respondemos lo antes posible.",
     "name": "Nombre",
     "email": "Email",
     "phone": "Teléfono",
@@ -103,6 +103,8 @@
     "peopleRange": "personas",
     "discipline": "Disciplina",
     "selectDiscipline": "Seleccionar disciplina",
+    "disciplineRequired": "La disciplina es obligatoria en cada clase.",
+    "missingDiscipline": "Falta disciplina — elimina esta clase y vuelve a añadirla eligiendo disciplina, participantes y día.",
     "modality": "Modalidad (opcional)",
     "selectModality": "Pista general / sin especificar",
     "instructor": "Instructor/a preferido/a",
@@ -132,7 +134,7 @@
     "remove": "Eliminar",
     "addMore": "Añadir más clases",
     "checkout": "Datos de contacto",
-    "checkoutDesc": "Completa tus datos y envía la reserva. Se abrirá tu cliente de email con el mensaje ya preparado.",
+    "checkoutDesc": "Completa tus datos y envía la solicitud. Te confirmamos por email. Sin pago online.",
     "estimatedTotal": "Total estimado",
     "vatIncluded": "IVA incluido · precio orientativo",
     "yourName": "Nombre",
@@ -142,8 +144,8 @@
     "privacy": "Acepto la política de privacidad",
     "sendBooking": "Enviar solicitud de reserva",
     "emailTo": "Te confirmaremos en",
-    "bookingSent": "¡Solicitud enviada!",
-    "bookingSentDesc": "Hemos recibido tu reserva. El equipo de Explora la revisará y te enviaremos un email de confirmación a la dirección indicada.",
+    "bookingSent": "¡Gracias por tu reserva!",
+    "bookingSentDesc": "Hemos recibido tu solicitud. Te enviaremos un email de confirmación y, en breve, tu monitor/a se pondrá en contacto para formalizarla y concretar el pago.",
     "newBooking": "Nueva reserva",
     "viewCart": "Ver reserva ({count} clases)"
   }

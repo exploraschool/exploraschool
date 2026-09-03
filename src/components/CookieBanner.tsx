@@ -53,7 +53,7 @@ export function CookieBanner() {
           {t("message")}{" "}
           <Link
             href="/politica-de-cookies"
-            className="hidden font-medium text-hielo underline-offset-2 hover:text-accent hover:underline sm:inline"
+            className="font-medium text-hielo underline-offset-2 hover:text-accent hover:underline"
           >
             {t("policy")}
           </Link>

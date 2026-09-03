@@ -211,7 +211,7 @@ Es una opción muy popular entre familias y grupos de amigos que quieren compart
 
 ## Jornada completa: la experiencia integral
 
-La opción Full Day incluye 5 horas de clase más 1 hora de margen, con recogida en hotel en la estación. Está pensada para quien quiere una experiencia completa sin preocuparse por logística: te recogemos, esquiamos juntos y aprovechamos al máximo el día.
+La opción de día completo incluye 5 horas de clase más 1 hora de margen, con recogida en hotel en la estación. Está pensada para quien quiere una experiencia completa sin preocuparse por logística: te recogemos, esquiamos juntos y aprovechamos al máximo el día.
 
 Recomendada para principiantes que vienen pocos días al año y quieren progresar de verdad en una sola visita, o para quienes prefieren dejar el día en manos de profesionales y centrarse solo en disfrutar.
 
@@ -250,9 +250,9 @@ The Full Day option includes 5 hours of lessons plus 1 hour buffer, with hotel p
 
 Recommended for beginners who visit only a few days a year and want real progress in a single trip, or for those who prefer to leave the day in professional hands and focus only on enjoying themselves.
 
-## Group course: learn with your group
+## Snowboard course: learn with your group
 
-If you are four or more friends keen to learn snowboard, the 3-hour group course is a social and affordable option. You share an instructor, progress together and the group atmosphere motivates—especially among young people and adults starting from scratch.
+If you are four or more friends keen to learn snowboard, the 3-hour snowboard course is a social and affordable option. You share an instructor, progress together and the group atmosphere motivates—especially among young people and adults starting from scratch.
 
 ## Multi-day courses: for companies and sports clubs
 
@@ -1027,7 +1027,7 @@ Lo ideal es contactar con varias semanas de antelación, sobre todo si el grupo 
 
 ## Logística que nos ocupamos nosotros
 
-En la opción Full Day incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte, pero te orientamos en todo el proceso para que nadie llegue perdido el primer día.
+En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte, pero te orientamos en todo el proceso para que nadie llegue perdido el primer día.
 
 ## Ideas para complementar el curso
 

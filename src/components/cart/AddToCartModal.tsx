@@ -218,18 +218,27 @@ export function AddToCartModal({
     (!maxDays || dates.length <= maxDays) &&
     (!requireConsecutiveDays || areConsecutiveDates(dates));
 
+  const resolvedDisciplineForSubmit: MainDisciplineId | undefined =
+    instructorSlug &&
+    isSnowboardOnlyInstructor(instructorSlug) &&
+    resolvedProduct.disciplines.includes("snowboard")
+      ? "snowboard"
+      : effectiveDiscipline;
+
+  const disciplineValid = Boolean(resolvedDisciplineForSubmit);
+  const canAddToCart = datesValid && disciplineValid && sessionPrice !== null;
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const people = clampParticipantCount(participants, productId, effectiveDiscipline);
     setParticipants(people);
-    if (!datesValid || sessionPrice === null) return;
+    if (!datesValid || !disciplineValid || sessionPrice === null) return;
     if (people < minPeople || people > maxPeople) return;
 
     const instructor = instructors.find((i) => i.slug === instructorSlug);
-    const resolvedDiscipline =
-      instructor && isSnowboardOnlyInstructor(instructor.slug)
-        ? "snowboard"
-        : effectiveDiscipline;
+    const resolvedDiscipline = resolvedDisciplineForSubmit;
+    if (!resolvedDiscipline) return;
+
     const slotLabel = getSlotLabel(timeSlotId, locale);
     const trimmedNotes = notes.trim() || undefined;
 
@@ -409,14 +418,15 @@ export function AddToCartModal({
                 {availableDisciplines.length > 1 ? (
                   <div>
                     <label htmlFor="cart-discipline" className="mb-1.5 block text-sm font-medium">
-                      {t("discipline")}
+                      {t("discipline")} *
                     </label>
                     <select
                       id="cart-discipline"
                       value={discipline}
                       onChange={(e) => handleDisciplineChange(e.target.value)}
+                      required
                       disabled={disciplineLocked}
-                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
+                      className="field-select"
                     >
                       <option value="">{t("selectDiscipline")}</option>
                       {availableDisciplines.map((d) => (
@@ -444,7 +454,7 @@ export function AddToCartModal({
                       id="cart-instructor"
                       value={instructorSlug}
                       onChange={(e) => handleInstructorChange(e.target.value)}
-                      className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                      className="field-select"
                     >
                       <option value="">{t("anyInstructor")}</option>
                       {instructors.map((i) => (
@@ -466,7 +476,7 @@ export function AddToCartModal({
                     id="cart-modality"
                     value={modality}
                     onChange={(e) => setModality(e.target.value as ModalityId | "")}
-                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                    className="field-select"
                   >
                     <option value="">{t("selectModality")}</option>
                     {availableModalities.map((m) => (
@@ -487,7 +497,7 @@ export function AddToCartModal({
                     id="cart-instructor-2"
                     value={instructorSlug}
                     onChange={(e) => handleInstructorChange(e.target.value)}
-                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none"
+                    className="field-select"
                   >
                     <option value="">{t("anyInstructor")}</option>
                     {instructors.map((i) => (
@@ -528,7 +538,7 @@ export function AddToCartModal({
               <div className="modal-action-bar">
                 <button
                   type="submit"
-                  disabled={!datesValid || sessionPrice === null}
+                  disabled={!canAddToCart}
                   className="btn-primary modal-action-btn modal-action-btn-primary disabled:opacity-50"
                 >
                   <span className="truncate sm:hidden">

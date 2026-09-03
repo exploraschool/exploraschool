@@ -36,7 +36,7 @@ const props = [
     ),
     titleEs: "Horarios flexibles",
     titleEn: "Flexible schedules",
-    descEs: "Full Day, 2 h y 3 h · 1–8 participantes",
+    descEs: "Día completo, 2 h y 3 h · 1–8 participantes",
     descEn: "Full day, 2 h and 3 h · 1–8 participants",
   },
   {

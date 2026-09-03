@@ -28,14 +28,14 @@ type BuildParams = {
 };
 
 const BRAND = {
-  pizarra: "#0a1219",
-  hielo: "#1a5568",
-  accent: "#e85a35",
-  nieve: "#f5f8fb",
-  muted: "#445661",
-  frost: "#a8c8d8",
+  pizarra: "#0e0e0f",
+  hielo: "#2d6b64",
+  accent: "#ea5b5e",
+  nieve: "#f6f7f7",
+  muted: "#5c5c5e",
+  frost: "#b5ddd6",
   white: "#ffffff",
-  border: "#d7e3ea",
+  border: "#d8e5e2",
 } as const;
 
 function escapeHtml(value: string): string {
@@ -213,7 +213,8 @@ export function buildCustomerConfirmationEmail({
   data,
   siteUrl,
 }: BuildParams): { subject: string; text: string; html: string } {
-  const isEn = data.locale === "en";
+  // Confirmación al cliente: siempre en español (idioma operativo del club).
+  const isEn = false;
   const name = String(data.name ?? "").trim();
   const greetingName = firstName(name) || name;
   const items = resolveItems(data);
@@ -233,44 +234,44 @@ export function buildCustomerConfirmationEmail({
 
   const preheader = pick(
     isEn,
-    "Thank you for your booking. Your instructor will get in touch to finalise it and confirm how to pay for the class.",
     "Gracias por tu reserva. Tu monitor/a se pondrá en contacto para formalizarla y concretar cómo abonar la clase.",
+    "Thank you for your booking. Your instructor will get in touch to finalise it and confirm how to pay for the class.",
   );
 
   const greeting = pick(
     isEn,
-    greetingName ? `Hello ${greetingName},` : "Hello,",
     greetingName ? `Hola ${greetingName},` : "Hola,",
+    greetingName ? `Hello ${greetingName},` : "Hello,",
   );
 
   const thanks = pick(
     isEn,
-    "Thank you for your booking with Explora School & Club. Your request is confirmed.",
     "Gracias por tu reserva en Explora School & Club. Tu solicitud ya está confirmada.",
+    "Thank you for your booking with Explora School & Club. Your request is confirmed.",
   );
 
   const nextContact = pick(
     isEn,
-    "The instructor who will take your lesson will get in touch soon to finalise the booking and confirm how to pay for the class.",
     "El monitor o monitora que se encargará de tu clase se pondrá en contacto contigo en breve para formalizarla y concretar cómo abonar la clase.",
+    "The instructor who will take your lesson will get in touch soon to finalise the booking and confirm how to pay for the class.",
   );
 
   const nothingElse = pick(
     isEn,
-    "You don’t need to do anything else for now. Keep this email handy as a summary of your booking.",
     "No necesitas hacer nada más por ahora. Guarda este correo como resumen de tu reserva.",
+    "You don’t need to do anything else for now. Keep this email handy as a summary of your booking.",
   );
 
   const meetingPoint = pick(
     isEn,
+    "Explora School & Club en la estación de esquí de Sierra Nevada. El monitor o monitora lleva uniforme Explora. En día completo: recogida y entrega donde se solicite.",
     "Explora School & Club at Sierra Nevada ski resort. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request.",
-    "Explora School & Club en la estación de esquí de Sierra Nevada. El monitor o monitora lleva uniforme Explora. En Full-Day: recogida y entrega donde se solicite.",
   );
 
   const totalNote = pick(
     isEn,
-    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
     "Total estimado (IVA incl.). El importe final se confirma con tu monitor/a al concretar el abono.",
+    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
   );
 
   const text = [
@@ -281,19 +282,19 @@ export function buildCustomerConfirmationEmail({
     "",
     nothingElse,
     "",
-    sessions.length > 0 ? pick(isEn, "Booking summary:", "Resumen de la reserva:") : "",
+    sessions.length > 0 ? pick(isEn, "Resumen de la reserva:", "Booking summary:") : "",
     buildTextSummary(sessions, isEn),
     "",
     estimatedTotal !== undefined
-      ? `${pick(isEn, "Estimated total", "Total estimado")}: ${formatEuro(estimatedTotal)}`
+      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${formatEuro(estimatedTotal)}`
       : "",
     estimatedTotal !== undefined ? totalNote : "",
     "",
-    pick(isEn, "Meeting point:", "Punto de encuentro:"),
+    pick(isEn, "Punto de encuentro:", "Meeting point:"),
     meetingPoint,
     mapsUrl,
     "",
-    pick(isEn, "Questions?", "¿Dudas?"),
+    pick(isEn, "¿Dudas?", "Questions?"),
     pick(
       isEn,
       `WhatsApp: ${site.phoneDisplay}`,
@@ -332,7 +333,7 @@ export function buildCustomerConfirmationEmail({
                 <img src="${escapeHtml(logoUrl)}" width="88" height="88" alt="Explora School & Club" style="display:block;margin:0 auto 14px;border:0;outline:none;" />
               </a>
               <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;color:${BRAND.pizarra};font-weight:700;">
-                ${escapeHtml(pick(isEn, "Booking confirmed", "Reserva confirmada"))}
+                ${escapeHtml(pick(isEn, "Reserva confirmada", "Booking confirmed"))}
               </p>
               <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">
                 Explora School &amp; Club
@@ -348,7 +349,7 @@ export function buildCustomerConfirmationEmail({
               <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:${BRAND.pizarra};">${escapeHtml(thanks)}</p>
               <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:${BRAND.pizarra};">${escapeHtml(nextContact)}</p>
 
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#fff7f4;border:1px solid #f3c7b8;border-radius:12px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#fef2f2;border:1px solid #f3c0c2;border-radius:12px;">
                 <tr>
                   <td style="padding:14px 16px;font-size:14px;line-height:1.55;color:${BRAND.pizarra};">
                     ${escapeHtml(nothingElse)}
@@ -358,7 +359,7 @@ export function buildCustomerConfirmationEmail({
 
               ${
                 sessions.length > 0
-                  ? `<p style="margin:0 0 12px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">${escapeHtml(pick(isEn, "Booking summary", "Resumen de la reserva"))}</p>${sessionRowsHtml(sessions, isEn)}`
+                  ? `<p style="margin:0 0 12px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">${escapeHtml(pick(isEn, "Resumen de la reserva", "Booking summary"))}</p>${sessionRowsHtml(sessions, isEn)}`
                   : ""
               }
 
@@ -367,7 +368,7 @@ export function buildCustomerConfirmationEmail({
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
                         <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">
-                          ${escapeHtml(pick(isEn, "Estimated total", "Total estimado"))}
+                          ${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}
                         </td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">
                           ${escapeHtml(formatEuro(estimatedTotal))}
@@ -386,13 +387,13 @@ export function buildCustomerConfirmationEmail({
                 <tr>
                   <td style="padding:18px;background:${BRAND.nieve};border:1px solid ${BRAND.border};border-radius:14px;">
                     <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">
-                      ${escapeHtml(pick(isEn, "Meeting point", "Punto de encuentro"))}
+                      ${escapeHtml(pick(isEn, "Punto de encuentro", "Meeting point"))}
                     </p>
                     <p style="margin:0 0 12px;font-size:14px;line-height:1.55;color:${BRAND.pizarra};">
                       ${escapeHtml(meetingPoint)}
                     </p>
                     <a href="${escapeHtml(mapsUrl)}" style="display:inline-block;font-size:14px;font-weight:700;color:${BRAND.hielo};text-decoration:underline;">
-                      ${escapeHtml(pick(isEn, "Open in Google Maps", "Abrir en Google Maps"))}
+                      ${escapeHtml(pick(isEn, "Abrir en Google Maps", "Open in Google Maps"))}
                     </a>
                   </td>
                 </tr>
@@ -402,8 +403,8 @@ export function buildCustomerConfirmationEmail({
                 ${escapeHtml(
                   pick(
                     isEn,
-                    "If you have any questions, reply to this email or write to us on WhatsApp.",
                     "Si tienes alguna duda, responde a este correo o escríbenos por WhatsApp.",
+                    "If you have any questions, reply to this email or write to us on WhatsApp.",
                   ),
                 )}
               </p>

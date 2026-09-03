@@ -11,10 +11,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/reserva",
-    title: pickLocale(locale, "Tu reserva", "Your booking"),
+    title: pickLocale(locale, "Reservar clases de esquí en Sierra Nevada", "Book ski lessons in Sierra Nevada"),
     description: pickLocale(
       locale,
-      "Elige clases, fechas y personas. Envía tu reserva por email a Explora School & Club.",
+      "Reserva clases de esquí, snowboard o telemark en Sierra Nevada. Elige fechas y personas y envía tu solicitud online a Explora School & Club.",
       "Choose lessons, dates and group size. Send your booking by email to Explora School & Club.",
     ),
   });

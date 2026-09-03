@@ -19,7 +19,15 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = getBlogPost(slug);
-  if (!post) return { title: "Blog" };
+  if (!post) {
+    return buildPageMetadata({
+      locale,
+      path: "/blog",
+      title: "Blog de esquí y snowboard en Sierra Nevada",
+      description:
+        "Guías prácticas de esquí, snowboard y clases en Sierra Nevada con Explora School & Club.",
+    });
+  }
   return buildPageMetadata({
     locale,
     path: `/blog/${slug}`,

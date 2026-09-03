@@ -73,7 +73,7 @@ export const SESSION_FULL_DAY: SessionPriceRow = pairBaseRow(220, 25);
 /** Cursos club/empresa (2–5 días): 195 €/día (1–2) + 25 €/día desde la 3.ª. */
 export const SESSION_CLUB_EMPRESA: SessionPriceRow = pairBaseRow(195, 25);
 
-/** Curso colectivo 3 h (10:00–13:00): 59 €/persona. Mínimo 4, máximo 8. */
+/** Curso de snowboard 3 h (10:00–13:00): 59 €/persona. Mínimo 4, máximo 8. */
 export const CURSO_COLECTIVO_PER_PERSON_EUR = 59;
 
 /** @deprecated Use CURSO_COLECTIVO_PER_PERSON_EUR */

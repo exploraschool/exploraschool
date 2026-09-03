@@ -14,8 +14,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/como-llegar",
-    title: pickLocale(locale, "Cómo llegar", "Getting here"),
-    description: pickLocale(locale, site.meetingPointEs, site.meetingPointEn),
+    title: pickLocale(locale, "Cómo llegar a Explora School en Sierra Nevada", "Getting to Explora School in Sierra Nevada"),
+    description: pickLocale(
+      locale,
+      "Punto de encuentro oficial de Explora School & Club en la estación de esquí de Sierra Nevada (Granada). Indicaciones y Google Maps.",
+      site.meetingPointEn,
+    ),
   });
 }
 

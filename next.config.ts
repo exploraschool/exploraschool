@@ -57,7 +57,10 @@ const legacyRedirects = [
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [{ protocol: "https", hostname: "firebasestorage.googleapis.com" }],
+    remotePatterns: [
+      { protocol: "https", hostname: "firebasestorage.googleapis.com" },
+      { protocol: "https", hostname: "storage.googleapis.com" },
+    ],
   },
   async redirects() {
     return legacyRedirects.flatMap((r) => [

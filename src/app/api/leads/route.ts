@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { sendTeamLeadNotification } from "@/lib/lead-emails";
+import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
+import { isBookingLead } from "@/lib/leads";
 
 const bookingItemSchema = z.object({
   productId: z.string().min(1).max(80),
@@ -10,7 +12,7 @@ const bookingItemSchema = z.object({
   timeSlotId: z.string().min(1).max(40),
   timeSlotLabel: z.string().min(1).max(80),
   participants: z.number().int().min(1).max(20),
-  discipline: z.string().max(40).optional(),
+  discipline: z.string().min(1).max(40),
   modality: z.string().max(40).optional(),
   instructorSlug: z.string().max(80).optional(),
   instructorName: z.string().max(120).optional(),
@@ -60,6 +62,7 @@ export async function POST(request: Request) {
       locale: parsed.data.locale ?? "es",
       source: parsed.data.source ?? "contact-form",
       createdAt: new Date().toISOString(),
+      privacyAccepted: true as const,
       ...(isBooking && parsed.data.bookingItems
         ? {
             bookingItems: parsed.data.bookingItems as StoredBookingItem[],
@@ -72,6 +75,20 @@ export async function POST(request: Request) {
       const db = getAdminDb();
       if (db) {
         const doc = await db.collection("leads").add(lead);
+        try {
+          await upsertMarketingContact(db, {
+            email: lead.email,
+            name: lead.name,
+            phone: lead.phone,
+            locale: lead.locale,
+            source: isBookingLead(lead) ? "booking" : "contact",
+            leadId: doc.id,
+            status: lead.status,
+            privacyAccepted: true,
+          });
+        } catch (marketingError) {
+          console.error("[leads] Marketing contact upsert failed:", marketingError);
+        }
         try {
           await sendTeamLeadNotification(doc.id, lead);
         } catch (emailError) {

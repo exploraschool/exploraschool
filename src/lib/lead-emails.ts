@@ -1,3 +1,4 @@
+import { buildCustomerCancellationEmail } from "@/lib/customer-cancellation-email";
 import { buildCustomerConfirmationEmail } from "@/lib/customer-confirmation-email";
 import { createLeadConfirmToken } from "@/lib/lead-confirm";
 import { buildTeamNotificationEmail } from "@/lib/team-notification-email";
@@ -56,11 +57,26 @@ export async function sendTeamLeadNotification(
   await sendResendEmail({ from, to: [teamTo], subject, text, html });
 }
 
-export async function sendCustomerBookingConfirmation(data: Record<string, unknown>): Promise<void> {
+async function requireCustomerMailbox(data: Record<string, unknown>) {
   const { from, siteUrl } = getEmailConfig();
-  const customerEmail = String(data.email ?? "");
-  if (!customerEmail) return;
+  const customerEmail = String(data.email ?? "").trim();
+  if (!customerEmail) {
+    throw new Error("Lead has no customer email");
+  }
+  if (!from.includes("@")) {
+    throw new Error("RESEND_FROM is not configured");
+  }
+  return { from, siteUrl, customerEmail };
+}
 
+export async function sendCustomerBookingConfirmation(data: Record<string, unknown>): Promise<void> {
+  const { from, siteUrl, customerEmail } = await requireCustomerMailbox(data);
   const { subject, text, html } = buildCustomerConfirmationEmail({ data, siteUrl });
+  await sendResendEmail({ from, to: [customerEmail], subject, text, html });
+}
+
+export async function sendCustomerBookingCancellation(data: Record<string, unknown>): Promise<void> {
+  const { from, siteUrl, customerEmail } = await requireCustomerMailbox(data);
+  const { subject, text, html } = buildCustomerCancellationEmail({ data, siteUrl });
   await sendResendEmail({ from, to: [customerEmail], subject, text, html });
 }

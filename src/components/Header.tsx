@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import {
@@ -11,13 +12,54 @@ import {
 } from "@/components/HeaderNav";
 import { CartBadge } from "@/components/cart/CartBadge";
 
+const ADMIN_LOGO_TAPS = 5;
+const ADMIN_LOGO_TAP_WINDOW_MS = 3500;
+const ADMIN_LOGO_TAP_KEY = "explora_logo_taps";
+
+type LogoTapState = {
+  count: number;
+  at: number;
+};
+
+function readLogoTaps(): LogoTapState {
+  try {
+    const raw = sessionStorage.getItem(ADMIN_LOGO_TAP_KEY);
+    if (!raw) return { count: 0, at: 0 };
+    const parsed = JSON.parse(raw) as LogoTapState;
+    if (typeof parsed.count !== "number" || typeof parsed.at !== "number") {
+      return { count: 0, at: 0 };
+    }
+    return parsed;
+  } catch {
+    return { count: 0, at: 0 };
+  }
+}
+
+function writeLogoTaps(state: LogoTapState) {
+  try {
+    sessionStorage.setItem(ADMIN_LOGO_TAP_KEY, JSON.stringify(state));
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function clearLogoTaps() {
+  try {
+    sessionStorage.removeItem(ADMIN_LOGO_TAP_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 type HeaderProps = {
   locale: string;
 };
 
 export function Header({ locale }: HeaderProps) {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const logoTapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     function onScroll() {
@@ -26,15 +68,41 @@ export function Header({ locale }: HeaderProps) {
 
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (logoTapTimerRef.current) clearTimeout(logoTapTimerRef.current);
+    };
   }, []);
+
+  function onBrandClick(e: React.MouseEvent<HTMLAnchorElement>) {
+    if (logoTapTimerRef.current) clearTimeout(logoTapTimerRef.current);
+
+    const now = Date.now();
+    const previous = readLogoTaps();
+    const withinWindow = previous.at > 0 && now - previous.at <= ADMIN_LOGO_TAP_WINDOW_MS;
+    const count = (withinWindow ? previous.count : 0) + 1;
+
+    if (count >= ADMIN_LOGO_TAPS) {
+      e.preventDefault();
+      clearLogoTaps();
+      router.push("/admin/reservas");
+      return;
+    }
+
+    writeLogoTaps({ count, at: now });
+
+    // Single tap always navigates home — never block taps 1–4.
+    logoTapTimerRef.current = setTimeout(() => {
+      clearLogoTaps();
+    }, ADMIN_LOGO_TAP_WINDOW_MS);
+  }
 
   return (
     <header
       className={`site-header ${scrolled ? "site-header--scrolled" : "site-header--top"}`}
     >
       <div className="container-page site-header__bar">
-        <Link href="/" className="site-header__brand group">
+        <Link href="/" className="site-header__brand" onClick={onBrandClick}>
           <Image
             src={media.logo}
             alt="Explora School & Club"
@@ -61,7 +129,6 @@ export function Header({ locale }: HeaderProps) {
         <div className="site-header__actions">
           <CartBadge />
           <HeaderMenuButton
-            locale={locale}
             open={menuOpen}
             onClick={() => setMenuOpen((value) => !value)}
           />

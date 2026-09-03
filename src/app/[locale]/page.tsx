@@ -36,7 +36,7 @@ export default async function HomePage({ params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <>
+    <div className="pb-[calc(3.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
       <Hero locale={locale} />
       <TrustBar locale={locale} />
       <AboutVisual locale={locale} compact />
@@ -46,6 +46,6 @@ export default async function HomePage({ params }: Props) {
       <Testimonials locale={locale} limit={3} />
       <HomeClosing locale={locale} />
       <StickyBookBar locale={locale} />
-    </>
+    </div>
   );
 }

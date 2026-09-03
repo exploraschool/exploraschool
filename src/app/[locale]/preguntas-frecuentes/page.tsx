@@ -17,10 +17,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/preguntas-frecuentes",
-    title: pickLocale(locale, "Preguntas frecuentes", "FAQs"),
+    title: pickLocale(
+      locale,
+      "Preguntas frecuentes sobre clases de esquí en Sierra Nevada",
+      "FAQs about ski lessons in Sierra Nevada",
+    ),
     description: pickLocale(
       locale,
-      "Resuelve tus dudas sobre clases, forfait, material y reservas en Explora School & Club.",
+      "Resuelve dudas sobre clases, forfait, material, punto de encuentro y reservas en Explora School & Club, Sierra Nevada.",
       "Answers about lessons, lift passes, equipment and bookings at Explora School & Club.",
     ),
   });

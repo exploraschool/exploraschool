@@ -79,9 +79,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Telemark",
     nameEn: "Telemark",
     descriptionEs:
-      "Descubre el esquí nórdico en la estación con instructores que dominan la disciplina.",
+      "Clases de telemark en Sierra Nevada con instructores especializados. Aprende o perfecciona la técnica nórdica en pista.",
     descriptionEn:
-      "Discover Nordic-style skiing in the resort with instructors who master the discipline.",
+      "Telemark lessons in Sierra Nevada with specialist instructors. Learn or refine Nordic-style technique on the slopes.",
     image: "/images/stock/discipline-telemark.jpg",
     sortOrder: 3,
   },
@@ -91,9 +91,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Esquí adaptado",
     nameEn: "Adaptive skiing",
     descriptionEs:
-      "Clases individualizadas e inclusivas para disfrutar de la nieve con seguridad.",
+      "Clases de esquí adaptado en Sierra Nevada: individualizadas e inclusivas para disfrutar de la nieve con seguridad.",
     descriptionEn:
-      "Individualized, inclusive lessons to enjoy the snow safely.",
+      "Adaptive ski lessons in Sierra Nevada: individualized and inclusive so everyone can enjoy the snow safely.",
     image: "/images/stock/discipline-adaptado.jpg",
     sortOrder: 4,
   },
@@ -103,9 +103,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Clases para niños",
     nameEn: "Kids lessons",
     descriptionEs:
-      "Clases de 1 a 8 participantes. Niños desde 3 años. Clases dinámicas y divertidas para aprender jugando.",
+      "Clases de esquí y snowboard para niños en Sierra Nevada. Grupos de 1 a 8, desde 3 años. Aprenden jugando con instructores titulados.",
     descriptionEn:
-      "Lessons for 1 to 8 participants. Children from 3 years. Fun, dynamic lessons where children learn through play.",
+      "Kids ski and snowboard lessons in Sierra Nevada. Groups of 1–8, from age 3. They learn through play with qualified instructors.",
     image: "/images/stock/discipline-ninos-explora.jpg",
     sortOrder: 5,
   },

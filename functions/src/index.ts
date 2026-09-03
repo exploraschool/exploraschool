@@ -103,6 +103,9 @@ export const onLeadUpdated = onDocumentUpdated(
         text,
         html,
       });
+      await event.data?.after.ref.update({
+        confirmationEmailSentAt: new Date().toISOString(),
+      });
       logger.info("Customer confirmation sent", {
         leadId: event.params.leadId,
         to: customerEmail,

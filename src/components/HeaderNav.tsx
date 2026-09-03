@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { media } from "@/lib/media";
+import { site } from "@/data/site";
 
 const navItems = [
   { href: "clases", labelKey: "clases" as const },
@@ -80,28 +83,25 @@ export function HeaderDesktopNav({ locale }: HeaderDesktopNavProps) {
 type HeaderMenuButtonProps = {
   open: boolean;
   onClick: () => void;
-  locale: string;
 };
 
-export function HeaderMenuButton({ open, onClick, locale }: HeaderMenuButtonProps) {
+export function HeaderMenuButton({ open, onClick }: HeaderMenuButtonProps) {
   const t = useTranslations("nav");
 
   return (
     <button
       type="button"
-      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hielo/30 bg-white text-hielo shadow-[0_2px_10px_rgba(10,18,25,0.12)] transition hover:border-hielo/45 hover:bg-white hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent lg:hidden"
+      className={`site-header__menu-btn lg:hidden ${open ? "is-open" : ""}`}
       aria-expanded={open}
       aria-controls="mobile-nav"
       aria-label={open ? t("close") : t("menu")}
       onClick={onClick}
     >
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25} aria-hidden>
-        {open ? (
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-        ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-        )}
-      </svg>
+      <span className="site-header__menu-btn-bars" aria-hidden>
+        <span />
+        <span />
+        <span />
+      </span>
     </button>
   );
 }
@@ -150,42 +150,81 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
         onClick={onClose}
       />
 
-      <nav
-        id="mobile-nav"
-        className="site-header__drawer"
-        aria-label="Mobile"
-      >
-        <div className="flex items-center justify-between border-b border-hielo/15 bg-white px-4 py-4">
-          <p className="font-display text-base font-semibold text-pizarra">{t("menu")}</p>
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-hielo/20 bg-nieve text-hielo transition hover:border-hielo/35 hover:bg-white hover:text-accent"
-            aria-label={t("close")}
-          >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25} aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      <nav id="mobile-nav" className="site-header__drawer" aria-label="Mobile">
+        <div className="site-header__drawer-glow" aria-hidden />
+
+        <div className="relative border-b border-white/10 px-5 pb-5 pt-5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.25)] backdrop-blur-sm">
+                <Image
+                  src={media.logo}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="h-9 w-9 object-contain"
+                />
+              </div>
+              <div className="min-w-0">
+                <p className="eyebrow text-oro-light">Sierra Nevada</p>
+                <p className="font-display text-lg font-semibold leading-tight text-nieve">
+                  Explora School <span className="text-frost">&</span> Club
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/20 bg-white/10 text-nieve transition hover:border-oro-light/50 hover:bg-white/15 hover:text-oro-light"
+              aria-label={t("close")}
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25} aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <div className="modal-scroll flex-1 bg-white px-3 py-4">
+        <div className="modal-scroll relative flex-1 px-3 py-4">
           <ul className="space-y-1.5">
-            {navItems.map((item) => {
+            {navItems.map((item, index) => {
               const active = isPathActive(pathname, locale, item.href);
               return (
-                <li key={item.href}>
+                <li
+                  key={item.href}
+                  className="site-header__drawer-item"
+                  style={{ animationDelay: `${80 + index * 45}ms` }}
+                >
                   <Link
                     href={`/${locale}/${item.href}`}
                     onClick={onClose}
-                    className={`flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold transition ${
+                    className={`group flex items-center justify-between rounded-2xl px-4 py-3.5 text-base font-semibold transition ${
                       active
-                        ? "bg-hielo text-white shadow-sm"
-                        : "text-pizarra hover:bg-nieve hover:text-hielo"
+                        ? "bg-gradient-to-r from-accent/90 to-accent-dark text-white shadow-[0_8px_24px_rgba(200,78,81,0.35)]"
+                        : "text-nieve/90 hover:bg-white/8 hover:text-nieve"
                     }`}
                   >
-                    <span>{t(item.labelKey)}</span>
-                    {active && <span className="h-2 w-2 rounded-full bg-oro" aria-hidden />}
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full transition ${
+                          active ? "bg-oro-light" : "bg-hielo-light/50 group-hover:bg-oro-light"
+                        }`}
+                        aria-hidden
+                      />
+                      {t(item.labelKey)}
+                    </span>
+                    <svg
+                      className={`h-4 w-4 transition ${
+                        active ? "text-white/80" : "text-nieve/30 group-hover:translate-x-0.5 group-hover:text-oro-light"
+                      }`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      aria-hidden
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
                   </Link>
                 </li>
               );
@@ -193,13 +232,39 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
           </ul>
         </div>
 
-        <div className="border-t border-hielo/15 bg-white p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-sm font-semibold text-pizarra">
+        <div className="relative space-y-3 border-t border-white/10 bg-black/20 px-4 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur-sm">
+          <Link
+            href={`/${locale}/reserva`}
+            onClick={onClose}
+            className="btn-primary !w-full site-header__drawer-cta"
+          >
+            {t("reservar")}
+          </Link>
+
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2.5">
+            <span className="text-xs font-semibold uppercase tracking-wider text-nieve/60">
               {locale === "es" ? "Idioma" : "Language"}
             </span>
-            <HeaderLangSwitch locale={locale} onNavigate={onClose} />
+            <HeaderLangSwitch
+              locale={locale}
+              onNavigate={onClose}
+              className="!border-white/20 !bg-white/10 !text-nieve hover:!border-oro-light/40 hover:!text-oro-light"
+            />
           </div>
+
+          <a
+            href={`tel:${site.phone}`}
+            className="flex items-center justify-center gap-2 text-sm text-nieve/70 transition hover:text-oro-light"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z"
+              />
+            </svg>
+            {site.phoneDisplay}
+          </a>
         </div>
       </nav>
     </div>,

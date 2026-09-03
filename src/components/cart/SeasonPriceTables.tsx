@@ -4,7 +4,12 @@ import { useState } from "react";
 import { seasonPriceTables } from "@/data/prices";
 import type { ProductId } from "@/data/products";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
-import { getBookingFromSeasonRow, type TimeSlotId } from "@/lib/booking-config";
+import { DisclosureItem } from "@/components/DisclosureItem";
+import {
+  getBookingFromSeasonRow,
+  readPeopleFromLocationSearch,
+  type TimeSlotId,
+} from "@/lib/booking-config";
 import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 import { resolvePriceDisplay } from "@/lib/promotions";
@@ -21,8 +26,12 @@ type BookingSelection = {
   participants: number;
 };
 
+function initialParticipants(): number {
+  return readPeopleFromLocationSearch() ?? 2;
+}
+
 export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
-  const [participants, setParticipants] = useState(2);
+  const [participants, setParticipants] = useState(initialParticipants);
   const [bookingSelection, setBookingSelection] = useState<BookingSelection | null>(null);
   const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
 
@@ -53,7 +62,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
               aria-pressed={participants === n}
               className={`min-w-[2.75rem] rounded-full px-3 py-2 text-sm font-semibold transition ${
                 participants === n
-                  ? "bg-hielo text-white shadow-md shadow-hielo/25"
+                  ? "bg-gradient-to-r from-hielo to-hielo-light text-white shadow-md shadow-hielo/25"
                   : "border border-hielo/15 bg-nieve text-pizarra hover:border-hielo/30"
               }`}
             >
@@ -73,29 +82,24 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {seasonPriceTables.map((table) => (
-          <details
+          <DisclosureItem
             key={table.id}
-            className="group overflow-hidden rounded-2xl border border-hielo/10 bg-white"
-            open={table.id === "clases-2h"}
-          >
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 border-b border-transparent px-4 py-4 transition group-open:border-hielo/10 sm:px-5 [&::-webkit-details-marker]:hidden">
-              <div>
-                <h3 className="font-display text-base font-semibold text-hielo sm:text-lg">
+            variant="card"
+            defaultOpen={table.id === "clases-2h"}
+            bodyClassName="!p-0"
+            title={
+              <>
+                <span className="font-display text-base font-semibold text-hielo sm:text-lg">
                   {pickLocale(locale, table.titleEs, table.titleEn)}
-                </h3>
-                <p className="mt-0.5 text-xs text-muted">
+                </span>
+                <span className="disclose__subtitle">
                   {pickLocale(locale, UNIFIED_SIZE_LABEL_ES, UNIFIED_SIZE_LABEL_EN)}
-                </p>
-              </div>
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-hielo/15 text-hielo transition group-open:rotate-180">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                </svg>
-              </span>
-            </summary>
-
+                </span>
+              </>
+            }
+          >
             <div className="divide-y divide-hielo/8">
               {table.rows.map((row) => {
                 const listPrice = row.prices[participants - 1];
@@ -159,7 +163,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                 );
               })}
             </div>
-          </details>
+          </DisclosureItem>
         ))}
       </div>
       </div>

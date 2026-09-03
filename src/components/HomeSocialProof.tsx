@@ -1,27 +1,33 @@
 import Image from "next/image";
 import { media } from "@/lib/media";
 import { Reveal } from "@/components/Reveal";
+import { LiveGalleryCarousel } from "@/components/LiveGalleryCarousel";
+import { SierraNevadaWeatherBanner } from "@/components/SierraNevadaWeatherBanner";
 import { pickLocale } from "@/lib/locale";
+import { getLiveGalleryForHome } from "@/lib/live-gallery";
+import { getSierraNevadaWeather } from "@/lib/sierra-nevada-weather";
 
 type HomeSocialProofProps = {
   locale: string;
 };
 
-export function HomeSocialProof({ locale }: HomeSocialProofProps) {
-  const gallery = [
-    media.gallery[0],
-    media.gallery[3],
-    {
-      src: "/images/stock/home-gallery-snow.jpg",
-      altEs: "Pistas de la estación de esquí de Sierra Nevada",
-      altEn: "Slopes at Sierra Nevada ski resort",
-    },
-    media.gallery[5],
-  ];
+export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
+  const [gallery, weather] = await Promise.all([
+    getLiveGalleryForHome(12),
+    getSierraNevadaWeather(),
+  ]);
 
   return (
     <section className="section-padding-sm mesh-dark overflow-hidden text-nieve">
       <div className="container-page">
+        {weather ? (
+          <Reveal>
+            <div className="mb-8 sm:mb-10">
+              <SierraNevadaWeatherBanner locale={locale} weather={weather} />
+            </div>
+          </Reveal>
+        ) : null}
+
         <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <Reveal>
             <a
@@ -53,38 +59,24 @@ export function HomeSocialProof({ locale }: HomeSocialProofProps) {
             </a>
           </Reveal>
 
-          <div>
+          <div className="min-w-0">
             <Reveal delay={80}>
-              <p className="eyebrow-dark">
-                {pickLocale(locale, "En la nieve", "On the snow")}
-              </p>
+              <p className="eyebrow-dark">{pickLocale(locale, "En la nieve", "On the snow")}</p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-nieve sm:text-3xl">
                 {pickLocale(locale, "La estación, en directo", "The resort, live")}
               </h2>
               <p className="mt-3 text-sm text-on-dark-muted">
                 {pickLocale(
                   locale,
-          "Pistas de la estación de esquí de Sierra Nevada (Granada). Síguenos en Instagram.",
-          "Sierra Nevada ski resort slopes (Granada). Follow us on Instagram.",
+                  "Pistas de la estación de esquí de Sierra Nevada (Granada). Síguenos en Instagram.",
+                  "Sierra Nevada ski resort slopes (Granada). Follow us on Instagram.",
                 )}
               </p>
             </Reveal>
 
-            <div className="mt-6 grid grid-cols-4 gap-2.5 sm:mt-8 sm:gap-3">
-              {gallery.map((item, i) => (
-                <Reveal key={item.src} delay={100 + i * 50}>
-                  <figure className="relative aspect-square overflow-hidden rounded-xl">
-                    <Image
-                      src={item.src}
-                      alt={pickLocale(locale, item.altEs, item.altEn)}
-                      fill
-                      className="object-cover"
-                      sizes="120px"
-                    />
-                  </figure>
-                </Reveal>
-              ))}
-            </div>
+            <Reveal delay={120}>
+              <LiveGalleryCarousel locale={locale} photos={gallery} />
+            </Reveal>
 
             <Reveal delay={200}>
               <a

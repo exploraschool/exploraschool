@@ -123,10 +123,7 @@ export function ContactInfoPanel({
               <p className="mt-2 text-sm text-muted">
                 {pickLocale(locale, site.meetingPointEs, site.meetingPointEn)}
               </p>
-              <div className="mt-3 flex flex-col gap-1">
-                <Link href="/como-llegar" className="text-sm font-semibold text-hielo hover:text-accent">
-                  {pickLocale(locale, "Cómo llegar →", "Getting here →")}
-                </Link>
+              <div className="mt-3">
                 <a
                   href={site.meetingPoint.googleMapsUrl}
                   target="_blank"

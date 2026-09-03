@@ -54,7 +54,7 @@ export const currentPrices: CurrentProductPrice[] = [
   {
     id: "full-day-current",
     productId: "full-day",
-    titleEs: "Full Day",
+    titleEs: "Día completo",
     titleEn: "Full Day",
     season: CURRENT_SEASON.key,
     unit: "day",
@@ -78,8 +78,8 @@ export const currentPrices: CurrentProductPrice[] = [
   {
     id: "curso-snow-current",
     productId: "curso-snow",
-    titleEs: "Curso colectivo",
-    titleEn: "Group course",
+    titleEs: "Curso de snowboard",
+    titleEn: "Snowboard course",
     season: CURRENT_SEASON.key,
     fromPrice: CURSO_COLECTIVO_PER_PERSON_EUR,
     unit: "person",
@@ -137,7 +137,7 @@ export const seasonPriceTables: PriceTable[] = [
   },
   {
     id: "full-day",
-    titleEs: "FULL DAY",
+    titleEs: "DÍA COMPLETO",
     titleEn: "FULL DAY",
     season: CURRENT_SEASON.key,
     groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
@@ -154,7 +154,7 @@ export const legacyFromPrices = [
   {
     productId: "full-day",
     fromPrice: SESSION_FULL_DAY[0],
-    labelEs: `Full Day — desde ${SESSION_FULL_DAY[0]} €`,
+    labelEs: `Día completo — desde ${SESSION_FULL_DAY[0]} €`,
     labelEn: `Full Day — from €${SESSION_FULL_DAY[0]}`,
     descriptionEs: "5 h + 1 h comodín. Experiencia personalizada. Recogida en hotel.",
     descriptionEn: "5 h lesson + 1 h buffer. Personalised experience. Hotel pick-up.",

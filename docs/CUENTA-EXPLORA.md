@@ -133,8 +133,19 @@ Flujo:
 
 #### Dominio antiguo (sierranevadaclases.es)
 
-Ya no se usa. Si aún apunta al hosting antiguo, deja de renovarlo o redirígelo manualmente a `https://www.explora-school.es` desde el registrador de ese dominio (no hace falta añadirlo en Vercel).
+Añadido al proyecto Vercel para **redirigir 308** a `https://www.explora-school.es` (misma ruta).
 
+En el registrador DNS de `sierranevadaclases.es` configura:
+
+| Tipo | Nombre | Valor |
+|------|--------|--------|
+| A | `@` | `216.198.79.1` |
+| A | `@` | `64.29.17.1` |
+| CNAME | `www` | `75fa1090096c1630.vercel-dns-017.com` |
+
+(Alternativa simple: un solo A `@` → `76.76.21.21` y CNAME `www` → `cname.vercel-dns.com`.)
+
+Hoy el dominio existe pero **no tiene registros DNS** (solo nameservers de nic.es). Hasta que los configures, la redirección no puede activarse.
 ---
 
 ## Firebase / GCP

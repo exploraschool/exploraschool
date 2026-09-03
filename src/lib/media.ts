@@ -8,7 +8,7 @@ export const media = {
   hero: "/images/stock/hero.jpg",
   heroPhoto: "/images/stock/hero.jpg",
   instructorsTeam: "/images/stock/team-backs.jpg",
-  og: "/images/logo-512.png",
+  og: "/images/stock/hero.jpg",
   clubAbout: {
     src: "/images/stock/club-about.jpg",
     altEs: "Esquís y material de nieve en la montaña",

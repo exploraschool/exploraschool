@@ -20,14 +20,40 @@ export async function generateStaticParams() {
   return getMainDisciplines().map((d) => ({ discipline: d.slug }));
 }
 
+const SEO_TITLES: Record<string, { es: string; en: string }> = {
+  esqui: {
+    es: "Clases de esquí alpino en Sierra Nevada",
+    en: "Alpine ski lessons in Sierra Nevada",
+  },
+  snowboard: {
+    es: "Clases de snowboard en Sierra Nevada",
+    en: "Snowboard lessons in Sierra Nevada",
+  },
+  telemark: {
+    es: "Clases de telemark en Sierra Nevada",
+    en: "Telemark lessons in Sierra Nevada",
+  },
+  "esqui-adaptado": {
+    es: "Esquí adaptado en Sierra Nevada",
+    en: "Adaptive skiing in Sierra Nevada",
+  },
+  ninos: {
+    es: "Clases de esquí para niños en Sierra Nevada",
+    en: "Kids ski lessons in Sierra Nevada",
+  },
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, discipline: slug } = await params;
   const d = getDisciplineBySlug(slug);
   if (!d) return {};
+  const seo = SEO_TITLES[d.id];
   return buildPageMetadata({
     locale,
     path: `/clases/${slug}`,
-    title: pickLocale(locale, d.nameEs, d.nameEn),
+    title: seo
+      ? pickLocale(locale, seo.es, seo.en)
+      : pickLocale(locale, d.nameEs, d.nameEn),
     description: pickLocale(locale, d.descriptionEs, d.descriptionEn),
   });
 }

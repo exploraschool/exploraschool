@@ -65,7 +65,7 @@ const PRODUCT_TITLES: Record<string, { es: string; en: string }> = {
   "full-day-iniciacion": { es: "Full-day iniciación", en: "Full-day beginners" },
   "full-day-tecnico": { es: "Full-day técnico", en: "Full-day technical" },
   "medio-dia": { es: "Clases Forfait medio día", en: "Half-day lift pass lessons" },
-  "curso-snow": { es: "Curso colectivo", en: "Group course" },
+  "curso-snow": { es: "Curso de snowboard", en: "Snowboard course" },
   particular: { es: "Clases particulares", en: "Private lessons" },
   "curso-empresa": { es: "Cursos de 2 a 5 días", en: "2 to 5-day courses" },
 };
@@ -81,13 +81,13 @@ const DISCIPLINE_TITLES: Record<string, { es: string; en: string }> = {
 };
 
 const BRAND = {
-  pizarra: "#0a1219",
-  hielo: "#1a5568",
-  accent: "#e85a35",
-  nieve: "#f5f8fb",
-  muted: "#445661",
+  pizarra: "#0e0e0f",
+  hielo: "#2d6b64",
+  accent: "#ea5b5e",
+  nieve: "#f6f7f7",
+  muted: "#5c5c5e",
   white: "#ffffff",
-  border: "#d7e3ea",
+  border: "#d8e5e2",
 } as const;
 
 function pick(isEn: boolean, es: string, en: string): string {
@@ -276,7 +276,7 @@ export function buildTeamNotificationEmail(params: {
             <td style="background:${BRAND.nieve};padding:24px 28px 18px;text-align:center;border-bottom:1px solid ${BRAND.border};">
               <img src="${escapeHtml(logoUrl)}" width="72" height="72" alt="Explora School & Club" style="display:block;margin:0 auto 12px;border:0;outline:none;" />
               <p style="margin:0 0 8px;">
-                <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:${isBooking ? "#e8f3f7" : "#fff7f4"};color:${isBooking ? BRAND.hielo : BRAND.accent};font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(title)}</span>
+                <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:${isBooking ? "#e8f4f2" : "#fef2f2"};color:${isBooking ? BRAND.hielo : BRAND.accent};font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">${escapeHtml(title)}</span>
               </p>
               <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:24px;line-height:1.25;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(name)}</p>
               <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:${BRAND.muted};">ID ${escapeHtml(leadId)} · ${escapeHtml(statusText)} · ${escapeHtml(localeText)}</p>
@@ -562,7 +562,7 @@ export function buildCustomerConfirmationEmail(params: {
               <p style="margin:0 0 14px;font-size:16px;line-height:1.5;color:${BRAND.pizarra};">${escapeHtml(greeting)}</p>
               <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:${BRAND.pizarra};">${escapeHtml(thanks)}</p>
               <p style="margin:0 0 18px;font-size:15px;line-height:1.6;color:${BRAND.pizarra};">${escapeHtml(nextContact)}</p>
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#fff7f4;border:1px solid #f3c7b8;border-radius:12px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#fef2f2;border:1px solid #f3c0c2;border-radius:12px;">
                 <tr><td style="padding:14px 16px;font-size:14px;line-height:1.55;color:${BRAND.pizarra};">${escapeHtml(nothingElse)}</td></tr>
               </table>
               ${

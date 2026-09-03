@@ -4,13 +4,23 @@ import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function proxy(request: NextRequest) {
-  const host = request.headers.get("host");
+const CANONICAL_HOST = "www.explora-school.es";
 
-  if (host === "explora-school.es") {
+/** Old brand domains → permanent redirect to the new site. */
+const LEGACY_HOSTS = new Set([
+  "sierranevadaclases.es",
+  "www.sierranevadaclases.es",
+  "explora-school.es",
+]);
+
+export default function proxy(request: NextRequest) {
+  const host = request.headers.get("host")?.split(":")[0]?.toLowerCase();
+
+  if (host && LEGACY_HOSTS.has(host)) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.host = "www.explora-school.es";
+    redirectUrl.host = CANONICAL_HOST;
     redirectUrl.protocol = "https:";
+    redirectUrl.port = "";
     return NextResponse.redirect(redirectUrl, 308);
   }
 

@@ -15,9 +15,26 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
   const [emailWarning, setEmailWarning] = useState("");
 
   if (!isBooking || currentStatus === "confirmed" || currentStatus === "cancelled") {
+    const label =
+      currentStatus === "confirmed"
+        ? "Confirmada"
+        : currentStatus === "cancelled"
+          ? "Rechazada"
+          : currentStatus === "pending"
+            ? "Pendiente"
+            : currentStatus === "received"
+              ? "Recibido"
+              : currentStatus;
+    const tone =
+      currentStatus === "confirmed"
+        ? "bg-hielo/10 text-hielo"
+        : currentStatus === "cancelled"
+          ? "bg-accent/10 text-accent"
+          : "bg-nieve text-muted";
+
     return (
-      <span className="inline-flex rounded-full bg-nieve px-2.5 py-1 text-xs font-semibold text-muted">
-        {currentStatus}
+      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${tone}`}>
+        {label}
       </span>
     );
   }
@@ -46,11 +63,12 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
 
       setCurrentStatus(next);
 
-      if (next === "confirmed" && !payload?.emailSent) {
+      if (!payload?.emailSent) {
+        const actionLabel = next === "confirmed" ? "confirmada" : "rechazada";
         setEmailWarning(
           payload?.emailError
-            ? `Reserva confirmada, pero el email al cliente falló: ${payload.emailError}`
-            : "Reserva confirmada, pero no se envió el email al cliente. Revisa RESEND_API_KEY en Vercel.",
+            ? `Reserva ${actionLabel}, pero el email al cliente falló: ${payload.emailError}`
+            : `Reserva ${actionLabel}, pero no se envió el email al cliente. Revisa RESEND_API_KEY en Vercel.`,
         );
       }
     } catch (updateError) {
@@ -77,7 +95,7 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
           onClick={() => updateStatus("cancelled")}
           className="rounded-full border border-hielo/15 px-3 py-1.5 text-xs font-semibold text-muted transition hover:border-accent/30 hover:text-accent disabled:opacity-60"
         >
-          {loading === "cancelled" ? "..." : "Cancelar"}
+          {loading === "cancelled" ? "..." : "Rechazar"}
         </button>
       </div>
       {error && <p className="text-xs text-accent">{error}</p>}

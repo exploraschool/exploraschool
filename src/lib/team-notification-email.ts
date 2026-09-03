@@ -1,4 +1,4 @@
-import { createLeadConfirmToken } from "@/lib/lead-confirm";
+import { createLeadCancelToken, createLeadConfirmToken } from "@/lib/lead-confirm";
 import { media } from "@/lib/media";
 import { earlyBirdDiscountLabel } from "@/lib/promotions";
 import { PRODUCTION_SITE_URL } from "@/lib/site-url";
@@ -30,13 +30,13 @@ type BuildParams = {
 };
 
 const BRAND = {
-  pizarra: "#0a1219",
-  hielo: "#1a5568",
-  accent: "#e85a35",
-  nieve: "#f5f8fb",
-  muted: "#445661",
+  pizarra: "#0e0e0f",
+  hielo: "#2d6b64",
+  accent: "#ea5b5e",
+  nieve: "#f6f7f7",
+  muted: "#5c5c5e",
   white: "#ffffff",
-  border: "#d7e3ea",
+  border: "#d8e5e2",
   success: "#1f6b4a",
 } as const;
 
@@ -83,7 +83,7 @@ function statusLabel(status: string): string {
     case "confirmed":
       return "Confirmada";
     case "cancelled":
-      return "Cancelada";
+      return "Rechazada";
     case "received":
       return "Recibido";
     default:
@@ -210,7 +210,7 @@ export function buildTeamNotificationEmail({
   const sessions = resolveSessions(items);
   const baseUrl = siteUrl.replace(/\/$/, "") || PRODUCTION_SITE_URL;
   const logoUrl = resolveLogoUrl(baseUrl);
-  const adminUrl = `${baseUrl}/admin/leads`;
+  const adminUrl = `${baseUrl}/admin/reservas`;
   const name = String(data.name ?? "").trim() || "Sin nombre";
   const email = String(data.email ?? "").trim();
   const phone = String(data.phone ?? "").trim();
@@ -223,6 +223,10 @@ export function buildTeamNotificationEmail({
     isBooking && confirmSecret
       ? `${baseUrl}/api/bookings/confirm?id=${encodeURIComponent(leadId)}&token=${createLeadConfirmToken(leadId, confirmSecret)}`
       : null;
+  const cancelUrl =
+    isBooking && confirmSecret
+      ? `${baseUrl}/api/bookings/cancel?id=${encodeURIComponent(leadId)}&token=${createLeadCancelToken(leadId, confirmSecret)}`
+      : null;
 
   const title = isBooking ? "Nueva reserva" : "Nuevo contacto";
   const subject = isBooking
@@ -230,7 +234,7 @@ export function buildTeamNotificationEmail({
     : `[Explora School] Nuevo contacto — ${name}`;
 
   const preheader = isBooking
-    ? `Reserva de ${name}. Revisa el detalle y confirma para avisar al cliente.`
+    ? `Reserva de ${name}. Confirma o rechaza desde este email.`
     : `Mensaje de ${name}. Responde desde el panel o por email.`;
 
   const text = [
@@ -252,6 +256,9 @@ export function buildTeamNotificationEmail({
     "",
     confirmUrl ? "Confirmar reserva (un clic):" : "",
     confirmUrl || "",
+    "",
+    cancelUrl ? "Rechazar reserva (un clic):" : "",
+    cancelUrl || "",
     "",
     "Panel de administración:",
     adminUrl,
@@ -277,7 +284,7 @@ export function buildTeamNotificationEmail({
             <td style="background:${BRAND.nieve};padding:24px 28px 18px;text-align:center;border-bottom:1px solid ${BRAND.border};">
               <img src="${escapeHtml(logoUrl)}" width="72" height="72" alt="Explora School & Club" style="display:block;margin:0 auto 12px;border:0;outline:none;" />
               <p style="margin:0 0 8px;">
-                <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:${isBooking ? "#e8f3f7" : "#fff7f4"};color:${isBooking ? BRAND.hielo : BRAND.accent};font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">
+                <span style="display:inline-block;padding:6px 12px;border-radius:999px;background:${isBooking ? "#e8f4f2" : "#fef2f2"};color:${isBooking ? BRAND.hielo : BRAND.accent};font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;">
                   ${escapeHtml(title)}
                 </span>
               </p>
@@ -348,16 +355,38 @@ export function buildTeamNotificationEmail({
               }
 
               ${
-                confirmUrl
+                confirmUrl || cancelUrl
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0 0;">
                       <tr>
-                        <td align="center" style="padding:18px;background:#eef8f3;border:1px solid #b9dfcb;border-radius:14px;">
-                          <p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:${BRAND.pizarra};">
-                            Al confirmar, el cliente recibe automáticamente el email de confirmación.
+                        <td style="padding:18px;background:#f7faf9;border:1px solid ${BRAND.border};border-radius:14px;">
+                          <p style="margin:0 0 16px;font-size:14px;line-height:1.5;color:${BRAND.pizarra};text-align:center;">
+                            Elige una acción. El cliente recibirá automáticamente el email correspondiente.
                           </p>
-                          <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:14px 24px;background:${BRAND.success};color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;">
-                            Confirmar reserva
-                          </a>
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                              ${
+                                confirmUrl
+                                  ? `<td align="center" style="padding:4px;">
+                                      <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;min-width:160px;padding:14px 20px;background:${BRAND.success};color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;text-align:center;">
+                                        Confirmar reserva
+                                      </a>
+                                    </td>`
+                                  : ""
+                              }
+                              ${
+                                cancelUrl
+                                  ? `<td align="center" style="padding:4px;">
+                                      <a href="${escapeHtml(cancelUrl)}" style="display:inline-block;min-width:160px;padding:14px 20px;background:${BRAND.accent};color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;text-align:center;">
+                                        Rechazar reserva
+                                      </a>
+                                    </td>`
+                                  : ""
+                              }
+                            </tr>
+                          </table>
+                          <p style="margin:14px 0 0;font-size:12px;line-height:1.45;color:${BRAND.muted};text-align:center;">
+                            Confirmar → email de confirmación · Rechazar → email de no disponibilidad
+                          </p>
                         </td>
                       </tr>
                     </table>`
@@ -365,7 +394,7 @@ export function buildTeamNotificationEmail({
               }
 
               <p style="margin:24px 0 0;text-align:center;">
-                <a href="${escapeHtml(adminUrl)}" style="font-size:14px;font-weight:700;color:${BRAND.hielo};text-decoration:underline;">Abrir panel de leads</a>
+                <a href="${escapeHtml(adminUrl)}" style="font-size:14px;font-weight:700;color:${BRAND.hielo};text-decoration:underline;">Abrir panel de reservas</a>
               </p>
             </td>
           </tr>

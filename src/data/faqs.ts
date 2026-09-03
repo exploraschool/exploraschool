@@ -91,7 +91,7 @@ export const faqs: Faq[] = [
     sortOrder: 5,
     questionEs: "¿Dónde está el punto de encuentro?",
     answerEs:
-      "Explora School & Club en la estación de esquí de Sierra Nevada — ubicación oficial en Google Maps. El/la instructor/a va con uniforme Explora. En Full-Day: recogida y entrega donde se solicite; en el resto de formatos, según disponibilidad.",
+      "Explora School & Club en la estación de esquí de Sierra Nevada — ubicación oficial en Google Maps. El/la instructor/a va con uniforme Explora. En día completo: recogida y entrega donde se solicite; en el resto de formatos, según disponibilidad.",
     questionEn: "Where is the meeting point?",
     answerEn:
       "Explora School & Club at Sierra Nevada ski resort — official location on Google Maps. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request; for other formats, subject to availability.",

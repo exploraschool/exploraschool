@@ -1,8 +1,12 @@
 import { cookies } from "next/headers";
+import { ADMIN_PASSWORD_REQUIRED } from "@/lib/admin-auth-config";
 
+export { ADMIN_PASSWORD_REQUIRED };
 export const ADMIN_COOKIE = "explora_admin";
 
 export async function isAdminAuthenticated(): Promise<boolean> {
+  if (!ADMIN_PASSWORD_REQUIRED) return true;
+
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_COOKIE)?.value;
   const secret = process.env.ADMIN_PASSWORD;

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
+import { parseQuickBookPeople } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
 
 type HeroQuickBookProps = {
@@ -23,7 +24,8 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    router.push(`/${locale}/clases/${discipline}`);
+    const count = parseQuickBookPeople(people) ?? 2;
+    router.push(`/${locale}/clases/${discipline}?people=${count}#clases-disponibles`);
   }
 
   return (
@@ -43,7 +45,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           <select
             value={discipline}
             onChange={(e) => setDiscipline(e.target.value as MainDisciplineId)}
-            className="w-full rounded-xl border border-white/15 bg-pizarra/60 px-3 py-2.5 text-sm font-medium text-nieve outline-none transition focus:border-oro/50 focus:ring-2 focus:ring-oro/20"
+            className="field-select field-select--dark py-2.5"
           >
             {getMainDisciplines().map((d) => (
               <option key={d.id} value={d.slug} className="bg-pizarra text-nieve">
@@ -60,7 +62,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           <select
             value={people}
             onChange={(e) => setPeople(e.target.value)}
-            className="w-full rounded-xl border border-white/15 bg-pizarra/60 px-3 py-2.5 text-sm font-medium text-nieve outline-none transition focus:border-oro/50 focus:ring-2 focus:ring-oro/20"
+            className="field-select field-select--dark py-2.5"
           >
             {peopleOptions.map((opt) => (
               <option key={opt.value} value={opt.value} className="bg-pizarra text-nieve">

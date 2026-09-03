@@ -43,7 +43,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             {t("skipToContent")}
           </a>
           <Header locale={locale} />
-          <main id="main-content" className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom,0px))] sm:pb-0">
+          <main id="main-content" className="flex-1">
             {children}
           </main>
           <Footer />

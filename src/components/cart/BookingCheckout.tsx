@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -33,6 +33,11 @@ export function BookingCheckout() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    if (!sent) return;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [sent]);
+
   const sortedItems = useMemo(
     () => [...items].sort((a, b) => a.date.localeCompare(b.date) || a.timeSlotLabel.localeCompare(b.timeSlotLabel)),
     [items],
@@ -40,10 +45,15 @@ export function BookingCheckout() {
 
   const total = estimateCartTotal(items);
   const highlighted = getHighlightedProducts().slice(0, 3);
+  const itemsMissingDiscipline = items.some((item) => !item.discipline);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !privacy || items.length === 0) return;
+    if (itemsMissingDiscipline) {
+      setError(true);
+      return;
+    }
 
     setError(false);
 
@@ -95,14 +105,21 @@ export function BookingCheckout() {
 
   if (sent) {
     return (
-      <div className="mx-auto max-w-lg rounded-2xl border border-hielo/10 bg-white p-8 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:p-10">
+      <div
+        role="status"
+        aria-live="polite"
+        className="mx-auto max-w-lg rounded-2xl border border-hielo/10 bg-white p-8 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:p-10"
+      >
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-hielo/10 text-hielo">
           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
           </svg>
         </div>
-        <h2 className="mt-5 font-display text-2xl font-semibold text-hielo">{t("bookingSent")}</h2>
-        <p className="mt-3 text-sm leading-relaxed text-muted">{t("bookingSentDesc")}</p>
+        <h2 className="mt-5 font-display text-2xl font-semibold text-hielo sm:text-3xl">{t("bookingSent")}</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">{t("bookingSentDesc")}</p>
+        <p className="mt-4 text-xs font-medium uppercase tracking-wider text-hielo/70">
+          {t("reassuranceNoPay")} · {t("reassuranceEmail")}
+        </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <button
             type="button"
@@ -213,22 +230,26 @@ export function BookingCheckout() {
               itemLabel={t("item")}
               peopleLabel={t("people")}
               removeLabel={t("remove")}
+              missingDisciplineLabel={t("missingDiscipline")}
               onRemove={() => removeItem(item.id)}
             />
           ))}
+          {itemsMissingDiscipline && (
+            <p className="text-sm font-medium text-accent">{t("disciplineRequired")}</p>
+          )}
         </div>
 
         <div className="xl:sticky xl:top-20 xl:max-h-[calc(100dvh-5.5rem)] xl:self-start">
           <form
             onSubmit={handleSend}
-            className="flex max-h-[calc(100dvh-5.5rem)] flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)]"
+            className="flex flex-col rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)] xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-hidden"
           >
             <div className="shrink-0 border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
               <h2 className="font-display text-xl font-semibold text-hielo">{t("checkout")}</h2>
               <p className="mt-1.5 text-sm text-muted">{t("checkoutDesc")}</p>
             </div>
 
-            <div className="modal-scroll min-h-0 flex-1 space-y-4 px-5 py-5 sm:px-6">
+            <div className="space-y-4 px-5 py-5 sm:px-6 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:overscroll-contain">
               <div className="rounded-2xl bg-gradient-to-br from-hielo to-hielo-light px-5 py-4 text-white">
                 <p className="text-xs font-bold uppercase tracking-wider text-white/80">{t("estimatedTotal")}</p>
                 <p className="mt-1 font-display text-3xl font-semibold">{total} €</p>
@@ -312,7 +333,7 @@ export function BookingCheckout() {
                 <span>{t("privacy")}</span>
               </label>
 
-              <button type="submit" className="btn-primary w-full">
+              <button type="submit" disabled={itemsMissingDiscipline} className="btn-primary w-full disabled:opacity-50">
                 {t("sendBooking")}
               </button>
 

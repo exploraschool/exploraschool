@@ -14,6 +14,7 @@ type BookingCartLineProps = {
   itemLabel: string;
   peopleLabel: string;
   removeLabel: string;
+  missingDisciplineLabel?: string;
   onRemove: () => void;
 };
 
@@ -35,6 +36,7 @@ export function BookingCartLine({
   itemLabel,
   peopleLabel,
   removeLabel,
+  missingDisciplineLabel,
   onRemove,
 }: BookingCartLineProps) {
   const product = getProductBySlug(item.productId);
@@ -92,7 +94,7 @@ export function BookingCartLine({
           >
             {item.participants} {peopleLabel}
           </MetaRow>
-          {discLabel && (
+          {discLabel ? (
             <MetaRow
               icon={
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
@@ -102,7 +104,9 @@ export function BookingCartLine({
             >
               {discLabel}
             </MetaRow>
-          )}
+          ) : missingDisciplineLabel ? (
+            <li className="text-sm font-medium text-accent">{missingDisciplineLabel}</li>
+          ) : null}
           {item.instructorName && (
             <MetaRow
               icon={

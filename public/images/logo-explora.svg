@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" fill="none" role="img" aria-label="Explora School and Club">
-  <text x="0" y="52" font-family="Georgia, serif" font-size="42" font-weight="600" fill="#0E1A24">Explora</text>
-  <text x="0" y="72" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="0.28em" fill="#1F4E5F">SCHOOL &amp; CLUB</text>
-  <circle cx="292" cy="40" r="28" fill="#E4572E" opacity="0.15"/>
-  <path d="M276 48 L292 22 L308 48 Z" fill="#1F4E5F"/>
-  <path d="M284 48 L292 34 L300 48 Z" fill="#F4F7FA"/>
+  <text x="0" y="52" font-family="Georgia, serif" font-size="42" font-weight="600" fill="#0e0e0f">Explora</text>
+  <text x="0" y="72" font-family="system-ui, sans-serif" font-size="11" font-weight="600" letter-spacing="0.28em" fill="#2d6b64">SCHOOL &amp; CLUB</text>
+  <circle cx="292" cy="40" r="28" fill="#ea5b5e" opacity="0.15"/>
+  <path d="M276 48 L292 22 L308 48 Z" fill="#2d6b64"/>
+  <path d="M284 48 L292 34 L300 48 Z" fill="#f6f7f7"/>
 </svg>

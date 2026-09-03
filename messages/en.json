@@ -44,7 +44,7 @@
   "cookies": {
     "message": "We use essential cookies.",
     "accept": "Accept",
-    "policy": "Learn more",
+    "policy": "Cookie policy",
     "close": "Close cookie notice"
   },
   "contact": {
@@ -103,6 +103,8 @@
     "peopleRange": "people",
     "discipline": "Discipline",
     "selectDiscipline": "Select discipline",
+    "disciplineRequired": "Discipline is required for every lesson.",
+    "missingDiscipline": "Discipline missing — remove this lesson and add it again choosing discipline, participants and day.",
     "modality": "Style (optional)",
     "selectModality": "General piste / not specified",
     "instructor": "Preferred instructor",
@@ -132,7 +134,7 @@
     "remove": "Remove",
     "addMore": "Add more lessons",
     "checkout": "Contact details",
-    "checkoutDesc": "Fill in your details and send the booking. Your email app will open with the message ready to send.",
+    "checkoutDesc": "Fill in your details and send the request. We confirm by email. No online payment.",
     "estimatedTotal": "Estimated total",
     "vatIncluded": "VAT included · indicative price",
     "yourName": "Name",
@@ -142,8 +144,8 @@
     "privacy": "I accept the privacy policy",
     "sendBooking": "Send booking request",
     "emailTo": "We will confirm at",
-    "bookingSent": "Request sent!",
-    "bookingSentDesc": "We have received your booking. The Explora team will review it and send you a confirmation email.",
+    "bookingSent": "Thank you for your booking!",
+    "bookingSentDesc": "We've received your request. You'll get a confirmation email, and your instructor will get in touch soon to finalise it and arrange payment.",
     "newBooking": "New booking",
     "viewCart": "View booking ({count} lessons)"
   }

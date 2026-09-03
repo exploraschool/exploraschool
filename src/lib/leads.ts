@@ -7,7 +7,7 @@ export type StoredBookingItem = {
   timeSlotId: string;
   timeSlotLabel: string;
   participants: number;
-  discipline?: string;
+  discipline: string;
   modality?: string;
   instructorSlug?: string;
   instructorName?: string;
@@ -30,7 +30,10 @@ export type StoredLead = {
   bookingItems?: StoredBookingItem[];
   estimatedTotal?: number;
   confirmedAt?: string;
+  cancelledAt?: string;
   confirmationEmailSentAt?: string;
+  cancellationEmailSentAt?: string;
+  privacyAccepted?: boolean;
 };
 
 export function isBookingLead(lead: { type?: string; source?: string }): boolean {
