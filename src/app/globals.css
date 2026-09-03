@@ -659,6 +659,10 @@
     transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.reveal.h-full > * {
+  height: 100%;
+}
+
 .reveal-visible {
   opacity: 1;
   transform: translateY(0);

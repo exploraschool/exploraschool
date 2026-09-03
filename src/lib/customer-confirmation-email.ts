@@ -5,6 +5,7 @@ import {
   type ModalityId,
 } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
+import { buildArrivalGuideHtml, buildArrivalGuideText } from "@/lib/arrival-guide-email";
 import { media } from "@/lib/media";
 import { earlyBirdDiscountLabel } from "@/lib/promotions";
 import { PRODUCTION_SITE_URL } from "@/lib/site-url";
@@ -224,7 +225,15 @@ export function buildCustomerConfirmationEmail({
   const logoUrl = resolveLogoUrl(siteUrl);
   const mapsUrl = site.meetingPoint.googleMapsUrl;
   const whatsappUrl = site.whatsappUrl;
+  const dayOfWhatsappUrl = `https://api.whatsapp.com/send?phone=${site.phone.replace(/^\+/, "")}&text=${encodeURIComponent(
+    pick(
+      isEn,
+      "Hola, tengo un imprevisto de camino a mi clase confirmada.",
+      "Hello, I have a delay on the way to my confirmed lesson.",
+    ),
+  )}`;
   const baseUrl = siteUrl.replace(/\/$/, "") || PRODUCTION_SITE_URL;
+  const arrivalGuideLinks = { mapsUrl, whatsappUrl: dayOfWhatsappUrl };
 
   const subject = pick(
     isEn,
@@ -234,8 +243,8 @@ export function buildCustomerConfirmationEmail({
 
   const preheader = pick(
     isEn,
-    "Gracias por tu reserva. Tu monitor/a se pondrá en contacto para formalizarla y concretar cómo abonar la clase.",
-    "Thank you for your booking. Your instructor will get in touch to finalise it and confirm how to pay for the class.",
+    "Reserva confirmada. Incluye el resumen y la guía de llegada a Borreguiles (regla de los 90 minutos).",
+    "Booking confirmed. Includes your summary and the arrival guide to Borreguiles (the 90-minute rule).",
   );
 
   const greeting = pick(
@@ -258,14 +267,8 @@ export function buildCustomerConfirmationEmail({
 
   const nothingElse = pick(
     isEn,
-    "No necesitas hacer nada más por ahora. Guarda este correo como resumen de tu reserva.",
-    "You don’t need to do anything else for now. Keep this email handy as a summary of your booking.",
-  );
-
-  const meetingPoint = pick(
-    isEn,
-    "Explora School & Club en la estación de esquí de Sierra Nevada. El monitor o monitora lleva uniforme Explora. En día completo: recogida y entrega donde se solicite.",
-    "Explora School & Club at Sierra Nevada ski resort. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request.",
+    "No necesitas hacer nada más para formalizar la reserva. Guarda este correo: incluye el resumen y la guía de llegada para el día de tu clase.",
+    "You don’t need to do anything else to finalise the booking for now. Keep this email: it includes your summary and the arrival guide for lesson day.",
   );
 
   const totalNote = pick(
@@ -290,9 +293,7 @@ export function buildCustomerConfirmationEmail({
       : "",
     estimatedTotal !== undefined ? totalNote : "",
     "",
-    pick(isEn, "Punto de encuentro:", "Meeting point:"),
-    meetingPoint,
-    mapsUrl,
+    buildArrivalGuideText(isEn, arrivalGuideLinks),
     "",
     pick(isEn, "¿Dudas?", "Questions?"),
     pick(
@@ -383,21 +384,7 @@ export function buildCustomerConfirmationEmail({
                   : ""
               }
 
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0 0;">
-                <tr>
-                  <td style="padding:18px;background:${BRAND.nieve};border:1px solid ${BRAND.border};border-radius:14px;">
-                    <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">
-                      ${escapeHtml(pick(isEn, "Punto de encuentro", "Meeting point"))}
-                    </p>
-                    <p style="margin:0 0 12px;font-size:14px;line-height:1.55;color:${BRAND.pizarra};">
-                      ${escapeHtml(meetingPoint)}
-                    </p>
-                    <a href="${escapeHtml(mapsUrl)}" style="display:inline-block;font-size:14px;font-weight:700;color:${BRAND.hielo};text-decoration:underline;">
-                      ${escapeHtml(pick(isEn, "Abrir en Google Maps", "Open in Google Maps"))}
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              ${buildArrivalGuideHtml(isEn, arrivalGuideLinks, BRAND)}
 
               <p style="margin:28px 0 12px;font-size:15px;line-height:1.55;color:${BRAND.pizarra};">
                 ${escapeHtml(

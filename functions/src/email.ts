@@ -1,4 +1,5 @@
 import { createHmac } from "node:crypto";
+import { buildArrivalGuideHtml, buildArrivalGuideText } from "./arrival-guide.js";
 
 type ResendEmail = {
   from: string;
@@ -375,6 +376,14 @@ export function buildCustomerConfirmationEmail(params: {
   const greetingName = firstName(name) || name;
   const baseUrl = siteUrl.replace(/\/$/, "") || "https://www.explora-school.es";
   const logoUrl = `${baseUrl}/images/logo-email.png`;
+  const dayOfWhatsappUrl = `https://api.whatsapp.com/send?phone=34660262790&text=${encodeURIComponent(
+    pick(
+      isEn,
+      "Hola, tengo un imprevisto de camino a mi clase confirmada.",
+      "Hello, I have a delay on the way to my confirmed lesson.",
+    ),
+  )}`;
+  const arrivalGuideLinks = { mapsUrl: CONTACT.mapsUrl, whatsappUrl: dayOfWhatsappUrl };
 
   const subject = pick(
     isEn,
@@ -384,44 +393,38 @@ export function buildCustomerConfirmationEmail(params: {
 
   const preheader = pick(
     isEn,
-    "Thank you for your booking. Your instructor will get in touch to finalise it and confirm how to pay for the class.",
-    "Gracias por tu reserva. Tu monitor/a se pondrá en contacto para formalizarla y concretar cómo abonar la clase.",
+    "Reserva confirmada. Incluye el resumen y la guía de llegada a Borreguiles (regla de los 90 minutos).",
+    "Booking confirmed. Includes your summary and the arrival guide to Borreguiles (the 90-minute rule).",
   );
 
   const greeting = pick(
     isEn,
-    greetingName ? `Hello ${greetingName},` : "Hello,",
     greetingName ? `Hola ${greetingName},` : "Hola,",
+    greetingName ? `Hello ${greetingName},` : "Hello,",
   );
 
   const thanks = pick(
     isEn,
-    "Thank you for your booking with Explora School & Club. Your request is confirmed.",
     "Gracias por tu reserva en Explora School & Club. Tu solicitud ya está confirmada.",
+    "Thank you for your booking with Explora School & Club. Your request is confirmed.",
   );
 
   const nextContact = pick(
     isEn,
-    "The instructor who will take your lesson will get in touch soon to finalise the booking and confirm how to pay for the class.",
     "El monitor o monitora que se encargará de tu clase se pondrá en contacto contigo en breve para formalizarla y concretar cómo abonar la clase.",
+    "The instructor who will take your lesson will get in touch soon to finalise the booking and confirm how to pay for the class.",
   );
 
   const nothingElse = pick(
     isEn,
-    "You don’t need to do anything else for now. Keep this email handy as a summary of your booking.",
-    "No necesitas hacer nada más por ahora. Guarda este correo como resumen de tu reserva.",
-  );
-
-  const meetingPoint = pick(
-    isEn,
-    "Explora School & Club at Sierra Nevada ski resort. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request.",
-    "Explora School & Club en la estación de esquí de Sierra Nevada. El monitor o monitora lleva uniforme Explora. En Full-Day: recogida y entrega donde se solicite.",
+    "No necesitas hacer nada más para formalizar la reserva. Guarda este correo: incluye el resumen y la guía de llegada para el día de tu clase.",
+    "You don’t need to do anything else to finalise the booking for now. Keep this email: it includes your summary and the arrival guide for lesson day.",
   );
 
   const totalNote = pick(
     isEn,
-    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
     "Total estimado (IVA incl.). El importe final se confirma con tu monitor/a al concretar el abono.",
+    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
   );
 
   const sessionText = items
@@ -455,19 +458,17 @@ export function buildCustomerConfirmationEmail(params: {
     "",
     nothingElse,
     "",
-    items.length > 0 ? pick(isEn, "Booking summary:", "Resumen de la reserva:") : "",
+    items.length > 0 ? pick(isEn, "Resumen de la reserva:", "Booking summary:") : "",
     sessionText,
     "",
     data.estimatedTotal !== undefined
-      ? `${pick(isEn, "Estimated total", "Total estimado")}: ${data.estimatedTotal} €`
+      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${data.estimatedTotal} €`
       : "",
     data.estimatedTotal !== undefined ? totalNote : "",
     "",
-    pick(isEn, "Meeting point:", "Punto de encuentro:"),
-    meetingPoint,
-    CONTACT.mapsUrl,
+    buildArrivalGuideText(isEn, arrivalGuideLinks),
     "",
-    pick(isEn, "Questions?", "¿Dudas?"),
+    pick(isEn, "¿Dudas?", "Questions?"),
     `WhatsApp: ${CONTACT.phoneDisplay}`,
     `Email: ${CONTACT.email}`,
     CONTACT.whatsappUrl,
@@ -547,7 +548,7 @@ export function buildCustomerConfirmationEmail(params: {
                 <img src="${escapeHtml(logoUrl)}" width="88" height="88" alt="Explora School & Club" style="display:block;margin:0 auto 14px;border:0;outline:none;" />
               </a>
               <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:26px;line-height:1.25;color:${BRAND.pizarra};font-weight:700;">
-                ${escapeHtml(pick(isEn, "Booking confirmed", "Reserva confirmada"))}
+                ${escapeHtml(pick(isEn, "Reserva confirmada", "Booking confirmed"))}
               </p>
               <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">
                 Explora School &amp; Club
@@ -567,30 +568,22 @@ export function buildCustomerConfirmationEmail(params: {
               </table>
               ${
                 items.length > 0
-                  ? `<p style="margin:0 0 12px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">${escapeHtml(pick(isEn, "Booking summary", "Resumen de la reserva"))}</p>${sessionsHtml}`
+                  ? `<p style="margin:0 0 12px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">${escapeHtml(pick(isEn, "Resumen de la reserva", "Booking summary"))}</p>${sessionsHtml}`
                   : ""
               }
               ${
                 data.estimatedTotal !== undefined
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
-                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Estimated total", "Total estimado"))}</td>
+                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}</td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">${escapeHtml(`${data.estimatedTotal} €`)}</td>
                       </tr>
                       <tr><td colspan="2" style="padding:0 0 4px;font-size:13px;line-height:1.5;color:${BRAND.muted};">${escapeHtml(totalNote)}</td></tr>
                     </table>`
                   : ""
               }
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0 0;">
-                <tr>
-                  <td style="padding:18px;background:${BRAND.nieve};border:1px solid ${BRAND.border};border-radius:14px;">
-                    <p style="margin:0 0 6px;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:${BRAND.hielo};font-weight:700;">${escapeHtml(pick(isEn, "Meeting point", "Punto de encuentro"))}</p>
-                    <p style="margin:0 0 12px;font-size:14px;line-height:1.55;color:${BRAND.pizarra};">${escapeHtml(meetingPoint)}</p>
-                    <a href="${escapeHtml(CONTACT.mapsUrl)}" style="display:inline-block;font-size:14px;font-weight:700;color:${BRAND.hielo};text-decoration:underline;">${escapeHtml(pick(isEn, "Open in Google Maps", "Abrir en Google Maps"))}</a>
-                  </td>
-                </tr>
-              </table>
-              <p style="margin:28px 0 12px;font-size:15px;line-height:1.55;color:${BRAND.pizarra};">${escapeHtml(pick(isEn, "If you have any questions, reply to this email or write to us on WhatsApp.", "Si tienes alguna duda, responde a este correo o escríbenos por WhatsApp."))}</p>
+              ${buildArrivalGuideHtml(isEn, arrivalGuideLinks, BRAND)}
+              <p style="margin:28px 0 12px;font-size:15px;line-height:1.55;color:${BRAND.pizarra};">${escapeHtml(pick(isEn, "Si tienes alguna duda, responde a este correo o escríbenos por WhatsApp.", "If you have any questions, reply to this email or write to us on WhatsApp."))}</p>
               <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 8px;">
                 <tr>
                   <td style="border-radius:999px;background:${BRAND.accent};">

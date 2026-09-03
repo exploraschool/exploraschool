@@ -46,55 +46,61 @@ function ProductCard({
         featured ? "border-accent/20 shadow-[0_8px_24px_rgba(10,18,25,0.06)]" : "border-hielo/10"
       }`}
     >
-      {/* Franja superior: foto a ancho completo detrás de badge + título + meta + descripción */}
-      <div className={`relative overflow-hidden ${featured ? "px-5 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6" : "px-4 pb-3.5 pt-4 sm:px-5 sm:pb-4 sm:pt-5"}`}>
-        <Image
-          src={product.image}
-          alt=""
-          fill
-          className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-          sizes="(max-width: 1024px) 100vw, 33vw"
-          aria-hidden
-        />
-        <div className="absolute inset-0 bg-white/78" />
-        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
+      <div
+        className={`relative isolate overflow-hidden ${
+          featured ? "px-5 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6" : "px-4 pb-3.5 pt-4 sm:px-5 sm:pb-4 sm:pt-5"
+        }`}
+      >
+        <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
+          <Image
+            src={product.image}
+            alt=""
+            fill
+            className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+            sizes="(max-width: 1024px) 100vw, 33vw"
+          />
+          <div className="absolute inset-0 bg-white/80" />
+          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
+        </div>
 
-        <div className="relative">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              {featured ? (
-                <span className="mb-2 inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-accent-dark">
-                  {pickLocale(locale, "Popular", "Popular")}
-                </span>
-              ) : null}
-              <h3 className={`font-display font-semibold text-hielo ${featured ? "text-xl" : "text-lg"}`}>
-                {pickLocale(locale, product.titleEs, product.titleEn)}
-              </h3>
-              {product.hours ? (
-                <p className="mt-1 text-xs font-medium text-muted">
-                  {product.hours} h · {pickLocale(locale, "1–8 participantes", "1–8 participants")}
-                </p>
-              ) : null}
-            </div>
-            {product.id === "curso-snow" ? (
-              <span className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[0.65rem] font-semibold text-hielo backdrop-blur-sm">
-                {pickLocale(locale, "mín. 3 · máx. 8", "min. 3 · max. 8")}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            {featured ? (
+              <span className="mb-2 inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-accent-dark">
+                {pickLocale(locale, "Popular", "Popular")}
               </span>
             ) : null}
-            {product.id === "curso-empresa" ? (
-              <span className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[0.65rem] font-semibold text-hielo backdrop-blur-sm">
-                {pickLocale(locale, "Jornada completa", "Full day")}
-              </span>
+            <h3 className={`font-display font-semibold text-hielo ${featured ? "text-xl" : "text-lg"}`}>
+              {pickLocale(locale, product.titleEs, product.titleEn)}
+            </h3>
+            {product.hours ? (
+              <p className="mt-1 text-xs font-medium text-muted">
+                {product.hours} h · {pickLocale(locale, "1–8 participantes", "1–8 participants")}
+              </p>
             ) : null}
           </div>
-
-          <p className={`mt-3 text-muted ${featured ? "text-sm" : "text-sm line-clamp-2"}`}>
-            {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
-          </p>
+          {product.id === "curso-snow" ? (
+            <span className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[0.65rem] font-semibold text-hielo backdrop-blur-sm">
+              {pickLocale(locale, "mín. 3 · máx. 8", "min. 3 · max. 8")}
+            </span>
+          ) : null}
+          {product.id === "curso-empresa" ? (
+            <span className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[0.65rem] font-semibold text-hielo backdrop-blur-sm">
+              {pickLocale(locale, "Jornada completa", "Full day")}
+            </span>
+          ) : null}
         </div>
+
+        <p className={`mt-3 text-muted ${featured ? "text-sm" : "text-sm line-clamp-2"}`}>
+          {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
+        </p>
       </div>
 
-      <div className={`flex flex-1 flex-col border-t border-hielo/6 ${featured ? "p-5 sm:p-6" : "p-4 sm:p-5"}`}>
+      <div
+        className={`mt-auto flex flex-1 flex-col border-t border-hielo/6 ${
+          featured ? "p-5 sm:p-6" : "p-4 sm:p-5"
+        }`}
+      >
         {fromPrice !== null ? (
           <p>
             <PriceTag
@@ -136,7 +142,7 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
         <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
           {pickLocale(locale, "Los más elegidos", "Most popular")}
         </h3>
-        <div className="mt-4 grid gap-5 lg:grid-cols-3">
+        <div className="mt-4 grid items-stretch gap-5 lg:grid-cols-3">
           {featured.map((product) => (
             <ProductCard key={product.id} product={product} locale={locale} featured />
           ))}
@@ -148,7 +154,7 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
           <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
             {pickLocale(locale, "Más formatos", "More formats")}
           </h3>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid items-stretch gap-4 sm:grid-cols-2">
             {others.map((product) => (
               <ProductCard key={product.id} product={product} locale={locale} />
             ))}
