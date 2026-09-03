@@ -13,6 +13,11 @@ type GalleryAdminManagerProps = {
   initialPhotos: LiveGalleryPhoto[];
 };
 
+function formatBytes(bytes: number): string {
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps) {
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
@@ -20,13 +25,47 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
   const [altEs, setAltEs] = useState("");
   const [altEn, setAltEn] = useState("");
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
+
+  async function uploadOne(
+    file: File,
+    altEsValue: string,
+    altEnValue: string,
+  ): Promise<LiveGalleryPhoto> {
+    const form = new FormData();
+    form.append("files", file);
+    if (altEsValue) form.set("altEs", altEsValue);
+    if (altEnValue) form.set("altEn", altEnValue);
+
+    const res = await fetch("/api/admin/gallery", { method: "POST", body: form });
+    let data: { photos?: LiveGalleryPhoto[]; photo?: LiveGalleryPhoto; error?: string } = {};
+    try {
+      data = (await res.json()) as typeof data;
+    } catch {
+      /* non-JSON (often body too large / gateway) */
+    }
+
+    if (!res.ok) {
+      if (res.status === 413) {
+        throw new Error(`${file.name}: archivo demasiado grande para el servidor`);
+      }
+      throw new Error(data.error || `No se pudo subir ${file.name} (${res.status})`);
+    }
+
+    const photo = data.photos?.[0] ?? data.photo;
+    if (!photo) {
+      throw new Error(`Respuesta vacía al subir ${file.name}`);
+    }
+    return photo;
+  }
 
   async function handleUpload(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setOk(null);
+    setProgress(null);
 
     const selected = Array.from(fileRef.current?.files ?? []);
     if (selected.length === 0) {
@@ -52,42 +91,56 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
       return;
     }
 
-    const form = new FormData();
-    for (const file of selected) {
-      form.append("files", file);
+    const oversized = selected.filter((file) => file.size > 6 * 1024 * 1024);
+    if (oversized.length > 0) {
+      setError(
+        `Estas fotos superan 6 MB: ${oversized.map((f) => `${f.name} (${formatBytes(f.size)})`).join(", ")}`,
+      );
+      return;
     }
-    if (altEs.trim()) form.set("altEs", altEs.trim());
-    if (altEn.trim()) form.set("altEn", altEn.trim());
+
+    const altEsValue = altEs.trim();
+    const altEnValue = altEn.trim();
 
     setBusy(true);
+    const uploaded: LiveGalleryPhoto[] = [];
+    const failures: string[] = [];
+
     try {
-      const res = await fetch("/api/admin/gallery", { method: "POST", body: form });
-      const data = (await res.json()) as {
-        photos?: LiveGalleryPhoto[];
-        photo?: LiveGalleryPhoto;
-        error?: string;
-      };
-      if (!res.ok) {
-        throw new Error(data.error || "No se pudo subir");
+      for (let i = 0; i < selected.length; i++) {
+        const file = selected[i];
+        setProgress(`Subiendo ${i + 1} de ${selected.length}: ${file.name}`);
+        try {
+          const photo = await uploadOne(file, altEsValue, altEnValue);
+          uploaded.push(photo);
+          setPhotos((prev) => [...prev, photo]);
+        } catch (err) {
+          failures.push(err instanceof Error ? err.message : `Error con ${file.name}`);
+        }
       }
 
-      const uploaded = data.photos ?? (data.photo ? [data.photo] : []);
       if (uploaded.length > 0) {
-        setPhotos((prev) => [...prev, ...uploaded]);
+        setAltEs("");
+        setAltEn("");
+        if (fileRef.current) fileRef.current.value = "";
+        setOk(
+          uploaded.length === 1
+            ? "Foto subida. Ya aparece en «La estación, en directo»."
+            : `${uploaded.length} fotos subidas. Ya aparecen en «La estación, en directo».`,
+        );
+        router.refresh();
       }
-      setAltEs("");
-      setAltEn("");
-      if (fileRef.current) fileRef.current.value = "";
-      setOk(
-        uploaded.length === 1
-          ? "Foto subida. Ya aparece en «La estación, en directo»."
-          : `${uploaded.length} fotos subidas. Ya aparecen en «La estación, en directo».`,
-      );
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error al subir");
+
+      if (failures.length > 0) {
+        setError(
+          uploaded.length > 0
+            ? `Subidas ${uploaded.length}. Fallaron: ${failures.join(" · ")}`
+            : failures.join(" · "),
+        );
+      }
     } finally {
       setBusy(false);
+      setProgress(null);
     }
   }
 
@@ -120,8 +173,8 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
       >
         <h2 className="font-display text-xl font-semibold text-hielo">Subir fotos</h2>
         <p className="mt-1 text-sm text-muted">
-          JPG, PNG o WebP · máx. 6 MB cada una · hasta {LIVE_GALLERY_MAX_UPLOAD_BATCH} a la vez ·{" "}
-          {LIVE_GALLERY_MAX_PHOTOS} en total en la sección.
+          JPG, PNG o WebP · máx. 6 MB cada una · hasta {LIVE_GALLERY_MAX_UPLOAD_BATCH} a la vez
+          (se suben una por una) · {LIVE_GALLERY_MAX_PHOTOS} en total en la sección.
         </p>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -133,7 +186,7 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
               id="gallery-file"
               ref={fileRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
               multiple
               required
               disabled={busy}
@@ -169,9 +222,10 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
         </div>
 
         <button type="submit" disabled={busy} className="btn-primary mt-5 !w-auto disabled:opacity-50">
-          {busy ? "Subiendo…" : "Subir a la web"}
+          {busy ? progress ?? "Subiendo…" : "Subir a la web"}
         </button>
 
+        {progress && !error ? <p className="mt-3 text-sm text-muted">{progress}</p> : null}
         {error ? <p className="mt-3 text-sm font-medium text-accent">{error}</p> : null}
         {ok ? <p className="mt-3 text-sm font-medium text-hielo">{ok}</p> : null}
       </form>

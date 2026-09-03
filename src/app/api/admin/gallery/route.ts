@@ -13,14 +13,32 @@ import {
 } from "@/lib/live-gallery";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
-const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const ALLOWED_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const MAX_BYTES = 6 * 1024 * 1024;
 
-function extensionFor(type: string): string {
-  if (type === "image/png") return "png";
-  if (type === "image/webp") return "webp";
+function extensionFor(type: string, fileName: string): string {
+  const normalized = type.toLowerCase();
+  if (normalized === "image/png") return "png";
+  if (normalized === "image/webp") return "webp";
+  const fromName = fileName.split(".").pop()?.toLowerCase();
+  if (fromName === "png" || fromName === "webp" || fromName === "jpg" || fromName === "jpeg") {
+    return fromName === "jpeg" ? "jpg" : fromName;
+  }
   return "jpg";
+}
+
+function resolveImageType(file: File): string | null {
+  const type = file.type.toLowerCase();
+  if (ALLOWED_TYPES.has(type)) {
+    return type === "image/jpg" ? "image/jpeg" : type;
+  }
+  const ext = file.name.split(".").pop()?.toLowerCase();
+  if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+  if (ext === "png") return "image/png";
+  if (ext === "webp") return "image/webp";
+  return null;
 }
 
 function revalidateGalleryPages() {
@@ -104,8 +122,12 @@ export async function POST(request: Request) {
     }
 
     for (const file of files) {
-      if (!ALLOWED_TYPES.has(file.type)) {
-        return NextResponse.json({ error: `Usa JPG, PNG o WebP (${file.name})` }, { status: 400 });
+      const resolvedType = resolveImageType(file);
+      if (!resolvedType) {
+        return NextResponse.json(
+          { error: `Usa JPG, PNG o WebP (${file.name})` },
+          { status: 400 },
+        );
       }
       if (file.size <= 0 || file.size > MAX_BYTES) {
         return NextResponse.json(
@@ -123,15 +145,16 @@ export async function POST(request: Request) {
     const uploaded: LiveGalleryPhoto[] = [];
 
     for (const file of files) {
+      const resolvedType = resolveImageType(file)!;
       const id = crypto.randomUUID();
-      const storagePath = `${LIVE_GALLERY_STORAGE_PREFIX}/${id}.${extensionFor(file.type)}`;
+      const storagePath = `${LIVE_GALLERY_STORAGE_PREFIX}/${id}.${extensionFor(resolvedType, file.name)}`;
       const buffer = Buffer.from(await file.arrayBuffer());
       const object = bucket.file(storagePath);
 
       await object.save(buffer, {
         resumable: false,
         metadata: {
-          contentType: file.type,
+          contentType: resolvedType,
           cacheControl: "public, max-age=31536000",
           metadata: {
             firebaseStorageDownloadTokens: id,
