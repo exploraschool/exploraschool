@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 
 export default async function AdminEvaluacionPage() {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  await requireAdminPanel();
   redirect("/admin/alumnos");
 }

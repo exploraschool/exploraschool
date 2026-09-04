@@ -32,7 +32,7 @@ export function StudentGoogleAuthCard({ locale }: StudentGoogleAuthCardProps) {
       successLabel={t("welcome")}
       onSuccess={(payload) => {
         if (payload.role === "staff") {
-          router.push("/admin/reservas");
+          router.push(payload.homePath || "/admin/reservas");
           router.refresh();
           return;
         }

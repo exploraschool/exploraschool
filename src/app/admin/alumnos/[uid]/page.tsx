@@ -3,7 +3,6 @@ import Link from "next/link";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminStudentDetail } from "@/components/admin/AdminStudentDetail";
 import { AdminStudentDeleteButton } from "@/components/admin/AdminStudentDeleteButton";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { getStudentProfile } from "@/lib/student-user-store";
@@ -19,7 +18,6 @@ import { ensureTipsMigratedFromStaffTips } from "@/lib/student-tips";
 type Props = { params: Promise<{ uid: string }> };
 
 export default async function AdminAlumnoDetailPage({ params }: Props) {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
   await requireAdminPanel();
   if (!isAdminConfigured()) notFound();
 

@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getStaffSession, staffHomePath } from "@/lib/admin-auth";
 import { AdminLoginForm } from "./AdminLoginForm";
 
 export default async function AdminLoginPage() {
-  if (await isAdminAuthenticated()) {
-    redirect("/admin/reservas");
+  const staff = await getStaffSession();
+  if (staff) {
+    redirect(staffHomePath(staff.role));
   }
 
   return <AdminLoginForm />;

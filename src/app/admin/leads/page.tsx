@@ -5,7 +5,6 @@ import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminTrashButton } from "@/components/admin/AdminTrashButton";
 import { LeadActions } from "@/components/admin/LeadActions";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { isBookingLead, type StoredBookingItem } from "@/lib/leads";
@@ -54,8 +53,6 @@ export default async function AdminContactsPage({
 }: {
   searchParams: SearchParams;
 }) {
-  const authed = await isAdminAuthenticated();
-  if (!authed) redirect("/admin/login");
   await requireAdminPanel();
 
   const params = await searchParams;

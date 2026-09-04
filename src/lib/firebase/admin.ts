@@ -33,7 +33,7 @@ function loadServiceAccountFromFile(): ServiceAccountJson | null {
   return null;
 }
 
-function getCredentialParts(): {
+export function getCredentialParts(): {
   projectId: string;
   clientEmail: string;
   privateKey: string;

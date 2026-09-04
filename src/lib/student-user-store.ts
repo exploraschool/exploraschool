@@ -1,5 +1,5 @@
 import { FieldValue } from "firebase-admin/firestore";
-import { isAllowedAdminEmail } from "@/lib/admin-auth";
+import { isAllowedStaffEmail } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/firebase/admin";
 import {
   parseStudentProfile,
@@ -14,7 +14,7 @@ export async function getStudentProfile(uid: string): Promise<StudentProfile | n
   const snap = await db.collection(USERS_COLLECTION).doc(uid).get();
   if (!snap.exists) return null;
   const profile = parseStudentProfile(uid, snap.data() as Record<string, unknown>);
-  if (isAllowedAdminEmail(profile.email)) return null;
+  if (isAllowedStaffEmail(profile.email)) return null;
   return profile;
 }
 
@@ -22,7 +22,7 @@ export async function upsertStudentProfile(
   uid: string,
   patch: Partial<StudentProfile> & { email: string },
 ): Promise<StudentProfile> {
-  if (isAllowedAdminEmail(patch.email)) {
+  if (isAllowedStaffEmail(patch.email)) {
     throw new Error("staff_email_not_student");
   }
 
@@ -36,7 +36,7 @@ export async function upsertStudentProfile(
     ? parseStudentProfile(uid, existing.data() as Record<string, unknown>)
     : null;
 
-  if (current && isAllowedAdminEmail(current.email)) {
+  if (current && isAllowedStaffEmail(current.email)) {
     throw new Error("staff_email_not_student");
   }
 
@@ -66,7 +66,7 @@ export async function upsertStudentProfile(
     updatedAt: now,
   };
 
-  if (isAllowedAdminEmail(next.email)) {
+  if (isAllowedStaffEmail(next.email)) {
     throw new Error("staff_email_not_student");
   }
 
@@ -98,7 +98,7 @@ export async function listStudentProfiles(): Promise<StudentProfile[]> {
     const snap = await db.collection(USERS_COLLECTION).get();
     return snap.docs
       .map((doc) => parseStudentProfile(doc.id, doc.data() as Record<string, unknown>))
-      .filter((profile) => profile.email && !isAllowedAdminEmail(profile.email))
+      .filter((profile) => profile.email && !isAllowedStaffEmail(profile.email))
       .sort((a, b) => {
         const nameA = a.displayName || a.email;
         const nameB = b.displayName || b.email;
@@ -120,7 +120,7 @@ export async function findStudentUidByEmail(email: string): Promise<string | nul
     const byEmail = await db.collection(USERS_COLLECTION).where("email", "==", email.trim()).limit(5).get();
     for (const doc of byEmail.docs) {
       const profile = parseStudentProfile(doc.id, doc.data() as Record<string, unknown>);
-      if (isAllowedAdminEmail(profile.email)) continue;
+      if (isAllowedStaffEmail(profile.email)) continue;
       if (profile.email.trim().toLowerCase() === emailLower) return doc.id;
     }
   } catch {
@@ -131,7 +131,7 @@ export async function findStudentUidByEmail(email: string): Promise<string | nul
     const snap = await db.collection(USERS_COLLECTION).get();
     for (const doc of snap.docs) {
       const profile = parseStudentProfile(doc.id, doc.data() as Record<string, unknown>);
-      if (isAllowedAdminEmail(profile.email)) continue;
+      if (isAllowedStaffEmail(profile.email)) continue;
       if (profile.email.trim().toLowerCase() === emailLower) return doc.id;
     }
   } catch (error) {

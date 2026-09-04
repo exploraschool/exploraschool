@@ -1,11 +1,13 @@
 import { setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
-import { blogPosts } from "@/data/blog";
+import { listPublicBlogCards } from "@/lib/blog-catalog";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
+
+export const revalidate = 60;
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -37,9 +39,7 @@ export default async function BlogPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const posts = [...blogPosts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  );
+  const posts = await listPublicBlogCards();
 
   return (
     <>
@@ -92,11 +92,18 @@ export default async function BlogPage({ params }: Props) {
                     />
                   </Link>
                   <div className="p-5 sm:p-6">
-                    <time className="text-xs font-medium uppercase tracking-wider text-oro">
-                      {new Date(post.date).toLocaleDateString(
-                        locale === "en" ? "en-GB" : "es-ES",
-                      )}
-                    </time>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <time className="text-xs font-medium uppercase tracking-wider text-oro">
+                        {new Date(post.date).toLocaleDateString(
+                          locale === "en" ? "en-GB" : "es-ES",
+                        )}
+                      </time>
+                      {post.kind === "affiliate" ? (
+                        <span className="rounded-full bg-hielo/10 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">
+                          {pickLocale(locale, "Guía de compra", "Buying guide")}
+                        </span>
+                      ) : null}
+                    </div>
                     <h2 className="mt-3 font-display text-xl font-semibold">
                       <Link href={`/blog/${post.slug}`} className="hover:text-accent">
                         {pickLocale(locale, post.titleEs, post.titleEn)}

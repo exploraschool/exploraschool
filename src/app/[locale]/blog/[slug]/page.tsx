@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BlogMarkdown } from "@/components/BlogMarkdown";
+import { AffiliatePostView } from "@/components/AffiliatePostView";
 import { Link } from "@/i18n/routing";
 import { blogPosts, getBlogPost } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
@@ -10,6 +11,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
 import { media } from "@/lib/media";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { resolvePublicBlogPost } from "@/lib/blog-catalog";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -18,10 +20,18 @@ export function generateStaticParams() {
   return blogPosts.map((p) => ({ slug: p.slug }));
 }
 
+export const dynamicParams = true;
+export const revalidate = 60;
+
+function absoluteImage(siteUrl: string, src: string): string {
+  if (src.startsWith("http://") || src.startsWith("https://")) return src;
+  return `${siteUrl}${src}`;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const post = getBlogPost(slug);
-  if (!post) {
+  const resolved = await resolvePublicBlogPost(slug);
+  if (!resolved) {
     return buildPageMetadata({
       locale,
       path: "/blog",
@@ -30,6 +40,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "Guías prácticas de esquí, snowboard y clases en Sierra Nevada con Explora School & Club.",
     });
   }
+  if (resolved.kind === "affiliate") {
+    const post = resolved.post;
+    return buildPageMetadata({
+      locale,
+      path: `/blog/${slug}`,
+      title: pickLocale(locale, post.seoTitleEs || post.titleEs, post.seoTitleEn || post.titleEn),
+      description: pickLocale(
+        locale,
+        post.seoDescriptionEs || post.excerptEs,
+        post.seoDescriptionEn || post.excerptEn,
+      ),
+      ogImage: post.coverImage,
+      ogImageAlt: pickLocale(locale, post.coverAltEs, post.coverAltEn),
+      ogType: "article",
+    });
+  }
+  const post = resolved.post;
   return buildPageMetadata({
     locale,
     path: `/blog/${slug}`,
@@ -45,9 +72,88 @@ export default async function BlogPostPage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const post = getBlogPost(slug);
-  if (!post) notFound();
+  const resolved = await resolvePublicBlogPost(slug);
+  if (!resolved) notFound();
 
+  if (resolved.kind === "affiliate") {
+    const post = resolved.post;
+    const postTitle = pickLocale(locale, post.titleEs, post.titleEn);
+    const siteUrl = getSiteUrl();
+    const date = (post.publishedAt || post.updatedAt).slice(0, 10);
+    const articleLd = {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      headline: postTitle,
+      description: pickLocale(locale, post.excerptEs, post.excerptEn),
+      image: absoluteImage(siteUrl, post.coverImage),
+      datePublished: date,
+      dateModified: post.updatedAt.slice(0, 10),
+      author: { "@type": "Organization", name: "Explora School & Club" },
+      publisher: {
+        "@type": "Organization",
+        name: "Explora School & Club",
+        logo: { "@type": "ImageObject", url: `${siteUrl}${media.logo}` },
+      },
+      mainEntityOfPage: `${siteUrl}/${locale}/blog/${post.slug}`,
+      inLanguage: locale === "en" ? "en-GB" : "es-ES",
+    };
+    const listLd =
+      post.type === "ranking"
+        ? {
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            itemListElement: post.products.map((product, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: pickLocale(locale, product.nameEs, product.nameEn),
+              url: product.affiliateUrl,
+            })),
+          }
+        : null;
+
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+        />
+        {listLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd) }}
+          />
+        ) : null}
+        <BreadcrumbJsonLd
+          locale={locale}
+          items={[
+            { name: "Blog", path: "/blog" },
+            { name: postTitle, path: `/blog/${post.slug}` },
+          ]}
+        />
+        <section className="page-header">
+          <div className="container-page">
+            <BackLink href="/blog">
+              {pickLocale(locale, "Volver al blog", "Back to the blog")}
+            </BackLink>
+            <time className="mt-4 block text-xs font-medium uppercase tracking-wider text-oro">
+              {new Date(date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
+            </time>
+            <h1 className="page-title mt-2 sm:mt-2.5">{postTitle}</h1>
+            <p className="mt-3 max-w-2xl text-muted">
+              {pickLocale(locale, post.excerptEs, post.excerptEn)}
+            </p>
+          </div>
+        </section>
+        <article className="section-padding pt-6">
+          <div className="container-page content-narrow">
+            <AffiliatePostView post={post} locale={locale} />
+          </div>
+        </article>
+      </>
+    );
+  }
+
+  const post = resolved.post;
   const content = pickLocale(locale, post.contentEs, post.contentEn);
   const related = post.relatedSlugs
     .map((s) => getBlogPost(s))

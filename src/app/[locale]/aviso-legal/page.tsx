@@ -112,6 +112,15 @@ export default async function AvisoLegalPage({ params }: Props) {
           .
         </p>
 
+        <h2>{pickLocale(locale, "Programa de Afiliados de Amazon", "Amazon Associates")}</h2>
+        <p>
+          {pickLocale(
+            locale,
+            "Explora School & Club participa en el Programa de Afiliados de Amazon EU. Como Afiliados de Amazon, obtenemos ingresos por las compras adscritas que cumplen los requisitos aplicables. Los enlaces a Amazon en este sitio pueden ser enlaces de afiliado. Amazon y el logotipo de Amazon son marcas de Amazon.com, Inc. o de sus afiliados.",
+            "Explora School & Club participates in the Amazon EU Associates Programme. As an Amazon Associate, we earn from qualifying purchases. Links to Amazon on this site may be affiliate links. Amazon and the Amazon logo are trademarks of Amazon.com, Inc. or its affiliates.",
+          )}
+        </p>
+
         <h2>{pickLocale(locale, "Propiedad intelectual", "Intellectual property")}</h2>
         <p>
           {pickLocale(

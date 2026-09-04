@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
 import { GoogleAuthCard } from "@/components/auth/GoogleAuthCard";
-import { ADMIN_GOOGLE_EMAIL } from "@/lib/admin-auth-config";
 import { adminCopy } from "@/lib/admin-copy";
+import { staffHomePath } from "@/lib/admin-auth-config";
 
 type AdminGoogleAuthCardProps = {
   onSuccess?: () => void;
@@ -25,7 +25,6 @@ export function AdminGoogleAuthCard({
       subtitle={adminCopy.panelName}
       buttonLabel={adminCopy.googleButton}
       loginEndpoint="/api/admin/login"
-      loginHint={ADMIN_GOOGLE_EMAIL}
       unauthorizedMessage={adminCopy.errors.unauthorizedEmail}
       firebaseMissing={adminCopy.errors.firebaseMissing}
       popupBlocked={adminCopy.errors.popupBlocked}
@@ -38,9 +37,12 @@ export function AdminGoogleAuthCard({
       successLabel={adminCopy.welcomeBack}
       consumeRedirectOnMount={consumeRedirectOnMount}
       footer={footer}
-      onSuccess={() => {
+      onSuccess={(payload) => {
         onSuccess?.();
-        router.push("/admin/reservas");
+        const next =
+          payload.homePath ||
+          (payload.staffRole ? staffHomePath(payload.staffRole) : "/admin/reservas");
+        router.push(next);
         router.refresh();
       }}
     />

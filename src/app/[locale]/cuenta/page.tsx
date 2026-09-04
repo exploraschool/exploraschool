@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { StudentGoogleAuthCard } from "@/components/cuenta/StudentGoogleAuthCard";
 import { AccountDashboard } from "@/components/cuenta/AccountDashboard";
 import { buildPageMetadata } from "@/lib/metadata";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getStaffSession, staffHomePath } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { canAccessStudentDashboard } from "@/lib/student-users";
@@ -29,8 +29,9 @@ export default async function CuentaPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  if (await isAdminAuthenticated()) {
-    redirect("/admin/reservas");
+  const staff = await getStaffSession();
+  if (staff) {
+    redirect(staffHomePath(staff.role));
   }
 
   const session = await getStudentSession();

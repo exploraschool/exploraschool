@@ -97,7 +97,7 @@ export function BookingIdentityPanel({
           successLabel={t("googleFormalizeSuccess")}
           onSuccess={async (payload) => {
             if (payload.role === "staff") {
-              router.push("/admin/reservas");
+              router.push(payload.homePath || "/admin/reservas");
               router.refresh();
               return;
             }

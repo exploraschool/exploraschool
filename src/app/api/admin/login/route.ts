@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { isAllowedAdminEmail, ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
+import {
+  ADMIN_SESSION_COOKIE,
+  getStaffRole,
+  isAllowedStaffEmail,
+  staffCustomClaims,
+  staffHomePath,
+} from "@/lib/admin-auth";
 import { ADMIN_SESSION_MAX_AGE_MS } from "@/lib/admin-auth-config";
 import { getAdminAuth, isAdminConfigured } from "@/lib/firebase/admin";
 
@@ -43,7 +49,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!isAllowedAdminEmail(decoded.email)) {
+    const role = getStaffRole(decoded.email);
+    if (!role || !isAllowedStaffEmail(decoded.email)) {
       return NextResponse.json(
         { error: "unauthorized_email", message: "Cuenta no autorizada" },
         { status: 403 },
@@ -51,7 +58,7 @@ export async function POST(request: Request) {
     }
 
     try {
-      await auth.setCustomUserClaims(decoded.uid, { admin: true });
+      await auth.setCustomUserClaims(decoded.uid, staffCustomClaims(role));
     } catch (claimError) {
       console.error("[admin/login] custom claims failed:", claimError);
     }
@@ -69,7 +76,13 @@ export async function POST(request: Request) {
       maxAge: Math.floor(ADMIN_SESSION_MAX_AGE_MS / 1000),
     });
 
-    return NextResponse.json({ ok: true, email: decoded.email });
+    return NextResponse.json({
+      ok: true,
+      email: decoded.email,
+      role: "staff",
+      staffRole: role,
+      homePath: staffHomePath(role),
+    });
   } catch (error) {
     console.error("[admin/login] Google session failed:", error);
     return NextResponse.json(

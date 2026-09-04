@@ -22,7 +22,8 @@ export const adminCopy = {
   errors: {
     firebaseMissing:
       "El acceso con Google no está disponible en este entorno. Revisa la configuración de Firebase.",
-    unauthorizedEmail: `Esta cuenta no tiene permiso. El panel solo admite ${ADMIN_GOOGLE_EMAIL}.`,
+    unauthorizedEmail:
+      "Esta cuenta no tiene permiso. Usa una cuenta de Google autorizada por Explora.",
     unverifiedEmail: "Tu cuenta de Google debe tener el correo verificado para entrar.",
     tokenInvalid: "No hemos podido validar la identidad. Vuelve a intentarlo.",
     authUnavailable: "El servicio de acceso no está disponible ahora mismo. Inténtalo en unos minutos.",

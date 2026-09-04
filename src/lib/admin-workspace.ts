@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getStaffSession, isAdminAuthenticated, staffHomePath } from "@/lib/admin-auth";
 import { getInstructorFromDb } from "@/lib/instructors-db";
 import { getSelectedInstructorSlug } from "@/lib/instructor-session";
 import {
@@ -27,9 +27,11 @@ export async function getAdminWorkspace(): Promise<AdminWorkspace | null> {
   return { kind: "explora" };
 }
 
-/** Any authenticated admin may use the panel. */
+/** Full Explora admin only. Affiliate editors are sent to the blog studio. */
 export async function requireAdminPanel(): Promise<AdminWorkspace> {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  const staff = await getStaffSession();
+  if (!staff) redirect("/admin/login");
+  if (staff.role !== "admin") redirect(staffHomePath(staff.role));
   const workspace = await getAdminWorkspace();
   return workspace ?? { kind: "explora" };
 }

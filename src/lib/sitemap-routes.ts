@@ -1,6 +1,7 @@
 import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { getMainDisciplines } from "@/data/disciplines";
+import { listPublishedAffiliatePosts } from "@/lib/affiliate-blog";
 import { getSiteUrl } from "@/lib/site-url";
 
 export type SitemapChangeFrequency =
@@ -42,17 +43,29 @@ function disciplineRoutes(): SitemapRoute[] {
   }));
 }
 
-function blogPostRoutes(): SitemapRoute[] {
-  return blogPosts.map((post) => ({
+async function blogPostRoutes(): Promise<SitemapRoute[]> {
+  const editorial = blogPosts.map((post) => ({
     path: `/blog/${post.slug}`,
     changeFrequency: "monthly" as const,
     priority: 0.6,
     lastModified: new Date(post.date),
   }));
+  let affiliate: SitemapRoute[] = [];
+  try {
+    affiliate = (await listPublishedAffiliatePosts()).map((post) => ({
+      path: `/blog/${post.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.55,
+      lastModified: new Date(post.publishedAt || post.updatedAt),
+    }));
+  } catch {
+    affiliate = [];
+  }
+  return [...editorial, ...affiliate];
 }
 
-export function getSitemapRoutes(): SitemapRoute[] {
-  return [...STATIC_ROUTES, ...disciplineRoutes(), ...blogPostRoutes()];
+export async function getSitemapRoutes(): Promise<SitemapRoute[]> {
+  return [...STATIC_ROUTES, ...disciplineRoutes(), ...(await blogPostRoutes())];
 }
 
 /** Build absolute URL for a locale + path (default locale is Spanish). */

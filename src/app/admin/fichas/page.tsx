@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 
 /** Fichas live inside each alumno — keep URL for old links. */
 export default async function AdminFichasPage() {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  await requireAdminPanel();
   redirect("/admin/alumnos");
 }

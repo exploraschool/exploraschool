@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { ProgressForm } from "@/components/instructor/ProgressForm";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
@@ -14,7 +13,6 @@ import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from
 type Props = { params: Promise<{ leadId: string; itemIndex: string }> };
 
 export default async function EvaluacionFichaPage({ params }: Props) {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
   await requireAdminPanel();
   if (!isAdminConfigured()) notFound();
   const db = getAdminDb();

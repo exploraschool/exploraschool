@@ -10,7 +10,8 @@ Nunca subas claves al repositorio. GitHub solo aloja código; los secretos viven
 | `FIREBASE_PROJECT_ID` | Vercel | API `/api/leads`, admin |
 | `FIREBASE_CLIENT_EMAIL` | Vercel | Firebase Admin SDK |
 | `FIREBASE_PRIVATE_KEY` | Vercel | Firebase Admin SDK |
-| `ADMIN_GOOGLE_EMAIL` | Código (`admin-auth-config.ts`) | Solo `explora.sclub@gmail.com` puede entrar al panel vía Google |
+| `ADMIN_GOOGLE_EMAIL` | Código (`admin-auth-config.ts`) | `explora.sclub@gmail.com` = panel completo; `alemv.mlg@gmail.com` = solo studio de blog |
+| `AMAZON_ASSOCIATE_TAG` | Código / Vercel opcional | Tag `explorashop08-21` para enlaces de Amazon.es |
 | `LEAD_CONFIRM_SECRET` | Vercel **y** Firebase | Enlace de confirmación en emails al equipo |
 | `NEXT_PUBLIC_SITE_URL` | Vercel | URLs canónicas |
 | `RESEND_API_KEY` | Vercel **y** Firebase Functions | Envío de emails (mismo valor en ambos) |
@@ -60,7 +61,15 @@ Cada push a `main` en GitHub redeploya Vercel automáticamente si el repo está 
 1. [Firebase Console](https://console.firebase.google.com/project/exploraschool-9ea82/authentication/providers) → Authentication → Sign-in method → **Google** → Enable
 2. En esa misma pantalla, **Nombre público del proyecto** = `Explora School & Club` (así aparece en la ventana de Google)
 3. Authorized domains: `localhost`, `explora-school.es`, `www.explora-school.es`
-4. Entra en `/admin/login` y usa **Entrar con Google** con `explora.sclub@gmail.com`
+4. Entra en `/admin/login` con Google:
+   - `explora.sclub@gmail.com` → panel completo (reservas, alumnos, **Blog**)
+   - `alemv.mlg@gmail.com` → solo studio de afiliados (`/admin/blog`)
+
+### Vertex AI (Gemini para el blog de afiliados)
+
+APIs habilitadas en el proyecto GCP `exploraschool-9ea82`: `aiplatform.googleapis.com` y `generativelanguage.googleapis.com`. La service account de Firebase Admin tiene `roles/aiplatform.user`. No uses `GEMINI_API_KEY` ni el CSV de Login with Amazon (client secret OAuth) en el repo ni en Vercel.
+
+Tag de afiliados (público, aparece en las URLs): `AMAZON_ASSOCIATE_TAG=explorashop08-21`.
 
 ---
 

@@ -10,7 +10,7 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/client";
-import { ADMIN_GOOGLE_EMAIL } from "@/lib/admin-auth-config";
+import { isAllowedStaffEmail } from "@/lib/admin-auth-config";
 import { media } from "@/lib/media";
 
 type Phase = "ready" | "checking" | "connecting" | "verifying" | "success";
@@ -40,6 +40,8 @@ function GoogleMark() {
 
 export type GoogleAuthSuccess = {
   role?: "staff" | "student";
+  staffRole?: "admin" | "affiliate_editor";
+  homePath?: string;
   onboardingComplete?: boolean;
   email?: string;
 };
@@ -117,7 +119,7 @@ export function GoogleAuthCard({
   }
 
   async function finishWithUser(getIdToken: () => Promise<string>, email?: string | null) {
-    if (!allowAnyAccount && email && email.toLowerCase() !== ADMIN_GOOGLE_EMAIL.toLowerCase()) {
+    if (!allowAnyAccount && email && !isAllowedStaffEmail(email)) {
       const auth = getFirebaseAuth();
       if (auth) await signOut(auth);
       throw new Error(unauthorizedMessage);

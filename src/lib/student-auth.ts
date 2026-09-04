@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { isAllowedAdminEmail } from "@/lib/admin-auth";
+import { isAllowedStaffEmail } from "@/lib/admin-auth";
 import { getAdminAuth } from "@/lib/firebase/admin";
 import {
   STUDENT_SESSION_COOKIE,
@@ -27,7 +27,7 @@ export async function getStudentSession(): Promise<StudentSession | null> {
     const decoded = await auth.verifySessionCookie(session, true);
     if (!decoded.email_verified || !decoded.email || !decoded.uid) return null;
     // Staff Google account must never resolve as a student session.
-    if (isAllowedAdminEmail(decoded.email)) return null;
+    if (isAllowedStaffEmail(decoded.email)) return null;
     return {
       uid: decoded.uid,
       email: String(decoded.email),

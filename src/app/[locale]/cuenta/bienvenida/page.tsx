@@ -4,7 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { AccountWelcomeWizard } from "@/components/cuenta/AccountWelcomeWizard";
 import { buildPageMetadata } from "@/lib/metadata";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { getStaffSession, staffHomePath } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { canAccessStudentDashboard } from "@/lib/student-users";
@@ -28,8 +28,9 @@ export default async function BienvenidaPage({ params, searchParams }: Props) {
   const { edit } = await searchParams;
   setRequestLocale(locale);
 
-  if (await isAdminAuthenticated()) {
-    redirect("/admin/reservas");
+  const staff = await getStaffSession();
+  if (staff) {
+    redirect(staffHomePath(staff.role));
   }
 
   const session = await getStudentSession();

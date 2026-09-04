@@ -6,8 +6,8 @@ import {
   getSitemapRoutes,
 } from "@/lib/sitemap-routes";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = getSitemapRoutes();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const routes = await getSitemapRoutes();
 
   return routing.locales.flatMap((locale) =>
     routes.map((route) => ({

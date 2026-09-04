@@ -1,10 +1,8 @@
-import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import {
   AdminStudentsDirectory,
   type AdminStudentListItem,
 } from "@/components/admin/AdminStudentsDirectory";
-import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { isExploraWorkspaceSlug } from "@/lib/admin-workspace-config";
 import { isAdminConfigured } from "@/lib/firebase/admin";
@@ -17,7 +15,6 @@ import {
 } from "@/lib/student-directory";
 
 export default async function AdminAlumnosPage() {
-  if (!(await isAdminAuthenticated())) redirect("/admin/login");
   await requireAdminPanel();
 
   let students: AdminStudentListItem[] = [];
