@@ -223,12 +223,16 @@ export function ProgressForm({
         });
         const payload = (await signed.json()) as { uploadUrl?: string; media?: ProgressMedia; error?: string };
         if (signed.ok && payload.uploadUrl && payload.media) {
-          const put = await fetch(payload.uploadUrl, {
-            method: "PUT",
-            headers: { "Content-Type": file.type || payload.media.contentType },
-            body: file,
-          });
-          if (put.ok) uploadedItem = payload.media;
+          try {
+            const put = await fetch(payload.uploadUrl, {
+              method: "PUT",
+              headers: { "Content-Type": file.type || payload.media.contentType },
+              body: file,
+            });
+            if (put.ok) uploadedItem = payload.media;
+          } catch {
+            uploadedItem = null;
+          }
         }
         if (!uploadedItem) {
           const form = new FormData();

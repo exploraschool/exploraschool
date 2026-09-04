@@ -8,6 +8,7 @@ import {
   type LiveGalleryPhoto,
 } from "@/lib/live-gallery";
 import { revalidatePath } from "next/cache";
+import { ensureDirectUploadCors } from "@/lib/storage-cors";
 import {
   assertStudentMediaConstraints,
   normalizeStudentMediaContentType,
@@ -155,35 +156,6 @@ async function publishToLiveGallery(params: {
   await db.collection(LIVE_GALLERY_COLLECTION).doc(galleryId).set(photo);
   revalidateGalleryPages();
   return galleryId;
-}
-
-let corsEnsured = false;
-
-async function ensureDirectUploadCors(bucket: NonNullable<ReturnType<typeof getAdminBucket>>) {
-  if (corsEnsured) return;
-  try {
-    const [metadata] = await bucket.getMetadata();
-    const cors = Array.isArray(metadata.cors) ? metadata.cors : [];
-    const allowsPut = cors.some((entry) => {
-      const methods = (entry.method ?? []).map((method) => String(method).toUpperCase());
-      const origins = entry.origin ?? [];
-      return methods.includes("PUT") && origins.length > 0;
-    });
-    if (!allowsPut) {
-      await bucket.setCorsConfiguration([
-        ...cors,
-        {
-          origin: ["*"],
-          method: ["GET", "HEAD", "PUT", "OPTIONS"],
-          responseHeader: ["Content-Type", "Content-Length"],
-          maxAgeSeconds: 3600,
-        },
-      ]);
-    }
-    corsEnsured = true;
-  } catch (error) {
-    console.error("[student-media] cors ensure failed:", error);
-  }
 }
 
 function studentMediaObjectPath(studentUid: string, mediaId: string, ext: string): string {

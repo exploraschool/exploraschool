@@ -26,6 +26,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { findStudentUidByEmail } from "@/lib/student-user-store";
 import { createStudentTip } from "@/lib/student-tips";
 import { sendStudentProgressUpdateEmail } from "@/lib/lead-emails";
+import { ensureDirectUploadCors } from "@/lib/storage-cors";
 
 export const runtime = "nodejs";
 
@@ -281,6 +282,7 @@ export async function PUT(request: Request) {
   const ext = parsed.data.fileName.split(".").pop()?.toLowerCase() || (contentType.startsWith("video/") ? "mp4" : "jpg");
   const storagePath = `progress/${reportId}/${mediaId}.${ext}`;
   const file = bucket.file(storagePath);
+  await ensureDirectUploadCors(bucket);
   const [uploadUrl] = await file.getSignedUrl({
     version: "v4",
     action: "write",
