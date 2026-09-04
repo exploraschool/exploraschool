@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { isExploraWorkspaceSlug } from "@/lib/admin-workspace-config";
 import { getSelectedInstructorSlug } from "@/lib/instructor-session";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
@@ -19,7 +20,7 @@ export async function GET() {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   const slug = await getSelectedInstructorSlug();
-  if (!slug) {
+  if (!slug || isExploraWorkspaceSlug(slug)) {
     return NextResponse.json({ error: "no_instructor" }, { status: 400 });
   }
   if (!isAdminConfigured()) {

@@ -2,17 +2,19 @@ import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { InstructorAdminManager } from "@/components/admin/InstructorAdminManager";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireExploraWorkspace } from "@/lib/admin-workspace";
 import { listInstructorsFromDb } from "@/lib/instructors-db";
 
 export default async function AdminInstructoresPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  await requireExploraWorkspace();
   const instructors = await listInstructorsFromDb();
 
   return (
     <AdminShell
       active="instructores"
-      title="Gestión de instructores"
-      description="Alta, foto, bio y disciplinas. Los perfiles aparecen en “¿Qué instructor eres hoy?” y en la asignación de reservas."
+      title="Monitores"
+      description="Alta, foto, bio y disciplinas. Estos perfiles se usan al entrar como monitor y al asignar reservas."
     >
       <InstructorAdminManager instructors={instructors} />
     </AdminShell>

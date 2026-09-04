@@ -3,6 +3,7 @@ import type { Query } from "firebase-admin/firestore";
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireExploraWorkspace } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import type { MarketingContact } from "@/lib/marketing-contacts";
 
@@ -36,6 +37,7 @@ export default async function AdminEmailsPage({
 }) {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
+  await requireExploraWorkspace();
 
   const params = await searchParams;
   const sourceFilter =

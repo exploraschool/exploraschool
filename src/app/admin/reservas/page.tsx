@@ -5,6 +5,7 @@ import { AdminBookingFilters } from "@/components/admin/AdminBookingFilters";
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireExploraWorkspace } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
 
@@ -39,6 +40,7 @@ export default async function AdminReservasPage({
 }) {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
+  await requireExploraWorkspace();
   const instructors = (await listActiveInstructorsFromDb()).map((item) => ({
     slug: item.slug,
     name: item.name,
@@ -115,7 +117,7 @@ export default async function AdminReservasPage({
     <AdminShell
       active="reservas"
       title="Reservas"
-      description="Consulta, confirma o rechaza las solicitudes. Desde el email del equipo también puedes confirmar o rechazar con un clic; el cliente recibe el aviso automáticamente."
+      description="Consulta, confirma o rechaza solicitudes y asigna el monitor de cada clase."
     >
       {!isAdminConfigured() && (
         <p className="mb-6 rounded-2xl border border-oro/30 bg-oro/10 px-4 py-3 text-sm text-pizarra">

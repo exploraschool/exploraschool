@@ -2,12 +2,14 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { requireExploraWorkspace } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { parseProgressReport, PROGRESS_REPORTS_COLLECTION } from "@/lib/progress-reports";
 import { progressDisciplineName, type ProgressDisciplineId } from "@/data/progress-skills";
 
 export default async function AdminFichasPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
+  await requireExploraWorkspace();
 
   let reports: ReturnType<typeof parseProgressReport>[] = [];
   if (isAdminConfigured()) {
@@ -23,8 +25,8 @@ export default async function AdminFichasPage() {
   return (
     <AdminShell
       active="fichas"
-      title="Auditoría de fichas"
-      description="Revisa y edita cualquier ficha de progreso y los archivos subidos por el equipo."
+      title="Fichas de progreso"
+      description="Auditoría de todas las fichas del equipo. Edita o revisa archivos subidos."
     >
       {reports.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hielo/20 bg-white px-6 py-12 text-center text-sm text-muted">
@@ -48,7 +50,7 @@ export default async function AdminFichasPage() {
                   href={`/admin/evaluacion/${report.leadId}/${report.itemIndex}`}
                   className="btn-secondary !w-auto"
                 >
-                  Editar
+                  Abrir
                 </Link>
               </div>
             </li>

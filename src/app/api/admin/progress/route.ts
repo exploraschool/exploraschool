@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { isExploraWorkspaceSlug } from "@/lib/admin-workspace-config";
 import { getSelectedInstructorSlug } from "@/lib/instructor-session";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { getInstructorFromDb } from "@/lib/instructors-db";
@@ -54,7 +55,12 @@ export async function GET(request: Request) {
   const audit = searchParams.get("audit") === "1";
   const leadId = searchParams.get("leadId");
   const itemIndexRaw = searchParams.get("itemIndex");
-  const instructorFilter = audit ? searchParams.get("instructor") : await getSelectedInstructorSlug();
+  const selectedSlug = await getSelectedInstructorSlug();
+  const instructorFilter = audit
+    ? searchParams.get("instructor")
+    : isExploraWorkspaceSlug(selectedSlug)
+      ? null
+      : selectedSlug;
 
   if (leadId && itemIndexRaw !== null) {
     const itemIndex = Number(itemIndexRaw);
@@ -122,7 +128,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "item_not_found" }, { status: 404 });
   }
 
-  const selectedSlug = (await getSelectedInstructorSlug()) || effectiveInstructorSlug(item);
+  const selectedRaw = await getSelectedInstructorSlug();
+  const selectedSlug =
+    selectedRaw && !isExploraWorkspaceSlug(selectedRaw) ? selectedRaw : effectiveInstructorSlug(item);
   const instructor = selectedSlug ? await getInstructorFromDb(selectedSlug) : null;
   const slot = TIME_SLOTS[item.timeSlotId as TimeSlotId];
   const product = getProductBySlug(item.productId as ProductId);

@@ -3,8 +3,7 @@ import Link from "next/link";
 import type { QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getSelectedInstructorSlug } from "@/lib/instructor-session";
-import { getInstructorFromDb } from "@/lib/instructors-db";
+import { requireInstructorWorkspace } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
   collectInstructorSlugs,
@@ -18,9 +17,8 @@ import { progressReportId } from "@/lib/progress-reports";
 
 export default async function EvaluacionPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
-  const slug = await getSelectedInstructorSlug();
-  if (!slug) redirect("/admin/hoy");
-  const instructor = await getInstructorFromDb(slug);
+  const workspace = await requireInstructorWorkspace();
+  const slug = workspace.slug;
 
   let classes: Array<{
     leadId: string;
@@ -90,15 +88,18 @@ export default async function EvaluacionPage() {
   return (
     <AdminShell
       active="evaluacion"
-      title={`Evaluación · ${instructor?.name ?? slug}`}
-      description="Clases y alumnos asignados a este perfil. Abre una ficha para puntuar técnica, notas y media."
+      title="Mis clases"
+      description={`Alumnos asignados a ${workspace.name}. Abre una ficha para puntuar técnica, notas y media.`}
     >
       {classes.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-hielo/20 bg-white px-6 py-14 text-center">
           <p className="font-display text-xl font-semibold">No hay clases asignadas</p>
           <p className="mt-2 text-sm text-muted">
-            Asigna este instructor en Reservas o pide que el alumno lo elija al reservar.
+            Cuando Explora te asigne clases en Reservas, aparecerán aquí.
           </p>
+          <Link href="/admin/hoy" className="btn-secondary mt-5 inline-flex !w-auto">
+            Cambiar de perfil
+          </Link>
         </div>
       ) : (
         <ul className="space-y-3">
