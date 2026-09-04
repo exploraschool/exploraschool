@@ -9,7 +9,7 @@ import {
   FAQ_CHAT_WHATSAPP_URL,
   type FaqChatButton,
 } from "@/data/faq-chat";
-import { usePathname } from "@/i18n/routing";
+import { usePathname } from "next/navigation";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { useStickyReveal } from "@/hooks/useStickyReveal";
@@ -22,8 +22,12 @@ function lineId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function pagePath(pathname: string) {
+  return pathname.replace(/^\/(es|en)(?=\/|$)/, "") || "/";
+}
+
 function isHomePath(pathname: string) {
-  return pathname === "/" || pathname === "";
+  return pagePath(pathname) === "/";
 }
 
 export function FaqChatWidget() {
@@ -61,6 +65,10 @@ export function FaqChatWidget() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
+
+  useEffect(() => {
+    if (!isHomePath(pathname)) setOpen(false);
+  }, [pathname]);
 
   function openChat() {
     shouldStickBottom.current = false;

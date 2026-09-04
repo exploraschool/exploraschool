@@ -116,7 +116,14 @@ export async function createStudentTip(
   }
 
   await ref.set({
-    ...tip,
+    id: tip.id,
+    text: tip.text,
+    createdAt: tip.createdAt,
+    authorSlug: tip.authorSlug,
+    authorName: tip.authorName,
+    ...(tip.discipline ? { discipline: tip.discipline } : {}),
+    source: tip.source,
+    pinned: tip.pinned,
     updatedAt: FieldValue.serverTimestamp(),
   });
 

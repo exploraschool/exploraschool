@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-import { getPistaById, PISTA_LEVEL_LABEL, type PistaLevel } from "@/data/pistas";
+import { getPistaById, PISTA_LEVEL_LABEL, sectorName, type PistaLevel, type PistaSectorId } from "@/data/pistas";
 import {
   progressDisciplineName,
   progressSkillLabel,
@@ -249,9 +249,9 @@ export function AccountDashboard({
       </div>
 
       {pinnedTip ? (
-        <aside className="mt-4 rounded-xl border border-oro/20 bg-gradient-to-br from-white to-hielo/5 px-3.5 py-3 sm:mt-5 sm:rounded-2xl sm:px-5 sm:py-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
-          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{pinnedTip.text}</p>
+        <aside className="mt-4 overflow-hidden rounded-2xl border border-oro/25 bg-gradient-to-br from-oro/10 via-white to-hielo/5 px-3.5 py-3.5 shadow-sm sm:mt-5 sm:px-5 sm:py-4">
+          <p className="text-[0.65rem] font-bold uppercase tracking-wider text-oro">{t("staffTips")}</p>
+          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{pinnedTip.text}</p>
           {pinnedTip.authorName ? (
             <p className="mt-2 text-xs text-muted">
               {pinnedTip.authorName}
@@ -260,16 +260,23 @@ export function AccountDashboard({
           ) : null}
         </aside>
       ) : profile?.staffTips ? (
-        <aside className="mt-4 rounded-xl border border-oro/20 bg-gradient-to-br from-white to-hielo/5 px-3.5 py-3 sm:mt-5 sm:rounded-2xl sm:px-5 sm:py-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
-          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{profile.staffTips}</p>
+        <aside className="mt-4 overflow-hidden rounded-2xl border border-oro/25 bg-gradient-to-br from-oro/10 via-white to-hielo/5 px-3.5 py-3.5 shadow-sm sm:mt-5 sm:px-5 sm:py-4">
+          <p className="text-[0.65rem] font-bold uppercase tracking-wider text-oro">{t("staffTips")}</p>
+          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{profile.staffTips}</p>
         </aside>
       ) : null}
 
       {latestReport?.nextFocus ? (
-        <aside className="mt-3 rounded-xl border border-hielo/15 bg-white px-3.5 py-3 sm:rounded-2xl sm:px-5 sm:py-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
-          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{latestReport.nextFocus}</p>
+        <aside className="mt-3 overflow-hidden rounded-2xl border border-hielo/15 bg-white px-3.5 py-3.5 shadow-sm sm:px-5 sm:py-4">
+          <p className="text-[0.65rem] font-bold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
+          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{latestReport.nextFocus}</p>
+          <button
+            type="button"
+            onClick={() => goTab("progreso")}
+            className="mt-2 text-xs font-semibold text-hielo"
+          >
+            {t("seeProgress")} →
+          </button>
         </aside>
       ) : null}
 
@@ -775,50 +782,38 @@ function ProgressPanel({
     reports[0]?.discipline ||
     "esqui") as ProgressDisciplineId;
   const skillTimeline = buildSkillTimeline(reports, primaryDiscipline, locale);
+  const [latest, ...older] = reports;
 
   return (
     <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
-      {tipHistory.length ? (
-        <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-          <h2 className="font-display text-xl text-hielo">{t("tipsHistory")}</h2>
-          <ul className="mt-3 space-y-3">
-            {tipHistory.map((tip) => (
-              <li key={tip.id} className="rounded-xl bg-nieve/70 px-3 py-2 text-sm">
-                <p className="whitespace-pre-wrap text-pizarra">{tip.text}</p>
-                <p className="mt-1 text-xs text-muted">
-                  {tip.authorName || "Explora"} · {tip.createdAt.slice(0, 10)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
       {skillTimeline.length ? (
-        <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-          <h2 className="font-display text-xl text-hielo">{t("skillEvolution")}</h2>
-          <p className="mt-1 text-xs text-muted">{progressDisciplineName(primaryDiscipline, locale)}</p>
-          <ul className="mt-3 space-y-2">
+        <section className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-sm">
+          <div className="border-b border-hielo/10 bg-gradient-to-br from-white to-hielo/[0.05] px-3.5 py-3.5 sm:px-5 sm:py-4">
+            <p className="text-[0.65rem] font-bold uppercase tracking-wider text-hielo">{t("skillEvolution")}</p>
+            <h2 className="mt-1 font-display text-xl text-pizarra sm:text-2xl">
+              {progressDisciplineName(primaryDiscipline, locale)}
+            </h2>
+          </div>
+          <ul className="divide-y divide-hielo/10 px-3.5 sm:px-5">
             {skillTimeline.slice(0, 8).map((row) => (
-              <li key={row.skillId} className="text-sm">
-                <div className="flex items-center justify-between gap-2">
-                  <span>{row.label}</span>
-                  <span className="tabular-nums text-muted">
+              <li key={row.skillId} className="py-3">
+                <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
+                  <span className="font-medium text-pizarra">{row.label}</span>
+                  <span className="tabular-nums font-semibold text-hielo">
                     {row.latest}/5
                     {row.delta != null ? (
-                      <span className={row.delta >= 0 ? " text-hielo" : " text-accent"}>
-                        {" "}
+                      <span className={`ml-1 text-xs ${row.delta >= 0 ? "text-hielo" : "text-accent"}`}>
                         ({row.delta >= 0 ? "+" : ""}
                         {row.delta})
                       </span>
                     ) : null}
                   </span>
                 </div>
-                <div className="mt-1 flex gap-0.5">
+                <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <span
                       key={n}
-                      className={`h-1.5 flex-1 rounded-full ${(row.latest ?? 0) >= n ? "bg-hielo" : "bg-hielo/15"}`}
+                      className={`h-2 flex-1 rounded-full ${(row.latest ?? 0) >= n ? "bg-hielo" : "bg-hielo/12"}`}
                     />
                   ))}
                 </div>
@@ -829,7 +824,7 @@ function ProgressPanel({
       ) : null}
 
       {profile?.selfSkills && Object.keys(profile.selfSkills).length ? (
-        <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
+        <section className="rounded-2xl border border-hielo/10 bg-white p-3.5 shadow-sm sm:p-5">
           <h2 className="font-display text-xl text-hielo">{t("selfSkillsTitle")}</h2>
           <div className="mt-3 space-y-4">
             {profile.disciplines.map((discipline) => {
@@ -856,29 +851,62 @@ function ProgressPanel({
             })}
           </div>
         </section>
-      ) : (
+      ) : reports.length === 0 ? (
         <EmptyHint title={t("selfSkillsTitle")} body={t("emptySelfSkills")} />
-      )}
+      ) : null}
 
-      {reports.length ? (
-        reports.map((report) => (
-          <ReportCard
-            key={report.id}
-            report={report}
-            locale={locale}
-            t={t}
-            hideNextFocus={hideNextFocusGlobally && report.id === latestReportId}
-            compactSkills={Boolean(skillTimeline.length)}
-          />
-        ))
+      {latest ? (
+        <ReportCard
+          report={latest}
+          locale={locale}
+          t={t}
+          featured
+          defaultOpen
+          hideNextFocus={hideNextFocusGlobally && latest.id === latestReportId}
+          compactSkills={Boolean(skillTimeline.length)}
+        />
       ) : (
         <EmptyHint title={t("tabProgreso")} body={t("noReportsYet")} />
       )}
 
-      <a href={newLessonUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !w-auto">
-        {t("requestNew", { name: lastInstructorName || "Explora" })}
-      </a>
-      <p className="text-xs text-muted">{meetingPoint}</p>
+      {older.length ? (
+        <div className="space-y-3">
+          <p className="px-1 text-xs font-bold uppercase tracking-wider text-muted">{t("previousReports")}</p>
+          {older.map((report) => (
+            <ReportCard
+              key={report.id}
+              report={report}
+              locale={locale}
+              t={t}
+              hideNextFocus={false}
+              compactSkills={Boolean(skillTimeline.length)}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      {tipHistory.length ? (
+        <section className="rounded-2xl border border-hielo/10 bg-white p-3.5 shadow-sm sm:p-5">
+          <h2 className="font-display text-xl text-hielo">{t("tipsHistory")}</h2>
+          <ul className="mt-3 space-y-2">
+            {tipHistory.map((tip) => (
+              <li key={tip.id} className="rounded-xl border border-hielo/10 bg-nieve/70 px-3.5 py-3 text-sm">
+                <p className="whitespace-pre-wrap leading-relaxed text-pizarra">{tip.text}</p>
+                <p className="mt-2 text-xs text-muted">
+                  {tip.authorName || "Explora"} · {tip.createdAt.slice(0, 10)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <div className="rounded-2xl border border-dashed border-hielo/20 bg-white px-4 py-5 text-center sm:px-6">
+        <a href={newLessonUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !w-auto">
+          {t("requestNew", { name: lastInstructorName || "Explora" })}
+        </a>
+        <p className="mt-3 text-xs text-muted">{meetingPoint}</p>
+      </div>
     </div>
   );
 }
@@ -890,6 +918,7 @@ function ReportCard({
   featured,
   hideNextFocus,
   compactSkills,
+  defaultOpen,
   onOpenProgress,
 }: {
   report: ProgressReport;
@@ -898,98 +927,181 @@ function ReportCard({
   featured?: boolean;
   hideNextFocus?: boolean;
   compactSkills?: boolean;
+  defaultOpen?: boolean;
   onOpenProgress?: () => void;
 }) {
+  const [open, setOpen] = useState(Boolean(featured || defaultOpen));
   const skills = Object.entries(report.skills);
   const pistas = report.recommendedPistaIds
     .map((id) => getPistaById(id))
     .filter((pista): pista is NonNullable<typeof pista> => Boolean(pista));
 
-  return (
-    <article className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-      <div className="flex flex-wrap items-start justify-between gap-2">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-oro">
-            {featured ? t("latestReport") : progressDisciplineName(report.discipline as ProgressDisciplineId, locale)}
-          </p>
-          <h2 className="mt-1 font-display text-xl text-pizarra">{report.instructorName || t("yourInstructor")}</h2>
-        </div>
-        <p className="text-sm text-oro" aria-label={`${report.rating} / 5`}>
-          {"★".repeat(report.rating)}
-          {"☆".repeat(5 - report.rating)}
-        </p>
-      </div>
-      {featured ? (
-        <p className="mt-1 text-sm text-muted">
-          {progressDisciplineName(report.discipline as ProgressDisciplineId, locale)}
-        </p>
-      ) : null}
-      {!hideNextFocus && report.nextFocus ? (
-        <div className="mt-3 rounded-xl bg-hielo/5 px-3 py-2">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
-          <p className="mt-1 whitespace-pre-wrap text-sm text-pizarra">{report.nextFocus}</p>
-        </div>
-      ) : null}
-      {report.notes ? <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{report.notes}</p> : null}
+  const pistasBySector = pistas.reduce<Record<string, typeof pistas>>((acc, pista) => {
+    const key = pista.sector;
+    (acc[key] ??= []).push(pista);
+    return acc;
+  }, {});
 
-      {!compactSkills && skills.length ? (
-        <div className="mt-4 space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("skillsRated")}</p>
-          {skills.map(([id, value]) => (
-            <div key={id}>
-              <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="text-pizarra">
-                  {progressSkillLabel(report.discipline as ProgressDisciplineId, id, locale)}
-                </span>
-                <span className="tabular-nums text-muted">{value}/5</span>
-              </div>
-              <div className="mt-1 flex gap-0.5">
-                {[1, 2, 3, 4, 5].map((n) => (
-                  <span
-                    key={n}
-                    className={`h-1.5 flex-1 rounded-full ${n <= value ? "bg-hielo" : "bg-hielo/15"}`}
-                  />
+  const disciplineLabel = progressDisciplineName(report.discipline as ProgressDisciplineId, locale);
+  const updatedLabel = report.updatedAt?.slice(0, 10) || "";
+
+  const header = (
+        <div className="flex w-full items-start justify-between gap-3 px-3.5 py-3.5 text-left sm:px-5 sm:py-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-full bg-oro/15 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-oro">
+              {featured ? t("latestReport") : disciplineLabel}
+            </span>
+            {report.hours ? (
+              <span className="rounded-full bg-nieve px-2.5 py-0.5 text-[0.65rem] font-semibold text-muted">
+                {t("reportHours", { hours: report.hours })}
+              </span>
+            ) : null}
+          </div>
+          <h2 className="mt-2 font-display text-xl leading-tight text-pizarra sm:text-2xl">
+            {report.instructorName || t("yourInstructor")}
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            {featured ? disciplineLabel : null}
+            {featured && updatedLabel ? " · " : null}
+            {updatedLabel}
+          </p>
+        </div>
+        <div className="flex shrink-0 flex-col items-end gap-2">
+          <p className="text-sm text-oro" aria-label={`${report.rating} / 5`}>
+            {"★".repeat(report.rating)}
+            <span className="text-hielo/20">{"★".repeat(5 - report.rating)}</span>
+          </p>
+          {!featured ? (
+            <span className="text-xs font-semibold text-hielo">{open ? t("closeReport") : t("openReport")}</span>
+          ) : onOpenProgress ? (
+            <span className="text-xs font-semibold text-hielo">{t("seeProgress")}</span>
+          ) : null}
+        </div>
+      </div>
+  );
+
+  return (
+    <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-sm">
+      {featured && !onOpenProgress ? (
+        header
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            if (featured && onOpenProgress) onOpenProgress();
+            else setOpen((value) => !value);
+          }}
+          className="w-full"
+        >
+          {header}
+        </button>
+      )}
+
+      {(featured || open) && !(featured && onOpenProgress) ? (
+        <div className="space-y-4 border-t border-hielo/10 px-3.5 py-4 sm:px-5 sm:py-5">
+          {!hideNextFocus && report.nextFocus ? (
+            <div className="rounded-xl border border-hielo/15 bg-gradient-to-br from-hielo/5 to-white px-3.5 py-3">
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
+              <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{report.nextFocus}</p>
+            </div>
+          ) : null}
+
+          {report.notes ? (
+            <div>
+              <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted">{t("reportNotes")}</p>
+              <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{report.notes}</p>
+            </div>
+          ) : null}
+
+          {!compactSkills && skills.length ? (
+            <div>
+              <p className="mb-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">{t("skillsRated")}</p>
+              <ul className="space-y-2.5">
+                {skills.map(([id, value]) => (
+                  <li key={id} className="rounded-xl bg-nieve/70 px-3 py-2.5">
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
+                      <span className="font-medium text-pizarra">
+                        {progressSkillLabel(report.discipline as ProgressDisciplineId, id, locale)}
+                      </span>
+                      <span className="tabular-nums font-semibold text-hielo">{value}/5</span>
+                    </div>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <span
+                          key={n}
+                          className={`h-2 flex-1 rounded-full ${n <= value ? "bg-hielo" : "bg-hielo/12"}`}
+                        />
+                      ))}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {pistas.length ? (
+            <div>
+              <p className="mb-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">{t("pistas")}</p>
+              <div className="space-y-3">
+                {Object.entries(pistasBySector).map(([sectorId, sectorPistas]) => (
+                  <div key={sectorId}>
+                    <p className="mb-1.5 text-xs font-semibold text-hielo">
+                      {sectorName(sectorId as PistaSectorId, locale)}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {sectorPistas.map((pista) => (
+                        <span
+                          key={pista.id}
+                          className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold ${pistaTone(pista.level)}`}
+                        >
+                          {pista.name}
+                          <span className="opacity-80">
+                            {" · "}
+                            {locale === "en" ? PISTA_LEVEL_LABEL[pista.level].en : PISTA_LEVEL_LABEL[pista.level].es}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      ) : null}
+          ) : null}
 
-      {pistas.length ? (
-        <div className="mt-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("pistas")}</p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {pistas.map((pista) => (
-              <span
-                key={pista.id}
-                className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold ${pistaTone(pista.level)}`}
-              >
-                {pista.name} · {locale === "en" ? PISTA_LEVEL_LABEL[pista.level].en : PISTA_LEVEL_LABEL[pista.level].es}
-              </span>
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {report.media.length ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {report.media.map((mediaItem) => (
-            <a
-              key={mediaItem.id}
-              href={`/api/cuenta/media/${mediaItem.id}?reportId=${report.id}`}
-              className="rounded-full border border-hielo/20 px-3 py-1.5 text-sm font-semibold text-hielo"
-            >
-              {mediaItem.kind === "video" ? t("downloadVideo") : t("downloadPhoto")}
-            </a>
-          ))}
+          {report.media.length ? (
+            <div>
+              <p className="mb-2 text-[0.65rem] font-bold uppercase tracking-wider text-muted">{t("mediaFromClass")}</p>
+              <div className="flex flex-wrap gap-2">
+                {report.media.map((mediaItem) => (
+                  <a
+                    key={mediaItem.id}
+                    href={`/api/cuenta/media/${mediaItem.id}?reportId=${report.id}`}
+                    className="rounded-xl border border-hielo/20 bg-hielo/5 px-3.5 py-2 text-sm font-semibold text-hielo transition hover:border-hielo/40 hover:bg-hielo/10"
+                  >
+                    {mediaItem.kind === "video" ? t("downloadVideo") : t("downloadPhoto")}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
 
       {featured && onOpenProgress ? (
-        <button type="button" onClick={onOpenProgress} className="mt-4 text-sm font-semibold text-hielo">
-          {t("seeProgress")}
-        </button>
+        <div className="border-t border-hielo/10 px-3.5 py-3 sm:px-5">
+          {!hideNextFocus && report.nextFocus ? (
+            <p className="mb-2 line-clamp-2 text-sm text-pizarra">
+              <span className="font-semibold text-hielo">{t("nextFocus")}: </span>
+              {report.nextFocus}
+            </p>
+          ) : report.notes ? (
+            <p className="mb-2 line-clamp-2 text-sm text-muted">{report.notes}</p>
+          ) : null}
+          <button type="button" onClick={onOpenProgress} className="text-sm font-semibold text-hielo">
+            {t("seeProgress")} →
+          </button>
+        </div>
       ) : null}
     </article>
   );
@@ -997,9 +1109,9 @@ function ReportCard({
 
 function EmptyHint({ title, body }: { title: string; body: string }) {
   return (
-    <section className="rounded-xl border border-dashed border-hielo/20 bg-white px-3.5 py-4 sm:rounded-2xl sm:px-5 sm:py-6">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted">{title}</p>
-      <p className="mt-2 text-sm text-muted">{body}</p>
+    <section className="rounded-2xl border border-dashed border-hielo/20 bg-white px-3.5 py-5 sm:px-5 sm:py-6">
+      <p className="text-xs font-bold uppercase tracking-wider text-muted">{title}</p>
+      <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>
     </section>
   );
 }
