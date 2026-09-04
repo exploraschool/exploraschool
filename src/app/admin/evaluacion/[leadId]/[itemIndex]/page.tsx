@@ -52,7 +52,7 @@ export default async function EvaluacionFichaPage({ params }: Props) {
 
   return (
     <AdminShell
-      active="fichas"
+      active="alumnos"
       title="Ficha de progreso"
       description={`${lead.name} · ${item.date} · ${disciplineLabel}`}
     >

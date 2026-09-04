@@ -52,7 +52,7 @@ export default async function AdminAlumnosPage() {
     <AdminShell
       active="alumnos"
       title="Alumnos"
-      description="Elige un alumno registrado. Cualquier miembro del equipo puede ver y actualizar su ficha."
+      description="Busca un alumno, abre su ficha, elige el monitor y deja tips o progreso."
     >
       <AdminStudentsDirectory initialStudents={students} />
     </AdminShell>

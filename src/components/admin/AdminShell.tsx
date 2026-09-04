@@ -11,7 +11,6 @@ type AdminNavId =
   | "alumnos"
   | "reservas"
   | "instructores"
-  | "fichas"
   | "emails"
   | "leads"
   | "galeria"
@@ -25,14 +24,14 @@ type AdminShellProps = {
   actions?: ReactNode;
 };
 
+/** Day-to-day first, then content & outreach. Fichas live inside each alumno. */
 const NAV = [
   { href: "/admin/alumnos", id: "alumnos" as const, label: "Alumnos" },
   { href: "/admin/reservas", id: "reservas" as const, label: "Reservas" },
   { href: "/admin/instructores", id: "instructores" as const, label: "Monitores" },
-  { href: "/admin/fichas", id: "fichas" as const, label: "Fichas" },
-  { href: "/admin/emails", id: "emails" as const, label: "Emails" },
-  { href: "/admin/leads", id: "leads" as const, label: "Contactos" },
   { href: "/admin/galeria", id: "galeria" as const, label: "Galería" },
+  { href: "/admin/leads", id: "leads" as const, label: "Contactos" },
+  { href: "/admin/emails", id: "emails" as const, label: "Emails" },
 ];
 
 export async function AdminShell({
@@ -43,6 +42,7 @@ export async function AdminShell({
   actions,
 }: AdminShellProps) {
   const session = await getAdminSession();
+  const navActive = active === "evaluacion" ? "alumnos" : active;
 
   return (
     <div className="min-h-screen bg-nieve">
@@ -86,7 +86,7 @@ export async function AdminShell({
 
         <nav className="container-page flex flex-wrap gap-1 pb-3" aria-label="Admin">
           {NAV.map((item) => {
-            const isActive = item.id === active;
+            const isActive = item.id === navActive;
             return (
               <Link
                 key={item.id}
