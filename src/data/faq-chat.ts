@@ -116,12 +116,12 @@ Te recomendamos estar en Pradollano 90 minutos antes para aparcar, alquilar y su
 
 Forfait: en Cetursa / sierranevada.es, o en los cajeros de la estación.
 
-Material: recomendamos Sierra Nevada Ski Rent (junto a los telecabinas Al-Andalus y Borreguiles). Con Explora tienes un 20% de descuento.`,
+Material: recomendamos José Luis Sáez, junto a los telecabinas Al-Andalus y Borreguiles. Con Explora tienes un 20% de descuento: dilo al alquilar.`,
     buttons: [
       {
         id: "alquiler",
-        label: "Alquiler con 20% de descuento",
-        action: { type: "link", href: site.rentalPartner.url },
+        label: "Cómo llegar al alquiler",
+        action: { type: "link", href: "/como-llegar" },
       },
       {
         id: "back",

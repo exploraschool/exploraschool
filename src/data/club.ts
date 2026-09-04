@@ -183,10 +183,9 @@ export const clubNotIncluded = [
   },
   {
     textEs:
-      "Material de alquiler — Sierra Nevada Ski Rent (20% dto. con Explora)",
+      "Material de alquiler — José Luis Sáez (20% dto. con Explora; junto a telecabinas)",
     textEn:
-      "Rental equipment — Sierra Nevada Ski Rent (20% off with Explora)",
-    href: "https://sierranevadaskirent.com/",
+      "Rental equipment — José Luis Sáez (20% off with Explora; next to gondolas)",
   },
   {
     textEs: "Comidas y bebidas",

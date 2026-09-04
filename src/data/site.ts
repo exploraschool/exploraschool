@@ -65,10 +65,11 @@ export type SiteConfig = {
   homeMetaDescriptionEn: string;
   rentalPartner: {
     name: string;
-    url: string;
     discountPercent: number;
     locationEs: string;
     locationEn: string;
+    howToFindEs: string;
+    howToFindEn: string;
     blurbEs: string;
     blurbEn: string;
   };
@@ -152,16 +153,19 @@ export const site: SiteConfig = {
   homeMetaDescriptionEn:
     "Ski, snowboard and telemark lessons in Sierra Nevada. Qualified instructors with over 20 years of experience. Explora since 2010. Book online by email.",
   rentalPartner: {
-    name: "Sierra Nevada Ski Rent",
-    url: "https://sierranevadaskirent.com/",
+    name: "José Luis Sáez",
     discountPercent: 20,
     locationEs:
-      "Junto a los telecabinas Al-Andalus y Borreguiles (Pradollano).",
+      "Junto a los telecabinas Al-Andalus y Borreguiles, en Pradollano.",
     locationEn:
-      "Next to the Al-Andalus and Borreguiles gondolas (Pradollano).",
+      "Next to the Al-Andalus and Borreguiles gondolas, in Pradollano.",
+    howToFindEs:
+      "En Pradollano, antes de subir a pistas: el alquiler de José Luis Sáez está junto a los telecabinas Al-Andalus y Borreguiles. Di que vienes de Explora para el 20% de descuento.",
+    howToFindEn:
+      "In Pradollano, before going up: José Luis Sáez rental is next to the Al-Andalus and Borreguiles gondolas. Say you are with Explora for 20% off.",
     blurbEs:
-      "Recomendamos alquilar el material en Sierra Nevada Ski Rent: con Explora obtienes un 20% de descuento. Están junto a los telecabinas Al-Andalus y Borreguiles.",
+      "Recomendamos alquilar el material en José Luis Sáez (junto a los telecabinas Al-Andalus y Borreguiles). Con Explora obtienes un 20% de descuento: indícalo al recoger el equipo.",
     blurbEn:
-      "We recommend renting equipment at Sierra Nevada Ski Rent: with Explora you get 20% off. They are next to the Al-Andalus and Borreguiles gondolas.",
+      "We recommend renting equipment at José Luis Sáez (next to the Al-Andalus and Borreguiles gondolas). With Explora you get 20% off: mention it when you pick up your gear.",
   },
 };

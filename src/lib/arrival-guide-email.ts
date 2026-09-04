@@ -1,5 +1,4 @@
 const FORFAIT_URL = "https://www.sierranevada.es";
-const RENTAL_URL = "https://sierranevadaskirent.com/";
 
 /** Keep in sync with functions/src/arrival-guide.ts */
 
@@ -134,8 +133,8 @@ function copy(isEn: boolean): GuideCopy {
     ),
     gearRental: pick(
       isEn,
-      `Material de alquiler: recomendamos Sierra Nevada Ski Rent (${RENTAL_URL}), junto a los telecabinas Al-Andalus y Borreguiles. Con Explora tienes un 20% de descuento. Reserva o recoge con tiempo (20–40 minutos).`,
-      `Rental: we recommend Sierra Nevada Ski Rent (${RENTAL_URL}), next to the Al-Andalus and Borreguiles gondolas. With Explora you get 20% off. Book or collect with time to spare (20–40 minutes).`,
+      "Material de alquiler: recomendamos José Luis Sáez, junto a los telecabinas Al-Andalus y Borreguiles. Con Explora tienes un 20% de descuento: dilo al recoger el equipo. Reserva o recoge con tiempo (20–40 minutos).",
+      "Rental: we recommend José Luis Sáez, next to the Al-Andalus and Borreguiles gondolas. With Explora you get 20% off: mention it when you pick up. Book or collect with time to spare (20–40 minutes).",
     ),
     gearPersonal: pick(
       isEn,

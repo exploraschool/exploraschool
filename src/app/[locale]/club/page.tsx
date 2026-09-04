@@ -290,18 +290,7 @@ export default async function ClubPage({ params }: Props) {
                   {clubNotIncluded.map((item) => (
                     <li key={item.textEs} className="flex items-start gap-2.5 text-sm text-muted">
                       <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-hielo/40" aria-hidden />
-                      {"href" in item && item.href ? (
-                        <a
-                          href={item.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo"
-                        >
-                          {pickLocale(locale, item.textEs, item.textEn)}
-                        </a>
-                      ) : (
-                        pickLocale(locale, item.textEs, item.textEn)
-                      )}
+                      {pickLocale(locale, item.textEs, item.textEn)}
                     </li>
                   ))}
                 </ul>

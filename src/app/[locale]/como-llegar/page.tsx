@@ -68,26 +68,7 @@ export default async function ComoLlegarPage({ params }: Props) {
             </p>
 
             <h2>{pickLocale(locale, "Alquiler de material", "Equipment rental")}</h2>
-            <p>
-              {pickLocale(
-                locale,
-                "Recomendamos alquilar el material en ",
-                "We recommend renting equipment at ",
-              )}
-              <a
-                href={site.rentalPartner.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-hielo underline decoration-hielo/30 underline-offset-2 hover:decoration-hielo"
-              >
-                {site.rentalPartner.name}
-              </a>
-              {pickLocale(
-                locale,
-                `: con Explora obtienes un ${site.rentalPartner.discountPercent}% de descuento. ${site.rentalPartner.locationEs}`,
-                `: with Explora you get ${site.rentalPartner.discountPercent}% off. ${site.rentalPartner.locationEn}`,
-              )}
-            </p>
+            <p>{pickLocale(locale, site.rentalPartner.howToFindEs, site.rentalPartner.howToFindEn)}</p>
 
             <a
               href={site.meetingPoint.googleMapsUrl}
@@ -96,18 +77,6 @@ export default async function ComoLlegarPage({ params }: Props) {
               className="btn-primary mt-6 !w-auto"
             >
               {pickLocale(locale, "Abrir en Google Maps", "Open in Google Maps")}
-            </a>
-            <a
-              href={site.rentalPartner.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary mt-4 !w-auto"
-            >
-              {pickLocale(
-                locale,
-                `Alquiler · ${site.rentalPartner.discountPercent}% dto.`,
-                `Rental · ${site.rentalPartner.discountPercent}% off`,
-              )}
             </a>
             <a href={`mailto:${site.email}`} className="btn-secondary mt-4 !w-auto">
               {site.email}
