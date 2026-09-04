@@ -101,6 +101,19 @@ function firstName(fullName: string): string {
   return trimmed.split(/\s+/)[0] ?? trimmed;
 }
 
+function customerNotesFromLeadMessage(message: string): string {
+  const trimmed = message.trim();
+  if (!trimmed) return "";
+  if (!/^(NUEVA RESERVA|NEW BOOKING)\b/.test(trimmed)) return trimmed;
+
+  const marker = trimmed.match(/(?:^|\n)(?:Mensaje adicional|Additional message):\s*\n/);
+  if (!marker || marker.index === undefined) return "";
+
+  const after = trimmed.slice(marker.index + marker[0].length);
+  const end = after.search(/\n─/);
+  return (end === -1 ? after : after.slice(0, end)).trim();
+}
+
 function formatDate(date: string, isEn: boolean): string {
   try {
     return new Date(`${date}T12:00:00`).toLocaleDateString(isEn ? "en-GB" : "es-ES", {
@@ -150,7 +163,7 @@ export function buildTeamNotificationEmail(params: {
   const name = String(data.name ?? "").trim() || "Sin nombre";
   const email = String(data.email ?? "").trim();
   const phone = String(data.phone ?? "").trim();
-  const message = String(data.message ?? "").trim();
+  const message = customerNotesFromLeadMessage(String(data.message ?? ""));
   const locale = String(data.locale ?? "es");
   const status = String(data.status ?? (isBooking ? "pending" : "received"));
   const estimatedTotal =

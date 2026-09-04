@@ -1,41 +1,43 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type LeadActionsProps = {
   leadId: string;
   status: string;
   isBooking: boolean;
+  onStatusChange?: (status: "confirmed" | "cancelled") => void;
 };
 
-export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
+export function LeadActions({ leadId, status, isBooking, onStatusChange }: LeadActionsProps) {
+  const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
   const [loading, setLoading] = useState<"confirmed" | "cancelled" | null>(null);
   const [error, setError] = useState("");
   const [emailWarning, setEmailWarning] = useState("");
 
-  if (!isBooking || currentStatus === "confirmed" || currentStatus === "cancelled") {
+  if (!isBooking) {
     const label =
-      currentStatus === "confirmed"
-        ? "Confirmada"
-        : currentStatus === "cancelled"
-          ? "Rechazada"
-          : currentStatus === "pending"
-            ? "Pendiente"
-            : currentStatus === "received"
-              ? "Recibido"
-              : currentStatus;
-    const tone =
-      currentStatus === "confirmed"
-        ? "bg-hielo/10 text-hielo"
-        : currentStatus === "cancelled"
-          ? "bg-accent/10 text-accent"
-          : "bg-nieve text-muted";
-
+      currentStatus === "received"
+        ? "Recibido"
+        : currentStatus === "pending"
+          ? "Pendiente"
+          : currentStatus;
     return (
-      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${tone}`}>
+      <span className="inline-flex rounded-full bg-nieve px-2.5 py-1 text-xs font-semibold text-muted">
         {label}
       </span>
+    );
+  }
+
+  if (currentStatus === "confirmed" || currentStatus === "cancelled") {
+    if (!emailWarning && !error) return null;
+    return (
+      <div className="space-y-2">
+        {error && <p className="text-xs text-accent">{error}</p>}
+        {emailWarning && <p className="text-xs font-medium text-oro">{emailWarning}</p>}
+      </div>
     );
   }
 
@@ -62,6 +64,8 @@ export function LeadActions({ leadId, status, isBooking }: LeadActionsProps) {
       }
 
       setCurrentStatus(next);
+      onStatusChange?.(next);
+      router.refresh();
 
       if (!payload?.emailSent) {
         const actionLabel = next === "confirmed" ? "confirmada" : "rechazada";

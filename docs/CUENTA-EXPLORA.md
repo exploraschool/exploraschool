@@ -62,8 +62,9 @@ Cada push a `main` generará preview + producción automática.
 
 Copiar desde `.env.example`:
 
-- `RESEND_API_KEY`, `LEAD_CONFIRM_SECRET`, `ADMIN_PASSWORD` (Vercel)
+- `RESEND_API_KEY`, `LEAD_CONFIRM_SECRET` (Vercel)
 - `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY` (Vercel)
+- Admin: Google Sign-In (solo `explora.sclub@gmail.com`) — activa el proveedor Google en Firebase Authentication
 
 ### 5. Dominio explora-school.es (producción)
 

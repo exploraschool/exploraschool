@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
-import { sendTeamLeadNotification } from "@/lib/lead-emails";
 import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { isBookingLead } from "@/lib/leads";
@@ -22,18 +21,42 @@ const bookingItemSchema = z.object({
   notes: z.string().max(500).optional(),
 });
 
-const leadSchema = z.object({
-  name: z.string().min(2).max(120),
-  email: z.string().email(),
-  phone: z.string().max(30).optional(),
-  message: z.string().min(10).max(15000),
-  privacy: z.literal(true),
-  website: z.string().max(0).optional(),
-  locale: z.string().optional(),
-  source: z.string().max(50).optional(),
-  bookingItems: z.array(bookingItemSchema).max(20).optional(),
-  estimatedTotal: z.number().min(0).optional(),
-});
+const leadSchema = z
+  .object({
+    name: z.string().min(2).max(120),
+    email: z.string().email(),
+    phone: z.string().max(30).optional(),
+    message: z.string().max(15000).optional().default(""),
+    privacy: z.literal(true),
+    website: z.string().max(0).optional(),
+    locale: z.string().optional(),
+    source: z.string().max(50).optional(),
+    bookingItems: z.array(bookingItemSchema).max(20).optional(),
+    estimatedTotal: z.number().min(0).optional(),
+  })
+  .superRefine((data, ctx) => {
+    const isBooking = data.source === "booking-cart";
+    if (isBooking) {
+      if (!data.bookingItems?.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Booking items required",
+          path: ["bookingItems"],
+        });
+      }
+      return;
+    }
+    if (data.message.trim().length < 10) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 10,
+        type: "string",
+        inclusive: true,
+        exact: false,
+        path: ["message"],
+      });
+    }
+  });
 
 export async function POST(request: Request) {
   try {
@@ -75,6 +98,7 @@ export async function POST(request: Request) {
       const db = getAdminDb();
       if (db) {
         const doc = await db.collection("leads").add(lead);
+        // Team email is sent by Firebase onLeadCreated — do not send it here too.
         try {
           await upsertMarketingContact(db, {
             email: lead.email,
@@ -88,11 +112,6 @@ export async function POST(request: Request) {
           });
         } catch (marketingError) {
           console.error("[leads] Marketing contact upsert failed:", marketingError);
-        }
-        try {
-          await sendTeamLeadNotification(doc.id, lead);
-        } catch (emailError) {
-          console.error("[leads] Team email failed:", emailError);
         }
         return NextResponse.json({ ok: true, id: doc.id });
       }

@@ -1,4 +1,5 @@
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
+import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 import { getStorage, type Storage } from "firebase-admin/storage";
 import { existsSync, readFileSync } from "fs";
@@ -90,6 +91,17 @@ function getAdminApp(): App | null {
     }),
     storageBucket: getStorageBucketName(parts.projectId),
   });
+}
+
+export function getAdminAuth(): Auth | null {
+  try {
+    const app = getAdminApp();
+    if (!app) return null;
+    return getAuth(app);
+  } catch (error) {
+    console.error("[firebase-admin] Failed to initialize auth:", error);
+    return null;
+  }
 }
 
 export function getAdminDb(): Firestore | null {

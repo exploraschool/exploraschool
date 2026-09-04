@@ -389,26 +389,30 @@ export function AddToCartModal({
                         )
                       : (
                         <>
-                          {minPeople}–{maxPeople} {t("peopleRange")}
-                          {productId === "curso-snow" &&
-                            pickLocale(
-                              locale,
-                              ` · Mínimo ${minPeople} para realizar el curso`,
-                              ` · Minimum ${minPeople} required to run the course`,
-                            )}
-                          {usesPairBasePricing(productId) &&
-                            timeSlotId === "2h-14-16" &&
-                            pickLocale(
-                              locale,
-                              " · Tarifa plana de 1 a 4 personas",
-                              " · Flat rate for 1 to 4 people",
-                            )}
-                          {usesPairBasePricing(productId) &&
-                            timeSlotId !== "2h-14-16" &&
-                            pickLocale(
-                              locale,
-                              " · 1 y 2 personas: mismo precio",
-                              " · 1 and 2 people: same price",
+                          {productId === "curso-snow"
+                            ? pickLocale(
+                                locale,
+                                `A partir de ${minPeople} participantes (máx. ${maxPeople})`,
+                                `From ${minPeople} participants (max. ${maxPeople})`,
+                              )
+                            : (
+                              <>
+                                {minPeople}–{maxPeople} {t("peopleRange")}
+                                {usesPairBasePricing(productId) &&
+                                  timeSlotId === "2h-14-16" &&
+                                  pickLocale(
+                                    locale,
+                                    " · Tarifa plana de 1 a 4 personas",
+                                    " · Flat rate for 1 to 4 people",
+                                  )}
+                                {usesPairBasePricing(productId) &&
+                                  timeSlotId !== "2h-14-16" &&
+                                  pickLocale(
+                                    locale,
+                                    " · 1 y 2 personas: mismo precio",
+                                    " · 1 and 2 people: same price",
+                                  )}
+                              </>
                             )}
                         </>
                       )}

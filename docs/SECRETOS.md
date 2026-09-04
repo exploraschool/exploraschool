@@ -10,7 +10,7 @@ Nunca subas claves al repositorio. GitHub solo aloja código; los secretos viven
 | `FIREBASE_PROJECT_ID` | Vercel | API `/api/leads`, admin |
 | `FIREBASE_CLIENT_EMAIL` | Vercel | Firebase Admin SDK |
 | `FIREBASE_PRIVATE_KEY` | Vercel | Firebase Admin SDK |
-| `ADMIN_PASSWORD` | Vercel | Panel `/admin` |
+| `ADMIN_GOOGLE_EMAIL` | Código (`admin-auth-config.ts`) | Solo `explora.sclub@gmail.com` puede entrar al panel vía Google |
 | `LEAD_CONFIRM_SECRET` | Vercel **y** Firebase | Enlace de confirmación en emails al equipo |
 | `NEXT_PUBLIC_SITE_URL` | Vercel | URLs canónicas |
 | `RESEND_API_KEY` | Vercel **y** Firebase Functions | Envío de emails (mismo valor en ambos) |
@@ -39,7 +39,7 @@ FIREBASE_PROJECT_ID=exploraschool-9ea82
 FIREBASE_CLIENT_EMAIL=...
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
 
-ADMIN_PASSWORD=tu-password-seguro
+ADMIN_PASSWORD=obsoleto-usar-google-sign-in
 LEAD_CONFIRM_SECRET=genera-un-string-aleatorio-largo
 
 RESEND_API_KEY=re_...clave-valida-de-resend.com
@@ -54,6 +54,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 Cada push a `main` en GitHub redeploya Vercel automáticamente si el repo está conectado.
+
+### Admin con Google
+
+1. [Firebase Console](https://console.firebase.google.com/project/exploraschool-9ea82/authentication/providers) → Authentication → Sign-in method → **Google** → Enable
+2. En esa misma pantalla, **Nombre público del proyecto** = `Explora School & Club` (así aparece en la ventana de Google)
+3. Authorized domains: `localhost`, `explora-school.es`, `www.explora-school.es`
+4. Entra en `/admin/login` y usa **Entrar con Google** con `explora.sclub@gmail.com`
 
 ---
 
@@ -114,7 +121,7 @@ firebase deploy --only functions
 ## 5. Rotar una clave comprometida
 
 1. **Resend:** [resend.com](https://resend.com) → API Keys → revocar y crear nueva → `firebase functions:secrets:set RESEND_API_KEY`
-2. **Admin:** cambiar `ADMIN_PASSWORD` en Vercel → redeploy
+2. **Admin:** el panel usa Google Sign-In; solo `explora.sclub@gmail.com`. Activa el proveedor Google en Firebase Authentication.
 3. **Confirm links:** regenerar `LEAD_CONFIRM_SECRET` en Vercel y Firebase
 
 ---

@@ -1,7 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
 import { AdminDeleteLeadButton } from "@/components/admin/AdminDeleteLeadButton";
 import { LeadActions } from "@/components/admin/LeadActions";
+import { customerNotesFromLeadMessage } from "@/lib/lead-message";
 import type { StoredBookingItem } from "@/lib/leads";
 
 export type AdminBookingLead = {
@@ -69,14 +73,20 @@ function formatDate(date: string, locale: string) {
 export function AdminBookingCard({ lead }: { lead: AdminBookingLead }) {
   const locale = lead.locale === "en" ? "en" : "es";
   const items = lead.bookingItems ?? [];
+  const customerNotes = customerNotesFromLeadMessage(lead.message);
+  const [status, setStatus] = useState(lead.status);
+
+  useEffect(() => {
+    setStatus(lead.status);
+  }, [lead.status]);
 
   return (
     <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.04)]">
       <div className="flex flex-col gap-4 border-b border-hielo/8 bg-gradient-to-r from-frost/30 via-white to-white px-5 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusTone(lead.status)}`}>
-              {statusLabel(lead.status)}
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusTone(status)}`}>
+              {statusLabel(status)}
             </span>
             <span className="text-xs text-muted">
               Recibida {new Date(lead.createdAt).toLocaleString("es-ES")}
@@ -143,23 +153,26 @@ export function AdminBookingCard({ lead }: { lead: AdminBookingLead }) {
             })}
           </ul>
         ) : (
-          <p className="whitespace-pre-wrap text-sm text-muted">{lead.message}</p>
+          <p className="whitespace-pre-wrap text-sm text-muted">{customerNotes || lead.message}</p>
         )}
 
-        {lead.message && items.length > 0 ? (
-          <details className="rounded-xl border border-hielo/10 bg-white px-3 py-2">
-            <summary className="cursor-pointer list-none text-xs font-semibold text-hielo [&::-webkit-details-marker]:hidden">
-              Ver mensaje completo
-            </summary>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-muted">{lead.message}</p>
-          </details>
+        {customerNotes && items.length > 0 ? (
+          <div className="rounded-xl border border-hielo/10 bg-white px-3.5 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-hielo">Mensaje del cliente</p>
+            <p className="mt-1.5 whitespace-pre-wrap text-sm text-muted">{customerNotes}</p>
+          </div>
         ) : null}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-hielo/8 px-5 py-4 sm:px-6">
         <p className="text-xs text-muted">ID: {lead.id}</p>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <LeadActions leadId={lead.id} status={lead.status ?? "pending"} isBooking />
+          <LeadActions
+            leadId={lead.id}
+            status={status ?? "pending"}
+            isBooking
+            onStatusChange={setStatus}
+          />
           <AdminDeleteLeadButton leadId={lead.id} />
         </div>
       </div>

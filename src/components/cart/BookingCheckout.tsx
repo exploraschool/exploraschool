@@ -6,7 +6,6 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCart } from "@/context/CartContext";
 import { estimateCartTotal } from "@/lib/cart";
-import { buildBookingEmail } from "@/lib/booking-email";
 import { pickLocale } from "@/lib/locale";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 import { site } from "@/data/site";
@@ -31,6 +30,7 @@ export function BookingCheckout() {
   const [message, setMessage] = useState("");
   const [privacy, setPrivacy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -57,7 +57,9 @@ export function BookingCheckout() {
       return;
     }
 
+    if (sending) return;
     setError(false);
+    setSending(true);
 
     const customer = {
       name: name.trim(),
@@ -65,8 +67,6 @@ export function BookingCheckout() {
       phone: phone.trim() || undefined,
       message: message.trim() || undefined,
     };
-
-    const { body } = buildBookingEmail({ locale, items: sortedItems, customer });
 
     try {
       const response = await fetch("/api/leads", {
@@ -76,7 +76,7 @@ export function BookingCheckout() {
           name: customer.name,
           email: customer.email,
           phone: customer.phone ?? "",
-          message: body,
+          message: customer.message ?? "",
           privacy: true,
           locale,
           source: "booking-cart",
@@ -90,6 +90,7 @@ export function BookingCheckout() {
       }
     } catch {
       setError(true);
+      setSending(false);
       return;
     }
 
@@ -335,8 +336,12 @@ export function BookingCheckout() {
                 <span>{t("privacy")}</span>
               </label>
 
-              <button type="submit" disabled={itemsMissingDiscipline} className="btn-primary w-full disabled:opacity-50">
-                {t("sendBooking")}
+              <button
+                type="submit"
+                disabled={itemsMissingDiscipline || sending}
+                className="btn-primary w-full disabled:opacity-50"
+              >
+                {sending ? tc("loading") : t("sendBooking")}
               </button>
 
               <p className="text-center text-xs text-muted">

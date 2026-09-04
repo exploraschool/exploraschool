@@ -16,6 +16,13 @@ export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
     const el = ref.current;
     if (!el) return;
 
+    const coarse = window.matchMedia("(pointer: coarse)").matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (coarse || reduceMotion) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -23,12 +30,11 @@ export function Reveal({ children, className = "", delay = 0 }: RevealProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0.1, rootMargin: "0px 0px -48px 0px" },
+      { threshold: 0.08, rootMargin: "80px 0px 0px 0px" },
     );
 
     observer.observe(el);
 
-    // Fallback: some embedded browsers never fire IntersectionObserver
     const fallback = window.setTimeout(() => setVisible(true), 1200);
 
     return () => {

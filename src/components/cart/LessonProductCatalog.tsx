@@ -6,6 +6,7 @@ import { getProductFromPrice, isBookableProduct } from "@/lib/product-pricing";
 import { pickLocale } from "@/lib/locale";
 import { ProductCardFooter } from "@/components/cart/ProductCardFooter";
 import { PriceTag } from "@/components/PriceTag";
+
 type LessonProductCatalogProps = {
   locale: string;
 };
@@ -26,6 +27,15 @@ function priceSuffix(product: Product, locale: string): string | undefined {
     return pickLocale(locale, " / día", " / day");
   }
   return undefined;
+}
+
+function participantsLabel(product: Product, locale: string): string {
+  const min = product.minPeople ?? 1;
+  const max = product.maxPeople ?? 8;
+  if (product.id === "curso-snow" || min > 1) {
+    return pickLocale(locale, `a partir de ${min} participantes`, `from ${min} participants`);
+  }
+  return pickLocale(locale, `${min}–${max} participantes`, `${min}–${max} participants`);
 }
 
 function ProductCard({
@@ -75,13 +85,13 @@ function ProductCard({
             </h3>
             {product.hours ? (
               <p className="mt-1 text-xs font-medium text-muted">
-                {product.hours} h · {pickLocale(locale, "1–8 participantes", "1–8 participants")}
+                {product.hours} h · {participantsLabel(product, locale)}
               </p>
             ) : null}
           </div>
           {product.id === "curso-snow" ? (
             <span className="shrink-0 rounded-full bg-white/80 px-2 py-1 text-[0.65rem] font-semibold text-hielo backdrop-blur-sm">
-              {pickLocale(locale, "mín. 3 · máx. 8", "min. 3 · max. 8")}
+              {pickLocale(locale, "a partir de 4", "from 4 people")}
             </span>
           ) : null}
           {product.id === "curso-empresa" ? (

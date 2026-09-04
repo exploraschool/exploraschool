@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
-import { ADMIN_PASSWORD_REQUIRED } from "@/lib/admin-auth-config";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { AdminLoginForm } from "./AdminLoginForm";
 
-export default function AdminLoginPage() {
-  if (!ADMIN_PASSWORD_REQUIRED) {
+export default async function AdminLoginPage() {
+  if (await isAdminAuthenticated()) {
     redirect("/admin/reservas");
   }
 

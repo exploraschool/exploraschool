@@ -1,6 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { AdminLogoutButton } from "@/components/AdminLogoutButton";
+import { getAdminSession } from "@/lib/admin-auth";
+import { adminCopy } from "@/lib/admin-copy";
+import { media } from "@/lib/media";
 
 type AdminShellProps = {
   title: string;
@@ -17,17 +21,50 @@ const NAV = [
   { href: "/admin/galeria", id: "galeria" as const, label: "Galería" },
 ];
 
-export function AdminShell({ title, description, active, children, actions }: AdminShellProps) {
+export async function AdminShell({
+  title,
+  description,
+  active,
+  children,
+  actions,
+}: AdminShellProps) {
+  const session = await getAdminSession();
+
   return (
     <div className="min-h-screen bg-nieve">
-      <header className="border-b border-hielo/10 bg-white/90 backdrop-blur-md">
+      <header className="border-b border-hielo/10 bg-white">
         <div className="container-page flex flex-wrap items-center justify-between gap-3 py-4">
-          <div className="min-w-0">
-            <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-oro">Explora · Admin</p>
-            <h1 className="font-display text-2xl font-semibold text-hielo sm:text-3xl">{title}</h1>
-            {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}
+          <div className="flex min-w-0 items-start gap-3">
+            <Link
+              href="/admin/reservas"
+              className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-hielo/10 bg-nieve"
+              aria-label={adminCopy.panelName}
+            >
+              <Image
+                src={media.logo}
+                alt=""
+                width={36}
+                height={36}
+                className="h-8 w-8 object-contain"
+              />
+            </Link>
+            <div className="min-w-0">
+              <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-oro">
+                {adminCopy.brand} · {adminCopy.panelName}
+              </p>
+              <h1 className="font-display text-2xl font-semibold text-hielo sm:text-3xl">{title}</h1>
+              {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            {session?.email ? (
+              <div className="hidden rounded-full border border-hielo/10 bg-nieve px-3 py-1.5 sm:block">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
+                  {adminCopy.loggedInAs}
+                </p>
+                <p className="max-w-[14rem] truncate text-xs font-medium text-pizarra">{session.email}</p>
+              </div>
+            ) : null}
             {actions}
             <AdminLogoutButton />
           </div>

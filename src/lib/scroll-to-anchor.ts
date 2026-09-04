@@ -22,6 +22,16 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+function isCoarsePointer(): boolean {
+  return window.matchMedia("(pointer: coarse)").matches;
+}
+
+function resolveScrollBehavior(requested: ScrollBehavior): ScrollBehavior {
+  if (requested === "auto") return "auto";
+  if (prefersReducedMotion() || isCoarsePointer()) return "auto";
+  return requested;
+}
+
 export function getHeaderOffset(): number {
   const header = document.querySelector(".site-header");
   const measured =
@@ -47,8 +57,7 @@ export function getAnchorTop(el: HTMLElement): number {
 
 export function scrollToElement(el: HTMLElement, behavior: ScrollBehavior = "smooth"): void {
   prepareTarget(el);
-  const used = prefersReducedMotion() ? "auto" : behavior;
-  window.scrollTo({ top: getAnchorTop(el), left: 0, behavior: used });
+  window.scrollTo({ top: getAnchorTop(el), left: 0, behavior: resolveScrollBehavior(behavior) });
 }
 
 type ScrollToHashOptions = {
@@ -62,6 +71,7 @@ export function scrollToHash(hash: string, options: ScrollToHashOptions = {}): (
 
   const retries = options.retries ?? 32;
   const behavior = options.behavior ?? "smooth";
+  const settleMs = isCoarsePointer() ? 160 : SETTLE_MS;
   let cancelled = false;
   let attempt = 0;
   let foundAt = 0;
@@ -82,7 +92,7 @@ export function scrollToHash(hash: string, options: ScrollToHashOptions = {}): (
     const first = now === foundAt;
     scrollToElement(el, first ? behavior : "auto");
 
-    if (now - foundAt < SETTLE_MS) {
+    if (now - foundAt < settleMs) {
       timer = window.setTimeout(run, first ? 80 : 50);
     }
   };

@@ -1,10 +1,33 @@
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, type Firestore } from "firebase-admin/firestore";
+import { bookingOfferFingerprint, hasBookingOfferFingerprint } from "@/lib/booking-fingerprint";
 import {
   sendCustomerBookingCancellation,
   sendCustomerBookingConfirmation,
 } from "@/lib/lead-emails";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import type { LeadStatus } from "@/lib/leads";
+
+async function deleteDuplicatePendingBookings(
+  db: Firestore,
+  keepLeadId: string,
+  data: Record<string, unknown>,
+): Promise<void> {
+  const fingerprint = bookingOfferFingerprint(data);
+  if (!hasBookingOfferFingerprint(fingerprint)) return;
+
+  const snapshot = await db.collection("leads").where("status", "==", "pending").get();
+  const duplicates = snapshot.docs.filter((doc) => {
+    if (doc.id === keepLeadId) return false;
+    return bookingOfferFingerprint(doc.data()) === fingerprint;
+  });
+  if (duplicates.length === 0) return;
+
+  const batch = db.batch();
+  for (const doc of duplicates) {
+    batch.delete(doc.ref);
+  }
+  await batch.commit();
+}
 
 export type BookingStatusUpdateResult =
   | { ok: false; error: string; status: number }
@@ -44,6 +67,11 @@ export async function updateBookingLeadStatus(
 
   if (status === "cancelled") {
     if (alreadyCancelled) {
+      try {
+        await deleteDuplicatePendingBookings(db, leadId, leadData);
+      } catch (duplicateError) {
+        console.error("[bookings] Duplicate cleanup failed:", duplicateError);
+      }
       return {
         ok: true,
         already: true,
@@ -73,6 +101,12 @@ export async function updateBookingLeadStatus(
       ...(emailSent ? { cancellationEmailSentAt: new Date().toISOString() } : {}),
     });
 
+    try {
+      await deleteDuplicatePendingBookings(db, leadId, leadData);
+    } catch (duplicateError) {
+      console.error("[bookings] Duplicate cleanup failed:", duplicateError);
+    }
+
     return {
       ok: true,
       already: false,
@@ -83,6 +117,11 @@ export async function updateBookingLeadStatus(
   }
 
   if (alreadyConfirmed && confirmationAlreadySent) {
+    try {
+      await deleteDuplicatePendingBookings(db, leadId, leadData);
+    } catch (duplicateError) {
+      console.error("[bookings] Duplicate cleanup failed:", duplicateError);
+    }
     return {
       ok: true,
       already: true,
@@ -112,6 +151,12 @@ export async function updateBookingLeadStatus(
       cancelledAt: FieldValue.delete(),
       ...(emailSent ? { confirmationEmailSentAt: new Date().toISOString() } : {}),
     });
+  }
+
+  try {
+    await deleteDuplicatePendingBookings(db, leadId, leadData);
+  } catch (duplicateError) {
+    console.error("[bookings] Duplicate cleanup failed:", duplicateError);
   }
 
   return {

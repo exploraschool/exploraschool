@@ -1,4 +1,5 @@
 import { createLeadCancelToken, createLeadConfirmToken } from "@/lib/lead-confirm";
+import { customerNotesFromLeadMessage } from "@/lib/lead-message";
 import { media } from "@/lib/media";
 import { earlyBirdDiscountLabel } from "@/lib/promotions";
 import { PRODUCTION_SITE_URL } from "@/lib/site-url";
@@ -214,7 +215,7 @@ export function buildTeamNotificationEmail({
   const name = String(data.name ?? "").trim() || "Sin nombre";
   const email = String(data.email ?? "").trim();
   const phone = String(data.phone ?? "").trim();
-  const message = String(data.message ?? "").trim();
+  const message = customerNotesFromLeadMessage(String(data.message ?? ""));
   const locale = String(data.locale ?? "es");
   const status = String(data.status ?? (isBooking ? "pending" : "received"));
   const estimatedTotal =
