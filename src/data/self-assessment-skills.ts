@@ -116,8 +116,9 @@ export function skillsGroupedByLevel(
 
 /**
  * Derive a level from ticked skills.
- * Climbs level bands while coverage is ≥ half (min 1).
- * Empty lower bands are skipped so advanced riders aren't forced to Debutante.
+ * Uses the highest skill band selected, so ticking avanzado/experto never
+ * leaves the student stuck on debutante just because lower bands are empty
+ * or only partially filled.
  */
 export function deriveSelfLevelFromSkills(
   discipline: ProgressDisciplineId,
@@ -126,27 +127,13 @@ export function deriveSelfLevelFromSkills(
   const selected = new Set(selectedIds);
   if (selected.size === 0) return null;
 
-  const groups = skillsGroupedByLevel(discipline);
-  let derived: SelfLevelId | null = null;
-
-  for (const group of groups) {
-    const hits = group.skills.filter((skill) => selected.has(skill.id)).length;
-    const needed = Math.max(1, Math.ceil(group.skills.length / 2));
-
-    if (hits >= needed) {
-      derived = group.level;
-      continue;
-    }
-
-    if (hits >= 1) {
-      derived = group.level;
-      break;
-    }
-
-    if (derived) break;
+  let bestIndex = -1;
+  for (const skill of skillsForDiscipline(discipline)) {
+    if (!selected.has(skill.id)) continue;
+    bestIndex = Math.max(bestIndex, LEVEL_ORDER.indexOf(skill.level));
   }
 
-  return derived;
+  return bestIndex >= 0 ? LEVEL_ORDER[bestIndex] : null;
 }
 
 /** Highest level across disciplines the student assessed. */

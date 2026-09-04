@@ -1,28 +1,59 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { BookingBarCTA } from "@/components/cart/BookingBarCTA";
+import { useStickyReveal } from "@/hooks/useStickyReveal";
 import { pickLocale } from "@/lib/locale";
+
+const BAR_HEIGHT_VAR = "--sticky-book-bar-h";
 
 type StickyBookBarProps = {
   locale: string;
 };
 
+function clearBarHeight() {
+  document.documentElement.style.removeProperty(BAR_HEIGHT_VAR);
+}
+
 export function StickyBookBar({ locale }: StickyBookBarProps) {
-  const [visible, setVisible] = useState(false);
+  const visible = useStickyReveal();
+  const barRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function onScroll() {
-      setVisible(window.scrollY > 480);
+    if (!visible) {
+      clearBarHeight();
+      return;
     }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+    const el = barRef.current;
+    if (!el) return;
+
+    function sync() {
+      const node = barRef.current;
+      if (!node) return;
+      const hidden = window.getComputedStyle(node).display === "none";
+      document.documentElement.style.setProperty(
+        BAR_HEIGHT_VAR,
+        hidden ? "0px" : `${node.offsetHeight}px`,
+      );
+    }
+
+    sync();
+    const observer = new ResizeObserver(sync);
+    observer.observe(el);
+    window.addEventListener("resize", sync);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", sync);
+      clearBarHeight();
+    };
+  }, [visible]);
 
   if (!visible) return null;
 
   return (
     <div
+      ref={barRef}
       data-sticky-book-bar
       className="fixed bottom-0 left-0 right-0 z-40 border-t border-hielo/10 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(10,18,25,0.1)] md:hidden"
       role="region"

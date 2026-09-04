@@ -12,6 +12,7 @@ import {
 import { usePathname } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
+import { useStickyReveal } from "@/hooks/useStickyReveal";
 
 type ChatLine =
   | { id: string; role: "bot"; text: string }
@@ -28,6 +29,7 @@ function isHomePath(pathname: string) {
 export function FaqChatWidget() {
   const locale = useLocale();
   const pathname = usePathname();
+  const stickyVisible = useStickyReveal();
   const [open, setOpen] = useState(false);
   const [nodeId, setNodeId] = useState("root");
   const [lines, setLines] = useState<ChatLine[]>(() => [
@@ -115,12 +117,13 @@ export function FaqChatWidget() {
   }
 
   if (!isHomePath(pathname)) return null;
+  if (!stickyVisible && !open) return null;
 
   return (
-    <div className="pointer-events-none fixed bottom-[5.5rem] right-3 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div className="pointer-events-none fixed bottom-[calc(var(--sticky-book-bar-h,0px)+1.5rem)] right-3 z-[60] flex flex-col items-end gap-3 transition-[bottom] duration-200 md:bottom-6 md:right-6">
       {open ? (
         <div
-          className="pointer-events-auto flex w-[min(20.5rem,calc(100vw-1.5rem))] max-h-[min(32rem,calc(100dvh-8rem))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem))]"
+          className="pointer-events-auto flex w-[min(20.5rem,calc(100vw-1.5rem))] max-h-[min(32rem,calc(100dvh-8rem-var(--sticky-book-bar-h,0px)))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem-var(--sticky-book-bar-h,0px)))]"
           role="dialog"
           aria-label="Asistente Explora School"
         >
@@ -197,7 +200,9 @@ export function FaqChatWidget() {
         <button
           type="button"
           onClick={openChat}
-          className="chat-prompt-bubble pointer-events-auto relative z-10 max-w-[13.5rem] rounded-2xl rounded-br-md border border-hielo/12 bg-white px-3.5 py-2 text-left text-sm font-semibold leading-snug text-pizarra"
+          className="chat-prompt-bubble pointer-events-auto relative z-10 max-w-[13.5rem] origin-bottom-right animate-[fade-up_0.22s_ease-out] rounded-2xl border border-hielo/12 bg-white px-3.5 py-2 text-left text-sm font-semibold leading-snug text-pizarra"
+          aria-expanded={false}
+          aria-haspopup="dialog"
         >
           <span className="flex items-center gap-2">
             <span className="relative mt-px flex h-2 w-2 shrink-0" aria-hidden>
