@@ -37,6 +37,6 @@ export async function DELETE(_request: Request, { params }: Params) {
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[admin/leads] delete failed:", error);
-    return NextResponse.json({ error: "No se pudo eliminar la reserva" }, { status: 500 });
+    return NextResponse.json({ error: "No se pudo eliminar el registro" }, { status: 500 });
   }
 }

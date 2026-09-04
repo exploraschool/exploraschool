@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import type { Query } from "firebase-admin/firestore";
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminTrashButton } from "@/components/admin/AdminTrashButton";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
@@ -165,6 +166,9 @@ export default async function AdminEmailsPage({
                     <th className="px-4 py-3 font-semibold">Origen</th>
                     <th className="px-4 py-3 font-semibold">Reservas</th>
                     <th className="px-4 py-3 font-semibold">Última vez</th>
+                    <th className="px-4 py-3 font-semibold">
+                      <span className="sr-only">Acciones</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-hielo/8">
@@ -198,6 +202,13 @@ export default async function AdminEmailsPage({
                         {contact.lastSeenAt
                           ? new Date(contact.lastSeenAt).toLocaleString("es-ES")
                           : "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <AdminTrashButton
+                          deleteUrl={`/api/admin/marketing/contacts/${encodeURIComponent(contact.email)}`}
+                          label={contact.email}
+                          confirmMessage={`¿Eliminar el email «${contact.email}» del registro de marketing?`}
+                        />
                       </td>
                     </tr>
                   ))}
