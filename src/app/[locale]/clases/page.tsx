@@ -1,6 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
+import { PageHero } from "@/components/PageHero";
 import { PriceTables } from "@/components/PriceTables";
 import { CTASection } from "@/components/CTASection";
+import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -31,24 +33,25 @@ export default async function ClasesPage({ params }: Props) {
 
   return (
     <>
+      <PageHero
+        locale={locale}
+        title={pickLocale(
+          locale,
+          "Clases de esquí, snowboard y telemark",
+          "Ski, snowboard and telemark lessons",
+        )}
+        description={pickLocale(
+          locale,
+          "Tarifas e información de clases particulares y en grupo. Precios con IVA incluido. Reserva online.",
+          "Prices and info for private and group lessons. VAT included. Book online.",
+        )}
+        imageSrc={media.clasesHero.src}
+        imageAltEs={media.clasesHero.altEs}
+        imageAltEn={media.clasesHero.altEn}
+      />
+
       <section className="section-padding">
-        <div className="container-page stack-lg">
-          <header className="max-w-3xl">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-hielo sm:text-4xl">
-              {pickLocale(
-                locale,
-                "Clases de esquí, snowboard y telemark en Sierra Nevada",
-                "Ski, snowboard and telemark lessons in Sierra Nevada",
-              )}
-            </h1>
-            <p className="mt-3 text-base text-muted sm:text-lg">
-              {pickLocale(
-                locale,
-                "Tarifas e información de clases particulares y en grupo. Precios con IVA incluido. Reserva online.",
-                "Prices and info for private and group lessons. VAT included. Book online.",
-              )}
-            </p>
-          </header>
+        <div className="container-page">
           <PriceTables locale={locale} />
         </div>
       </section>

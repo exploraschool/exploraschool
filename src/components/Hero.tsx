@@ -54,7 +54,7 @@ export function Hero({ locale }: HeroProps) {
 
             {showEarlyBird && (
               <p className="mt-4 inline-flex items-center gap-2 text-sm text-nieve/85">
-                <span className="h-1.5 w-1.5 rounded-full bg-oro" aria-hidden />
+                <span className="live-dot" aria-hidden />
                 {preseason}
               </p>
             )}

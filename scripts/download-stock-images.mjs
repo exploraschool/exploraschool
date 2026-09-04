@@ -63,6 +63,7 @@ const sierraNevada = {
 
 const images = {
   "stock/hero.jpg": sierraNevada.borreguiles6,
+  "stock/clases-hero.jpg": sierraNevada.borreguiles2,
   "stock/gallery-01.jpg": sierraNevada.borreguiles5,
   "stock/gallery-02.jpg": sierraNevada.borreguiles7,
   "stock/gallery-03.jpg": sierraNevada.vistaBorreguiles2,

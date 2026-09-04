@@ -63,12 +63,12 @@ export function earlyBirdBannerCopy(locale: string): { title: string; body: stri
   if (locale === "es") {
     return {
       title: "10% de descuento en reservas anticipadas",
-      body: "Reserva antes del 1 de noviembre de 2026 y consigue un 10% de descuento en todas las clases. El curso de snowboard mantiene el 10% toda la temporada. Precios con IVA incluido.",
+      body: "Reserva antes del 1 de noviembre de 2026 y consigue un 10% de descuento en todas las clases. Precios con IVA incluido.",
     };
   }
   return {
     title: "10% off early bookings",
-    body: "Book before 1 November 2026 and get 10% off all lessons. The snowboard course keeps 10% off all season. Prices include VAT.",
+    body: "Book before 1 November 2026 and get 10% off all lessons. Prices include VAT.",
   };
 }
 

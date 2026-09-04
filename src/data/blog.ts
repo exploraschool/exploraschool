@@ -1169,9 +1169,9 @@ At Explora we have been welcoming clients from across Spain and abroad for years
     titleEs: "Forfait en Sierra Nevada: todo lo que necesitas saber antes de tu clase",
     titleEn: "Lift passes in Sierra Nevada: everything you need to know before your lesson",
     excerptEs:
-      "Forfait Sierra Nevada: dónde comprarlo (Plaza de Andalucía o online), qué tipo necesitas según tu clase Explora, seguro de accidentes y errores a evitar.",
+      "Forfait Sierra Nevada: dónde comprarlo (online, cajeros en parkings y Silla del Pueblo, o Plaza de Andalucía), qué tipo necesitas según tu clase Explora, seguro de accidentes y errores a evitar.",
     excerptEn:
-      "Sierra Nevada lift pass: where to buy (Plaza de Andalucía or online), which type you need for your Explora lesson, accident insurance and mistakes to avoid.",
+      "Sierra Nevada lift pass: where to buy (online, machines in car parks and at the Village chairlift, or Plaza de Andalucía), which type you need for your Explora lesson, accident insurance and mistakes to avoid.",
     date: "2026-09-01",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-forfait.jpg",
@@ -1187,7 +1187,7 @@ Cetursa Sierra Nevada es la empresa que gestiona los remontes y vende los forfai
 
 ## Dónde comprar el forfait
 
-Tienes dos opciones principales. En persona, en Plaza de Andalucía (Pradollano), la zona baja de la estación. Online, en la web oficial sierranevada.es. Comprar por internet con antelación es la mejor forma de evitar colas, sobre todo en fines de semana y vacaciones escolares.
+Tienes varias opciones. La más cómoda: comprarlo online con antelación en sierranevada.es. El mismo día puedes sacarlo en los cajeros automáticos de forfait que hay en los parkings y en la estación media y superior de la Silla del Pueblo, sin hacer cola en taquilla. También se vende en Plaza de Andalucía (Pradollano). Comprar por internet sigue siendo la mejor forma de evitar esperas en fines de semana y vacaciones escolares.
 
 ## ¿Qué tipo de forfait necesito?
 
@@ -1215,7 +1215,7 @@ No. Al igual que el forfait, el material (esquís, tabla, botas, bastones) se al
 
 ## Resumen rápido
 
-Forfait: compra en Plaza de Andalucía o sierranevada.es. Seguro de accidentes: recomendado. Clase Explora: incluye solo la enseñanza con instructor titulado. Material: alquiler aparte o propio.
+Forfait: cómpralo online, en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía. Seguro de accidentes: recomendado. Clase Explora: incluye solo la enseñanza con instructor titulado. Material: alquiler aparte o propio.
 
 ### Reserva tu clase en Explora
 
@@ -1228,7 +1228,7 @@ Cetursa Sierra Nevada manages the lifts and sells passes independently of ski sc
 
 ## Where to buy your lift pass
 
-You have two main options. In person at Plaza de Andalucía (Pradollano), the lower resort area. Online at the official website sierranevada.es. Buying online in advance is the best way to avoid queues, especially at weekends and school holidays.
+You have several options. The easiest: buy it online in advance at sierranevada.es. On the day you can collect it at the automatic forfait machines in the car parks and at the middle and top stations of the Village chairlift (Silla del Pueblo), without queuing at the ticket office. Passes are also sold at Plaza de Andalucía (Pradollano). Buying online remains the best way to avoid waits at weekends and during school holidays.
 
 ## Which type of pass do I need?
 
@@ -1256,7 +1256,7 @@ No. Like the lift pass, equipment (skis, board, boots, poles) is rented separate
 
 ## Quick summary
 
-Lift pass: buy at Plaza de Andalucía or sierranevada.es. Accident insurance: recommended. Explora lesson: instruction with qualified instructor only. Equipment: rental separately or your own.
+Lift pass: buy online, at the car-park and Village chairlift machines, or at Plaza de Andalucía. Accident insurance: recommended. Explora lesson: instruction with qualified instructor only. Equipment: rental separately or your own.
 
 ### Book your lesson at Explora
 

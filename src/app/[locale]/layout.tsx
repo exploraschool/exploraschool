@@ -8,7 +8,6 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { LocaleHtmlLang } from "@/components/LocaleHtmlLang";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { SiteSplash } from "@/components/SiteSplash";
 import { CartProvider } from "@/context/CartContext";
 
 type Props = {
@@ -36,7 +35,6 @@ export default async function LocaleLayout({ children, params }: Props) {
       <LocaleHtmlLang locale={locale} />
       <NextIntlClientProvider locale={locale} messages={messages}>
         <CartProvider>
-          <SiteSplash />
           <ScrollToTop />
           <a
             href="#main-content"

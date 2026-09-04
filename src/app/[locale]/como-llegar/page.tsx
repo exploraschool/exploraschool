@@ -62,8 +62,8 @@ export default async function ComoLlegarPage({ params }: Props) {
             <p>
               {pickLocale(
                 locale,
-                "El forfait se adquiere en Plaza de Andalucía (Pradollano) o en sierranevada.es. Si necesitas indicaciones concretas para tu día, escríbenos por email.",
-                "Lift passes are purchased at Plaza de Andalucía (Pradollano) or at sierranevada.es. Email us if you need specific directions for your day.",
+                "El forfait se saca en sierranevada.es, en los cajeros de los parkings y de la Silla del Pueblo (estación media y superior), o en Plaza de Andalucía. Si necesitas indicaciones concretas para tu día, escríbenos.",
+                "Lift passes are available at sierranevada.es, at the automatic machines in the car parks and at the Village chairlift (middle and top stations), or at Plaza de Andalucía. Email us if you need specific directions for your day.",
               )}
             </p>
 

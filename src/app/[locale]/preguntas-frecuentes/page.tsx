@@ -1,11 +1,14 @@
 import { setRequestLocale } from "next-intl/server";
+import { CTASection } from "@/components/CTASection";
 import { FAQAccordion } from "@/components/FAQAccordion";
+import { FAQHighlights } from "@/components/FAQHighlights";
 import { FAQQuickHelp } from "@/components/FAQQuickHelp";
 import { FaqJsonLd } from "@/components/FaqJsonLd";
+import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
-import { Link } from "@/i18n/routing";
-import { faqs } from "@/data/faqs";
+import { FAQ_CATEGORIES, getFaqsSorted } from "@/data/faqs";
+import { faqAnswerPlainText } from "@/lib/faq-text";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -24,8 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ),
     description: pickLocale(
       locale,
-      "Resuelve dudas sobre clases, forfait, material, punto de encuentro y reservas en Explora School & Club, Sierra Nevada.",
-      "Answers about lessons, lift passes, equipment and bookings at Explora School & Club.",
+      "Forfait, cajeros en parkings y Silla del Pueblo, punto de encuentro, material y reservas en Explora School & Club, Sierra Nevada.",
+      "Lift pass machines, meeting point, equipment and bookings at Explora School & Club, Sierra Nevada.",
     ),
   });
 }
@@ -34,41 +37,81 @@ export default async function FaqsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const faqItems = faqs.map((f) => ({
+  const faqItems = getFaqsSorted().map((f) => ({
     question: pickLocale(locale, f.questionEs, f.questionEn),
-    answer: pickLocale(locale, f.answerEs, f.answerEn),
+    answer: faqAnswerPlainText(pickLocale(locale, f.answerEs, f.answerEn)),
   }));
 
   return (
     <>
       <FaqJsonLd items={faqItems} />
 
-      <section className="page-header">
-        <div className="container-page relative">
-          <p className="eyebrow">FAQs</p>
-          <h1 className="page-title mt-2 sm:mt-2.5">
-            {pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
-          </h1>
-          <p className="page-lead">
-            {pickLocale(
-              locale,
-              "Encuentra respuestas rápidas sobre reservas, forfait, material y el día de tu clase. Si no encuentras lo que buscas, estamos a un mensaje de distancia.",
-              "Find quick answers about bookings, lift passes, equipment and your lesson day. If you cannot find what you need, we are just a message away.",
-            )}
-          </p>
+      <PageHeader
+        eyebrow="FAQs"
+        title={pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
+        description={pickLocale(
+          locale,
+          "Lo esencial para llegar a tiempo, sacar el forfait sin colas y encontrar a tu instructor. Si no está aquí, te respondemos en minutos.",
+          "The essentials to arrive on time, collect your lift pass without queues and find your instructor. If it is not here, we will reply in minutes.",
+        )}
+      >
+        <nav
+          className="flex flex-wrap gap-2.5"
+          aria-label={pickLocale(locale, "Temas de la página", "Page topics")}
+        >
+          {FAQ_CATEGORIES.map((category) => (
+            <a
+              key={category.id}
+              href={`#faq-${category.id}`}
+              className="inline-flex items-center rounded-full border border-hielo/15 bg-white px-4 py-2 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-nieve"
+            >
+              {pickLocale(locale, category.labelEs, category.labelEn)}
+            </a>
+          ))}
+        </nav>
+      </PageHeader>
+
+      <section className="section-band bg-white">
+        <div className="container-page">
+          <Reveal>
+            <p className="eyebrow">{pickLocale(locale, "Lo esencial", "The essentials")}</p>
+            <h2 className="section-title mt-2">
+              {pickLocale(locale, "Cuatro cosas que conviene tener claras", "Four things worth knowing first")}
+            </h2>
+          </Reveal>
+          <div className="section-body-sm">
+            <FAQHighlights locale={locale} />
+          </div>
         </div>
       </section>
 
-      <section className="section-band bg-nieve">
+      <section className="section-padding bg-nieve">
+        <div className="container-page max-w-4xl">
+          <SectionHeader
+            eyebrow={pickLocale(locale, "Dudas habituales", "Common questions")}
+            title={pickLocale(locale, "Todo lo que debes saber", "Everything you need to know")}
+            description={pickLocale(
+              locale,
+              "Agrupadas por tema: reservas, estación y el día de la clase. Usa el buscador si vienes con una duda concreta.",
+              "Grouped by topic: bookings, the resort and lesson day. Use the search if you have a specific question.",
+            )}
+          />
+          <div className="section-body">
+            <FAQAccordion locale={locale} grouped showSearch />
+          </div>
+        </div>
+      </section>
+
+      <section className="section-padding">
         <div className="container-page">
           <Reveal>
             <SectionHeader
-              eyebrow={pickLocale(locale, "¿Necesitas ayuda?", "Need help?")}
-              title={pickLocale(locale, "Contacta con nosotros", "Get in touch")}
+              eyebrow={pickLocale(locale, "¿Sigue la duda?", "Still stuck?")}
+              title={pickLocale(locale, "Habla con el equipo", "Talk to the team")}
               description={pickLocale(
                 locale,
-                "Si tu duda es urgente o prefieres hablar con alguien del equipo, elige el canal que te resulte más cómodo.",
-                "If your question is urgent or you prefer to speak with the team, choose the channel that suits you best.",
+                "Si tu duda es urgente o prefieres que te orientemos con tu reserva, elige el canal que te resulte más cómodo.",
+                "If your question is urgent or you would rather we help with your booking, choose the channel that suits you.",
               )}
             />
           </Reveal>
@@ -78,43 +121,7 @@ export default async function FaqsPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="section-padding">
-        <div className="container-page max-w-4xl">
-          <SectionHeader
-            eyebrow={pickLocale(locale, "Dudas habituales", "Common questions")}
-            title={pickLocale(locale, "Todo lo que debes saber", "Everything you need to know")}
-            description={pickLocale(
-              locale,
-              "Hemos agrupado las preguntas por tema para que encuentres lo que buscas más rápido.",
-              "We have grouped questions by topic so you can find what you need faster.",
-            )}
-          />
-          <div className="section-body">
-            <FAQAccordion locale={locale} grouped showSearch />
-          </div>
-
-          <div className="section-body-sm rounded-2xl border border-hielo/10 bg-white px-5 py-7 text-center sm:px-8 sm:py-8">
-            <h2 className="font-display text-xl font-semibold text-hielo">
-              {pickLocale(locale, "¿No encuentras tu respuesta?", "Cannot find your answer?")}
-            </h2>
-            <p className="mx-auto mt-3 max-w-lg text-sm text-muted">
-              {pickLocale(
-                locale,
-                "Escríbenos y te ayudamos con tu reserva, material o cualquier detalle de tu día en la nieve.",
-                "Write to us and we will help with your booking, equipment or any detail about your day on the snow.",
-              )}
-            </p>
-            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-              <Link href="/contacto" className="btn-primary !w-auto">
-                {pickLocale(locale, "Ir a contacto", "Go to contact")}
-              </Link>
-              <Link href="/clases" className="btn-secondary !w-auto">
-                {pickLocale(locale, "Ver clases y tarifas", "View lessons & prices")}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTASection locale={locale} />
     </>
   );
 }

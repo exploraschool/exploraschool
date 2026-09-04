@@ -7,6 +7,11 @@ export const media = {
   appleTouchIcon: "/images/apple-touch-icon.png",
   hero: "/images/stock/hero.jpg",
   heroPhoto: "/images/stock/hero.jpg",
+  clasesHero: {
+    src: "/images/stock/clases-hero.jpg",
+    altEs: "Estación de esquí de Sierra Nevada en Borreguiles, con pistas y telesilla",
+    altEn: "Sierra Nevada ski resort at Borreguiles, with slopes and a chairlift",
+  },
   instructorsTeam: "/images/stock/team-backs.jpg",
   og: "/images/stock/hero.jpg",
   clubAbout: {

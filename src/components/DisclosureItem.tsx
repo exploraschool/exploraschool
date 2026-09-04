@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 type DisclosureItemProps = {
+  id?: string;
   title: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
@@ -24,6 +25,7 @@ function DiscloseIcon() {
 }
 
 export function DisclosureItem({
+  id,
   title,
   children,
   defaultOpen = false,
@@ -43,8 +45,9 @@ export function DisclosureItem({
 
   return (
     <details
+      id={id}
       ref={detailsRef}
-      className={`disclose group ${variantClass} ${className}`.trim()}
+      className={`disclose group ${variantClass} ${id ? "scroll-target" : ""} ${className}`.trim()}
     >
       <summary className="disclose__trigger">
         <span className="disclose__title">{title}</span>

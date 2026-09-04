@@ -1,5 +1,7 @@
 const FORFAIT_URL = "https://www.sierranevada.es";
 
+/** Keep in sync with src/lib/arrival-guide-email.ts */
+
 export type ArrivalGuideBrand = {
   pizarra: string;
   hielo: string;
@@ -37,6 +39,7 @@ type GuideCopy = {
   parkingTitle: string;
   parkingDrive: string;
   parkingRecommended: string;
+  parkingForfait: string;
   parkingTraffic: string;
   parkingChains: string;
   gearTitle: string;
@@ -98,6 +101,11 @@ function copy(isEn: boolean): GuideCopy {
       "Aparcamiento recomendado: Parking Subterráneo Plaza de Andalucía en Pradollano. Te deja en la plaza principal, justo debajo de alquileres, taquillas y accesos a telecabinas.",
       "Recommended parking: Plaza de Andalucía underground car park in Pradollano. It drops you at the main square, right below rentals, ticket offices and gondola access.",
     ),
+    parkingForfait: pick(
+      isEn,
+      "En los parkings hay cajeros automáticos para sacar el forfait sin pasar por taquilla. También los encontrarás en la estación media y superior de la Silla del Pueblo.",
+      "The car parks have automatic machines to collect your lift pass without going to the ticket office. There are also machines at the middle and top stations of the Village chairlift (Silla del Pueblo).",
+    ),
     parkingTraffic: pick(
       isEn,
       "Tráfico: a partir de las 8:30–9:00 h la subida a la estación se vuelve más densa. Sube con margen.",
@@ -120,8 +128,8 @@ function copy(isEn: boolean): GuideCopy {
     ),
     gearForfait: pick(
       isEn,
-      "Forfait: cómpralo con antelación en la web oficial de Cetursa o en las máquinas automáticas de la plaza para evitar colas de taquilla.",
-      "Lift pass: buy it in advance on the official Cetursa website or at the automatic machines in the square to skip ticket-office queues.",
+      "Forfait: lo más cómodo es comprarlo con antelación en sierranevada.es. El mismo día puedes sacarlo en los cajeros automáticos de forfait: hay en los parkings y en la estación media y superior de la Silla del Pueblo. Así evitas las colas de taquilla de Plaza de Andalucía. Recomendamos el seguro de accidentes.",
+      "Lift pass: the easiest option is to buy it in advance at sierranevada.es. On the day you can collect it at the automatic forfait machines in the car parks and at the middle and top stations of the Village chairlift (Silla del Pueblo). That way you skip the ticket-office queues at Plaza de Andalucía. We recommend accident insurance.",
     ),
     gearRental: pick(
       isEn,
@@ -185,13 +193,13 @@ function copy(isEn: boolean): GuideCopy {
     checklist: isEn
       ? [
           "Park in Pradollano: 1 h 30 min before",
-          "Collect lift passes and equipment: 1 h before",
+          "Collect lift pass (website, car-park machine or Silla del Pueblo) and equipment: 1 h before",
           "Join the Al-Andalus gondola queue: 40 min before",
           "Arrive at the meeting point (Al-Andalus snow exit): 10 min before",
         ]
       : [
           "Aparcar en Pradollano: 1 h 30 min antes",
-          "Recoger forfaits y equipo: 1 h antes",
+          "Sacar forfait (web, cajero del parking o Silla del Pueblo) y equipo: 1 h antes",
           "Entrar a la fila del Telecabina Al-Andalus: 40 min antes",
           "Llegada al punto de encuentro (salida nieve Al-Andalus): 10 min antes",
         ],
@@ -221,6 +229,7 @@ export function buildArrivalGuideText(isEn: boolean, links: ArrivalGuideLinks): 
     c.parkingTitle,
     c.parkingDrive,
     c.parkingRecommended,
+    c.parkingForfait,
     c.parkingTraffic,
     c.parkingChains,
     "",
@@ -318,6 +327,7 @@ export function buildArrivalGuideHtml(
         ${sectionTitle(c.parkingTitle, brand)}
         ${p(c.parkingDrive, brand)}
         ${p(c.parkingRecommended, brand)}
+        ${p(c.parkingForfait, brand)}
         ${p(c.parkingTraffic, brand)}
         ${p(c.parkingChains, brand, "0")}
       `,
