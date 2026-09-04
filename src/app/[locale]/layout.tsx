@@ -7,7 +7,6 @@ import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
 import { FaqChatWidget } from "@/components/FaqChatWidget";
 import { JsonLd } from "@/components/JsonLd";
-import { LocaleHtmlLang } from "@/components/LocaleHtmlLang";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { CartProvider } from "@/context/CartContext";
 
@@ -33,7 +32,6 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <LocaleHtmlLang locale={locale} />
       <NextIntlClientProvider locale={locale} messages={messages}>
         <CartProvider>
           <ScrollToTop />
@@ -50,7 +48,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           <Footer />
           <CookieBanner />
           <FaqChatWidget />
-          <JsonLd />
+          <JsonLd locale={locale} />
         </CartProvider>
       </NextIntlClientProvider>
     </div>

@@ -69,7 +69,7 @@ export function Hero({ locale }: HeroProps) {
             </div>
           </div>
 
-          <div className="animate-fade-up lg:justify-self-end" style={{ animationDelay: "0.1s" }}>
+          <div className="relative w-full max-w-xl animate-fade-up lg:justify-self-end" style={{ animationDelay: "0.1s" }}>
             <HeroQuickBook locale={locale} />
           </div>
         </div>

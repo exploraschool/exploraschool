@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { BookingBarCTA } from "@/components/cart/BookingBarCTA";
 import { useStickyReveal } from "@/hooks/useStickyReveal";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 const BAR_HEIGHT_VAR = "--sticky-book-bar-h";
 
@@ -65,7 +66,11 @@ export function StickyBookBar({ locale }: StickyBookBarProps) {
             {pickLocale(locale, "¿Listo para la nieve?", "Ready for the snow?")}
           </p>
           <p className="truncate text-[0.65rem] text-muted">
-            {pickLocale(locale, "Elige clases y envía tu solicitud", "Pick lessons and send your request")}
+            {pickLocale(
+              locale,
+              `Desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa`,
+              `From €${FULL_DAY_HOURLY_EUR}/h on a full day`,
+            )}
           </p>
         </div>
         <BookingBarCTA locale={locale} className="px-5 py-2.5 text-sm" />

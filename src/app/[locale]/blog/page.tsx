@@ -4,6 +4,7 @@ import { Link } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -36,14 +37,18 @@ export default async function BlogPage({ params }: Props) {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[{ name: "Blog", path: "/blog" }]}
+      />
       <section className="page-header">
         <div className="container-page">
           <p className="eyebrow">Blog</p>
           <h1 className="page-title mt-2 sm:mt-2.5">
             {pickLocale(
               locale,
-              "Consejos de nieve en Sierra Nevada",
-              "Snow tips for Sierra Nevada",
+              "Blog de esquí y snowboard en Sierra Nevada",
+              "Ski and snowboard blog for Sierra Nevada",
             )}
           </h1>
           <p className="mt-3 max-w-2xl text-muted">

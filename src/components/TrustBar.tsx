@@ -3,6 +3,7 @@ import { tripAdvisorSummary } from "@/data/reviews";
 import { getActiveInstructors } from "@/data/instructors";
 import { Reveal } from "@/components/Reveal";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 type TrustBarProps = {
   locale: string;
@@ -14,31 +15,23 @@ export function TrustBar({ locale }: TrustBarProps) {
 
   const stats = [
     {
+      value: `${FULL_DAY_HOURLY_EUR} €/h`,
+      label: pickLocale(locale, "Mejor precio / hora", "Best hourly rate"),
+      accent: "text-hielo",
+    },
+    {
       value: `${tripAdvisorSummary.rating}★`,
       label: "TripAdvisor",
-      sub: `${tripAdvisorSummary.reviewCount}+ ${pickLocale(locale, "reseñas", "reviews")}`,
       accent: "text-hielo",
     },
     {
       value: String(instructors.length),
       label: pickLocale(locale, "Instructores", "Instructors"),
-      sub: pickLocale(
-        locale,
-        site.instructorQualificationsShortEs,
-        site.instructorQualificationsShortEn,
-      ),
       accent: "text-hielo",
     },
     {
       value: `${years}+`,
       label: pickLocale(locale, "Años en Sierra Nevada", "Years in Sierra Nevada"),
-      sub: `${pickLocale(locale, "Desde", "Since")} ${site.foundedYear}`,
-      accent: "text-hielo",
-    },
-    {
-      value: "ES / EN",
-      label: pickLocale(locale, "Idiomas", "Languages"),
-      sub: pickLocale(locale, "Clases bilingües", "Bilingual lessons"),
       accent: "text-hielo",
     },
   ];

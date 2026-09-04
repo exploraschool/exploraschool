@@ -7,6 +7,7 @@ import { Link } from "@/i18n/routing";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -29,6 +30,10 @@ export default async function ContactoPage({ params }: Props) {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[{ name: t("title"), path: "/contacto" }]}
+      />
       <section className="page-header">
         <div className="container-page relative">
           <p className="eyebrow">{pickLocale(locale, "Contacto", "Contact")}</p>

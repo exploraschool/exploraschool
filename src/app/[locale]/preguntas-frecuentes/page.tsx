@@ -11,6 +11,7 @@ import { FAQ_CATEGORIES, getFaqsSorted } from "@/data/faqs";
 import { faqAnswerPlainText } from "@/lib/faq-text";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -45,6 +46,15 @@ export default async function FaqsPage({ params }: Props) {
   return (
     <>
       <FaqJsonLd items={faqItems} />
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          {
+            name: pickLocale(locale, "Preguntas frecuentes", "FAQs"),
+            path: "/preguntas-frecuentes",
+          },
+        ]}
+      />
 
       <PageHeader
         eyebrow="FAQs"

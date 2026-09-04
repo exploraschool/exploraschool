@@ -16,6 +16,7 @@ import {
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 import Image from "next/image";
 
@@ -53,6 +54,10 @@ export default async function ClubPage({ params }: Props) {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[{ name: "Club", path: "/club" }]}
+      />
       <PageHeader
         eyebrow="Club"
         title={club.name}

@@ -8,6 +8,8 @@ import { blogPosts, getBlogPost } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
+import { media } from "@/lib/media";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -34,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, post.titleEs, post.titleEn),
     description: pickLocale(locale, post.excerptEs, post.excerptEn),
     ogImage: post.coverImage,
+    ogType: "article",
   });
 }
 
@@ -49,11 +52,12 @@ export default async function BlogPostPage({ params }: Props) {
     .map((s) => getBlogPost(s))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
+  const postTitle = pickLocale(locale, post.titleEs, post.titleEn);
   const siteUrl = getSiteUrl();
   const articleLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: pickLocale(locale, post.titleEs, post.titleEn),
+    headline: postTitle,
     description: pickLocale(locale, post.excerptEs, post.excerptEn),
     image: `${siteUrl}${post.coverImage}`,
     datePublished: post.date,
@@ -65,6 +69,10 @@ export default async function BlogPostPage({ params }: Props) {
     publisher: {
       "@type": "Organization",
       name: "Explora School & Club",
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}${media.logo}`,
+      },
     },
     mainEntityOfPage: `${siteUrl}/${locale}/blog/${post.slug}`,
     inLanguage: locale === "en" ? "en-GB" : "es-ES",
@@ -75,6 +83,13 @@ export default async function BlogPostPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: "Blog", path: "/blog" },
+          { name: postTitle, path: `/blog/${post.slug}` },
+        ]}
       />
 
       <section className="page-header">

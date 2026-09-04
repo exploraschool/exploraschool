@@ -3,6 +3,7 @@ import { CURRENT_SEASON } from "./season";
 import { site } from "./site";
 import {
   CURSO_COLECTIVO_PER_PERSON_EUR,
+  FULL_DAY_HOURLY_EUR,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
   SESSION_CLUB_EMPRESA,
@@ -62,8 +63,8 @@ export const products: Product[] = [
     category: "full-day",
     titleEs: "Día completo",
     titleEn: "Full Day",
-    shortDescriptionEs: "5 h de clase + 1 h comodín. Experiencia personalizada.",
-    shortDescriptionEn: "5 h lesson + 1 h buffer. Personalised experience.",
+    shortDescriptionEs: `5 h de clase · desde ${FULL_DAY_HOURLY_EUR} €/h. Experiencia personalizada.`,
+    shortDescriptionEn: `5 h lesson · from €${FULL_DAY_HOURLY_EUR}/h. Personalised experience.`,
     descriptionEs:
       "Actividad de día completo con 5 horas de clase efectivas y 1 hora de comodín para recogida en hotel, retrasos, descansos y comidas. Horario ajustado a tus necesidades y punto de encuentro personalizado.",
     descriptionEn:
@@ -74,6 +75,7 @@ export const products: Product[] = [
     minPeople: 1,
     maxPeople: 8,
     featuresEs: [
+      `Desde ${FULL_DAY_HOURLY_EUR} €/h (5 h de clase)`,
       "5 horas de clase efectivas",
       "1 hora de descanso / comodín",
       "1 y 2 personas: mismo precio total",
@@ -82,6 +84,7 @@ export const products: Product[] = [
       "Recogida en hotel (día completo)",
     ],
     featuresEn: [
+      `From €${FULL_DAY_HOURLY_EUR}/h (5 h of teaching)`,
       "5 hours of effective lesson time",
       "1 hour break / buffer",
       "1 and 2 people: same total price",

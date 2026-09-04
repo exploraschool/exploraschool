@@ -14,7 +14,6 @@ export type EquipmentFormState = {
   snowboardBootSize: string;
   heightCm: string;
   weightKg: string;
-  helmetSize: string;
   skiLengthCm: string;
   poleLengthCm: string;
   boardLengthCm: string;
@@ -29,7 +28,6 @@ export const equipmentSchema = z.object({
   snowboardBootSize: z.string().max(24).optional().default(""),
   heightCm: z.number().min(50).max(250).nullable(),
   weightKg: z.number().min(10).max(250).nullable(),
-  helmetSize: z.string().max(16).optional().default(""),
   skiLengthCm: z.number().min(50).max(220).nullable().optional().default(null),
   poleLengthCm: z.number().min(50).max(160).nullable().optional().default(null),
   boardLengthCm: z.number().min(80).max(180).nullable().optional().default(null),
@@ -45,7 +43,6 @@ export function emptyEquipmentForm(source: EquipmentSource = "rental"): Equipmen
     snowboardBootSize: "",
     heightCm: "",
     weightKg: "",
-    helmetSize: "",
     skiLengthCm: "",
     poleLengthCm: "",
     boardLengthCm: "",
@@ -63,7 +60,6 @@ export function equipmentFormFromProfile(equipment: StudentEquipment | null): Eq
     snowboardBootSize: equipment.snowboardBootSize,
     heightCm: equipment.heightCm != null ? String(equipment.heightCm) : "",
     weightKg: equipment.weightKg != null ? String(equipment.weightKg) : "",
-    helmetSize: equipment.helmetSize,
     skiLengthCm: equipment.skiLengthCm != null ? String(equipment.skiLengthCm) : "",
     poleLengthCm: equipment.poleLengthCm != null ? String(equipment.poleLengthCm) : "",
     boardLengthCm: equipment.boardLengthCm != null ? String(equipment.boardLengthCm) : "",
@@ -92,7 +88,6 @@ export function toStudentEquipment(form: EquipmentFormState): StudentEquipment {
     snowboardBootSize: form.snowboardBootSize.trim(),
     heightCm: optionalNumber(form.heightCm),
     weightKg: optionalNumber(form.weightKg),
-    helmetSize: form.helmetSize.trim(),
     skiLengthCm: optionalNumber(form.skiLengthCm),
     poleLengthCm: optionalNumber(form.poleLengthCm),
     boardLengthCm: optionalNumber(form.boardLengthCm),
@@ -141,8 +136,6 @@ export function equipmentCopy(locale: string) {
       : "Altura y peso siguen siendo importantes para que el instructor compruebe que tu material te encaja.",
     height: en ? "Height (cm)" : "Altura (cm)",
     weight: en ? "Weight (kg)" : "Peso (kg)",
-    helmet: en ? "Helmet size (optional)" : "Talla de casco (opcional)",
-    helmetPlaceholder: en ? "S / M / L or 56 cm" : "S / M / L o 56 cm",
     bootSki: en ? "Ski boot size" : "Talla de botas de esquí",
     bootSnowboard: en ? "Snowboard boot size" : "Talla de botas de snowboard",
     bootTelemark: en ? "Telemark boot size" : "Talla de botas de telemark",
@@ -239,9 +232,6 @@ export function formatEquipmentSummary(
   }
   if (needs.usesSnowboardGear && equipment.stance) {
     parts.push(equipment.stance === "goofy" ? "goofy" : "regular");
-  }
-  if (equipment.helmetSize) {
-    parts.push(en ? `helmet ${equipment.helmetSize}` : `casco ${equipment.helmetSize}`);
   }
   return parts.join(" · ");
 }

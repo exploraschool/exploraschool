@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { getLocale } from "next-intl/server";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { buildRootSpanishMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
@@ -43,10 +44,12 @@ type Props = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: Props) {
+export default async function RootLayout({ children }: Props) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="es"
+      lang={locale}
       suppressHydrationWarning
       data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${fraunces.variable}`}

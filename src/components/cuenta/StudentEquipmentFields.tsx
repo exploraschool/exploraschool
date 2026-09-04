@@ -157,16 +157,6 @@ export function StudentEquipmentFields({
             </Field>
           ) : null}
         </div>
-        <div className="mt-3">
-          <Field label={copy.helmet}>
-            <input
-              value={values.helmetSize}
-              onChange={(event) => onChange({ helmetSize: event.target.value })}
-              className={inputClass()}
-              placeholder={copy.helmetPlaceholder}
-            />
-          </Field>
-        </div>
       </div>
 
       {needs.showGearBase ? (

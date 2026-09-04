@@ -6,6 +6,7 @@ import { getProductFromPrice, isBookableProduct } from "@/lib/product-pricing";
 import { pickLocale } from "@/lib/locale";
 import { ProductCardFooter } from "@/components/cart/ProductCardFooter";
 import { PriceTag } from "@/components/PriceTag";
+import { CURSO_COLECTIVO_HOURLY_EUR, FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 type LessonProductCatalogProps = {
   locale: string;
@@ -121,6 +122,24 @@ function ProductCard({
               suffix={priceSuffix(product, locale)}
               size={featured ? "lg" : "md"}
             />
+            {product.category === "full-day" ? (
+              <span className="mt-1 block text-xs font-semibold text-hielo">
+                {pickLocale(
+                  locale,
+                  `Mejor precio: ${FULL_DAY_HOURLY_EUR} €/h`,
+                  `Best rate: €${FULL_DAY_HOURLY_EUR}/h`,
+                )}
+              </span>
+            ) : null}
+            {product.id === "curso-snow" ? (
+              <span className="mt-1 block text-xs font-semibold text-hielo">
+                {pickLocale(
+                  locale,
+                  `~${CURSO_COLECTIVO_HOURLY_EUR} €/h por persona · 3 h · mín. 4`,
+                  `~€${CURSO_COLECTIVO_HOURLY_EUR}/h per person · 3 h · min. 4`,
+                )}
+              </span>
+            ) : null}
           </p>
         ) : null}
 

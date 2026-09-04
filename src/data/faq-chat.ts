@@ -1,4 +1,5 @@
 import { site } from "@/data/site";
+import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
 import { whatsappHref } from "@/lib/whatsapp";
 
 export const FAQ_CHAT_WHATSAPP_TEXT =
@@ -62,10 +63,10 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
   },
   tarifas: {
     id: "tarifas",
-    botText: `Nuestra tarifa base es de 55 €/h por instructor privado (mínimo 2 horas).
+    botText: `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € para 1 o 2 personas).
 
-• 1 o 2 personas pagan lo mismo: 110 € por 2 h de mañana (o 89 € en horario de tarde).
-• Extras por persona adicional: +10 € en 2 h | +15 € en 3 h | +25 € en Full Day.
+• 2 h mañana: 110 € (1 o 2 personas) · 2 h tarde: 89 €.
+• Desde 3 personas: 2 h mañana 130 € | 2 h tarde 110 € | 3 h mañana 180 € | 3 h tarde 165 €; luego +10 € (2 h) o +15 € (3 h) por persona.
 • No vendemos clases sueltas de 1 hora por la mañana.`,
     buttons: [
       {

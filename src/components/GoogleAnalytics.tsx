@@ -2,8 +2,12 @@
 
 import Script from "next/script";
 import { useEffect, useState } from "react";
+import {
+  COOKIE_CONSENT_ACCEPTED_EVENT,
+  COOKIE_CONSENT_REJECTED_EVENT,
+  readCookieConsent,
+} from "@/lib/cookie-consent";
 
-const COOKIE_KEY = "explora_cookies_accepted";
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 export function GoogleAnalytics() {
@@ -12,14 +16,17 @@ export function GoogleAnalytics() {
   useEffect(() => {
     if (!GA_ID) return;
 
-    if (localStorage.getItem(COOKIE_KEY)) {
-      setEnabled(true);
-      return;
+    function sync() {
+      setEnabled(readCookieConsent() === "accepted");
     }
 
-    const onAccept = () => setEnabled(true);
-    window.addEventListener("explora-cookies-accepted", onAccept);
-    return () => window.removeEventListener("explora-cookies-accepted", onAccept);
+    sync();
+    window.addEventListener(COOKIE_CONSENT_ACCEPTED_EVENT, sync);
+    window.addEventListener(COOKIE_CONSENT_REJECTED_EVENT, sync);
+    return () => {
+      window.removeEventListener(COOKIE_CONSENT_ACCEPTED_EVENT, sync);
+      window.removeEventListener(COOKIE_CONSENT_REJECTED_EVENT, sync);
+    };
   }, []);
 
   if (!GA_ID || !enabled) return null;

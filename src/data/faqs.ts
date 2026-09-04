@@ -1,4 +1,9 @@
 import { site } from "./site";
+import {
+  FULL_DAY_EFFECTIVE_HOURS,
+  FULL_DAY_HOURLY_EUR,
+  SESSION_FULL_DAY,
+} from "@/lib/lesson-pricing";
 
 export type FaqCategory = "reservas" | "estacion" | "clase";
 
@@ -50,6 +55,14 @@ export const FAQ_HIGHLIGHTS: {
   bodyEs: string;
   bodyEn: string;
 }[] = [
+  {
+    id: "precio",
+    faqId: "precio-clases",
+    titleEs: `Desde ${FULL_DAY_HOURLY_EUR} €/h`,
+    titleEn: `From €${FULL_DAY_HOURLY_EUR}/h`,
+    bodyEs: "Mejor precio por hora en jornada completa (5 h de clase).",
+    bodyEn: "Best hourly rate on a full day (5 h of teaching).",
+  },
   {
     id: "tiempo",
     faqId: "cuanto-tiempo",
@@ -119,6 +132,29 @@ If you would rather talk to us:
 We reply from 9:00 am to 8:00 pm.
 
 > 10% off if you book before 1 November 2026.`,
+  },
+  {
+    id: "precio-clases",
+    category: "reservas",
+    sortOrder: 2,
+    questionEs: "¿Cuánto cuestan las clases de esquí en Sierra Nevada?",
+    answerEs: `El mejor precio por hora es el **día completo: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € en total para 1 o 2 personas). Si sois dos, sale a ${Math.round(SESSION_FULL_DAY[0] / 2 / FULL_DAY_EFFECTIVE_HOURS)} €/h por persona.
+
+Las clases más cortas salen más caras por hora (2 h mañana: 110 €). No hay clases sueltas de 1 hora.
+
+Buscas clases de esquí baratas en Sierra Nevada: el día completo es la tarifa que más rinde.
+
+- [Ver tarifas](/clases)
+- [Reservar](/reserva)`,
+    questionEn: "How much do ski lessons cost in Sierra Nevada?",
+    answerEn: `The best hourly rate is the **full day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} total for 1 or 2 people). If there are two of you, it works out at €${Math.round(SESSION_FULL_DAY[0] / 2 / FULL_DAY_EFFECTIVE_HOURS)}/h per person.
+
+Shorter lessons cost more per hour (2 h morning: €110). There are no standalone 1-hour lessons.
+
+Looking for affordable ski lessons in Sierra Nevada: the full day is the best-value rate.
+
+- [See prices](/clases)
+- [Book](/reserva)`,
   },
   {
     id: "forfait",

@@ -1,21 +1,10 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { site } from "@/data/site";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { getSiteUrl } from "@/lib/site-url";
 
 const DEFAULT_OG = "/images/stock/hero.jpg";
-
-const SPANISH_KEYWORDS = [
-  "clases de esquí Sierra Nevada",
-  "clases de snowboard Sierra Nevada",
-  "escuela de esquí Granada",
-  "telemark Sierra Nevada",
-  "Explora School",
-  "instructores titulados",
-  "reservar clases de esquí",
-  "Borreguiles",
-  "Pradollano",
-];
 
 type PageMeta = {
   locale: string;
@@ -23,8 +12,8 @@ type PageMeta = {
   title: string;
   description: string;
   ogImage?: string;
+  ogType?: "website" | "article";
   noIndex?: boolean;
-  keywords?: string[];
 };
 
 function buildLocalizedPageUrl(siteUrl: string, locale: string, path: string): string {
@@ -39,8 +28,8 @@ export function buildPageMetadata({
   title,
   description,
   ogImage = DEFAULT_OG,
+  ogType = "website",
   noIndex = false,
-  keywords,
 }: PageMeta): Metadata {
   const siteUrl = getSiteUrl();
   const canonical = buildLocalizedPageUrl(siteUrl, locale, path);
@@ -50,12 +39,10 @@ export function buildPageMetadata({
   languages["x-default"] = buildLocalizedPageUrl(siteUrl, routing.defaultLocale, path);
   const fullTitle = title.includes("Explora") ? title : `${title} | Explora School & Club`;
   const isSpanish = locale !== "en";
-  const metaKeywords = keywords ?? (isSpanish ? SPANISH_KEYWORDS : undefined);
 
   return {
-    title: fullTitle,
+    title: { absolute: fullTitle },
     description,
-    ...(metaKeywords ? { keywords: metaKeywords } : {}),
     metadataBase: new URL(siteUrl),
     applicationName: site.name,
     authors: [{ name: site.name, url: siteUrl }],
@@ -67,7 +54,7 @@ export function buildPageMetadata({
       languages,
     },
     openGraph: {
-      type: "website",
+      type: ogType,
       locale: isSpanish ? "es_ES" : "en_GB",
       alternateLocale: isSpanish ? ["en_GB"] : ["es_ES"],
       url: canonical,
@@ -110,7 +97,7 @@ export function buildPageMetadata({
 /** Metadatos por defecto (español) para el layout raíz y fallbacks. */
 export function buildRootSpanishMetadata(): Metadata {
   const siteUrl = getSiteUrl();
-  const title = "Clases de esquí y snowboard en Sierra Nevada | Explora School & Club";
+  const title = `Clases de esquí y snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h | Explora School & Club`;
   const description = site.homeMetaDescriptionEs;
 
   return {
@@ -120,7 +107,6 @@ export function buildRootSpanishMetadata(): Metadata {
       template: `%s | ${site.name}`,
     },
     description,
-    keywords: SPANISH_KEYWORDS,
     applicationName: site.name,
     authors: [{ name: site.name, url: siteUrl }],
     creator: site.name,

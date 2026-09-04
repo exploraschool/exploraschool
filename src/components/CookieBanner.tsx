@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
-
-const COOKIE_KEY = "explora_cookies_accepted";
+import { readCookieConsent, writeCookieConsent } from "@/lib/cookie-consent";
 
 function CookieIcon() {
   return (
@@ -20,15 +19,14 @@ export function CookieBanner() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!localStorage.getItem(COOKIE_KEY)) {
+    if (!readCookieConsent()) {
       setVisible(true);
       requestAnimationFrame(() => setMounted(true));
     }
   }, []);
 
-  function accept() {
-    localStorage.setItem(COOKIE_KEY, "1");
-    window.dispatchEvent(new Event("explora-cookies-accepted"));
+  function choose(consent: "accepted" | "rejected") {
+    writeCookieConsent(consent);
     setMounted(false);
     window.setTimeout(() => setVisible(false), 200);
   }
@@ -45,36 +43,35 @@ export function CookieBanner() {
         mounted ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 sm:translate-y-4"
       }`}
     >
-      <div className="container-page flex items-center gap-2.5 py-2 sm:gap-3 sm:py-2.5 md:max-w-4xl md:py-3">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-hielo/8 sm:h-7 sm:w-7">
-          <CookieIcon />
-        </span>
-        <p id="cookie-banner-title" className="min-w-0 flex-1 text-[0.7rem] leading-snug text-muted sm:text-xs md:text-sm">
-          {t("message")}{" "}
-          <Link
-            href="/politica-de-cookies"
-            className="font-medium text-hielo underline-offset-2 hover:text-accent hover:underline"
-          >
-            {t("policy")}
-          </Link>
-        </p>
-        <div className="flex shrink-0 items-center gap-1">
+      <div className="container-page flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:gap-3 sm:py-2.5 md:max-w-4xl md:py-3">
+        <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">
+          <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-hielo/8 sm:mt-0 sm:h-7 sm:w-7">
+            <CookieIcon />
+          </span>
+          <p id="cookie-banner-title" className="min-w-0 flex-1 text-[0.7rem] leading-snug text-muted sm:text-xs md:text-sm">
+            {t("message")}{" "}
+            <Link
+              href="/politica-de-cookies"
+              className="font-medium text-hielo underline-offset-2 hover:text-accent hover:underline"
+            >
+              {t("policy")}
+            </Link>
+          </p>
+        </div>
+        <div className="flex shrink-0 items-center justify-end gap-1.5 pl-8 sm:pl-0">
           <button
             type="button"
-            onClick={accept}
-            className="rounded-full bg-accent-dark px-3 py-1 text-[0.7rem] font-semibold text-white shadow-sm transition hover:bg-accent-dark/90 active:scale-[0.98] sm:px-3.5 sm:py-1.5 sm:text-xs"
+            onClick={() => choose("rejected")}
+            className="rounded-full px-3 py-1 text-[0.7rem] font-semibold text-hielo transition hover:bg-hielo/8 sm:px-3.5 sm:py-1.5 sm:text-xs"
           >
-            {t("accept")}
+            {t("reject")}
           </button>
           <button
             type="button"
-            onClick={accept}
-            aria-label={t("close")}
-            className="flex h-6 w-6 items-center justify-center rounded-full text-muted transition hover:bg-hielo/8 hover:text-hielo sm:h-7 sm:w-7"
+            onClick={() => choose("accepted")}
+            className="rounded-full bg-accent-dark px-3 py-1 text-[0.7rem] font-semibold text-white shadow-sm transition hover:bg-accent-dark/90 active:scale-[0.98] sm:px-3.5 sm:py-1.5 sm:text-xs"
           >
-            <svg viewBox="0 0 24 24" className="h-3 w-3 sm:h-3.5 sm:w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-            </svg>
+            {t("accept")}
           </button>
         </div>
       </div>

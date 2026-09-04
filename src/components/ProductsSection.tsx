@@ -4,7 +4,9 @@ import { ProductCardFooter } from "@/components/cart/ProductCardFooter";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getHighlightedProducts } from "@/data/products";
+import type { Product } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { resolvePriceDisplay } from "@/lib/promotions";
 
 type ProductsSectionProps = {
@@ -13,6 +15,16 @@ type ProductsSectionProps = {
   limit?: number;
   compact?: boolean;
 };
+
+function fromPriceBadge(product: Product, locale: string): string | null {
+  if (!product.fromPrice) return null;
+  if (product.category === "full-day") {
+    return `${pickLocale(locale, "desde", "from")} ${FULL_DAY_HOURLY_EUR} €/h`;
+  }
+  const price = resolvePriceDisplay(product.fromPrice, new Date(), product.id);
+  const discount = price.discountActive ? ` (-${price.discountPercent}%)` : "";
+  return `${pickLocale(locale, "desde", "from")} ${price.finalPrice} €${discount}`;
+}
 
 export function ProductsSection({
   locale,
@@ -52,17 +64,11 @@ export function ProductsSection({
                       className="object-cover"
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
-                    {product.fromPrice && (() => {
-                      const price = resolvePriceDisplay(product.fromPrice, new Date(), product.id);
-                      return (
-                        <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-2.5 py-0.5 text-xs font-bold text-white">
-                          {pickLocale(locale, "desde", "from")} {price.finalPrice} €
-                          {price.discountActive && (
-                            <span className="ml-1 text-white">(-{price.discountPercent}%)</span>
-                          )}
-                        </span>
-                      );
-                    })()}
+                    {fromPriceBadge(product, locale) ? (
+                      <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-2.5 py-0.5 text-xs font-bold text-white">
+                        {fromPriceBadge(product, locale)}
+                      </span>
+                    ) : null}
                   </div>
                   <div className="flex flex-1 flex-col p-4">
                     <h3 className="font-display text-lg font-semibold text-hielo">
@@ -112,17 +118,11 @@ export function ProductsSection({
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 to-transparent" />
-                  {product.fromPrice && (() => {
-                    const price = resolvePriceDisplay(product.fromPrice, new Date(), product.id);
-                    return (
-                      <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-3 py-1 text-xs font-bold text-white">
-                        {pickLocale(locale, "desde", "from")} {price.finalPrice} €
-                        {price.discountActive && (
-                          <span className="ml-1 text-white">(-{price.discountPercent}%)</span>
-                        )}
-                      </span>
-                    );
-                  })()}
+                  {fromPriceBadge(product, locale) ? (
+                    <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-3 py-1 text-xs font-bold text-white">
+                      {fromPriceBadge(product, locale)}
+                    </span>
+                  ) : null}
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <h3 className="font-display text-lg font-semibold text-white">
                       {pickLocale(locale, product.titleEs, product.titleEn)}

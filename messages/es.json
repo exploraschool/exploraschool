@@ -44,10 +44,13 @@
     "backHome": "Volver al inicio"
   },
   "cookies": {
-    "message": "Usamos cookies esenciales.",
+    "message": "Usamos cookies esenciales y, si aceptas, Google Analytics para medir visitas.",
     "accept": "Aceptar",
+    "reject": "Solo esenciales",
     "policy": "Política de cookies",
-    "close": "Cerrar aviso de cookies"
+    "close": "Cerrar aviso de cookies",
+    "statusAccepted": "Preferencia actual: analítica aceptada. Puedes cambiarla cuando quieras.",
+    "statusRejected": "Preferencia actual: solo cookies esenciales. Puedes activar la analítica cuando quieras."
   },
   "contact": {
     "title": "Contacto Explora School en Sierra Nevada",
@@ -145,7 +148,7 @@
     "messagePlaceholder": "¿Algo más que debamos saber?",
     "privacy": "Acepto la política de privacidad",
     "sendBooking": "Enviar solicitud de reserva",
-    "emailTo": "Te confirmaremos en",
+    "emailTo": "Te confirmaremos desde",
     "bookingSent": "¡Gracias por tu reserva!",
     "bookingSentDesc": "Hemos recibido tu solicitud. Te enviaremos un email de confirmación y, en breve, tu monitor/a se pondrá en contacto para formalizarla y concretar el pago.",
     "newBooking": "Nueva reserva",

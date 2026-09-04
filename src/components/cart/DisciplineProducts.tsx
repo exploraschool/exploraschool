@@ -7,6 +7,7 @@ import { productMatchesDiscipline, type MainDisciplineId } from "@/data/discipli
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { PriceTag } from "@/components/PriceTag";
 import { pickLocale } from "@/lib/locale";
+import { CURSO_COLECTIVO_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { Reveal } from "@/components/Reveal";
 
 type DisciplineProductsProps = {
@@ -99,6 +100,15 @@ export function DisciplineProducts({
                       prefix={pickLocale(locale, "desde ", "from ")}
                       size="sm"
                     />
+                    {product.id === "curso-snow" ? (
+                      <span className="mt-1 block text-xs font-semibold text-hielo">
+                        {pickLocale(
+                          locale,
+                          `~${CURSO_COLECTIVO_HOURLY_EUR} €/h por persona · 3 h · mín. 4`,
+                          `~€${CURSO_COLECTIVO_HOURLY_EUR}/h per person · 3 h · min. 4`,
+                        )}
+                      </span>
+                    ) : null}
                   </p>
                 ) : null}
                 <AddToCartButton

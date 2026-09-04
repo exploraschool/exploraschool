@@ -221,7 +221,6 @@ export function HeaderMobileMenu({ locale, open, onClose }: HeaderMobileMenuProp
             <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" onClick={onClose}>
               WhatsApp
             </a>
-            <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a>
           </div>
 
           <div className="site-header__menu-footer">

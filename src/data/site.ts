@@ -1,3 +1,4 @@
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { getSiteUrl } from "@/lib/site-url";
 
 export type SocialLink = {
@@ -108,7 +109,7 @@ export const site: SiteConfig = {
     "Explora School & Club at Sierra Nevada ski resort — official location on Google Maps. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request.",
   nap: {
     name: "Explora School & Club",
-    streetAddress: "Estación de esquí de Sierra Nevada",
+    streetAddress: "Estación de esquí de Sierra Nevada, Borreguiles, Pradollano",
     addressLocality: "Sierra Nevada",
     addressRegion: "Granada",
     postalCode: "18196",
@@ -150,9 +151,9 @@ export const site: SiteConfig = {
   aboutLeadEn:
     "A group of qualified instructors with years of experience on the snow. Explora School & Club since 2010. Lessons for 1 to 8 participants and courses in ski, snowboard, telemark and more. Meeting point at Sierra Nevada ski resort.",
   homeMetaDescriptionEs:
-    "Clases de esquí, snowboard y telemark en Sierra Nevada. Instructores titulados con más de 20 años de experiencia. Explora desde 2010. Reserva online por email.",
+    `Clases de esquí y snowboard baratas en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Instructores titulados, grupos de 1 a 8. Reserva online.`,
   homeMetaDescriptionEn:
-    "Ski, snowboard and telemark lessons in Sierra Nevada. Qualified instructors with over 20 years of experience. Explora since 2010. Book online by email.",
+    `Affordable ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Qualified instructors, groups of 1 to 8. Book online.`,
   rentalPartner: {
     name: "José Luis Sáez",
     discountPercent: 20,

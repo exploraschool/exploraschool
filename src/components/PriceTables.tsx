@@ -3,6 +3,7 @@ import { SeasonPriceTables } from "@/components/cart/SeasonPriceTables";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
 import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { priceNotes } from "@/data/prices";
 import { CURRENT_SEASON } from "@/data/season";
 
@@ -19,8 +20,8 @@ export function PriceTables({ locale }: PriceTablesProps) {
           title={pickLocale(locale, "Elige tu formato", "Choose your format")}
           description={pickLocale(
             locale,
-            "Estos son nuestros servicios actuales. Elige el que mejor encaje con tu día y añádelo a la reserva.",
-            "These are our current services. Pick the one that fits your day and add it to your booking.",
+            `El día completo es el mejor precio por hora (${FULL_DAY_HOURLY_EUR} €/h). Elige 2 h, 3 h o jornada completa y añádelo a la reserva.`,
+            `The full day is the best hourly rate (€${FULL_DAY_HOURLY_EUR}/h). Pick 2 h, 3 h or a full day and add it to your booking.`,
           )}
         />
         <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">

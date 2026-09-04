@@ -44,14 +44,17 @@
     "backHome": "Back to home"
   },
   "cookies": {
-    "message": "We use essential cookies.",
+    "message": "We use essential cookies and, if you accept, Google Analytics to measure visits.",
     "accept": "Accept",
+    "reject": "Essential only",
     "policy": "Cookie policy",
-    "close": "Close cookie notice"
+    "close": "Close cookie notice",
+    "statusAccepted": "Current preference: analytics accepted. You can change this at any time.",
+    "statusRejected": "Current preference: essential cookies only. You can enable analytics at any time."
   },
   "contact": {
-    "title": "Contact",
-    "subtitle": "We are here for you. Write, call or book online — we will reply as soon as possible.",
+    "title": "Contact Explora School in Sierra Nevada",
+    "subtitle": "Write, call or book ski and snowboard lessons in Sierra Nevada online. We reply as soon as we can.",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
@@ -145,7 +148,7 @@
     "messagePlaceholder": "Anything else we should know?",
     "privacy": "I accept the privacy policy",
     "sendBooking": "Send booking request",
-    "emailTo": "We will confirm at",
+    "emailTo": "We'll confirm from",
     "bookingSent": "Thank you for your booking!",
     "bookingSentDesc": "We've received your request. You'll get a confirmation email, and your instructor will get in touch soon to finalise it and arrange payment.",
     "newBooking": "New booking",

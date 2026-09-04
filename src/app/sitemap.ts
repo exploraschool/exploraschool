@@ -9,13 +9,15 @@ import {
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = getSitemapRoutes();
 
-  return routes.map((route) => ({
-    url: buildLocalizedUrl(routing.defaultLocale, route.path),
-    lastModified: route.lastModified ?? new Date(),
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
-    alternates: {
-      languages: buildLanguageAlternates(route.path),
-    },
-  }));
+  return routing.locales.flatMap((locale) =>
+    routes.map((route) => ({
+      url: buildLocalizedUrl(locale, route.path),
+      lastModified: route.lastModified ?? new Date(),
+      changeFrequency: route.changeFrequency,
+      priority: route.priority,
+      alternates: {
+        languages: buildLanguageAlternates(route.path),
+      },
+    })),
+  );
 }

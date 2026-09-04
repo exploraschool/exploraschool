@@ -9,7 +9,9 @@ import { DisciplineProducts } from "@/components/cart/DisciplineProducts";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR, CURSO_COLECTIVO_PER_PERSON_EUR } from "@/lib/lesson-pricing";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; discipline: string }> };
@@ -22,12 +24,12 @@ export async function generateStaticParams() {
 
 const SEO_TITLES: Record<string, { es: string; en: string }> = {
   esqui: {
-    es: "Clases de esquí alpino en Sierra Nevada",
-    en: "Alpine ski lessons in Sierra Nevada",
+    es: `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
+    en: `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
   },
   snowboard: {
-    es: "Clases de snowboard en Sierra Nevada",
-    en: "Snowboard lessons in Sierra Nevada",
+    es: `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
+    en: `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
   },
   telemark: {
     es: "Clases de telemark en Sierra Nevada",
@@ -38,8 +40,8 @@ const SEO_TITLES: Record<string, { es: string; en: string }> = {
     en: "Adaptive skiing in Sierra Nevada",
   },
   ninos: {
-    es: "Clases de esquí para niños en Sierra Nevada",
-    en: "Kids ski lessons in Sierra Nevada",
+    es: `Clases de esquí para niños en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
+    en: `Kids ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
   },
 };
 
@@ -66,27 +68,54 @@ export default async function DisciplinePage({ params }: Props) {
 
   const showModalities = disciplinesWithModalities.includes(d.id);
   const isEsquiPage = d.id === "esqui";
+  const isSnowboardPage = d.id === "snowboard";
+
+  const heading = pickLocale(
+    locale,
+    SEO_TITLES[d.id]?.es ?? d.nameEs,
+    SEO_TITLES[d.id]?.en ?? d.nameEn,
+  );
 
   return (
     <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          { name: pickLocale(locale, "Clases", "Lessons"), path: "/clases" },
+          { name: heading, path: `/clases/${slug}` },
+        ]}
+      />
       <section className="relative overflow-hidden border-b border-hielo/10 bg-white">
         <div className="container-page grid items-center gap-8 py-10 sm:py-12 md:grid-cols-2 md:gap-12 md:py-16">
           <div>
             <BackLink href="/clases">
               {pickLocale(locale, "Todas las clases", "All lessons")}
             </BackLink>
-            <h1 className="page-title mt-4">
-              {pickLocale(locale, d.nameEs, d.nameEn)}
-            </h1>
+            <h1 className="page-title mt-4">{heading}</h1>
             <p className="page-lead">
               {isEsquiPage
                 ? pickLocale(
                     locale,
-                    "Clases de esquí y snowboard para 1 a 8 participantes, todas las edades y niveles. En pista, freeride y freestyle con instructores titulados en Sierra Nevada.",
-                    "Ski and snowboard lessons for 1 to 8 participants, all ages and levels. On piste, freeride and freestyle with qualified instructors in Sierra Nevada.",
+                    `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. De 1 a 8 participantes, todas las edades y niveles. En pista, freeride y freestyle con instructores titulados.`,
+                    `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1 to 8, all ages and levels. On piste, freeride and freestyle with qualified instructors.`,
                   )
-                : pickLocale(locale, d.descriptionEs, d.descriptionEn)}
+                : isSnowboardPage
+                  ? pickLocale(
+                      locale,
+                      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. De iniciación a snowpark y fuera de pista, con instructores especializados.`,
+                      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. From first turns to snowpark and off-piste, with specialist instructors.`,
+                    )
+                  : pickLocale(locale, d.descriptionEs, d.descriptionEn)}
             </p>
+            {isSnowboardPage ? (
+              <p className="mt-3 text-sm font-medium text-hielo">
+                {pickLocale(
+                  locale,
+                  `Curso colectivo desde ${CURSO_COLECTIVO_PER_PERSON_EUR} €/persona (3 h).`,
+                  `Group course from €${CURSO_COLECTIVO_PER_PERSON_EUR}/person (3 h).`,
+                )}
+              </p>
+            ) : null}
             <p className="mt-4 text-sm text-muted">
               {isEsquiPage
                 ? pickLocale(

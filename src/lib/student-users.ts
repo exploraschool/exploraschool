@@ -22,7 +22,6 @@ export type StudentEquipment = {
   snowboardBootSize: string;
   heightCm: number | null;
   weightKg: number | null;
-  helmetSize: string;
   skiLengthCm: number | null;
   poleLengthCm: number | null;
   boardLengthCm: number | null;
@@ -84,7 +83,6 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
       snowboardBootSize: typeof row.snowboardBootSize === "string" ? row.snowboardBootSize : "",
       heightCm: typeof row.heightCm === "number" ? row.heightCm : null,
       weightKg: typeof row.weightKg === "number" ? row.weightKg : null,
-      helmetSize: typeof row.helmetSize === "string" ? row.helmetSize : "",
       skiLengthCm: typeof row.skiLengthCm === "number" ? row.skiLengthCm : null,
       poleLengthCm: typeof row.poleLengthCm === "number" ? row.poleLengthCm : null,
       boardLengthCm: typeof row.boardLengthCm === "number" ? row.boardLengthCm : null,

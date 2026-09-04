@@ -1,5 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 type ValuePropsProps = {
   locale: string;
@@ -34,10 +35,10 @@ const props = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
       </svg>
     ),
-    titleEs: "Horarios flexibles",
-    titleEn: "Flexible schedules",
-    descEs: "Día completo, 2 h y 3 h · 1–8 participantes",
-    descEn: "Full day, 2 h and 3 h · 1–8 participants",
+    titleEs: `Desde ${FULL_DAY_HOURLY_EUR} €/h`,
+    titleEn: `From €${FULL_DAY_HOURLY_EUR}/h`,
+    descEs: "Mejor precio en jornada completa",
+    descEn: "Best rate on a full day",
   },
   {
     icon: (

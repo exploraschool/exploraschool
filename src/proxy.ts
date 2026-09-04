@@ -24,7 +24,18 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 308);
   }
 
-  return intlMiddleware(request);
+  const response = intlMiddleware(request);
+
+  // next-intl uses 307 for locale prefixing (`/` → `/es`). Canonical locale
+  // URLs should be permanent so Google consolidates ranking signals.
+  if (response.status === 307 || response.status === 302) {
+    const location = response.headers.get("location");
+    if (location) {
+      return NextResponse.redirect(new URL(location, request.url), 308);
+    }
+  }
+
+  return response;
 }
 
 export const config = {

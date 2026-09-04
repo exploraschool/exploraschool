@@ -1,27 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "@/i18n/routing";
 import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
 import { parseQuickBookPeople } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
+import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
+import { GlassSelect } from "@/components/GlassSelect";
 import { setPendingHash } from "@/lib/scroll-to-anchor";
 
 type HeroQuickBookProps = {
   locale: string;
 };
 
-const peopleOptions = [
-  { value: "1", labelEs: "1 persona", labelEn: "1 person" },
-  { value: "2", labelEs: "2 personas", labelEn: "2 people" },
-  { value: "3-4", labelEs: "3–4 personas", labelEn: "3–4 people" },
-  { value: "5+", labelEs: "5+ personas", labelEn: "5+ people" },
-];
+const peopleOptions = PEOPLE_COUNT_HEADERS_ES.map((_, index) => {
+  const n = String(index + 1);
+  return { value: n, labelEs: PEOPLE_COUNT_HEADERS_ES[index], labelEn: PEOPLE_COUNT_HEADERS_EN[index] };
+});
 
 export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   const router = useRouter();
+  const disciplineLabelId = useId();
+  const peopleLabelId = useId();
   const [discipline, setDiscipline] = useState<MainDisciplineId>(getMainDisciplines()[0].slug);
   const [people, setPeople] = useState("2");
+  const disciplines = getMainDisciplines();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -33,51 +36,73 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 p-3.5 backdrop-blur-xl sm:p-5"
+      className="relative w-full max-w-xl rounded-2xl border border-white/15 bg-white/10 p-3.5 pt-4 backdrop-blur-xl sm:p-5 sm:pt-5"
     >
-      <p className="mb-3 text-xs font-bold uppercase tracking-wider text-oro-light">
+      <div
+        className="hero-offer-sticker"
+        role="img"
+        aria-label={pickLocale(
+          locale,
+          `Desde ${FULL_DAY_HOURLY_EUR} euros la hora en jornada completa`,
+          `From €${FULL_DAY_HOURLY_EUR} per hour on a full day`,
+        )}
+      >
+        <span className="hero-offer-sticker__face" aria-hidden="true">
+          <span className="hero-offer-sticker__kicker">
+            {pickLocale(locale, "Desde", "From")}
+          </span>
+          <span className="hero-offer-sticker__price">
+            {FULL_DAY_HOURLY_EUR}€
+          </span>
+        </span>
+      </div>
+
+      <p className="mb-3 pr-16 text-xs font-bold uppercase tracking-wider text-oro-light">
         {pickLocale(locale, "Reserva rápida", "Quick booking")}
       </p>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:gap-2">
-        <label className="block">
-          <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85">
+      <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end sm:gap-2">
+        <div className="block">
+          <span
+            id={disciplineLabelId}
+            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85"
+          >
             {pickLocale(locale, "Disciplina", "Discipline")}
           </span>
-          <select
+          <GlassSelect
+            labelledBy={disciplineLabelId}
+            title={pickLocale(locale, "Disciplina", "Discipline")}
+            closeLabel={pickLocale(locale, "Cerrar", "Close")}
             value={discipline}
-            onChange={(e) => setDiscipline(e.target.value as MainDisciplineId)}
-            className="field-select field-select--dark py-2.5"
-          >
-            {getMainDisciplines().map((d) => (
-              <option key={d.id} value={d.slug} className="bg-pizarra text-nieve">
-                {pickLocale(locale, d.nameEs, d.nameEn)}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={setDiscipline}
+            options={disciplines.map((d) => ({
+              value: d.slug,
+              label: pickLocale(locale, d.nameEs, d.nameEn),
+            }))}
+          />
+        </div>
 
-        <label className="block">
-          <span className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85">
+        <div className="block">
+          <span
+            id={peopleLabelId}
+            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85"
+          >
             {pickLocale(locale, "Grupo", "Group")}
           </span>
-          <select
+          <GlassSelect
+            labelledBy={peopleLabelId}
+            title={pickLocale(locale, "Grupo", "Group")}
+            closeLabel={pickLocale(locale, "Cerrar", "Close")}
             value={people}
-            onChange={(e) => setPeople(e.target.value)}
-            className="field-select field-select--dark py-2.5"
-          >
-            {peopleOptions.map((opt) => (
-              <option key={opt.value} value={opt.value} className="bg-pizarra text-nieve">
-                {pickLocale(locale, opt.labelEs, opt.labelEn)}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={setPeople}
+            options={peopleOptions.map((opt) => ({
+              value: opt.value,
+              label: pickLocale(locale, opt.labelEs, opt.labelEn),
+            }))}
+          />
+        </div>
 
-        <button
-          type="submit"
-          className="btn-primary mt-auto h-[42px] self-end !w-full sm:!w-auto sm:px-5"
-        >
+        <button type="submit" className="btn-primary mt-auto h-11 self-end !w-full sm:!w-auto sm:px-5">
           {pickLocale(locale, "Ver clases", "View lessons")}
         </button>
       </div>

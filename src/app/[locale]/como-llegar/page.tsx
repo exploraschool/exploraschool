@@ -5,6 +5,7 @@ import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { getMeetingPointEmbedUrl } from "@/lib/maps";
 import { buildPageMetadata } from "@/lib/metadata";
+import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -31,9 +32,22 @@ export default async function ComoLlegarPage({ params }: Props) {
 
   return (
     <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[
+          {
+            name: pickLocale(locale, "Cómo llegar", "Getting here"),
+            path: "/como-llegar",
+          },
+        ]}
+      />
       <PageHeader
         eyebrow={pickLocale(locale, "Ubicación", "Location")}
-        title={pickLocale(locale, "Cómo llegar", "Getting here")}
+        title={pickLocale(
+          locale,
+          "Cómo llegar a Explora School en Sierra Nevada",
+          "Getting to Explora School in Sierra Nevada",
+        )}
       />
 
       <section className="section-padding">

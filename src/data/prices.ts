@@ -1,6 +1,7 @@
 import { CURRENT_SEASON } from "./season";
 import {
   CURSO_COLECTIVO_PER_PERSON_EUR,
+  FULL_DAY_HOURLY_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
   SESSION_2H_AFTERNOON,
@@ -61,6 +62,7 @@ export const currentPrices: CurrentProductPrice[] = [
     fromPrice: SESSION_FULL_DAY[0],
     hours: 5,
     featuresEs: [
+      `Desde ${FULL_DAY_HOURLY_EUR} €/h (5 h de clase)`,
       "5 horas de clase efectivas",
       "1 hora de descanso",
       "1 y 2 personas: mismo precio total",
@@ -68,6 +70,7 @@ export const currentPrices: CurrentProductPrice[] = [
       "Punto de encuentro personalizado",
     ],
     featuresEn: [
+      `From €${FULL_DAY_HOURLY_EUR}/h (5 h of teaching)`,
       "5 hours of effective lesson time",
       "1 hour break",
       "1 and 2 people: same total price",
@@ -177,7 +180,7 @@ export const priceNotes = {
   groupTotalEn:
     "Total price for the group (not per person). 1 and 2 people pay the same price. Minimum duration: 2 hours.",
   tablesIntroEs:
-    "Para clases particulares. Duración mínima 2 horas. Elige cuántas personas sois y consulta el precio según el horario.",
+    `Para clases particulares. El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h. Duración mínima 2 horas.`,
   tablesIntroEn:
-    "For private lessons. 2-hour minimum. Select your group size and check the price for each time slot.",
+    `For private lessons. The best hourly rate is the full day: €${FULL_DAY_HOURLY_EUR}/h. 2-hour minimum.`,
 };

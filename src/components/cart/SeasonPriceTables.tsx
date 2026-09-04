@@ -10,7 +10,7 @@ import {
   readPeopleFromLocationSearch,
   type TimeSlotId,
 } from "@/lib/booking-config";
-import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
+import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 import { resolvePriceDisplay } from "@/lib/promotions";
 
@@ -106,7 +106,6 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                 const display = resolvePriceDisplay(listPrice);
                 const isRecommended = table.id === "clases-2h" && row.schedule === "10:00–12:00";
                 const isFullDay = table.id === "full-day";
-                const isAfternoonFlat = table.id === "clases-2h" && row.schedule === "14:00–16:00" && participants <= 4;
 
                 return (
                   <div
@@ -122,14 +121,13 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                           {pickLocale(locale, "Horario más solicitado", "Most requested slot")}
                         </span>
                       )}
-                      {isAfternoonFlat && (
-                        <span className="mt-0.5 block text-xs text-muted">
-                          {pickLocale(locale, "Tarifa plana 1–4 personas", "Flat rate for 1–4 people")}
-                        </span>
-                      )}
                       {isFullDay && (
                         <span className="mt-0.5 block text-xs text-muted">
-                          {pickLocale(locale, "5 h de clase + 1 h de comodín", "5 h lesson + 1 h buffer")}
+                          {pickLocale(
+                            locale,
+                            `5 h de clase · ${FULL_DAY_HOURLY_EUR} €/h`,
+                            `5 h lesson · €${FULL_DAY_HOURLY_EUR}/h`,
+                          )}
                         </span>
                       )}
                     </div>
