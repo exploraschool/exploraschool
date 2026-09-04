@@ -16,6 +16,7 @@ type GlassSelectProps<T extends string> = {
   labelledBy: string;
   title: string;
   closeLabel: string;
+  compact?: boolean;
 };
 
 function Chevron({ open }: { open: boolean }) {
@@ -46,6 +47,7 @@ export function GlassSelect<T extends string>({
   labelledBy,
   title,
   closeLabel,
+  compact = false,
 }: GlassSelectProps<T>) {
   const listId = useId();
   const titleId = useId();
@@ -238,7 +240,11 @@ export function GlassSelect<T extends string>({
         aria-controls={listId}
         aria-labelledby={labelledBy}
         onClick={() => setOpen((current) => !current)}
-        className={`flex h-11 w-full items-center justify-between gap-2 rounded-full border px-4 text-sm font-medium text-nieve shadow-[inset_0_1px_0_rgb(255_255_255_/_0.08)] backdrop-blur-md transition ${
+        className={`flex w-full items-center justify-between rounded-full border text-nieve shadow-[inset_0_1px_0_rgb(255_255_255_/_0.08)] backdrop-blur-md transition ${
+          compact
+            ? "h-10 gap-1.5 px-3 text-[0.8rem] font-medium sm:h-11 sm:gap-2 sm:px-4 sm:text-sm"
+            : "h-11 gap-2 px-4 text-sm font-medium"
+        } ${
           open
             ? "border-oro-light/45 bg-white/15"
             : "border-white/18 bg-white/10 hover:border-white/30 hover:bg-white/14"

@@ -36,7 +36,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative w-full min-w-0 max-w-xl overflow-visible rounded-2xl border border-white/15 bg-white/10 p-3.5 pt-4 backdrop-blur-xl sm:p-5 sm:pt-5"
+      className="relative w-full min-w-0 max-w-xl overflow-visible rounded-2xl border border-white/15 bg-white/10 p-3 pt-3.5 backdrop-blur-xl sm:p-5 sm:pt-5"
     >
       <div
         className="hero-offer-sticker"
@@ -57,19 +57,20 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
         </span>
       </div>
 
-      <p className="mb-3 pr-16 text-xs font-bold uppercase tracking-wider text-oro-light">
+      <p className="mb-2.5 pr-16 text-[0.65rem] font-bold uppercase tracking-wider text-oro-light sm:mb-3 sm:text-xs">
         {pickLocale(locale, "Reserva rápida", "Quick booking")}
       </p>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end sm:gap-2">
-        <div className="block">
+      <div className="grid grid-cols-2 items-end gap-2 sm:grid-cols-[1fr_1fr_auto] sm:gap-2">
+        <div className="min-w-0">
           <span
             id={disciplineLabelId}
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85"
+            className="mb-1 block text-[0.65rem] font-semibold uppercase tracking-wider text-nieve/85 sm:mb-1.5 sm:text-xs"
           >
             {pickLocale(locale, "Disciplina", "Discipline")}
           </span>
           <GlassSelect
+            compact
             labelledBy={disciplineLabelId}
             title={pickLocale(locale, "Disciplina", "Discipline")}
             closeLabel={pickLocale(locale, "Cerrar", "Close")}
@@ -82,14 +83,15 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           />
         </div>
 
-        <div className="block">
+        <div className="min-w-0">
           <span
             id={peopleLabelId}
-            className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-nieve/85"
+            className="mb-1 block text-[0.65rem] font-semibold uppercase tracking-wider text-nieve/85 sm:mb-1.5 sm:text-xs"
           >
             {pickLocale(locale, "Grupo", "Group")}
           </span>
           <GlassSelect
+            compact
             labelledBy={peopleLabelId}
             title={pickLocale(locale, "Grupo", "Group")}
             closeLabel={pickLocale(locale, "Cerrar", "Close")}
@@ -102,16 +104,19 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           />
         </div>
 
-        <button type="submit" className="btn-primary mt-auto h-11 self-end !w-full sm:!w-auto sm:px-5">
+        <button
+          type="submit"
+          className="btn-primary col-span-2 mt-0.5 h-10 !w-full py-0 sm:col-span-1 sm:mt-auto sm:h-11 sm:!w-auto sm:px-5"
+        >
           {pickLocale(locale, "Ver clases", "View lessons")}
         </button>
       </div>
 
-      <p className="mt-3 text-center text-xs text-nieve/80 sm:text-left">
+      <p className="mt-2 truncate text-center text-[0.7rem] text-nieve/80 sm:mt-3 sm:text-left sm:text-xs">
         {pickLocale(
           locale,
-          "Sin compromiso · Confirmamos disponibilidad por email",
-          "No commitment · We confirm availability by email",
+          "Sin compromiso · Confirmamos por email",
+          "No commitment · We confirm by email",
         )}
       </p>
     </form>

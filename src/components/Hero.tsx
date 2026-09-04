@@ -33,7 +33,7 @@ export function Hero({ locale }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/15 to-pizarra/35 sm:from-pizarra/80 sm:via-transparent sm:to-transparent" />
 
       <div className="hero-block__inner container-page relative">
-        <div className="grid min-w-0 items-start gap-5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        <div className="grid min-w-0 items-start gap-3.5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           <div className="max-w-xl min-w-0 animate-fade-up">
             <p className="eyebrow-pill">
               <span className="h-1.5 w-1.5 rounded-full bg-oro-light" aria-hidden />
@@ -58,7 +58,7 @@ export function Hero({ locale }: HeroProps) {
               </p>
             )}
 
-            <div className="btn-stack mt-5 sm:mt-7">
+            <div className="btn-stack mt-4 max-sm:hidden sm:mt-7">
               <Link href="/clases" className="btn-primary">
                 {pickLocale(locale, "Elegir clases", "Choose lessons")}
               </Link>

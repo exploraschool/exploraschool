@@ -847,8 +847,8 @@
     min-height: 58svh;
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 1.25rem;
-    padding-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
   }
 
   .home-trust-bar {
