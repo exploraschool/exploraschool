@@ -7,6 +7,24 @@ import { pickLocale } from "@/lib/locale";
 import { getLiveGalleryForHome } from "@/lib/live-gallery";
 import { getSierraNevadaWeather } from "@/lib/sierra-nevada-weather";
 
+function InstagramGlyph({ id, className }: { id: string; className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} aria-hidden>
+      <defs>
+        <radialGradient id={id} cx="0.3" cy="1.1" r="1.2">
+          <stop offset="0%" stopColor="#fdf497" />
+          <stop offset="45%" stopColor="#fd5949" />
+          <stop offset="60%" stopColor="#d6249f" />
+          <stop offset="90%" stopColor="#285AEB" />
+        </radialGradient>
+      </defs>
+      <rect width="24" height="24" rx="6" fill={`url(#${id})`} />
+      <circle cx="12" cy="12" r="4.35" fill="none" stroke="#fff" strokeWidth="1.85" />
+      <circle cx="17.35" cy="6.65" r="1.15" fill="#fff" />
+    </svg>
+  );
+}
+
 type HomeSocialProofProps = {
   locale: string;
 };
@@ -46,19 +64,7 @@ export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
               <div className="pointer-events-none absolute inset-0 bg-pizarra/20 transition group-hover:bg-pizarra/10" />
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                 <span className="flex h-14 w-14 items-center justify-center drop-shadow-lg transition group-hover:scale-110">
-                  <svg viewBox="0 0 24 24" className="h-14 w-14" aria-hidden>
-                    <defs>
-                      <radialGradient id="explora-ig-mark" cx="0.3" cy="1.1" r="1.2">
-                        <stop offset="0%" stopColor="#fdf497" />
-                        <stop offset="45%" stopColor="#fd5949" />
-                        <stop offset="60%" stopColor="#d6249f" />
-                        <stop offset="90%" stopColor="#285AEB" />
-                      </radialGradient>
-                    </defs>
-                    <rect width="24" height="24" rx="6" fill="url(#explora-ig-mark)" />
-                    <circle cx="12" cy="12" r="4.35" fill="none" stroke="#fff" strokeWidth="1.85" />
-                    <circle cx="17.35" cy="6.65" r="1.15" fill="#fff" />
-                  </svg>
+                  <InstagramGlyph id="explora-ig-mark" className="h-14 w-14" />
                 </span>
               </div>
             </a>
@@ -88,9 +94,18 @@ export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
                 href={media.video.instagramProfile}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-7 inline-flex text-sm font-semibold text-oro-light hover:underline sm:mt-8"
+                aria-label={pickLocale(
+                  locale,
+                  "Abrir el perfil de Instagram @explora.school",
+                  "Open the Instagram profile @explora.school",
+                )}
+                className="mt-5 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 py-1.5 pl-1.5 pr-4 text-nieve backdrop-blur-sm transition hover:border-white/30 hover:bg-white/16 sm:mt-6"
               >
-                @explora.school →
+                <InstagramGlyph id="explora-ig-follow" className="h-8 w-8 shrink-0" />
+                <span className="flex min-w-0 flex-col leading-tight">
+                  <span className="text-sm font-semibold">Instagram</span>
+                  <span className="text-[0.7rem] font-medium text-nieve/70">@explora.school</span>
+                </span>
               </a>
             </Reveal>
           </div>

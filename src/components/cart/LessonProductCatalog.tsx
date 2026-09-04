@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { products, type Product } from "@/data/products";
 import { isBookableProduct } from "@/lib/product-pricing";
 import { pickLocale } from "@/lib/locale";
+import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 
 type LessonProductCatalogProps = {
@@ -11,7 +12,7 @@ type LessonProductCatalogProps = {
 };
 
 const carouselClass =
-  "x-scroller x-scroller--bleed mt-4 flex snap-x snap-mandatory gap-4 pb-2 sm:overflow-visible sm:snap-none sm:pb-0";
+  "x-scroller x-scroller--bleed mt-3 flex snap-x snap-mandatory gap-4 pb-2 sm:mt-4 sm:overflow-visible sm:snap-none sm:pb-0";
 
 function CatalogSlide({
   children,
@@ -44,14 +45,15 @@ function CatalogCards({
   slideClassName?: string;
 }) {
   return (
-    <div
+    <HorizontalScroller
       className={`${carouselClass} ${desktopClassName}`}
-      role="list"
-      aria-label={
+      label={
         popular
           ? pickLocale(locale, "Los más elegidos", "Most popular")
-          : pickLocale(locale, "Más formatos", "More formats")
+          : pickLocale(locale, "Otros formatos", "More formats")
       }
+      prevLabel={pickLocale(locale, "Clase anterior", "Previous lesson")}
+      nextLabel={pickLocale(locale, "Clase siguiente", "Next lesson")}
     >
       {list.map((product) => (
         <CatalogSlide key={product.id} className={slideClassName}>
@@ -63,7 +65,7 @@ function CatalogCards({
           />
         </CatalogSlide>
       ))}
-    </div>
+    </HorizontalScroller>
   );
 }
 
@@ -76,7 +78,7 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
   const others = bookable.filter((p) => !p.highlighted);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-8 sm:space-y-10">
       <div>
         <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
           {pickLocale(locale, "Los más elegidos", "Most popular")}
@@ -92,7 +94,7 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
       {others.length > 0 ? (
         <div>
           <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
-            {pickLocale(locale, "Más formatos", "More formats")}
+            {pickLocale(locale, "Otros formatos", "More formats")}
           </h3>
           <CatalogCards
             products={others}

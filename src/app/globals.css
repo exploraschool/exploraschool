@@ -271,7 +271,7 @@
   }
 
   .page-header {
-    @apply relative overflow-hidden border-b border-hielo/10 bg-white py-8 sm:py-10 md:py-12 lg:py-14;
+    @apply relative overflow-hidden border-b border-hielo/10 bg-white py-5 sm:py-8 md:py-10 lg:py-12;
   }
 
   .page-header::before {
@@ -445,7 +445,7 @@
   }
 
   .early-bird-banner {
-    @apply flex items-start gap-3 rounded-2xl border border-hielo/15 bg-white px-3.5 py-3 sm:items-center sm:gap-3.5 sm:px-4 sm:py-3.5;
+    @apply flex items-center gap-2.5 rounded-2xl border border-hielo/15 bg-white px-3 py-2.5 sm:gap-3.5 sm:px-4 sm:py-3;
   }
 
   .early-bird-banner__badge {

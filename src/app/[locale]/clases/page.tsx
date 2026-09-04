@@ -42,6 +42,7 @@ export default async function ClasesPage({ params }: Props) {
         items={[{ name: pickLocale(locale, "Clases", "Lessons"), path: "/clases" }]}
       />
       <PageHeader
+        className="!pb-4 sm:!pb-6 md:!pb-8"
         title={pickLocale(locale, "Elige tu clase", "Choose your lesson")}
         description={pickLocale(
           locale,
@@ -50,7 +51,7 @@ export default async function ClasesPage({ params }: Props) {
         )}
       />
 
-      <section className="section-padding">
+      <section className="pb-8 pt-3 sm:pb-10 sm:pt-5 md:pb-12 md:pt-7 lg:pb-16">
         <div className="container-page">
           <PriceTables locale={locale} />
         </div>

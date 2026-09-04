@@ -14,7 +14,7 @@ export function PriceTables({ locale }: PriceTablesProps) {
     <>
       <section id="formatos" className="scroll-target">
         <EarlyBirdBanner locale={locale} />
-        <div className="section-body-sm">
+        <div className="mt-3 sm:mt-4">
           <LessonProductCatalog locale={locale} />
         </div>
       </section>

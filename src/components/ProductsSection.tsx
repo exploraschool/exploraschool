@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -43,12 +44,13 @@ export function ProductsSection({
           </div>
         </Reveal>
 
-        <div
+        <HorizontalScroller
           className={`x-scroller x-scroller--bleed flex snap-x snap-mandatory gap-4 pb-2 sm:grid sm:overflow-visible sm:snap-none sm:pb-0 lg:grid-cols-3 ${
             compact ? "mt-6 sm:mt-8 sm:grid-cols-2 sm:gap-5" : "section-body sm:grid-cols-2 md:gap-6"
           }`}
-          role="list"
-          aria-label={pickLocale(locale, "Los más reservados", "Most booked")}
+          label={pickLocale(locale, "Los más reservados", "Most booked")}
+          prevLabel={pickLocale(locale, "Clase anterior", "Previous lesson")}
+          nextLabel={pickLocale(locale, "Clase siguiente", "Next lesson")}
         >
           {products.map((product, i) => (
             <Reveal
@@ -59,7 +61,7 @@ export function ProductsSection({
               <LessonOfferCard product={product} locale={locale} />
             </Reveal>
           ))}
-        </div>
+        </HorizontalScroller>
       </div>
     </section>
   );
