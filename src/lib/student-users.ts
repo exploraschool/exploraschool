@@ -36,6 +36,8 @@ export type StudentProfile = {
   email: string;
   displayName: string;
   photoURL: string;
+  /** Contact phone for bookings / instructor outreach */
+  phone: string;
   locale: string;
   hasTakenClassesBefore: boolean | null;
   onboardingCompletedAt: string | null;
@@ -147,6 +149,7 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     email: typeof data.email === "string" ? data.email : "",
     displayName: typeof data.displayName === "string" ? data.displayName : "",
     photoURL: typeof data.photoURL === "string" ? data.photoURL : "",
+    phone: typeof data.phone === "string" ? data.phone.trim() : "",
     locale: typeof data.locale === "string" ? data.locale : "es",
     hasTakenClassesBefore:
       data.hasTakenClassesBefore === true ? true : data.hasTakenClassesBefore === false ? false : null,

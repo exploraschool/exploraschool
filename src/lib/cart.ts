@@ -2,6 +2,7 @@ import type { MainDisciplineId, ModalityId } from "@/data/disciplines";
 import type { ProductId } from "@/data/products";
 import type { TimeSlotId } from "@/lib/booking-config";
 import { calculateSessionPrice } from "@/lib/booking-config";
+import { getMadridDateKey } from "@/lib/booking-cutoff";
 import { applyEarlyBirdDiscount, isDiscountActiveForProduct } from "@/lib/promotions";
 
 export type CartItem = {
@@ -38,8 +39,7 @@ export function createCartItemId(): string {
 }
 
 export function getMinBookingDate(): string {
-  const today = new Date();
-  return today.toISOString().split("T")[0]!;
+  return getMadridDateKey();
 }
 
 export function getMaxBookingDate(): string {

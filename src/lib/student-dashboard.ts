@@ -21,6 +21,7 @@ import type { StudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import type { StudentProfile } from "@/lib/student-users";
 import { bookingStatusWhatsappText, newLessonWhatsappText, whatsappHref } from "@/lib/whatsapp";
+import { ensureTipsMigratedFromStaffTips, listStudentTips, type StudentTip } from "@/lib/student-tips";
 
 export type DashboardLesson = {
   leadId: string;
@@ -44,6 +45,7 @@ export type StudentDashboard = {
   confirmed: DashboardLesson[];
   history: DashboardLesson[];
   reports: ProgressReport[];
+  tips: StudentTip[];
   hours: number;
   badges: { id: string; label: string }[];
   meetingPoint: string;
@@ -98,6 +100,7 @@ export async function loadStudentDashboard(session: StudentSession): Promise<Stu
     confirmed: [],
     history: [],
     reports: [],
+    tips: [],
     hours: 0,
     badges: [],
     meetingPoint,
@@ -128,7 +131,14 @@ export async function loadStudentDashboard(session: StudentSession): Promise<Stu
     });
 
   const reports = reportsSnap.docs.map((doc) => parseProgressReport(doc.id, doc.data() as Record<string, unknown>));
-  const reportIds = new Set(reports.map((report) => report.id));
+  const reportIds = new Set<string>();
+  for (const report of reports) {
+    reportIds.add(report.id);
+    reportIds.add(`${report.leadId}_${report.itemIndex}`);
+  }
+  const tips = profile
+    ? await ensureTipsMigratedFromStaffTips(session.uid, profile.staffTips)
+    : await listStudentTips(session.uid, 20);
   const requested: DashboardLesson[] = [];
   const confirmed: DashboardLesson[] = [];
   const history: DashboardLesson[] = [];
@@ -160,6 +170,7 @@ export async function loadStudentDashboard(session: StudentSession): Promise<Stu
     confirmed,
     history,
     reports,
+    tips,
     hours: totalProgressHours(reports) || confirmed.concat(history).reduce((sum, item) => sum + item.hours, 0),
     badges: earnedBadges(reports, locale),
     meetingPoint,

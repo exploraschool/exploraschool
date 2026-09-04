@@ -24,6 +24,9 @@ type ProgressFormProps = {
   initial: ProgressReport | null;
   instructors?: InstructorOption[];
   defaultInstructorSlug?: string;
+  companions?: { id: string; name: string; relationLabel: string }[];
+  companionId?: string;
+  onCompanionChange?: (companionId: string) => void;
 };
 
 export function ProgressForm({
@@ -37,6 +40,9 @@ export function ProgressForm({
   initial,
   instructors = [],
   defaultInstructorSlug = "",
+  companions = [],
+  companionId = "",
+  onCompanionChange,
 }: ProgressFormProps) {
   const router = useRouter();
   const initialDiscipline: ProgressDisciplineId = isProgressDiscipline(initial?.discipline || defaultDiscipline)
@@ -52,6 +58,7 @@ export function ProgressForm({
   const [skills, setSkills] = useState<Record<string, number>>(initial?.skills ?? {});
   const [rating, setRating] = useState(initial?.rating ?? 3);
   const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [nextFocus, setNextFocus] = useState(initial?.nextFocus ?? "");
   const [pistas, setPistas] = useState<string[]>(initial?.recommendedPistaIds ?? []);
   const [hours, setHours] = useState(initial?.hours ?? defaultHours);
   const [media, setMedia] = useState<ProgressMedia[]>(initial?.media ?? []);
@@ -60,6 +67,7 @@ export function ProgressForm({
   const [error, setError] = useState("");
 
   const skillList = useMemo(() => PROGRESS_SKILLS[discipline], [discipline]);
+  const reportKey = companionId ? `${leadId}_${itemIndex}_${companionId}` : `${leadId}_${itemIndex}`;
 
   function togglePista(id: string) {
     setPistas((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
@@ -85,8 +93,10 @@ export function ProgressForm({
           skills,
           rating,
           notes,
+          nextFocus,
           recommendedPistaIds: pistas,
           hours,
+          companionId: companionId || undefined,
           media: nextMedia,
         }),
       });
@@ -116,6 +126,7 @@ export function ProgressForm({
           body: JSON.stringify({
             leadId,
             itemIndex,
+            companionId: companionId || undefined,
             contentType: file.type || "application/octet-stream",
             fileName: file.name,
           }),
@@ -133,6 +144,7 @@ export function ProgressForm({
           const form = new FormData();
           form.set("leadId", leadId);
           form.set("itemIndex", String(itemIndex));
+          if (companionId) form.set("companionId", companionId);
           form.set("file", file);
           const fallback = await fetch("/api/admin/progress/upload", { method: "POST", body: form });
           const fallbackPayload = (await fallback.json()) as { media?: ProgressMedia; error?: string };
@@ -154,13 +166,12 @@ export function ProgressForm({
   }
 
   async function removeMedia(id: string) {
-    const reportId = `${leadId}_${itemIndex}`;
     setBusy(true);
     try {
       await fetch("/api/admin/progress/media", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportId, mediaId: id }),
+        body: JSON.stringify({ reportId: reportKey, mediaId: id }),
       });
       setMedia((current) => current.filter((item) => item.id !== id));
     } finally {
@@ -182,6 +193,24 @@ export function ProgressForm({
           {studentEmail} · {dateLabel}
         </p>
       </div>
+
+      {companions.length > 0 && onCompanionChange ? (
+        <label className="block text-sm font-semibold">
+          Persona de la ficha
+          <select
+            className="mt-1 w-full rounded-xl border border-hielo/15 bg-white px-3 py-2"
+            value={companionId}
+            onChange={(event) => onCompanionChange(event.target.value)}
+          >
+            <option value="">Titular ({studentName})</option>
+            {companions.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name} ({item.relationLabel})
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
 
       {instructors.length > 0 ? (
         <label className="block text-sm font-semibold">
@@ -265,6 +294,21 @@ export function ProgressForm({
           rows={5}
           className="mt-1 w-full rounded-xl border border-hielo/15 bg-white px-3 py-2"
         />
+      </label>
+
+      <label className="block text-sm font-semibold">
+        Foco para la próxima clase
+        <textarea
+          value={nextFocus}
+          onChange={(event) => setNextFocus(event.target.value)}
+          rows={2}
+          maxLength={500}
+          placeholder="Qué trabajar en la siguiente sesión…"
+          className="mt-1 w-full rounded-xl border border-hielo/15 bg-white px-3 py-2"
+        />
+        <span className="mt-1 block text-xs font-normal text-muted">
+          Se muestra al alumno y se añade al historial de tips (sin pinear).
+        </span>
       </label>
 
       <div>

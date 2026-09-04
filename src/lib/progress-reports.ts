@@ -28,6 +28,8 @@ export type ProgressReport = {
   skills: Record<string, number>;
   rating: number;
   notes: string;
+  /** Focus for the next lesson — shown prominently to the student. */
+  nextFocus: string;
   recommendedPistaIds: string[];
   hours: number;
   media: ProgressMedia[];
@@ -35,8 +37,10 @@ export type ProgressReport = {
   updatedAt: string;
 };
 
-export function progressReportId(leadId: string, itemIndex: number): string {
-  return `${leadId}_${itemIndex}`;
+export function progressReportId(leadId: string, itemIndex: number, companionId?: string): string {
+  const base = `${leadId}_${itemIndex}`;
+  if (companionId?.trim()) return `${base}_${companionId.trim()}`;
+  return base;
 }
 
 export function mediaKindFromContentType(contentType: string): ProgressMediaKind {
@@ -85,6 +89,7 @@ export function parseProgressReport(id: string, data: Record<string, unknown>): 
     skills,
     rating: typeof data.rating === "number" ? Math.min(5, Math.max(1, data.rating)) : 3,
     notes: typeof data.notes === "string" ? data.notes : "",
+    nextFocus: typeof data.nextFocus === "string" ? data.nextFocus.trim() : "",
     recommendedPistaIds,
     hours: typeof data.hours === "number" ? data.hours : 0,
     media,

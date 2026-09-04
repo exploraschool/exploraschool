@@ -23,6 +23,7 @@ export async function GET() {
       email: session.email,
       displayName: profile?.displayName || session.name,
       photoURL: profile?.photoURL || session.picture,
+      phone: profile?.phone || "",
       onboardingComplete: profile ? isOnboardingComplete(profile) : false,
     },
   });

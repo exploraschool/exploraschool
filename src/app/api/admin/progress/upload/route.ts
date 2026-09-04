@@ -39,6 +39,7 @@ export async function POST(request: Request) {
   const form = await request.formData();
   const leadId = String(form.get("leadId") || "");
   const itemIndex = Number(form.get("itemIndex"));
+  const companionId = String(form.get("companionId") || "").trim() || undefined;
   const file = form.get("file");
   if (!leadId || !Number.isInteger(itemIndex) || !(file instanceof File)) {
     return NextResponse.json({ error: "invalid_data" }, { status: 400 });
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_type" }, { status: 400 });
   }
 
-  const reportId = progressReportId(leadId, itemIndex);
+  const reportId = progressReportId(leadId, itemIndex, companionId);
   const existing = await db.collection(PROGRESS_REPORTS_COLLECTION).doc(reportId).get();
   const current: ProgressMedia[] = existing.exists
     ? parseProgressReport(reportId, existing.data() as Record<string, unknown>).media

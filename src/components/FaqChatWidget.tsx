@@ -5,10 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import {
   FAQ_CHAT_NODES,
+  FAQ_CHAT_PROMPT,
   FAQ_CHAT_WHATSAPP_URL,
   type FaqChatButton,
 } from "@/data/faq-chat";
 import { media } from "@/lib/media";
+import { pickLocale } from "@/lib/locale";
 
 type ChatLine =
   | { id: string; role: "bot"; text: string }
@@ -183,21 +185,38 @@ export function FaqChatWidget() {
             </div>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <button
+          type="button"
+          onClick={openChat}
+          className="chat-prompt-bubble pointer-events-auto relative z-10 max-w-[13.5rem] rounded-2xl rounded-br-md border border-hielo/12 bg-white px-3.5 py-2 text-left text-sm font-semibold leading-snug text-pizarra"
+        >
+          <span className="flex items-center gap-2">
+            <span className="relative mt-px flex h-2 w-2 shrink-0" aria-hidden>
+              <span className="chat-live-dot absolute inline-flex h-full w-full rounded-full bg-hielo/55" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-hielo" />
+            </span>
+            {pickLocale(locale, FAQ_CHAT_PROMPT, "How can I help you?")}
+          </span>
+        </button>
+      )}
 
       <button
         type="button"
         onClick={() => (open ? closeChat() : openChat())}
-        className="pointer-events-auto h-14 w-14 transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo active:scale-[0.97] sm:h-16 sm:w-16"
+        className="pointer-events-auto relative z-0 flex h-14 w-14 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo sm:h-16 sm:w-16"
         aria-label={open ? "Cerrar asistente" : "Abrir asistente"}
         aria-expanded={open}
       >
+        {!open ? (
+          <span className="chat-logo-ring pointer-events-none absolute inset-0 rounded-full bg-hielo/25" aria-hidden />
+        ) : null}
         <Image
           src={media.logoMark}
           alt=""
           width={64}
           height={64}
-          className="h-full w-full object-contain drop-shadow-[0_8px_18px_rgba(14,26,36,0.32)]"
+          className="relative z-[1] h-full w-full object-contain drop-shadow-[0_8px_18px_rgba(14,26,36,0.32)]"
         />
       </button>
     </div>

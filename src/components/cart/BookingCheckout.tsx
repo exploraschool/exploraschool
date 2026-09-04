@@ -6,17 +6,25 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCart } from "@/context/CartContext";
 import { estimateCartTotal } from "@/lib/cart";
+import { partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import { pickLocale } from "@/lib/locale";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 import { site } from "@/data/site";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { BookingCartLine } from "@/components/cart/BookingCartLine";
+import {
+  BookingIdentityPanel,
+  type BookingStudentUser,
+} from "@/components/cart/BookingIdentityPanel";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
 import { PriceTag } from "@/components/PriceTag";
 import { getHighlightedProducts } from "@/data/products";
 
 const inputClass =
   "w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm text-pizarra placeholder:text-muted focus:border-hielo focus:outline-none";
+
+const inputLockedClass =
+  "w-full cursor-default rounded-xl border border-hielo/10 bg-hielo/[0.04] px-4 py-3 text-sm text-pizarra";
 
 export function BookingCheckout() {
   const t = useTranslations("cart");
@@ -31,12 +39,59 @@ export function BookingCheckout() {
   const [privacy, setPrivacy] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<"generic" | "cutoff" | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+  const [student, setStudent] = useState<BookingStudentUser | null>(null);
+  const [identitySeeded, setIdentitySeeded] = useState(false);
 
   useEffect(() => {
     if (!sent) return;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [sent]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadSession() {
+      try {
+        const res = await fetch("/api/cuenta/me");
+        const payload = (await res.json().catch(() => null)) as
+          | { user?: BookingStudentUser | null }
+          | null;
+        if (!cancelled) {
+          setStudent(payload?.user ?? null);
+        }
+      } catch {
+        if (!cancelled) setStudent(null);
+      } finally {
+        if (!cancelled) setAuthReady(true);
+      }
+    }
+
+    void loadSession();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!student || identitySeeded) return;
+    setName((current) => current.trim() || student.displayName || "");
+    setEmail(student.email);
+    setPhone((current) => current.trim() || student.phone || "");
+    setIdentitySeeded(true);
+  }, [student, identitySeeded]);
+
+  function applySignedInUser(user: BookingStudentUser) {
+    setStudent(user);
+    setName(user.displayName || "");
+    setEmail(user.email);
+    setPhone(user.phone || "");
+    setIdentitySeeded(true);
+    window.setTimeout(() => {
+      document.getElementById("bk-phone")?.focus();
+    }, 80);
+  }
 
   const sortedItems = useMemo(
     () => [...items].sort((a, b) => a.date.localeCompare(b.date) || a.timeSlotLabel.localeCompare(b.timeSlotLabel)),
@@ -48,18 +103,36 @@ export function BookingCheckout() {
   const itemsMissingDiscipline = items.some((item) => !item.discipline);
   const showDiscountLabel =
     isEarlyBirdActive() || items.some((item) => isDiscountActiveForProduct(item.productId));
+  const signedIn = Boolean(student);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !privacy || items.length === 0) return;
+    if (signedIn && !phone.trim()) {
+      setError("generic");
+      return;
+    }
     if (itemsMissingDiscipline) {
-      setError(true);
+      setError("generic");
       return;
     }
 
     if (sending) return;
-    setError(false);
+    setError(null);
     setSending(true);
+
+    const { bookable, tooLate } = partitionByBookingCutoff(items);
+    if (tooLate.length > 0) {
+      for (const item of tooLate) removeItem(item.id);
+      setError("cutoff");
+      setSending(false);
+      return;
+    }
+    if (bookable.length === 0) {
+      setError("cutoff");
+      setSending(false);
+      return;
+    }
 
     const customer = {
       name: name.trim(),
@@ -80,16 +153,32 @@ export function BookingCheckout() {
           privacy: true,
           locale,
           source: "booking-cart",
-          bookingItems: sortedItems.map(({ id: _id, ...item }) => item),
-          estimatedTotal: total,
+          bookingItems: bookable
+            .slice()
+            .sort((a, b) => a.date.localeCompare(b.date) || a.timeSlotLabel.localeCompare(b.timeSlotLabel))
+            .map(({ id: _id, ...item }) => item),
+          estimatedTotal: estimateCartTotal(bookable),
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Request failed");
+        let code: string | undefined;
+        try {
+          const payload = (await response.json()) as { code?: string; error?: string };
+          code = payload.code ?? payload.error;
+        } catch {
+          /* ignore */
+        }
+        if (code === "booking_cutoff") {
+          setError("cutoff");
+        } else {
+          setError("generic");
+        }
+        setSending(false);
+        return;
       }
     } catch {
-      setError(true);
+      setError("generic");
       setSending(false);
       return;
     }
@@ -120,21 +209,29 @@ export function BookingCheckout() {
         </div>
         <h2 className="mt-5 font-display text-2xl font-semibold text-hielo sm:text-3xl">{t("bookingSent")}</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted sm:text-base">{t("bookingSentDesc")}</p>
+        {signedIn ? (
+          <p className="mt-3 text-sm text-hielo">{t("bookingSentAccount")}</p>
+        ) : null}
         <p className="mt-4 text-xs font-medium uppercase tracking-wider text-hielo/70">
           {t("reassuranceNoPay")} · {t("reassuranceEmail")}
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          {signedIn ? (
+            <Link href="/cuenta" className="btn-primary !w-auto">
+              {t("openAccount")}
+            </Link>
+          ) : null}
           <button
             type="button"
             onClick={() => {
               clearCart();
               setSent(false);
             }}
-            className="btn-secondary !w-auto"
+            className={signedIn ? "btn-secondary !w-auto" : "btn-secondary !w-auto"}
           >
             {t("newBooking")}
           </button>
-          <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !w-auto">
+          <a href={site.whatsappUrl} target="_blank" rel="noopener noreferrer" className={signedIn ? "btn-secondary !w-auto" : "btn-primary !w-auto"}>
             WhatsApp
           </a>
         </div>
@@ -249,7 +346,9 @@ export function BookingCheckout() {
           >
             <div className="shrink-0 border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
               <h2 className="font-display text-xl font-semibold text-hielo">{t("checkout")}</h2>
-              <p className="mt-1.5 text-sm text-muted">{t("checkoutDesc")}</p>
+              <p className="mt-1.5 text-sm text-muted">
+                {signedIn ? t("checkoutDescSignedIn") : t("checkoutDesc")}
+              </p>
             </div>
 
             <div className="space-y-4 px-5 py-5 sm:px-6 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:overscroll-contain">
@@ -263,18 +362,27 @@ export function BookingCheckout() {
               </div>
 
               <ul className="flex flex-wrap gap-2">
-                {[t("reassuranceNoPay"), t("reassuranceEmail")].map((label) => (
-                  <li
-                    key={label}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-hielo/15 bg-nieve px-3 py-1 text-xs font-medium text-muted"
-                  >
-                    <svg className="h-3.5 w-3.5 text-hielo" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
-                    {label}
-                  </li>
-                ))}
+                {[t("reassuranceNoPay"), t("reassuranceEmail"), ...(signedIn ? [t("reassuranceAccount")] : [])].map(
+                  (label) => (
+                    <li
+                      key={label}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-hielo/15 bg-nieve px-3 py-1 text-xs font-medium text-muted"
+                    >
+                      <svg className="h-3.5 w-3.5 text-hielo" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                      </svg>
+                      {label}
+                    </li>
+                  ),
+                )}
               </ul>
+
+              <BookingIdentityPanel
+                locale={locale}
+                user={student}
+                authReady={authReady}
+                onSignedIn={applySignedInUser}
+              />
 
               <div>
                 <label htmlFor="bk-name" className="mb-1.5 block text-sm font-medium">
@@ -292,22 +400,33 @@ export function BookingCheckout() {
                     id="bk-email"
                     type="email"
                     required
+                    readOnly={signedIn}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={inputClass}
+                    className={signedIn ? inputLockedClass : inputClass}
+                    title={signedIn ? t("emailLockedHint") : undefined}
                   />
+                  {signedIn ? (
+                    <p className="mt-1 text-xs text-muted">{t("emailLockedHint")}</p>
+                  ) : null}
                 </div>
                 <div>
                   <label htmlFor="bk-phone" className="mb-1.5 block text-sm font-medium">
-                    {t("yourPhone")}
+                    {t("yourPhone")} {signedIn ? "*" : ""}
                   </label>
                   <input
                     id="bk-phone"
                     type="tel"
+                    required={signedIn}
+                    autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    placeholder={t("phonePlaceholder")}
                     className={inputClass}
                   />
+                  {signedIn ? (
+                    <p className="mt-1 text-xs text-muted">{t("phoneHint")}</p>
+                  ) : null}
                 </div>
               </div>
 
@@ -341,7 +460,7 @@ export function BookingCheckout() {
                 disabled={itemsMissingDiscipline || sending}
                 className="btn-primary w-full disabled:opacity-50"
               >
-                {sending ? tc("loading") : t("sendBooking")}
+                {sending ? tc("loading") : signedIn ? t("sendBookingSignedIn") : t("sendBooking")}
               </button>
 
               <p className="text-center text-xs text-muted">
@@ -358,7 +477,8 @@ export function BookingCheckout() {
                 </a>
               </div>
 
-              {error && <p className="text-sm text-accent">{tc("error")}</p>}
+              {error === "cutoff" && <p className="text-sm text-accent">{t("bookingCutoffError")}</p>}
+              {error === "generic" && <p className="text-sm text-accent">{tc("error")}</p>}
             </div>
           </form>
         </div>

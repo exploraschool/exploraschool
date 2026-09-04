@@ -21,6 +21,8 @@ import {
 import { formatEquipmentSummary } from "@/lib/student-equipment";
 import type { ProgressReport } from "@/lib/progress-reports";
 import type { StudentProfile } from "@/lib/student-users";
+import type { StudentTip } from "@/lib/student-tips";
+import { buildSkillTimeline } from "@/lib/skill-bridge";
 import { StudentLogoutButton } from "@/components/cuenta/StudentLogoutButton";
 import { StudentMediaUploader } from "@/components/cuenta/StudentMediaUploader";
 
@@ -51,6 +53,7 @@ type AccountDashboardProps = {
   confirmed: Lesson[];
   history: Lesson[];
   reports: ProgressReport[];
+  tips: StudentTip[];
   hours: number;
   badges: { id: string; label: string }[];
   meetingPoint: string;
@@ -120,6 +123,7 @@ export function AccountDashboard({
   confirmed,
   history,
   reports,
+  tips,
   hours,
   badges,
   meetingPoint,
@@ -142,6 +146,11 @@ export function AccountDashboard({
   );
   const nextLesson = useMemo(() => pickNextLesson(confirmedSorted), [confirmedSorted]);
   const latestReport = reportsSorted[0] ?? null;
+  const pinnedTip = useMemo(() => tips.find((tip) => tip.pinned) ?? null, [tips]);
+  const tipHistory = useMemo(
+    () => tips.filter((tip) => !tip.pinned).slice(0, 8),
+    [tips],
+  );
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -239,10 +248,28 @@ export function AccountDashboard({
         ) : null}
       </div>
 
-      {profile?.staffTips ? (
+      {pinnedTip ? (
+        <aside className="mt-4 rounded-xl border border-oro/20 bg-gradient-to-br from-white to-hielo/5 px-3.5 py-3 sm:mt-5 sm:rounded-2xl sm:px-5 sm:py-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
+          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{pinnedTip.text}</p>
+          {pinnedTip.authorName ? (
+            <p className="mt-2 text-xs text-muted">
+              {pinnedTip.authorName}
+              {pinnedTip.createdAt ? ` · ${pinnedTip.createdAt.slice(0, 10)}` : ""}
+            </p>
+          ) : null}
+        </aside>
+      ) : profile?.staffTips ? (
         <aside className="mt-4 rounded-xl border border-oro/20 bg-gradient-to-br from-white to-hielo/5 px-3.5 py-3 sm:mt-5 sm:rounded-2xl sm:px-5 sm:py-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
           <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{profile.staffTips}</p>
+        </aside>
+      ) : null}
+
+      {latestReport?.nextFocus ? (
+        <aside className="mt-3 rounded-xl border border-hielo/15 bg-white px-3.5 py-3 sm:rounded-2xl sm:px-5 sm:py-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
+          <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{latestReport.nextFocus}</p>
         </aside>
       ) : null}
 
@@ -374,6 +401,8 @@ export function AccountDashboard({
           hours={hours}
           badges={badges}
           reports={reportsSorted}
+          tips={tips}
+          tipHistory={tipHistory}
           profile={profile}
           locale={locale}
           t={t}
@@ -719,6 +748,8 @@ function ProgressPanel({
   hours,
   badges,
   reports,
+  tips,
+  tipHistory,
   profile,
   locale,
   t,
@@ -729,6 +760,8 @@ function ProgressPanel({
   hours: number;
   badges: { id: string; label: string }[];
   reports: ProgressReport[];
+  tips: StudentTip[];
+  tipHistory: StudentTip[];
   profile: StudentProfile | null;
   locale: string;
   t: ReturnType<typeof useTranslations<"account">>;
@@ -736,6 +769,11 @@ function ProgressPanel({
   lastInstructorName: string;
   meetingPoint: string;
 }) {
+  const primaryDiscipline = (profile?.disciplines[0] ||
+    reports[0]?.discipline ||
+    "esqui") as ProgressDisciplineId;
+  const skillTimeline = buildSkillTimeline(reports, primaryDiscipline, locale);
+
   return (
     <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
       <div className="grid grid-cols-2 gap-2 sm:gap-3">
@@ -758,6 +796,64 @@ function ProgressPanel({
           </div>
         </div>
       </div>
+
+      {tips.some((tip) => tip.pinned) || tipHistory.length ? (
+        <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
+          <h2 className="font-display text-xl text-hielo">{t("tipsHistory")}</h2>
+          <ul className="mt-3 space-y-3">
+            {tips
+              .filter((tip) => tip.pinned)
+              .map((tip) => (
+                <li key={tip.id} className="rounded-xl border border-oro/20 bg-hielo/5 px-3 py-2 text-sm">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
+                  <p className="mt-1 whitespace-pre-wrap text-pizarra">{tip.text}</p>
+                </li>
+              ))}
+            {tipHistory.map((tip) => (
+              <li key={tip.id} className="rounded-xl bg-nieve/70 px-3 py-2 text-sm">
+                <p className="whitespace-pre-wrap text-pizarra">{tip.text}</p>
+                <p className="mt-1 text-xs text-muted">
+                  {tip.authorName || "Explora"} · {tip.createdAt.slice(0, 10)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {skillTimeline.length ? (
+        <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
+          <h2 className="font-display text-xl text-hielo">{t("skillEvolution")}</h2>
+          <p className="mt-1 text-xs text-muted">{progressDisciplineName(primaryDiscipline, locale)}</p>
+          <ul className="mt-3 space-y-2">
+            {skillTimeline.slice(0, 8).map((row) => (
+              <li key={row.skillId} className="text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span>{row.label}</span>
+                  <span className="tabular-nums text-muted">
+                    {row.latest}/5
+                    {row.delta != null ? (
+                      <span className={row.delta >= 0 ? " text-hielo" : " text-accent"}>
+                        {" "}
+                        ({row.delta >= 0 ? "+" : ""}
+                        {row.delta})
+                      </span>
+                    ) : null}
+                  </span>
+                </div>
+                <div className="mt-1 flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span
+                      key={n}
+                      className={`h-1.5 flex-1 rounded-full ${(row.latest ?? 0) >= n ? "bg-hielo" : "bg-hielo/15"}`}
+                    />
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {profile?.selfSkills && Object.keys(profile.selfSkills).length ? (
         <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
@@ -841,6 +937,12 @@ function ReportCard({
         <p className="mt-1 text-sm text-muted">
           {progressDisciplineName(report.discipline as ProgressDisciplineId, locale)}
         </p>
+      ) : null}
+      {report.nextFocus ? (
+        <div className="mt-3 rounded-xl bg-hielo/5 px-3 py-2">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
+          <p className="mt-1 whitespace-pre-wrap text-sm text-pizarra">{report.nextFocus}</p>
+        </div>
       ) : null}
       {report.notes ? <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{report.notes}</p> : null}
 

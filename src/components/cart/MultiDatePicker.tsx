@@ -22,6 +22,8 @@ type MultiDatePickerProps = {
   minDays?: number;
   maxDays?: number;
   requireConsecutiveDays?: boolean;
+  /** Extra unavailable dates (e.g. too close to class start for the selected slot). */
+  isDateUnavailable?: (dateKey: string) => boolean;
 };
 
 const CALENDAR_ROWS = 6;
@@ -57,6 +59,7 @@ export function MultiDatePicker({
   minDays,
   maxDays,
   requireConsecutiveDays = false,
+  isDateUnavailable,
 }: MultiDatePickerProps) {
   const min = getMinBookingDate();
   const max = getMaxBookingDate();
@@ -124,7 +127,7 @@ export function MultiDatePicker({
   const courseStartDate = rangeAnchor ?? sortedDates[0] ?? null;
 
   function isDisabled(dateKey: string): boolean {
-    return dateKey < min || dateKey > max;
+    return dateKey < min || dateKey > max || Boolean(isDateUnavailable?.(dateKey));
   }
 
   function clearSelection() {

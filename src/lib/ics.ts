@@ -1,4 +1,5 @@
 import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
+import { getLessonStartDate, getSlotStartHour } from "@/lib/booking-cutoff";
 
 function pad(value: number): string {
   return String(value).padStart(2, "0");
@@ -11,15 +12,6 @@ function icsUtc(date: Date): string {
   );
 }
 
-function slotStartHour(slotId: string): { start: number; hours: number } {
-  const slot = TIME_SLOTS[slotId as TimeSlotId];
-  if (slotId.startsWith("fd")) return { start: 10, hours: slot?.hours ?? 6 };
-  if (slotId.includes("14-16") || slotId.includes("14-17")) return { start: 14, hours: slot?.hours ?? 2 };
-  if (slotId.includes("12-14") || slotId.includes("12-15")) return { start: 12, hours: slot?.hours ?? 2 };
-  if (slotId.includes("10-")) return { start: 10, hours: slot?.hours ?? 2 };
-  return { start: 10, hours: slot?.hours ?? 2 };
-}
-
 export function buildLessonIcs(params: {
   title: string;
   date: string;
@@ -27,9 +19,14 @@ export function buildLessonIcs(params: {
   location: string;
   description: string;
 }): string {
-  const { start, hours } = slotStartHour(params.timeSlotId);
-  const [year, month, day] = params.date.split("-").map(Number);
-  const begin = new Date(year, (month || 1) - 1, day || 1, start, 0, 0);
+  const slot = TIME_SLOTS[params.timeSlotId as TimeSlotId];
+  const hours = slot?.hours ?? 2;
+  const begin =
+    getLessonStartDate(params.date, params.timeSlotId) ??
+    (() => {
+      const [year, month, day] = params.date.split("-").map(Number);
+      return new Date(year, (month || 1) - 1, day || 1, getSlotStartHour(params.timeSlotId), 0, 0);
+    })();
   const end = new Date(begin.getTime() + hours * 60 * 60 * 1000);
   const stamp = icsUtc(new Date());
   const uid = `${params.date}-${params.timeSlotId}@explora-school.es`;

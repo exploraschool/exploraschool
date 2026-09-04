@@ -14,6 +14,7 @@ import {
   PROGRESS_REPORTS_COLLECTION,
 } from "@/lib/progress-reports";
 import type { StoredLead } from "@/lib/leads";
+import { ensureTipsMigratedFromStaffTips } from "@/lib/student-tips";
 
 type Props = { params: Promise<{ uid: string }> };
 
@@ -46,12 +47,24 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
   }[] = [];
   if (db) {
     try {
-      const reportSnap = await db.collection(PROGRESS_REPORTS_COLLECTION).get();
+      const reportSnap = await db
+        .collection(PROGRESS_REPORTS_COLLECTION)
+        .where("studentUid", "==", uid)
+        .get()
+        .catch(async () => {
+          const all = await db.collection(PROGRESS_REPORTS_COLLECTION).get();
+          return {
+            docs: all.docs.filter((doc) => {
+              const data = doc.data() as Record<string, unknown>;
+              return (
+                data.studentUid === uid ||
+                String(data.studentEmail || "").toLowerCase() === profile.email.toLowerCase()
+              );
+            }),
+          };
+        });
       for (const doc of reportSnap.docs) {
-        const report = parseProgressReport(doc.id, doc.data() as Record<string, unknown>);
-        if (report.studentUid === uid || report.studentEmail.toLowerCase() === profile.email.toLowerCase()) {
-          reports.push(report);
-        }
+        reports.push(parseProgressReport(doc.id, doc.data() as Record<string, unknown>));
       }
       reports.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
     } catch {
@@ -59,13 +72,24 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
     }
 
     try {
-      const leadSnap = await db.collection("leads").get();
+      const leadSnap = await db
+        .collection("leads")
+        .where("studentUid", "==", uid)
+        .get()
+        .catch(async () => {
+          const all = await db.collection("leads").get();
+          return {
+            docs: all.docs.filter((doc) => {
+              const data = doc.data() as Record<string, unknown>;
+              return (
+                data.studentUid === uid ||
+                String(data.email || "").toLowerCase() === profile.email.toLowerCase()
+              );
+            }),
+          };
+        });
       for (const doc of leadSnap.docs) {
         const lead = { id: doc.id, ...(doc.data() as StoredLead) };
-        const match =
-          lead.studentUid === uid ||
-          (lead.email || "").toLowerCase() === profile.email.toLowerCase();
-        if (!match) continue;
         (lead.bookingItems ?? []).forEach((item, itemIndex) => {
           bookings.push({
             leadId: lead.id,
@@ -87,6 +111,7 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
   }
 
   const media = await listStudentMediaForUid(uid);
+  const tips = await ensureTipsMigratedFromStaffTips(uid, profile.staffTips);
 
   return (
     <AdminShell
@@ -108,6 +133,7 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
         bookings={bookings}
         media={media}
         instructors={instructors}
+        initialTips={tips}
       />
     </AdminShell>
   );

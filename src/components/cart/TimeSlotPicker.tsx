@@ -11,6 +11,9 @@ type TimeSlotPickerProps = {
   value: string;
   onChange: (slotId: string) => void;
   title: string;
+  /** Slot ids that cannot be booked (e.g. less than 1 hour before start). */
+  disabledSlotIds?: readonly string[];
+  disabledHint?: string;
 };
 
 function getDurationGroups(slots: TimeSlot[]): number[] {
@@ -19,7 +22,16 @@ function getDurationGroups(slots: TimeSlot[]): number[] {
     .sort((a, b) => a - b);
 }
 
-export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSlotPickerProps) {
+export function TimeSlotPicker({
+  locale,
+  slots,
+  value,
+  onChange,
+  title,
+  disabledSlotIds = [],
+  disabledHint,
+}: TimeSlotPickerProps) {
+  const disabled = useMemo(() => new Set(disabledSlotIds), [disabledSlotIds]);
   const bookableSlots = useMemo(
     () => slots.filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS),
     [slots],
@@ -46,10 +58,17 @@ export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSl
   if (bookableSlots.length <= 1) {
     const slot = bookableSlots[0];
     if (!slot) return null;
+    const isDisabled = disabled.has(slot.id);
     return (
       <div>
         <p className="mb-2 text-sm font-medium">{title}</p>
-        <div className="rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm font-semibold text-hielo">
+        <div
+          className={`rounded-xl border px-4 py-3 text-sm font-semibold ${
+            isDisabled
+              ? "border-hielo/10 bg-nieve/60 text-muted"
+              : "border-hielo/15 bg-nieve text-hielo"
+          }`}
+        >
           {pickLocale(locale, slot.labelEs, slot.labelEn)}
           {slot.hours > 0 && (
             <span className="ml-2 text-xs font-normal text-muted">
@@ -57,6 +76,9 @@ export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSl
             </span>
           )}
         </div>
+        {isDisabled && disabledHint ? (
+          <p className="mt-2 text-xs text-accent">{disabledHint}</p>
+        ) : null}
       </div>
     );
   }
@@ -105,24 +127,35 @@ export function TimeSlotPicker({ locale, slots, value, onChange, title }: TimeSl
       <div className="grid grid-cols-1 gap-2 min-[400px]:grid-cols-2">
         {visibleSlots.map((slot) => {
           const selected = value === slot.id;
+          const isDisabled = disabled.has(slot.id);
           return (
             <button
               key={slot.id}
               type="button"
+              disabled={isDisabled}
               onClick={() => onChange(slot.id)}
               className={`rounded-xl border px-3.5 py-2.5 text-left transition sm:px-4 sm:py-3 ${
-                selected
-                  ? "border-accent bg-accent/5 shadow-[0_0_0_1px_rgba(232,90,53,0.35)]"
-                  : "border-hielo/15 bg-white hover:border-hielo/30 hover:bg-nieve/50"
+                isDisabled
+                  ? "cursor-not-allowed border-hielo/10 bg-nieve/50 text-muted opacity-60"
+                  : selected
+                    ? "border-accent bg-accent/5 shadow-[0_0_0_1px_rgba(232,90,53,0.35)]"
+                    : "border-hielo/15 bg-white hover:border-hielo/30 hover:bg-nieve/50"
               }`}
             >
-              <span className={`block text-sm font-semibold leading-snug ${selected ? "text-accent" : "text-pizarra"}`}>
+              <span
+                className={`block text-sm font-semibold leading-snug ${
+                  isDisabled ? "text-muted" : selected ? "text-accent" : "text-pizarra"
+                }`}
+              >
                 {pickLocale(locale, slot.labelEs, slot.labelEn)}
               </span>
             </button>
           );
         })}
       </div>
+      {disabledHint && visibleSlots.some((slot) => disabled.has(slot.id)) ? (
+        <p className="mt-2 text-xs text-accent">{disabledHint}</p>
+      ) : null}
     </div>
   );
 }

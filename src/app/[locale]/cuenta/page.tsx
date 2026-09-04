@@ -60,6 +60,7 @@ export default async function CuentaPage({ params }: Props) {
       confirmed={dashboard.confirmed}
       history={dashboard.history}
       reports={dashboard.reports}
+      tips={dashboard.tips}
       hours={dashboard.hours}
       badges={dashboard.badges}
       meetingPoint={dashboard.meetingPoint}

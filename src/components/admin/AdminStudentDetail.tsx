@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   COMPANION_RELATIONS,
@@ -20,8 +20,11 @@ import {
   skillsGroupedByLevel,
 } from "@/data/self-assessment-skills";
 import type { ProgressReport } from "@/lib/progress-reports";
+import { progressReportId } from "@/lib/progress-reports";
 import type { StudentMediaItem } from "@/lib/student-media";
 import type { StudentProfile } from "@/lib/student-users";
+import type { StudentTip } from "@/lib/student-tips";
+import { buildSkillTimeline } from "@/lib/skill-bridge";
 import { ProgressForm } from "@/components/instructor/ProgressForm";
 
 type InstructorOption = { slug: string; name: string };
@@ -44,6 +47,7 @@ type AdminStudentDetailProps = {
   bookings: BookingRow[];
   media: StudentMediaItem[];
   instructors: InstructorOption[];
+  initialTips?: StudentTip[];
 };
 
 function initialMonitorSlug(
@@ -58,20 +62,27 @@ function initialMonitorSlug(
   return fromReport ?? "";
 }
 
+const SOURCE_LABEL: Record<StudentTip["source"], string> = {
+  staff: "Equipo",
+  report: "Ficha",
+  correction: "Corrección",
+};
+
 export function AdminStudentDetail({
   profile: initialProfile,
   reports,
   bookings,
   media: initialMedia,
   instructors,
+  initialTips = [],
 }: AdminStudentDetailProps) {
   const router = useRouter();
   const [profile, setProfile] = useState(initialProfile);
   const [media, setMedia] = useState(initialMedia);
+  const [tips, setTips] = useState<StudentTip[]>(initialTips);
   const [monitorSlug, setMonitorSlug] = useState(() =>
     initialMonitorSlug(instructors, bookings, reports),
   );
-  const [staffTips, setStaffTips] = useState(initialProfile.staffTips || "");
   const [disciplines, setDisciplines] = useState<ProgressDisciplineId[]>(initialProfile.disciplines);
   const [selfSkills, setSelfSkills] = useState(initialProfile.selfSkills ?? {});
   const [equipment, setEquipment] = useState(() => equipmentFormFromProfile(initialProfile.equipment));
@@ -79,19 +90,64 @@ export function AdminStudentDetail({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [activeBooking, setActiveBooking] = useState<BookingRow | null>(bookings[0] ?? null);
+  const [companionId, setCompanionId] = useState("");
+  const [timelineDiscipline, setTimelineDiscipline] = useState<ProgressDisciplineId>(
+    () => initialProfile.disciplines[0] || "esqui",
+  );
+  const [newTip, setNewTip] = useState("");
+  const [pinNewTip, setPinNewTip] = useState(true);
+  const [addTipFromCorrection, setAddTipFromCorrection] = useState<Record<string, boolean>>({});
   const [correctionDrafts, setCorrectionDrafts] = useState<Record<string, string>>(() =>
     Object.fromEntries(initialMedia.map((item) => [item.id, item.correctionNotes || ""])),
   );
 
+  useEffect(() => {
+    if (initialTips.length > 0) {
+      setTips(initialTips);
+      return;
+    }
+    let cancelled = false;
+    fetch(`/api/admin/students/${initialProfile.uid}/tips`)
+      .then((res) => res.json())
+      .then((payload: { tips?: StudentTip[] }) => {
+        if (!cancelled && Array.isArray(payload.tips)) setTips(payload.tips);
+      })
+      .catch(() => null);
+    return () => {
+      cancelled = true;
+    };
+  }, [initialProfile.uid, initialTips]);
+
   const derivedLevel = useMemo(() => deriveOverallSelfLevel(selfSkills), [selfSkills]);
+  const pinnedTip = useMemo(() => tips.find((tip) => tip.pinned) ?? null, [tips]);
+  const lastFocus = useMemo(
+    () => reports.find((report) => report.nextFocus.trim())?.nextFocus ?? "",
+    [reports],
+  );
+  const companions = useMemo(
+    () =>
+      profile.companions.map((companion) => ({
+        id: companion.id,
+        name: companion.name,
+        relationLabel:
+          COMPANION_RELATIONS.find((item) => item.id === companion.relation)?.nameEs || companion.relation,
+      })),
+    [profile.companions],
+  );
+
   const activeReport = useMemo(() => {
     if (!activeBooking) return null;
-    return (
-      reports.find(
-        (report) => report.leadId === activeBooking.leadId && report.itemIndex === activeBooking.itemIndex,
-      ) ?? null
-    );
-  }, [activeBooking, reports]);
+    const id = progressReportId(activeBooking.leadId, activeBooking.itemIndex, companionId || undefined);
+    return reports.find((report) => report.id === id) ?? null;
+  }, [activeBooking, companionId, reports]);
+
+  const timelineDisciplineResolved = timelineDiscipline;
+  const skillTimeline = useMemo(
+    () => buildSkillTimeline(reports, timelineDisciplineResolved, "es"),
+    [reports, timelineDisciplineResolved],
+  );
+
+  const monitorName = instructors.find((item) => item.slug === monitorSlug)?.name || "";
 
   async function saveProfile() {
     setBusy(true);
@@ -105,7 +161,6 @@ export function AdminStudentDetail({
           disciplines,
           selfSkills,
           selfLevel: derivedLevel,
-          staffTips,
           equipment: toStudentEquipment(equipment),
         }),
       });
@@ -121,16 +176,81 @@ export function AdminStudentDetail({
     }
   }
 
+  async function addTip() {
+    if (!newTip.trim()) return;
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/students/${profile.uid}/tips`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: newTip,
+          pinned: pinNewTip,
+          source: "staff",
+          authorSlug: monitorSlug || "explora",
+          authorName: monitorName || "Explora",
+        }),
+      });
+      if (!res.ok) throw new Error("No se pudo guardar el tip");
+      const payload = (await res.json()) as { tips: StudentTip[] };
+      setTips(payload.tips);
+      setNewTip("");
+      setMessage("Tip añadido");
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function pinTip(tipId: string, pinned: boolean) {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/admin/students/${profile.uid}/tips/${tipId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pinned }),
+      });
+      if (!res.ok) throw new Error("No se pudo actualizar el tip");
+      const payload = (await res.json()) as { tips: StudentTip[] };
+      setTips(payload.tips);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function removeTip(tipId: string) {
+    if (!window.confirm("¿Eliminar este tip?")) return;
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/admin/students/${profile.uid}/tips/${tipId}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("No se pudo eliminar");
+      const payload = (await res.json()) as { tips: StudentTip[] };
+      setTips(payload.tips);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function saveCorrection(mediaId: string) {
     setBusy(true);
     setError("");
     try {
+      const notes = correctionDrafts[mediaId] || "";
       const res = await fetch(`/api/admin/students/${profile.uid}/media`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mediaId,
-          correctionNotes: correctionDrafts[mediaId] || "",
+          correctionNotes: notes,
           reviewedByInstructorSlug: monitorSlug || undefined,
           markReviewed: true,
         }),
@@ -138,6 +258,25 @@ export function AdminStudentDetail({
       if (!res.ok) throw new Error("No se pudo guardar la corrección");
       const payload = (await res.json()) as { media: StudentMediaItem };
       setMedia((current) => current.map((item) => (item.id === mediaId ? payload.media : item)));
+
+      if (addTipFromCorrection[mediaId] && notes.trim()) {
+        const tipRes = await fetch(`/api/admin/students/${profile.uid}/tips`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: notes,
+            pinned: false,
+            source: "correction",
+            authorSlug: monitorSlug || "explora",
+            authorName: monitorName || "Explora",
+          }),
+        });
+        if (tipRes.ok) {
+          const tipPayload = (await tipRes.json()) as { tips: StudentTip[] };
+          setTips(tipPayload.tips);
+        }
+      }
+
       setMessage("Corrección guardada");
       router.refresh();
     } catch (err) {
@@ -180,6 +319,12 @@ export function AdminStudentDetail({
     });
   }
 
+  function companionLabel(id?: string) {
+    if (!id) return "Titular";
+    const found = companions.find((item) => item.id === id);
+    return found ? `${found.name} (${found.relationLabel})` : id;
+  }
+
   return (
     <div className="space-y-5 sm:space-y-8">
       <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
@@ -213,7 +358,7 @@ export function AdminStudentDetail({
       </section>
 
       <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-        <h2 className="font-display text-xl font-semibold">Perfil y tips del equipo</h2>
+        <h2 className="font-display text-xl font-semibold">Perfil</h2>
         <div className="flex flex-wrap gap-2">
           {WIZARD_DISCIPLINES.map((item) => (
             <button
@@ -261,17 +406,6 @@ export function AdminStudentDetail({
           onChange={(patch) => setEquipment((current) => ({ ...current, ...patch }))}
         />
 
-        <label className="block text-sm font-semibold">
-          Tips permanentes para el alumno
-          <textarea
-            value={staffTips}
-            onChange={(event) => setStaffTips(event.target.value)}
-            rows={4}
-            className="mt-1 w-full rounded-xl border border-hielo/15 px-3 py-2"
-            placeholder="Consejos que verá en su área de alumno…"
-          />
-        </label>
-
         {profile.companions.length > 0 ? (
           <div>
             <p className="text-sm font-semibold">Compañeros</p>
@@ -289,9 +423,126 @@ export function AdminStudentDetail({
         ) : null}
 
         <button type="button" disabled={busy} onClick={() => void saveProfile()} className="btn-primary !w-auto">
-          Guardar perfil y tips
+          Guardar perfil
         </button>
       </section>
+
+      <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
+        <h2 className="font-display text-xl font-semibold">Tips del equipo</h2>
+        {pinnedTip ? (
+          <div className="rounded-xl border border-oro/25 bg-gradient-to-br from-white to-hielo/5 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-hielo">Tip pinado (visible al alumno)</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-pizarra">{pinnedTip.text}</p>
+            <p className="mt-1 text-xs text-muted">
+              {pinnedTip.authorName} · {SOURCE_LABEL[pinnedTip.source]} · {pinnedTip.createdAt.slice(0, 10)}
+            </p>
+          </div>
+        ) : (
+          <p className="text-sm text-muted">Ningún tip pinado. El alumno no verá tip destacado en el resumen.</p>
+        )}
+
+        <div className="space-y-2">
+          <textarea
+            value={newTip}
+            onChange={(event) => setNewTip(event.target.value)}
+            rows={3}
+            className="w-full rounded-xl border border-hielo/15 px-3 py-2 text-sm"
+            placeholder="Nuevo tip para el alumno…"
+          />
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" checked={pinNewTip} onChange={(event) => setPinNewTip(event.target.checked)} />
+            Pinear como tip actual
+          </label>
+          <button type="button" disabled={busy || !newTip.trim()} onClick={() => void addTip()} className="btn-primary !w-auto">
+            Añadir tip
+          </button>
+        </div>
+
+        {tips.length > 0 ? (
+          <ul className="space-y-2">
+            {tips.map((tip) => (
+              <li key={tip.id} className="rounded-xl bg-nieve/70 px-3 py-2 text-sm">
+                <p className="whitespace-pre-wrap text-pizarra">{tip.text}</p>
+                <p className="mt-1 text-xs text-muted">
+                  {tip.authorName || "Explora"} · {SOURCE_LABEL[tip.source]} · {tip.createdAt.slice(0, 10)}
+                  {tip.pinned ? " · Pinado" : ""}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    className="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                    onClick={() => void pinTip(tip.id, !tip.pinned)}
+                  >
+                    {tip.pinned ? "Quitar pin" : "Pinear"}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={busy}
+                    className="rounded-full border border-accent/30 px-2.5 py-1 text-xs font-semibold text-accent"
+                    onClick={() => void removeTip(tip.id)}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+      </section>
+
+      {skillTimeline.length > 0 ? (
+        <section className="space-y-3 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-display text-xl font-semibold">Evolución técnica</h2>
+            <select
+              className="rounded-xl border border-hielo/15 bg-white px-3 py-1.5 text-sm"
+              value={timelineDiscipline}
+              onChange={(event) => setTimelineDiscipline(event.target.value as ProgressDisciplineId)}
+            >
+              {(["esqui", "snowboard", "telemark", "esqui-adaptado", "freeride", "freestyle"] as ProgressDisciplineId[]).map(
+                (id) => (
+                  <option key={id} value={id}>
+                    {progressDisciplineName(id, "es")}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+          <ul className="space-y-2">
+            {skillTimeline.map((row) => (
+              <li key={row.skillId} className="rounded-xl bg-nieve/60 px-3 py-2 text-sm">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium">{row.label}</span>
+                  <span className="tabular-nums text-muted">
+                    {row.latest}/5
+                    {row.delta != null ? (
+                      <span className={row.delta >= 0 ? " text-hielo" : " text-accent"}>
+                        {" "}
+                        ({row.delta >= 0 ? "+" : ""}
+                        {row.delta})
+                      </span>
+                    ) : null}
+                  </span>
+                </div>
+                <div className="mt-1 flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <span
+                      key={n}
+                      className={`h-1.5 flex-1 rounded-full ${(row.latest ?? 0) >= n ? "bg-hielo" : "bg-hielo/15"}`}
+                    />
+                  ))}
+                </div>
+                {row.points.length > 1 ? (
+                  <p className="mt-1 text-xs text-muted">
+                    {row.points.map((point) => `${point.date}: ${point.rating}`).join(" → ")}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <h2 className="font-display text-xl font-semibold">Medias y videocorrecciones</h2>
@@ -328,6 +579,19 @@ export function AdminStudentDetail({
                       }
                       placeholder="Corrección / tip sobre este vídeo o foto…"
                     />
+                    <label className="mt-2 flex items-center gap-2 text-xs">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(addTipFromCorrection[item.id])}
+                        onChange={(event) =>
+                          setAddTipFromCorrection((current) => ({
+                            ...current,
+                            [item.id]: event.target.checked,
+                          }))
+                        }
+                      />
+                      También añadir al historial de tips
+                    </label>
                     <div className="mt-2 flex flex-wrap gap-2">
                       <button
                         type="button"
@@ -358,6 +622,12 @@ export function AdminStudentDetail({
 
       <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <h2 className="font-display text-xl font-semibold">Clases y fichas</h2>
+        {lastFocus ? (
+          <div className="rounded-xl border border-hielo/15 bg-hielo/5 px-3 py-2 text-sm">
+            <p className="text-xs font-semibold uppercase tracking-wider text-hielo">Último foco</p>
+            <p className="mt-1 text-pizarra">{lastFocus}</p>
+          </div>
+        ) : null}
         {bookings.length === 0 ? (
           <p className="text-sm text-muted">Sin reservas vinculadas todavía.</p>
         ) : (
@@ -370,7 +640,10 @@ export function AdminStudentDetail({
                   <button
                     key={`${booking.leadId}-${booking.itemIndex}`}
                     type="button"
-                    onClick={() => setActiveBooking(booking)}
+                    onClick={() => {
+                      setActiveBooking(booking);
+                      setCompanionId("");
+                    }}
                     className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
                       active ? "bg-hielo text-white" : "bg-nieve"
                     }`}
@@ -382,7 +655,7 @@ export function AdminStudentDetail({
             </div>
             {activeBooking ? (
               <ProgressForm
-                key={`${activeBooking.leadId}-${activeBooking.itemIndex}`}
+                key={`${activeBooking.leadId}-${activeBooking.itemIndex}-${companionId}`}
                 leadId={activeBooking.leadId}
                 itemIndex={activeBooking.itemIndex}
                 studentName={profile.displayName || profile.email}
@@ -395,6 +668,9 @@ export function AdminStudentDetail({
                 defaultInstructorSlug={
                   monitorSlug || activeBooking.instructorSlug || activeReport?.instructorSlug || ""
                 }
+                companions={companions}
+                companionId={companionId}
+                onCompanionChange={setCompanionId}
               />
             ) : null}
           </>
@@ -407,8 +683,10 @@ export function AdminStudentDetail({
               {reports.map((report) => (
                 <li key={report.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-nieve px-3 py-2">
                   <span>
-                    {report.instructorName} · {progressDisciplineName(report.discipline as ProgressDisciplineId, "es")} ·{" "}
-                    {report.hours}h · {"★".repeat(report.rating)}
+                    {companionLabel(report.companionId)} · {report.instructorName} ·{" "}
+                    {progressDisciplineName(report.discipline as ProgressDisciplineId, "es")} · {report.hours}h ·{" "}
+                    {"★".repeat(report.rating)}
+                    {report.nextFocus ? ` · Foco: ${report.nextFocus.slice(0, 40)}` : ""}
                   </span>
                   <Link
                     href={`/admin/evaluacion/${report.leadId}/${report.itemIndex}`}

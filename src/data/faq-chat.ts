@@ -31,7 +31,7 @@ export type FaqChatNode = {
 export const FAQ_CHAT_WELCOME =
   "Hola, soy el asistente de Explora. Elige una opción o habla con el equipo si lo prefieres.";
 
-export const FAQ_CHAT_PROMPT = "¿Te ayudamos con tu clase?";
+export const FAQ_CHAT_PROMPT = "¿Cómo puedo ayudarte?";
 
 export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
   root: {
@@ -57,11 +57,6 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
         id: "disciplinas",
         label: "Disciplinas",
         action: { type: "menu", menuId: "disciplinas" },
-      },
-      {
-        id: "equipo",
-        label: "Hablar con el equipo",
-        action: { type: "whatsapp", href: FAQ_CHAT_WHATSAPP_URL },
       },
     ],
   },

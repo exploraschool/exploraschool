@@ -22,6 +22,9 @@ import {
 import { isProgressDiscipline } from "@/data/progress-skills";
 import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
 import { getProductBySlug, type ProductId } from "@/data/products";
+import { FieldValue } from "firebase-admin/firestore";
+import { findStudentUidByEmail } from "@/lib/student-user-store";
+import { createStudentTip } from "@/lib/student-tips";
 
 export const runtime = "nodejs";
 
@@ -58,7 +61,8 @@ export async function GET(request: Request) {
 
   if (leadId && itemIndexRaw !== null) {
     const itemIndex = Number(itemIndexRaw);
-    const id = progressReportId(leadId, itemIndex);
+    const companionId = searchParams.get("companionId") || undefined;
+    const id = progressReportId(leadId, itemIndex, companionId);
     const snap = await db.collection(PROGRESS_REPORTS_COLLECTION).doc(id).get();
     return NextResponse.json({
       report: snap.exists ? parseProgressReport(id, snap.data() as Record<string, unknown>) : null,
@@ -82,6 +86,7 @@ const saveSchema = z.object({
   skills: z.record(z.string(), z.number().min(1).max(5)).optional().default({}),
   rating: z.number().min(1).max(5),
   notes: z.string().max(5000).optional().default(""),
+  nextFocus: z.string().max(500).optional().default(""),
   recommendedPistaIds: z.array(z.string()).max(20).optional().default([]),
   hours: z.number().min(0).max(24).optional(),
   companionId: z.string().max(80).optional(),
@@ -135,27 +140,45 @@ export async function POST(request: Request) {
   }
   const slot = TIME_SLOTS[item.timeSlotId as TimeSlotId];
   const product = getProductBySlug(item.productId as ProductId);
-  const id = progressReportId(parsed.data.leadId, parsed.data.itemIndex);
+  const companionId = parsed.data.companionId?.trim() || undefined;
+  const id = progressReportId(parsed.data.leadId, parsed.data.itemIndex, companionId);
   const existing = await db.collection(PROGRESS_REPORTS_COLLECTION).doc(id).get();
   const previous = existing.exists
     ? parseProgressReport(id, existing.data() as Record<string, unknown>)
     : null;
   const now = new Date().toISOString();
 
+  let studentUid = lead.studentUid || "";
+  if (!studentUid && lead.email) {
+    const matched = await findStudentUidByEmail(lead.email);
+    if (matched) {
+      studentUid = matched;
+      await leadSnap.ref.update({
+        studentUid: matched,
+        updatedAt: FieldValue.serverTimestamp(),
+      });
+    }
+  }
+
+  const nextFocus = (parsed.data.nextFocus ?? "").trim();
+  const instructorSlugFinal = instructor?.slug || selectedSlug || effectiveInstructorSlug(item);
+  const instructorNameFinal = instructor?.name || effectiveInstructorName(item);
+
   const report: ProgressReport = {
     id,
     leadId: parsed.data.leadId,
     itemIndex: parsed.data.itemIndex,
-    studentUid: lead.studentUid || "",
+    studentUid,
     studentEmail: lead.email,
     studentName: lead.name,
-    companionId: parsed.data.companionId,
-    instructorSlug: instructor?.slug || selectedSlug || effectiveInstructorSlug(item),
-    instructorName: instructor?.name || effectiveInstructorName(item),
+    companionId,
+    instructorSlug: instructorSlugFinal,
+    instructorName: instructorNameFinal,
     discipline: parsed.data.discipline,
     skills: parsed.data.skills,
     rating: parsed.data.rating,
     notes: parsed.data.notes,
+    nextFocus,
     recommendedPistaIds: parsed.data.recommendedPistaIds,
     hours: parsed.data.hours ?? previous?.hours ?? slot?.hours ?? product?.hours ?? 0,
     media: parsed.data.media ?? previous?.media ?? [],
@@ -164,12 +187,29 @@ export async function POST(request: Request) {
   };
 
   await db.collection(PROGRESS_REPORTS_COLLECTION).doc(id).set(report);
+
+  if (studentUid && nextFocus && nextFocus !== (previous?.nextFocus || "").trim()) {
+    try {
+      await createStudentTip(studentUid, {
+        text: nextFocus,
+        authorSlug: instructorSlugFinal || "explora",
+        authorName: instructorNameFinal || "Explora",
+        source: "report",
+        pinned: false,
+        discipline: parsed.data.discipline,
+      });
+    } catch (tipError) {
+      console.error("[admin/progress] tip from nextFocus failed:", tipError);
+    }
+  }
+
   return NextResponse.json({ ok: true, report });
 }
 
 const uploadSchema = z.object({
   leadId: z.string().min(1),
   itemIndex: z.number().int().min(0),
+  companionId: z.string().max(80).optional(),
   contentType: z.string().min(3).max(80),
   fileName: z.string().min(1).max(180),
 });
@@ -191,7 +231,11 @@ export async function PUT(request: Request) {
   const bucket = getAdminBucket();
   if (!bucket) return NextResponse.json({ error: "unavailable" }, { status: 503 });
 
-  const reportId = progressReportId(parsed.data.leadId, parsed.data.itemIndex);
+  const reportId = progressReportId(
+    parsed.data.leadId,
+    parsed.data.itemIndex,
+    parsed.data.companionId?.trim() || undefined,
+  );
   const existing = await db.collection(PROGRESS_REPORTS_COLLECTION).doc(reportId).get();
   const currentMedia: ProgressMedia[] = existing.exists
     ? parseProgressReport(reportId, existing.data() as Record<string, unknown>).media

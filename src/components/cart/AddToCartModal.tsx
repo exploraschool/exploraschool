@@ -24,6 +24,7 @@ import {
 } from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
 import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
+import { isBookingStillOpen, isBookingTooLate } from "@/lib/booking-cutoff";
 import {
   calculateSessionPrice,
   clampParticipantCount,
@@ -169,6 +170,29 @@ export function AddToCartModal({
     [productId, participants, timeSlotId],
   );
 
+  const disabledSlotIds = useMemo(() => {
+    if (dates.length === 0) return [] as TimeSlotId[];
+    return slots
+      .filter((slot) => dates.some((date) => isBookingTooLate(date, slot.id)))
+      .map((slot) => slot.id);
+  }, [dates, slots]);
+
+  useEffect(() => {
+    if (!open || dates.length === 0) return;
+    const nextDates = dates.filter((date) => isBookingStillOpen(date, timeSlotId));
+    if (nextDates.length !== dates.length) {
+      setDates(nextDates);
+    }
+  }, [open, timeSlotId, dates]);
+
+  useEffect(() => {
+    if (!open || slots.length === 0) return;
+    if (disabledSlotIds.includes(timeSlotId)) {
+      const next = slots.find((slot) => !disabledSlotIds.includes(slot.id));
+      if (next) setTimeSlotId(next.id);
+    }
+  }, [open, disabledSlotIds, timeSlotId, slots]);
+
   if (!mounted || !open || !product) return null;
 
   const resolvedProduct = product;
@@ -246,7 +270,9 @@ export function AddToCartModal({
       : effectiveDiscipline;
 
   const disciplineValid = Boolean(resolvedDisciplineForSubmit);
-  const canAddToCart = datesValid && disciplineValid && sessionPrice !== null;
+  const selectedSlotOpen =
+    dates.length > 0 && dates.every((date) => isBookingStillOpen(date, timeSlotId));
+  const canAddToCart = datesValid && disciplineValid && sessionPrice !== null && selectedSlotOpen;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -259,10 +285,13 @@ export function AddToCartModal({
     const resolvedDiscipline = resolvedDisciplineForSubmit;
     if (!resolvedDiscipline) return;
 
+    const bookableDates = dates.filter((date) => isBookingStillOpen(date, timeSlotId));
+    if (bookableDates.length === 0) return;
+
     const slotLabel = getSlotLabel(timeSlotId, locale);
     const trimmedNotes = notes.trim() || undefined;
 
-    const newItems = dates
+    const newItems = bookableDates
       .map((date) =>
         buildCartItem({
           productId,
@@ -346,6 +375,7 @@ export function AddToCartModal({
                 minDays={minDays}
                 maxDays={maxDays}
                 requireConsecutiveDays={requireConsecutiveDays}
+                isDateUnavailable={(dateKey) => isBookingTooLate(dateKey, timeSlotId)}
                 labels={{
                   title: minDays && maxDays ? t("courseDates") : t("dates"),
                   hint:
@@ -366,8 +396,15 @@ export function AddToCartModal({
                   value={timeSlotId}
                   onChange={(id) => setTimeSlotId(id as TimeSlotId)}
                   title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+                  disabledSlotIds={disabledSlotIds}
+                  disabledHint={t("bookingCutoffHint")}
                 />
               )}
+              {dates.length > 0 && !selectedSlotOpen ? (
+                <p className="rounded-xl border border-accent/20 bg-accent/5 px-3 py-2 text-xs text-accent">
+                  {t("bookingCutoffError")}
+                </p>
+              ) : null}
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="cart-participants" className="mb-1.5 block text-sm font-medium">

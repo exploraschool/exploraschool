@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { upsertMarketingContact } from "@/lib/marketing-contacts";
+import { isBookingTooLate, partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { normalizeEmail } from "@/lib/link-bookings";
 import { getStudentSession } from "@/lib/student-auth";
+import { upsertStudentProfile } from "@/lib/student-user-store";
 
 const bookingItemSchema = z.object({
   productId: z.string().min(1).max(80),
@@ -45,7 +47,18 @@ const leadSchema = z
           message: "Booking items required",
           path: ["bookingItems"],
         });
+        return;
       }
+      const now = new Date();
+      data.bookingItems.forEach((item, index) => {
+        if (isBookingTooLate(item.date, item.timeSlotId, now)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Booking cutoff: less than 1 hour before class start",
+            path: ["bookingItems", index],
+          });
+        }
+      });
       return;
     }
     if (data.message.trim().length < 10) {
@@ -66,7 +79,16 @@ export async function POST(request: Request) {
     const parsed = leadSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+      const tooLate = parsed.error.issues.some((issue) =>
+        String(issue.message).includes("Booking cutoff"),
+      );
+      return NextResponse.json(
+        {
+          error: tooLate ? "booking_cutoff" : "Invalid data",
+          ...(tooLate ? { code: "booking_cutoff" as const } : {}),
+        },
+        { status: 400 },
+      );
     }
 
     if (parsed.data.website) {
@@ -78,22 +100,44 @@ export async function POST(request: Request) {
     const status: LeadStatus = isBooking ? "pending" : "received";
 
     const student = await getStudentSession();
-    const bookingItems = isBooking ? (parsed.data.bookingItems as StoredBookingItem[]) : undefined;
+    let bookingItems = isBooking ? (parsed.data.bookingItems as StoredBookingItem[]) : undefined;
+    if (bookingItems) {
+      const { bookable, tooLate } = partitionByBookingCutoff(bookingItems);
+      if (tooLate.length > 0) {
+        return NextResponse.json({ error: "booking_cutoff", code: "booking_cutoff" }, { status: 400 });
+      }
+      bookingItems = bookable;
+    }
+
+    const submittedEmail = parsed.data.email;
+    const linkedStudent =
+      student && normalizeEmail(student.email) === normalizeEmail(submittedEmail) ? student : null;
+
+    if (linkedStudent) {
+      try {
+        await upsertStudentProfile(linkedStudent.uid, {
+          email: linkedStudent.email,
+          displayName: parsed.data.name.trim() || linkedStudent.name,
+          phone: (parsed.data.phone ?? "").trim(),
+        });
+      } catch (profileError) {
+        console.error("[leads] Student profile phone sync failed:", profileError);
+      }
+    }
+
     const lead = {
       type,
       status,
       name: parsed.data.name,
-      email: parsed.data.email,
-      emailLower: normalizeEmail(parsed.data.email),
+      email: submittedEmail,
+      emailLower: normalizeEmail(submittedEmail),
       phone: parsed.data.phone ?? "",
       message: parsed.data.message,
       locale: parsed.data.locale ?? "es",
       source: parsed.data.source ?? "contact-form",
       createdAt: new Date().toISOString(),
       privacyAccepted: true as const,
-      ...(student && normalizeEmail(student.email) === normalizeEmail(parsed.data.email)
-        ? { studentUid: student.uid }
-        : {}),
+      ...(linkedStudent ? { studentUid: linkedStudent.uid } : {}),
       ...(isBooking && bookingItems
         ? {
             bookingItems,

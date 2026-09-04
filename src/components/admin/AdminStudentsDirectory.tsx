@@ -14,9 +14,15 @@ export type AdminStudentListItem = {
   profileReady: boolean;
   onboardingComplete: boolean;
   reportCount: number;
+  lastReportAt?: string;
+  pendingMediaCount?: number;
+  hasPinnedTip?: boolean;
+  tipPreview?: string;
   updatedAt: string;
   staffTips: string;
 };
+
+type QuickFilter = "all" | "tip" | "pending" | "no-report";
 
 const LEVEL_LABEL: Record<string, string> = {
   debutante: "Debutante",
@@ -39,18 +45,22 @@ function TrashIcon({ className }: { className?: string }) {
 export function AdminStudentsDirectory({ initialStudents }: { initialStudents: AdminStudentListItem[] }) {
   const router = useRouter();
   const [q, setQ] = useState("");
+  const [filter, setFilter] = useState<QuickFilter>("all");
   const [students, setStudents] = useState(initialStudents);
   const [busyUid, setBusyUid] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return students;
     return students.filter((student) => {
+      if (filter === "tip" && !student.hasPinnedTip && !student.staffTips?.trim()) return false;
+      if (filter === "pending" && !(student.pendingMediaCount && student.pendingMediaCount > 0)) return false;
+      if (filter === "no-report" && student.reportCount > 0) return false;
+      if (!needle) return true;
       const hay = `${student.displayName} ${student.email}`.toLowerCase();
       return hay.includes(needle);
     });
-  }, [students, q]);
+  }, [students, q, filter]);
 
   async function removeStudent(student: AdminStudentListItem) {
     const label = student.displayName || student.email;
@@ -71,6 +81,13 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
     }
   }
 
+  const filters: { id: QuickFilter; label: string }[] = [
+    { id: "all", label: "Todos" },
+    { id: "tip", label: "Con tip" },
+    { id: "pending", label: "Medias pendientes" },
+    { id: "no-report", label: "Sin ficha" },
+  ];
+
   return (
     <div className="space-y-3 sm:space-y-5">
       <label className="block">
@@ -83,11 +100,26 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
         />
       </label>
 
+      <div className="flex flex-wrap gap-2">
+        {filters.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setFilter(item.id)}
+            className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+              filter === item.id ? "bg-hielo text-white" : "border border-hielo/15 bg-white text-pizarra"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
       {error ? <p className="text-sm text-accent">{error}</p> : null}
 
       {filtered.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hielo/20 bg-white px-6 py-12 text-center text-sm text-muted">
-          No hay alumnos registrados{q ? " con ese filtro" : ""}.
+          No hay alumnos{q || filter !== "all" ? " con ese filtro" : ""}.
         </p>
       ) : (
         <ul className="space-y-2 sm:space-y-3">
@@ -121,8 +153,28 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                       {student.selfLevel ? LEVEL_LABEL[student.selfLevel] || student.selfLevel : "Sin nivel"}
                       {" · "}
                       {student.reportCount} ficha{student.reportCount === 1 ? "" : "s"}
+                      {student.lastReportAt ? ` · Última ${student.lastReportAt.slice(0, 10)}` : ""}
                       {!student.profileReady ? " · Perfil incompleto" : ""}
                     </p>
+                    <div className="mt-1.5 flex flex-wrap gap-1.5">
+                      {student.hasPinnedTip || student.staffTips?.trim() ? (
+                        <span className="rounded-full bg-oro/15 px-2 py-0.5 text-[0.65rem] font-semibold text-hielo">
+                          Tip
+                          {student.tipPreview ? `: ${student.tipPreview.slice(0, 28)}${student.tipPreview.length > 28 ? "…" : ""}` : ""}
+                        </span>
+                      ) : null}
+                      {(student.pendingMediaCount ?? 0) > 0 ? (
+                        <span className="rounded-full bg-accent/10 px-2 py-0.5 text-[0.65rem] font-semibold text-accent">
+                          {student.pendingMediaCount} media{student.pendingMediaCount === 1 ? "" : "s"} pendiente
+                          {student.pendingMediaCount === 1 ? "" : "s"}
+                        </span>
+                      ) : null}
+                      {student.reportCount === 0 ? (
+                        <span className="rounded-full bg-nieve px-2 py-0.5 text-[0.65rem] font-semibold text-muted">
+                          Sin ficha
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
                 </div>
                 <span className="hidden text-sm font-semibold text-hielo sm:inline">Abrir →</span>

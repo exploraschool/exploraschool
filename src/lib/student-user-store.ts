@@ -45,6 +45,7 @@ export async function upsertStudentProfile(
     email: patch.email || current?.email || "",
     displayName: patch.displayName ?? current?.displayName ?? "",
     photoURL: patch.photoURL ?? current?.photoURL ?? "",
+    phone: patch.phone !== undefined ? patch.phone.trim() : (current?.phone ?? ""),
     locale: patch.locale ?? current?.locale ?? "es",
     hasTakenClassesBefore:
       patch.hasTakenClassesBefore !== undefined
@@ -99,6 +100,36 @@ export async function listStudentProfiles(): Promise<StudentProfile[]> {
   }
 }
 
+export async function findStudentUidByEmail(email: string): Promise<string | null> {
+  const db = getAdminDb();
+  if (!db) return null;
+  const emailLower = email.trim().toLowerCase();
+  if (!emailLower) return null;
+
+  try {
+    const byEmail = await db.collection(USERS_COLLECTION).where("email", "==", email.trim()).limit(5).get();
+    for (const doc of byEmail.docs) {
+      const profile = parseStudentProfile(doc.id, doc.data() as Record<string, unknown>);
+      if (isAllowedAdminEmail(profile.email)) continue;
+      if (profile.email.trim().toLowerCase() === emailLower) return doc.id;
+    }
+  } catch {
+    /* fall through to scan */
+  }
+
+  try {
+    const snap = await db.collection(USERS_COLLECTION).get();
+    for (const doc of snap.docs) {
+      const profile = parseStudentProfile(doc.id, doc.data() as Record<string, unknown>);
+      if (isAllowedAdminEmail(profile.email)) continue;
+      if (profile.email.trim().toLowerCase() === emailLower) return doc.id;
+    }
+  } catch (error) {
+    console.error("[student-user-store] find by email failed:", error);
+  }
+  return null;
+}
+
 export async function adminUpsertStudentProfile(
   uid: string,
   patch: Partial<StudentProfile>,
@@ -124,6 +155,13 @@ export async function deleteStudentProfile(uid: string): Promise<boolean> {
 
   const { deleteAllStudentMediaForUid } = await import("@/lib/student-media");
   await deleteAllStudentMediaForUid(uid);
+
+  try {
+    const { deleteAllStudentTips } = await import("@/lib/student-tips");
+    await deleteAllStudentTips(uid);
+  } catch (error) {
+    console.error("[student-user-store] delete tips failed:", error);
+  }
 
   try {
     const reportSnap = await db.collection(PROGRESS_REPORTS_COLLECTION).where("studentUid", "==", uid).get();

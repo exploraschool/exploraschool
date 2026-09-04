@@ -6,53 +6,64 @@ import {
 } from "@/components/admin/AdminStudentsDirectory";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
+import { isExploraWorkspaceSlug } from "@/lib/admin-workspace-config";
 import { isAdminConfigured } from "@/lib/firebase/admin";
+import { getSelectedInstructorSlug } from "@/lib/instructor-session";
 import { listStudentProfiles } from "@/lib/student-user-store";
 import { canAccessStudentDashboard, isProfileReady } from "@/lib/student-users";
-import { getAdminDb } from "@/lib/firebase/admin";
-import { parseProgressReport, PROGRESS_REPORTS_COLLECTION } from "@/lib/progress-reports";
+import {
+  buildStudentDirectoryStats,
+  listStudentUidsForInstructor,
+} from "@/lib/student-directory";
 
 export default async function AdminAlumnosPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
   await requireAdminPanel();
 
   let students: AdminStudentListItem[] = [];
+  let instructorFilter: string | null = null;
+
   if (isAdminConfigured()) {
-    const profiles = await listStudentProfiles();
-    const reportCounts = new Map<string, number>();
-    const db = getAdminDb();
-    if (db) {
-      try {
-        const snap = await db.collection(PROGRESS_REPORTS_COLLECTION).get();
-        for (const doc of snap.docs) {
-          const report = parseProgressReport(doc.id, doc.data() as Record<string, unknown>);
-          if (!report.studentUid) continue;
-          reportCounts.set(report.studentUid, (reportCounts.get(report.studentUid) ?? 0) + 1);
-        }
-      } catch {
-        /* ignore */
-      }
+    let profiles = await listStudentProfiles();
+    const selected = await getSelectedInstructorSlug();
+    if (selected && !isExploraWorkspaceSlug(selected)) {
+      instructorFilter = selected;
+      const allowed = await listStudentUidsForInstructor(selected);
+      profiles = profiles.filter((profile) => allowed.has(profile.uid));
     }
-    students = profiles.map((student) => ({
-      uid: student.uid,
-      email: student.email,
-      displayName: student.displayName,
-      photoURL: student.photoURL,
-      selfLevel: student.selfLevel,
-      disciplines: student.disciplines,
-      profileReady: isProfileReady(student),
-      onboardingComplete: canAccessStudentDashboard(student),
-      reportCount: reportCounts.get(student.uid) ?? 0,
-      updatedAt: student.updatedAt,
-      staffTips: student.staffTips,
-    }));
+
+    const stats = await buildStudentDirectoryStats(profiles);
+    students = profiles.map((student) => {
+      const row = stats.get(student.uid);
+      return {
+        uid: student.uid,
+        email: student.email,
+        displayName: student.displayName,
+        photoURL: student.photoURL,
+        selfLevel: student.selfLevel,
+        disciplines: student.disciplines,
+        profileReady: isProfileReady(student),
+        onboardingComplete: canAccessStudentDashboard(student),
+        reportCount: row?.reportCount ?? 0,
+        lastReportAt: row?.lastReportAt ?? "",
+        pendingMediaCount: row?.pendingMediaCount ?? 0,
+        hasPinnedTip: row?.hasPinnedTip ?? Boolean(student.staffTips?.trim()),
+        tipPreview: row?.tipPreview ?? (student.staffTips || "").trim().slice(0, 80),
+        updatedAt: student.updatedAt,
+        staffTips: student.staffTips,
+      };
+    });
   }
 
   return (
     <AdminShell
       active="alumnos"
       title="Alumnos"
-      description="Busca un alumno, abre su ficha, elige el monitor y deja tips o progreso."
+      description={
+        instructorFilter
+          ? `Vista filtrada por monitor (${instructorFilter}): tips, medias pendientes y fichas.`
+          : "Busca un alumno, abre su ficha, elige el monitor y deja tips o progreso."
+      }
     >
       <AdminStudentsDirectory initialStudents={students} />
     </AdminShell>

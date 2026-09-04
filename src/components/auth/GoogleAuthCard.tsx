@@ -65,6 +65,8 @@ type GoogleAuthCardProps = {
   onSuccess?: (payload: GoogleAuthSuccess) => void;
   footer?: ReactNode;
   consumeRedirectOnMount?: boolean;
+  /** Full branded card (default) or a single Google button for checkout embeds. */
+  variant?: "card" | "compact";
 };
 
 export function GoogleAuthCard({
@@ -88,6 +90,7 @@ export function GoogleAuthCard({
   onSuccess,
   footer,
   consumeRedirectOnMount = true,
+  variant = "card",
 }: GoogleAuthCardProps) {
   const [error, setError] = useState("");
   const [phase, setPhase] = useState<Phase>(consumeRedirectOnMount ? "checking" : "ready");
@@ -226,6 +229,37 @@ export function GoogleAuthCard({
           ? verifyingLabel
           : buttonLabel;
 
+  const googleButton = (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={handleGoogleSignIn}
+      className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-hielo/15 bg-white px-5 py-3 text-sm font-semibold text-pizarra shadow-[0_6px_20px_rgba(14,14,15,0.06)] transition hover:border-hielo/30 hover:bg-nieve disabled:cursor-wait disabled:opacity-70"
+    >
+      <GoogleMark />
+      <span>{label}</span>
+    </button>
+  );
+
+  if (variant === "compact") {
+    return (
+      <div className="space-y-3">
+        {phase === "success" ? (
+          <div role="status" className="rounded-xl border border-hielo/15 bg-hielo/5 px-3 py-2 text-center text-sm font-semibold text-hielo">
+            {successLabel}
+          </div>
+        ) : null}
+        {error ? (
+          <div role="alert" className="rounded-xl border border-accent/20 bg-accent/5 px-3 py-2 text-sm leading-relaxed text-accent">
+            {error}
+          </div>
+        ) : null}
+        {googleButton}
+        {footer}
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-hidden rounded-3xl border border-hielo/10 bg-white shadow-[0_24px_60px_rgba(14,14,15,0.12)]">
       <div className="border-b border-hielo/8 bg-gradient-to-r from-frost/40 via-white to-white px-5 py-5 text-center sm:px-6">
@@ -258,15 +292,7 @@ export function GoogleAuthCard({
           </div>
         ) : null}
 
-        <button
-          type="button"
-          disabled={busy}
-          onClick={handleGoogleSignIn}
-          className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-hielo/15 bg-white px-5 py-3 text-sm font-semibold text-pizarra shadow-[0_6px_20px_rgba(14,14,15,0.06)] transition hover:border-hielo/30 hover:bg-nieve disabled:cursor-wait disabled:opacity-70"
-        >
-          <GoogleMark />
-          <span>{label}</span>
-        </button>
+        {googleButton}
 
         {footer}
       </div>

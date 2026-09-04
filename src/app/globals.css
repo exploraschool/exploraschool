@@ -910,6 +910,56 @@
   animation: pulse-glow 4s ease-in-out infinite;
 }
 
+@keyframes chat-prompt-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes chat-prompt-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 24px rgba(14, 26, 36, 0.1),
+      0 0 0 0 rgba(45, 107, 100, 0.16);
+  }
+  50% {
+    box-shadow:
+      0 14px 32px rgba(45, 107, 100, 0.18),
+      0 0 0 8px rgba(45, 107, 100, 0.07);
+  }
+}
+
+@keyframes chat-logo-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.38;
+  }
+  50% {
+    transform: scale(1.16);
+    opacity: 0.1;
+  }
+}
+
+.chat-prompt-bubble {
+  animation:
+    chat-prompt-float 3.4s ease-in-out infinite,
+    chat-prompt-glow 3.4s ease-in-out infinite;
+}
+
+.chat-logo-ring {
+  animation: chat-logo-ring 2.8s ease-in-out infinite;
+}
+
+.chat-live-dot {
+  animation: live-dot-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
 @keyframes live-dot-ping {
   75%,
   100% {
@@ -1087,6 +1137,9 @@ body.modal-open [data-sticky-book-bar] {
   .animate-float,
   .animate-float-slow,
   .animate-pulse-glow,
+  .chat-prompt-bubble,
+  .chat-logo-ring,
+  .chat-live-dot,
   .hero-shimmer,
   .live-dot::after,
   .site-header__menu-backdrop,
