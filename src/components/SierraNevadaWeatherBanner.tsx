@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { pickLocale } from "@/lib/locale";
 import {
   formatWeatherDayLabel,
+  formatWeatherUpdatedAt,
   weatherIconKind,
   weatherLabel,
   type SierraNevadaWeather,
@@ -8,8 +12,10 @@ import {
 
 type SierraNevadaWeatherBannerProps = {
   locale: string;
-  weather: SierraNevadaWeather;
+  weather?: SierraNevadaWeather | null;
 };
+
+const REFRESH_MS = 10 * 60 * 1000;
 
 function WeatherGlyph({
   kind,
@@ -63,13 +69,55 @@ function WeatherGlyph({
   }
 }
 
-export function SierraNevadaWeatherBanner({ locale, weather }: SierraNevadaWeatherBannerProps) {
+export function SierraNevadaWeatherBanner({ locale, weather: initialWeather = null }: SierraNevadaWeatherBannerProps) {
+  const [weather, setWeather] = useState<SierraNevadaWeather | null>(initialWeather);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const bucket = Math.floor(Date.now() / REFRESH_MS);
+        const response = await fetch(`/api/weather?t=${bucket}`, { cache: "no-store" });
+        if (!response.ok) return;
+        const payload = (await response.json()) as { weather?: SierraNevadaWeather | null };
+        if (!cancelled && payload.weather) setWeather(payload.weather);
+      } catch {
+        /* keep last good reading */
+      }
+    }
+
+    void load();
+
+    function onVisible() {
+      if (document.visibilityState === "visible") void load();
+    }
+
+    function onPageShow(event: PageTransitionEvent) {
+      if (event.persisted) void load();
+    }
+
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("pageshow", onPageShow);
+    const interval = window.setInterval(() => void load(), REFRESH_MS);
+
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("pageshow", onPageShow);
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  if (!weather) return null;
+
   const nowKind = weatherIconKind(weather.weatherCode);
   const nowCondition = weatherLabel(weather.weatherCode, locale);
+  const updated = formatWeatherUpdatedAt(weather.updatedAt);
 
   return (
     <aside
-      className="rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 backdrop-blur-sm sm:px-5 sm:py-5"
+      className="mb-8 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 backdrop-blur-sm sm:mb-10 sm:px-5 sm:py-5"
       aria-label={pickLocale(locale, "Tiempo en Sierra Nevada", "Weather in Sierra Nevada")}
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-5">
@@ -132,7 +180,9 @@ export function SierraNevadaWeatherBanner({ locale, weather }: SierraNevadaWeath
         </div>
       </div>
       <p className="mt-3 text-[0.65rem] text-nieve/35">
-        {pickLocale(locale, "Datos orientativos · Open-Meteo", "Indicative data · Open-Meteo")}
+        {updated
+          ? pickLocale(locale, `Actualizado ${updated} · Open-Meteo`, `Updated ${updated} · Open-Meteo`)
+          : pickLocale(locale, "Datos orientativos · Open-Meteo", "Indicative data · Open-Meteo")}
       </p>
     </aside>
   );

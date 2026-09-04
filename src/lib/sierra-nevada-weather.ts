@@ -19,6 +19,8 @@ export type SierraNevadaWeather = {
   days: SierraNevadaDayForecast[];
 };
 
+const WEATHER_REVALIDATE_SECONDS = 600;
+
 const WEATHER_URL =
   "https://api.open-meteo.com/v1/forecast" +
   `?latitude=${site.meetingPoint.latitude}` +
@@ -90,10 +92,15 @@ export function formatWeatherDayLabel(date: string, locale: string, index: numbe
   }
 }
 
+export function formatWeatherUpdatedAt(iso: string): string {
+  const match = iso.match(/T(\d{2}):(\d{2})/);
+  return match ? `${match[1]}:${match[2]}` : "";
+}
+
 export async function getSierraNevadaWeather(): Promise<SierraNevadaWeather | null> {
   try {
     const response = await fetch(WEATHER_URL, {
-      next: { revalidate: 1800 },
+      next: { revalidate: WEATHER_REVALIDATE_SECONDS },
       headers: { Accept: "application/json" },
     });
 

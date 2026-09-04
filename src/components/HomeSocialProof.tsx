@@ -20,13 +20,7 @@ export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
   return (
     <section className="section-padding-sm mesh-dark overflow-hidden text-nieve">
       <div className="container-page">
-        {weather ? (
-          <Reveal>
-            <div className="mb-8 sm:mb-10">
-              <SierraNevadaWeatherBanner locale={locale} weather={weather} />
-            </div>
-          </Reveal>
-        ) : null}
+        <SierraNevadaWeatherBanner locale={locale} weather={weather} />
 
         <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <Reveal>
