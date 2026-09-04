@@ -11,6 +11,7 @@ import { BlogProsCons } from "@/components/blog/BlogProsCons";
 import { BlogComparisonTable, BlogTechTable } from "@/components/blog/BlogTechTable";
 import { BlogTldr } from "@/components/blog/BlogTldr";
 import { BlogToc } from "@/components/blog/BlogToc";
+import { BlogVerdict } from "@/components/blog/BlogVerdict";
 import { BlogRankingNav, BlogRankingWinner, rankingPickBadge } from "@/components/blog/BlogRankingPicks";
 import { BlogStarRating } from "@/components/blog/BlogStarRating";
 import {
