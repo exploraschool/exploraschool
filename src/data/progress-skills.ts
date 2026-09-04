@@ -77,3 +77,13 @@ export function progressDisciplineName(id: ProgressDisciplineId, locale: string)
   if (!row) return id;
   return locale === "en" ? row.nameEn : row.nameEs;
 }
+
+export function progressSkillLabel(
+  discipline: ProgressDisciplineId,
+  skillId: string,
+  locale: string,
+): string {
+  const skill = PROGRESS_SKILLS[discipline]?.find((item) => item.id === skillId);
+  if (!skill) return skillId;
+  return locale === "en" ? skill.labelEn : skill.labelEs;
+}

@@ -1,3 +1,5 @@
+import { site } from "./site";
+
 export type BlogPost = {
   slug: string;
   titleEs: string;
@@ -55,7 +57,7 @@ En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcu
 
 ## 6. No subestimes el forfait y el material
 
-Si no tienes equipo propio, el alquiler en la estación es cómodo, pero conviene reservarlo con antelación en fechas punta. En Explora recomendamos **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles): con nosotros obtienes un 20% de descuento; dilo al alquilar. Ver también [cómo llegar](/como-llegar). Pregunta por el nivel de rigidez adecuado a tu peso y experiencia: un material mal ajustado dificulta el aprendizaje.
+Si no tienes equipo propio, el alquiler en la estación es cómodo, pero conviene reservarlo con antelación en fechas punta. En Explora recomendamos **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles): con nosotros obtienes un 20% de descuento; dilo al alquilar. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}). Pregunta por el nivel de rigidez adecuado a tu peso y experiencia: un material mal ajustado dificulta el aprendizaje.
 
 ## 7. Empieza en pistas verdes y ten paciencia
 
@@ -92,7 +94,7 @@ In peak season there are queues at lifts, gondolas and rental shops. Allow at le
 
 ## 6. Do not underestimate the lift pass and equipment
 
-If you do not have your own gear, renting at the resort is convenient, but it is worth booking ahead on busy dates. At Explora we recommend **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas): with us you get 20% off; mention it when you rent. See also [getting here](/como-llegar). Ask about the right stiffness for your weight and experience. Poorly fitted equipment makes learning much harder.
+If you do not have your own gear, renting at the resort is convenient, but it is worth booking ahead on busy dates. At Explora we recommend **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas): with us you get 20% off; mention it when you rent. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}). Ask about the right stiffness for your weight and experience. Poorly fitted equipment makes learning much harder.
 
 ## 7. Start on green runs and be patient
 
@@ -543,7 +545,7 @@ Calcetines de esquí o de montaña, sin costuras molestas. Nunca uses dos pares 
 
 ## Para la clase de esquí o snowboard
 
-Si alquilas material, ve a **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles): con Explora tienes un 20% de descuento; dilo al recoger. Lleva DNI. Indicaciones en [cómo llegar](/como-llegar). Si tienes equipo propio, revisa fijaciones y cantos. Casco muy recomendable, imprescindible para niños. Ropa interior de recambio para después de la clase.
+Si alquilas material, ve a **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles): con Explora tienes un 20% de descuento; dilo al recoger. Lleva DNI. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}). Si tienes equipo propio, revisa fijaciones y cantos. Casco muy recomendable, imprescindible para niños. Ropa interior de recambio para después de la clase.
 
 ## Extras que marcan la diferencia
 
@@ -576,7 +578,7 @@ Ski or hiking socks without annoying seams. Never wear two thick sock layers: th
 
 ## For your ski or snowboard lesson
 
-If you rent, go to **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas): with Explora you get 20% off; mention it when you pick up. Bring ID. Directions in [getting here](/como-llegar). If you have your own gear, check bindings and edges. Helmet highly recommended, essential for children. Spare base layer for after the lesson.
+If you rent, go to **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas): with Explora you get 20% off; mention it when you pick up. Bring ID. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}). If you have your own gear, check bindings and edges. Helmet highly recommended, essential for children. Spare base layer for after the lesson.
 
 ## Extras that make a difference
 
@@ -1027,7 +1029,7 @@ Lo ideal es contactar con varias semanas de antelación, sobre todo si el grupo 
 
 ## Logística que nos ocupamos nosotros
 
-En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte: para el material recomendamos **José Luis Sáez** (junto a los telecabinas) con un 20% de descuento. Ver [cómo llegar](/como-llegar). Te orientamos en todo el proceso para que nadie llegue perdido el primer día.
+En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte: para el material recomendamos **José Luis Sáez** (junto a los telecabinas) con un 20% de descuento. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}). Te orientamos en todo el proceso para que nadie llegue perdido el primer día.
 
 ## Ideas para complementar el curso
 
@@ -1060,7 +1062,7 @@ Ideally contact us several weeks ahead, especially if the group exceeds 8 people
 
 ## Logistics we handle
 
-With the Full Day option we include hotel pick-up and drop-off on request. We coordinate the meeting point, schedules and instructor assignment. Lift passes and rental equipment are arranged separately: for gear we recommend **José Luis Sáez** (next to the gondolas) with 20% off. See [getting here](/como-llegar). We guide you through the process so no one arrives lost on day one.
+With the Full Day option we include hotel pick-up and drop-off on request. We coordinate the meeting point, schedules and instructor assignment. Lift passes and rental equipment are arranged separately: for gear we recommend **José Luis Sáez** (next to the gondolas) with 20% off. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}). We guide you through the process so no one arrives lost on day one.
 
 ## Ideas to complement the course
 
@@ -1211,7 +1213,7 @@ Llegar a la estación sin forfait y encontrar una cola de 40 minutos en taquilla
 
 ## ¿El material de esquí está incluido?
 
-No. Al igual que el forfait, el material (esquís, tabla, botas, bastones) se alquila aparte o traes el tuyo. Recomendamos **José Luis Sáez**, junto a los telecabinas Al-Andalus y Borreguiles: con Explora obtienes un **20% de descuento** (dilo al alquilar). Indicaciones en [cómo llegar](/como-llegar).
+No. Al igual que el forfait, el material (esquís, tabla, botas, bastones) se alquila aparte o traes el tuyo. Recomendamos **José Luis Sáez**, junto a los telecabinas Al-Andalus y Borreguiles: con Explora obtienes un **20% de descuento** (dilo al alquilar). [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}).
 
 ## Resumen rápido
 
@@ -1252,7 +1254,7 @@ Arriving at the resort without a pass and finding a 40-minute queue at the ticke
 
 ## Is ski equipment included?
 
-No. Like the lift pass, equipment (skis, board, boots, poles) is rented separately or you bring your own. We recommend **José Luis Sáez**, next to the Al-Andalus and Borreguiles gondolas: with Explora you get **20% off** (mention it when you rent). Directions in [getting here](/como-llegar).
+No. Like the lift pass, equipment (skis, board, boots, poles) is rented separately or you bring your own. We recommend **José Luis Sáez**, next to the Al-Andalus and Borreguiles gondolas: with Explora you get **20% off** (mention it when you rent). [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}).
 
 ## Quick summary
 

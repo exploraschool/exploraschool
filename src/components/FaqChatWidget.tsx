@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale } from "next-intl";
 import {
   FAQ_CHAT_NODES,
-  FAQ_CHAT_PROMPT,
   FAQ_CHAT_WHATSAPP_URL,
   type FaqChatButton,
 } from "@/data/faq-chat";
@@ -22,7 +21,6 @@ function lineId() {
 export function FaqChatWidget() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
-  const [promptVisible, setPromptVisible] = useState(true);
   const [nodeId, setNodeId] = useState("root");
   const [lines, setLines] = useState<ChatLine[]>(() => [
     { id: "welcome", role: "bot", text: FAQ_CHAT_NODES.root.botText },
@@ -56,7 +54,6 @@ export function FaqChatWidget() {
 
   function openChat() {
     shouldStickBottom.current = false;
-    setPromptVisible(false);
     setOpen(true);
   }
 
@@ -88,12 +85,15 @@ export function FaqChatWidget() {
         ? action.href
         : `/${locale}${action.href.startsWith("/") ? action.href : `/${action.href}`}`;
       window.open(href, "_blank", "noopener,noreferrer");
+      const isMaps = /google\.com\/maps|maps\.google\.com/i.test(action.href);
       setLines((current) => [
         ...current,
         {
           id: lineId(),
           role: "bot",
-          text: "Te abrimos el enlace en una pestaña nueva. ¿Necesitas algo más?",
+          text: isMaps
+            ? "Te abrimos Google Maps en una ventana nueva con la ubicación."
+            : "Te abrimos el enlace en una pestaña nueva. ¿Necesitas algo más?",
         },
       ]);
       setNodeId("root");
@@ -108,28 +108,6 @@ export function FaqChatWidget() {
 
   return (
     <div className="pointer-events-none fixed bottom-[5.5rem] right-3 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
-      {!open && promptVisible ? (
-        <div className="pointer-events-auto flex max-w-[min(16rem,calc(100vw-5.5rem))] items-start gap-1 animate-[fade-up_0.3s_ease-out] rounded-2xl rounded-br-md border border-hielo/12 bg-white p-1 pl-3.5 shadow-[0_8px_28px_rgba(14,26,36,0.1)]">
-          <button
-            type="button"
-            onClick={openChat}
-            className="min-w-0 flex-1 py-2.5 pr-1 text-left text-sm leading-snug text-pizarra transition hover:text-hielo"
-          >
-            {FAQ_CHAT_PROMPT}
-          </button>
-          <button
-            type="button"
-            onClick={() => setPromptVisible(false)}
-            className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-muted transition hover:bg-hielo/8 hover:text-hielo"
-            aria-label="Cerrar aviso"
-          >
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-              <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-            </svg>
-          </button>
-        </div>
-      ) : null}
-
       {open ? (
         <div
           className="pointer-events-auto flex w-[min(20.5rem,calc(100vw-1.5rem))] max-h-[min(32rem,calc(100dvh-8rem))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem))]"
@@ -210,19 +188,17 @@ export function FaqChatWidget() {
       <button
         type="button"
         onClick={() => (open ? closeChat() : openChat())}
-        className="pointer-events-auto relative flex h-14 w-14 items-center justify-center rounded-full bg-hielo text-white shadow-[0_10px_28px_rgba(45,107,100,0.35)] transition hover:bg-hielo-light hover:shadow-[0_12px_32px_rgba(45,107,100,0.4)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo active:scale-[0.97]"
+        className="pointer-events-auto h-14 w-14 transition hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo active:scale-[0.97] sm:h-16 sm:w-16"
         aria-label={open ? "Cerrar asistente" : "Abrir asistente"}
         aria-expanded={open}
       >
-        {open ? (
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2.25" aria-hidden>
-            <path d="M6 6l12 12M18 6L6 18" strokeLinecap="round" />
-          </svg>
-        ) : (
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white">
-            <Image src={media.logoMark} alt="" width={28} height={28} className="h-7 w-7 object-contain" />
-          </span>
-        )}
+        <Image
+          src={media.logoMark}
+          alt=""
+          width={64}
+          height={64}
+          className="h-full w-full object-contain drop-shadow-[0_8px_18px_rgba(14,26,36,0.32)]"
+        />
       </button>
     </div>
   );

@@ -72,6 +72,7 @@ export type SiteConfig = {
     howToFindEn: string;
     blurbEs: string;
     blurbEn: string;
+    googleMapsUrl: string;
   };
 };
 
@@ -167,5 +168,7 @@ export const site: SiteConfig = {
       "Recomendamos alquilar el material en José Luis Sáez (junto a los telecabinas Al-Andalus y Borreguiles). Con Explora obtienes un 20% de descuento: indícalo al recoger el equipo.",
     blurbEn:
       "We recommend renting equipment at José Luis Sáez (next to the Al-Andalus and Borreguiles gondolas). With Explora you get 20% off: mention it when you pick up your gear.",
+    googleMapsUrl:
+      "https://www.google.com/maps/dir/?api=1&destination=Jos%C3%A9+Luis+S%C3%A1ez+Alquiler+Esqu%C3%ADs+Plaza+de+Andaluc%C3%ADa+telecabinas+Al-Andalus+Borreguiles+Pradollano+Sierra+Nevada",
   },
 };

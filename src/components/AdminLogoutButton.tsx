@@ -24,7 +24,7 @@ export function AdminLogoutButton() {
     <button
       type="button"
       onClick={exitAdmin}
-      className="rounded-full border border-hielo/15 bg-white px-3.5 py-2 text-xs font-semibold text-pizarra transition hover:border-accent/30 hover:text-accent sm:text-sm"
+      className="rounded-full border border-hielo/15 bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-pizarra transition hover:border-accent/30 hover:text-accent sm:px-3.5 sm:py-2 sm:text-sm"
     >
       {adminCopy.logout}
     </button>

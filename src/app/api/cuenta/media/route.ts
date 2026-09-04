@@ -3,15 +3,34 @@ import { z } from "zod";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import {
+  completeStudentMediaUpload,
   createStudentMediaFromUpload,
   listStudentMediaForUid,
+  prepareStudentMediaUpload,
   publishStudentMediaToGallery,
   unlinkStudentMediaFromGallery,
 } from "@/lib/student-media";
 import { isAdminConfigured } from "@/lib/firebase/admin";
+import { STUDENT_MEDIA_VIDEO_MAX_BYTES } from "@/lib/student-media-shared";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
+
+const CLIENT_ERRORS = new Set([
+  "invalid_type",
+  "invalid_file",
+  "file_too_large",
+  "media_limit",
+  "video_too_long",
+  "upload_incomplete",
+  "forbidden",
+]);
+
+function errorResponse(error: unknown) {
+  const code = error instanceof Error ? error.message : "upload_failed";
+  const status = CLIENT_ERRORS.has(code) ? 400 : code === "unavailable" ? 503 : 500;
+  return NextResponse.json({ error: code }, { status });
+}
 
 export async function GET() {
   const session = await getStudentSession();
@@ -19,6 +38,48 @@ export async function GET() {
   const media = await listStudentMediaForUid(session.uid);
   return NextResponse.json({ media });
 }
+
+const prepareSchema = z.object({
+  fileName: z.string().min(1).max(180),
+  contentType: z.string().max(80).optional().default(""),
+  size: z.number().int().positive().max(STUDENT_MEDIA_VIDEO_MAX_BYTES),
+  durationSeconds: z.number().positive().max(600).nullable().optional(),
+});
+
+export async function PUT(request: Request) {
+  const session = await getStudentSession();
+  if (!session) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!isAdminConfigured()) {
+    return NextResponse.json({ error: "unavailable" }, { status: 503 });
+  }
+
+  const parsed = prepareSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) {
+    return NextResponse.json({ error: "invalid_data" }, { status: 400 });
+  }
+
+  try {
+    const prepared = await prepareStudentMediaUpload({
+      studentUid: session.uid,
+      fileName: parsed.data.fileName,
+      contentType: parsed.data.contentType,
+      size: parsed.data.size,
+      durationSeconds: parsed.data.durationSeconds ?? null,
+    });
+    return NextResponse.json(prepared);
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
+const completeSchema = z.object({
+  intent: z.literal("complete"),
+  mediaId: z.string().uuid(),
+  storagePath: z.string().min(1).max(300),
+  contentType: z.string().min(3).max(80),
+  fileName: z.string().min(1).max(180),
+  durationSeconds: z.number().positive().max(600).nullable().optional(),
+});
 
 export async function POST(request: Request) {
   const session = await getStudentSession();
@@ -28,6 +89,28 @@ export async function POST(request: Request) {
   }
 
   const profile = await getStudentProfile(session.uid);
+  const header = request.headers.get("content-type") || "";
+
+  if (header.includes("application/json")) {
+    const parsed = completeSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ error: "invalid_data" }, { status: 400 });
+    }
+    try {
+      const result = await completeStudentMediaUpload({
+        studentUid: session.uid,
+        mediaId: parsed.data.mediaId,
+        storagePath: parsed.data.storagePath,
+        contentType: parsed.data.contentType,
+        fileName: parsed.data.fileName,
+        durationSeconds: parsed.data.durationSeconds ?? null,
+      });
+      return NextResponse.json(result);
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
+
   const form = await request.formData();
   const file = form.get("file");
   if (!(file instanceof File)) {
@@ -35,9 +118,7 @@ export async function POST(request: Request) {
   }
   const durationRaw = form.get("durationSeconds");
   const durationSeconds =
-    typeof durationRaw === "string" && durationRaw.trim()
-      ? Number(durationRaw)
-      : null;
+    typeof durationRaw === "string" && durationRaw.trim() ? Number(durationRaw) : null;
 
   try {
     const result = await createStudentMediaFromUpload({
@@ -48,16 +129,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(result);
   } catch (error) {
-    const code = error instanceof Error ? error.message : "upload_failed";
-    const status =
-      code === "invalid_type" ||
-      code === "file_too_large" ||
-      code === "media_limit" ||
-      code === "video_too_long" ||
-      code === "duration_required"
-        ? 400
-        : 500;
-    return NextResponse.json({ error: code }, { status });
+    return errorResponse(error);
   }
 }
 

@@ -50,6 +50,14 @@ export default async function ComoLlegarPage({ params }: Props) {
 
             <h2>{pickLocale(locale, "Punto de encuentro", "Meeting point")}</h2>
             <p>{pickLocale(locale, site.meetingPointEs, site.meetingPointEn)}</p>
+            <a
+              href={site.meetingPoint.googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary mt-3 !w-auto"
+            >
+              {pickLocale(locale, "Abrir punto de encuentro en Google Maps", "Open meeting point in Google Maps")}
+            </a>
 
             <h2>{pickLocale(locale, "Cómo llegar a la estación", "Getting to the resort")}</h2>
             <p>
@@ -69,15 +77,15 @@ export default async function ComoLlegarPage({ params }: Props) {
 
             <h2>{pickLocale(locale, "Alquiler de material", "Equipment rental")}</h2>
             <p>{pickLocale(locale, site.rentalPartner.howToFindEs, site.rentalPartner.howToFindEn)}</p>
-
             <a
-              href={site.meetingPoint.googleMapsUrl}
+              href={site.rentalPartner.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary mt-6 !w-auto"
+              className="btn-primary mt-3 !w-auto"
             >
-              {pickLocale(locale, "Abrir en Google Maps", "Open in Google Maps")}
+              {pickLocale(locale, "Cómo llegar al alquiler", "Directions to the rental shop")}
             </a>
+
             <a href={`mailto:${site.email}`} className="btn-secondary mt-4 !w-auto">
               {site.email}
             </a>

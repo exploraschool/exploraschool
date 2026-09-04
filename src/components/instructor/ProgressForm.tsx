@@ -47,7 +47,7 @@ export function ProgressForm({
 
   const [discipline, setDiscipline] = useState<ProgressDisciplineId>(initialDiscipline);
   const [instructorSlug, setInstructorSlug] = useState(
-    initial?.instructorSlug || defaultInstructorSlug || instructors[0]?.slug || "",
+    initial?.instructorSlug || defaultInstructorSlug || "",
   );
   const [skills, setSkills] = useState<Record<string, number>>(initial?.skills ?? {});
   const [rating, setRating] = useState(initial?.rating ?? 3);

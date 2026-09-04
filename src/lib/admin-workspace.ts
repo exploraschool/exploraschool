@@ -46,5 +46,5 @@ export async function requireInstructorWorkspace(): Promise<never> {
 }
 
 export function workspaceHome(_workspace?: AdminWorkspace | null): string {
-  return "/admin/alumnos";
+  return "/admin/reservas";
 }

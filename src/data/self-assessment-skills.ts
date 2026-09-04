@@ -87,7 +87,9 @@ export const SELF_SKILL_TEMPLATES: Record<ProgressDisciplineId, SelfSkillTemplat
   ],
 };
 
-const LEVEL_ORDER: SelfLevelId[] = ["debutante", "intermedio", "avanzado", "experto"];
+export const SELF_LEVEL_ORDER: SelfLevelId[] = ["debutante", "intermedio", "avanzado", "experto"];
+
+const LEVEL_ORDER = SELF_LEVEL_ORDER;
 
 export function selfSkillLabel(skill: SelfSkillTemplate, locale: string): string {
   return locale === "en" ? skill.labelEn : skill.labelEs;

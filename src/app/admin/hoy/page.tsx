@@ -3,5 +3,5 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 
 export default async function AdminHoyPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
-  redirect("/admin/alumnos");
+  redirect("/admin/reservas");
 }

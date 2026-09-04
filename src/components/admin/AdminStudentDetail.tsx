@@ -5,10 +5,14 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   COMPANION_RELATIONS,
-  EQUIPMENT_SOURCES,
   selfLevelName,
   WIZARD_DISCIPLINES,
 } from "@/data/student-account";
+import { StudentEquipmentFields } from "@/components/cuenta/StudentEquipmentFields";
+import {
+  equipmentFormFromProfile,
+  toStudentEquipment,
+} from "@/lib/student-equipment";
 import { progressDisciplineName, type ProgressDisciplineId } from "@/data/progress-skills";
 import {
   deriveOverallSelfLevel,
@@ -42,6 +46,18 @@ type AdminStudentDetailProps = {
   instructors: InstructorOption[];
 };
 
+function initialMonitorSlug(
+  instructors: InstructorOption[],
+  bookings: BookingRow[],
+  reports: ProgressReport[],
+): string {
+  const allowed = new Set(instructors.map((item) => item.slug));
+  const fromBooking = bookings.find((row) => row.instructorSlug && allowed.has(row.instructorSlug))?.instructorSlug;
+  if (fromBooking) return fromBooking;
+  const fromReport = reports.find((row) => row.instructorSlug && allowed.has(row.instructorSlug))?.instructorSlug;
+  return fromReport ?? "";
+}
+
 export function AdminStudentDetail({
   profile: initialProfile,
   reports,
@@ -52,12 +68,13 @@ export function AdminStudentDetail({
   const router = useRouter();
   const [profile, setProfile] = useState(initialProfile);
   const [media, setMedia] = useState(initialMedia);
-  const [monitorSlug, setMonitorSlug] = useState(instructors[0]?.slug || "");
+  const [monitorSlug, setMonitorSlug] = useState(() =>
+    initialMonitorSlug(instructors, bookings, reports),
+  );
   const [staffTips, setStaffTips] = useState(initialProfile.staffTips || "");
   const [disciplines, setDisciplines] = useState<ProgressDisciplineId[]>(initialProfile.disciplines);
   const [selfSkills, setSelfSkills] = useState(initialProfile.selfSkills ?? {});
-  const [equipmentSource, setEquipmentSource] = useState(initialProfile.equipment?.source ?? "rental");
-  const [bootSize, setBootSize] = useState(initialProfile.equipment?.bootSize ?? "");
+  const [equipment, setEquipment] = useState(() => equipmentFormFromProfile(initialProfile.equipment));
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -89,12 +106,7 @@ export function AdminStudentDetail({
           selfSkills,
           selfLevel: derivedLevel,
           staffTips,
-          equipment: {
-            source: equipmentSource,
-            bootSize: bootSize.trim(),
-            heightCm: profile.equipment?.heightCm ?? null,
-            weightKg: profile.equipment?.weightKg ?? null,
-          },
+          equipment: toStudentEquipment(equipment),
         }),
       });
       if (!res.ok) throw new Error("No se pudo guardar el perfil");
@@ -169,11 +181,11 @@ export function AdminStudentDetail({
   }
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-2xl border border-hielo/10 bg-white p-5">
+    <div className="space-y-5 sm:space-y-8">
+      <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <p className="font-display text-2xl font-semibold">{profile.displayName || profile.email}</p>
+            <p className="font-display text-xl font-semibold sm:text-2xl">{profile.displayName || profile.email}</p>
             <p className="text-sm text-muted">{profile.email}</p>
             <p className="mt-1 text-sm text-hielo">
               Nivel: {profile.selfLevel ? selfLevelName(profile.selfLevel, "es") : "Sin estimar"}
@@ -200,7 +212,7 @@ export function AdminStudentDetail({
         </div>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-hielo/10 bg-white p-5">
+      <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <h2 className="font-display text-xl font-semibold">Perfil y tips del equipo</h2>
         <div className="flex flex-wrap gap-2">
           {WIZARD_DISCIPLINES.map((item) => (
@@ -242,30 +254,12 @@ export function AdminStudentDetail({
           </div>
         ))}
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <label className="text-sm font-semibold">
-            Origen del material
-            <select
-              className="mt-1 w-full rounded-xl border border-hielo/15 px-3 py-2"
-              value={equipmentSource}
-              onChange={(event) => setEquipmentSource(event.target.value as "own" | "rental")}
-            >
-              {EQUIPMENT_SOURCES.map((source) => (
-                <option key={source.id} value={source.id}>
-                  {source.nameEs}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label className="text-sm font-semibold">
-            Talla bota
-            <input
-              className="mt-1 w-full rounded-xl border border-hielo/15 px-3 py-2"
-              value={bootSize}
-              onChange={(event) => setBootSize(event.target.value)}
-            />
-          </label>
-        </div>
+        <StudentEquipmentFields
+          locale="es"
+          disciplines={disciplines}
+          values={equipment}
+          onChange={(patch) => setEquipment((current) => ({ ...current, ...patch }))}
+        />
 
         <label className="block text-sm font-semibold">
           Tips permanentes para el alumno
@@ -299,7 +293,7 @@ export function AdminStudentDetail({
         </button>
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-hielo/10 bg-white p-5">
+      <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <h2 className="font-display text-xl font-semibold">Medias y videocorrecciones</h2>
         {media.length === 0 ? (
           <p className="text-sm text-muted">El alumno aún no ha subido fotos ni vídeos.</p>
@@ -362,7 +356,7 @@ export function AdminStudentDetail({
         )}
       </section>
 
-      <section className="space-y-4 rounded-2xl border border-hielo/10 bg-white p-5">
+      <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
         <h2 className="font-display text-xl font-semibold">Clases y fichas</h2>
         {bookings.length === 0 ? (
           <p className="text-sm text-muted">Sin reservas vinculadas todavía.</p>
@@ -388,6 +382,7 @@ export function AdminStudentDetail({
             </div>
             {activeBooking ? (
               <ProgressForm
+                key={`${activeBooking.leadId}-${activeBooking.itemIndex}`}
                 leadId={activeBooking.leadId}
                 itemIndex={activeBooking.itemIndex}
                 studentName={profile.displayName || profile.email}

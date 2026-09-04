@@ -29,7 +29,7 @@ export default async function BienvenidaPage({ params, searchParams }: Props) {
   setRequestLocale(locale);
 
   if (await isAdminAuthenticated()) {
-    redirect("/admin/alumnos");
+    redirect("/admin/reservas");
   }
 
   const session = await getStudentSession();
@@ -43,7 +43,7 @@ export default async function BienvenidaPage({ params, searchParams }: Props) {
   }
 
   return (
-    <section className="section-padding">
+    <section className="section-padding !py-6 sm:!py-10">
       <div className="container-page">
         <AccountWelcomeWizard locale={locale} initialProfile={profile} editMode={editing} />
       </div>

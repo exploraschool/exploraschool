@@ -30,7 +30,7 @@ export default async function CuentaPage({ params }: Props) {
   setRequestLocale(locale);
 
   if (await isAdminAuthenticated()) {
-    redirect("/admin/alumnos");
+    redirect("/admin/reservas");
   }
 
   const session = await getStudentSession();

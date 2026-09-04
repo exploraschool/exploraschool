@@ -18,6 +18,7 @@ import {
 } from "@/lib/progress-reports";
 import type { StoredLead } from "@/lib/leads";
 import { listStudentMediaForUid } from "@/lib/student-media";
+import { equipmentSchema } from "@/lib/student-equipment";
 
 export const runtime = "nodejs";
 
@@ -40,15 +41,7 @@ const companionSchema = z.object({
 const patchSchema = z.object({
   displayName: z.string().min(1).max(120).optional(),
   disciplines: z.array(z.enum(DISCIPLINE_IDS)).max(6).optional(),
-  equipment: z
-    .object({
-      source: z.enum(["own", "rental"]),
-      bootSize: z.string().max(12),
-      heightCm: z.number().min(50).max(250).nullable(),
-      weightKg: z.number().min(15).max(250).nullable(),
-    })
-    .nullable()
-    .optional(),
+  equipment: equipmentSchema.nullable().optional(),
   companions: z.array(companionSchema).max(12).optional(),
   selfSkills: z.record(z.string(), z.array(z.string().min(1).max(80)).max(30)).optional(),
   selfLevel: z.enum(["debutante", "intermedio", "avanzado", "experto"]).nullable().optional(),

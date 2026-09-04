@@ -72,14 +72,14 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3 sm:space-y-5">
       <label className="block">
         <span className="sr-only">Buscar alumno</span>
         <input
           value={q}
           onChange={(event) => setQ(event.target.value)}
           placeholder="Buscar por nombre o email…"
-          className="w-full max-w-md rounded-xl border border-hielo/15 bg-white px-4 py-3 text-sm"
+          className="w-full max-w-md rounded-xl border border-hielo/15 bg-white px-3.5 py-2.5 text-sm sm:px-4 sm:py-3"
         />
       </label>
 
@@ -90,18 +90,18 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
           No hay alumnos registrados{q ? " con ese filtro" : ""}.
         </p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="space-y-2 sm:space-y-3">
           {filtered.map((student) => (
             <li
               key={student.uid}
-              className="flex flex-wrap items-center gap-2 rounded-2xl border border-hielo/10 bg-white px-3 py-3 sm:px-5 sm:py-4"
+              className="flex items-center gap-2 rounded-xl border border-hielo/10 bg-white px-2.5 py-2.5 sm:rounded-2xl sm:px-5 sm:py-4"
             >
               <Link
                 href={`/admin/alumnos/${student.uid}`}
                 className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3 transition hover:opacity-90"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-nieve text-muted">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-nieve text-muted sm:h-12 sm:w-12">
                     {student.photoURL ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={student.photoURL} alt="" className="h-full w-full object-cover" />
@@ -113,7 +113,7 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate font-display text-lg font-semibold text-pizarra">
+                    <p className="truncate font-display text-base font-semibold text-pizarra sm:text-lg">
                       {student.displayName || student.email}
                     </p>
                     <p className="truncate text-sm text-muted">{student.email}</p>
@@ -131,7 +131,7 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                 type="button"
                 disabled={busyUid === student.uid}
                 onClick={() => void removeStudent(student)}
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/25 text-accent transition hover:bg-accent/5 disabled:opacity-50"
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/25 text-accent transition hover:bg-accent/5 disabled:opacity-50 sm:h-10 sm:w-10"
                 aria-label={`Eliminar a ${student.displayName || student.email}`}
                 title="Eliminar alumno"
               >

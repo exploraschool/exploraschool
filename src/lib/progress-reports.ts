@@ -1,4 +1,4 @@
-import type { ProgressDisciplineId } from "@/data/progress-skills";
+import { progressDisciplineName, type ProgressDisciplineId } from "@/data/progress-skills";
 
 export const PROGRESS_REPORTS_COLLECTION = "progressReports";
 export const PROGRESS_MEDIA_MAX = 3;
@@ -125,9 +125,10 @@ export function earnedBadges(reports: ProgressReport[], locale: string): { id: s
 
   const disciplines = new Set(reports.map((report) => report.discipline));
   for (const discipline of disciplines) {
+    const name = progressDisciplineName(discipline, locale);
     out.push({
       id: `discipline-${discipline}`,
-      label: locale === "en" ? `Progress in ${discipline}` : `Progreso en ${discipline}`,
+      label: locale === "en" ? `Progress in ${name}` : `Progreso en ${name}`,
     });
   }
 

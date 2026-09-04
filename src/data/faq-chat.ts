@@ -121,7 +121,7 @@ Material: recomendamos José Luis Sáez, junto a los telecabinas Al-Andalus y Bo
       {
         id: "alquiler",
         label: "Cómo llegar al alquiler",
-        action: { type: "link", href: "/como-llegar" },
+        action: { type: "link", href: site.rentalPartner.googleMapsUrl },
       },
       {
         id: "back",

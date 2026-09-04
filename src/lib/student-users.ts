@@ -1,7 +1,9 @@
 import type {
   CompanionRelation,
+  EquipmentGearBase,
   EquipmentSource,
   SelfLevelId,
+  SnowboardStance,
 } from "@/data/student-account";
 import type { ProgressDisciplineId } from "@/data/progress-skills";
 
@@ -17,8 +19,16 @@ export type StudentCompanion = {
 export type StudentEquipment = {
   source: EquipmentSource;
   bootSize: string;
+  snowboardBootSize: string;
   heightCm: number | null;
   weightKg: number | null;
+  helmetSize: string;
+  skiLengthCm: number | null;
+  poleLengthCm: number | null;
+  boardLengthCm: number | null;
+  stance: SnowboardStance | null;
+  notes: string;
+  gearBase: EquipmentGearBase | null;
 };
 
 export type StudentProfile = {
@@ -69,8 +79,16 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     equipment = {
       source: row.source === "rental" ? "rental" : "own",
       bootSize: typeof row.bootSize === "string" ? row.bootSize : "",
+      snowboardBootSize: typeof row.snowboardBootSize === "string" ? row.snowboardBootSize : "",
       heightCm: typeof row.heightCm === "number" ? row.heightCm : null,
       weightKg: typeof row.weightKg === "number" ? row.weightKg : null,
+      helmetSize: typeof row.helmetSize === "string" ? row.helmetSize : "",
+      skiLengthCm: typeof row.skiLengthCm === "number" ? row.skiLengthCm : null,
+      poleLengthCm: typeof row.poleLengthCm === "number" ? row.poleLengthCm : null,
+      boardLengthCm: typeof row.boardLengthCm === "number" ? row.boardLengthCm : null,
+      stance: row.stance === "regular" || row.stance === "goofy" ? row.stance : null,
+      notes: typeof row.notes === "string" ? row.notes : "",
+      gearBase: row.gearBase === "esqui" || row.gearBase === "snowboard" ? row.gearBase : null,
     };
   }
 

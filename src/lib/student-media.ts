@@ -9,17 +9,19 @@ import {
 } from "@/lib/live-gallery";
 import { revalidatePath } from "next/cache";
 import {
+  assertStudentMediaConstraints,
+  normalizeStudentMediaContentType,
+  resolveStudentMediaKind,
+  studentMediaExtension,
   STUDENT_MEDIA_COLLECTION,
-  STUDENT_MEDIA_IMAGE_MAX_BYTES,
   STUDENT_MEDIA_MAX_PER_USER,
   STUDENT_MEDIA_STORAGE_PREFIX,
-  STUDENT_MEDIA_VIDEO_MAX_BYTES,
-  STUDENT_MEDIA_VIDEO_MAX_SECONDS,
   type StudentMediaItem,
   type StudentMediaKind,
 } from "@/lib/student-media-shared";
 
 export {
+  resolveStudentMediaKind,
   STUDENT_MEDIA_COLLECTION,
   STUDENT_MEDIA_IMAGE_MAX_BYTES,
   STUDENT_MEDIA_MAX_PER_USER,
@@ -30,42 +32,12 @@ export {
   type StudentMediaKind,
 } from "@/lib/student-media-shared";
 
-const IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
-const VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);
-
-export function resolveStudentMediaKind(contentType: string, fileName: string): StudentMediaKind | null {
-  const type = contentType.toLowerCase();
-  if (IMAGE_TYPES.has(type)) return "image";
-  if (VIDEO_TYPES.has(type)) return "video";
-  const ext = fileName.split(".").pop()?.toLowerCase();
-  if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "webp") return "image";
-  if (ext === "mp4" || ext === "webm" || ext === "mov") return "video";
-  return null;
-}
-
-export function normalizeContentType(contentType: string, kind: StudentMediaKind): string {
-  const type = contentType.toLowerCase();
-  if (kind === "image") {
-    if (type === "image/jpg" || type === "image/jpeg") return "image/jpeg";
-    if (type === "image/png") return "image/png";
-    if (type === "image/webp") return "image/webp";
-    return "image/jpeg";
-  }
-  if (type === "video/webm") return "video/webm";
-  if (type === "video/quicktime") return "video/quicktime";
-  return "video/mp4";
-}
-
-function extensionFor(contentType: string, fileName: string, kind: StudentMediaKind): string {
-  const fromName = fileName.split(".").pop()?.toLowerCase();
-  if (kind === "image") {
-    if (fromName === "png" || fromName === "webp" || fromName === "jpg" || fromName === "jpeg") {
-      return fromName === "jpeg" ? "jpg" : fromName;
-    }
-    return contentType.includes("png") ? "png" : contentType.includes("webp") ? "webp" : "jpg";
-  }
-  if (fromName === "webm" || fromName === "mov" || fromName === "mp4") return fromName === "mov" ? "mov" : fromName;
-  return contentType.includes("webm") ? "webm" : "mp4";
+export function normalizeContentType(
+  contentType: string,
+  kind: StudentMediaKind,
+  fileName = "",
+): string {
+  return normalizeStudentMediaContentType(contentType, fileName, kind);
 }
 
 export function parseStudentMedia(id: string, data: Record<string, unknown>): StudentMediaItem {
@@ -185,11 +157,174 @@ async function publishToLiveGallery(params: {
   return galleryId;
 }
 
+let corsEnsured = false;
+
+async function ensureDirectUploadCors(bucket: NonNullable<ReturnType<typeof getAdminBucket>>) {
+  if (corsEnsured) return;
+  try {
+    const [metadata] = await bucket.getMetadata();
+    const cors = Array.isArray(metadata.cors) ? metadata.cors : [];
+    const allowsPut = cors.some((entry) => {
+      const methods = (entry.method ?? []).map((method) => String(method).toUpperCase());
+      const origins = entry.origin ?? [];
+      return methods.includes("PUT") && origins.length > 0;
+    });
+    if (!allowsPut) {
+      await bucket.setCorsConfiguration([
+        ...cors,
+        {
+          origin: ["*"],
+          method: ["GET", "HEAD", "PUT", "OPTIONS"],
+          responseHeader: ["Content-Type", "Content-Length"],
+          maxAgeSeconds: 3600,
+        },
+      ]);
+    }
+    corsEnsured = true;
+  } catch (error) {
+    console.error("[student-media] cors ensure failed:", error);
+  }
+}
+
+function studentMediaObjectPath(studentUid: string, mediaId: string, ext: string): string {
+  return `${STUDENT_MEDIA_STORAGE_PREFIX}/${studentUid}/${mediaId}.${ext}`;
+}
+
+function isOwnedStudentMediaPath(studentUid: string, mediaId: string, storagePath: string): boolean {
+  const prefix = `${STUDENT_MEDIA_STORAGE_PREFIX}/${studentUid}/${mediaId}.`;
+  return storagePath.startsWith(prefix) && storagePath.slice(prefix.length).split("/").length === 1;
+}
+
+async function assertQuotaAvailable(studentUid: string): Promise<void> {
+  const existing = await listStudentMediaForUid(studentUid);
+  if (existing.length >= STUDENT_MEDIA_MAX_PER_USER) throw new Error("media_limit");
+}
+
+function buildStudentMediaItem(params: {
+  mediaId: string;
+  studentUid: string;
+  kind: StudentMediaKind;
+  src: string;
+  storagePath: string;
+  contentType: string;
+  fileName: string;
+}): StudentMediaItem {
+  return {
+    id: params.mediaId,
+    studentUid: params.studentUid,
+    kind: params.kind,
+    src: params.src,
+    storagePath: params.storagePath,
+    contentType: params.contentType,
+    fileName: params.fileName,
+    createdAt: new Date().toISOString(),
+    forCorrection: true,
+    correctionNotes: "",
+    reviewedAt: null,
+    reviewedByInstructorSlug: "",
+    liveGalleryId: null,
+    publishedToGallery: false,
+  };
+}
+
+export async function prepareStudentMediaUpload(params: {
+  studentUid: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  durationSeconds?: number | null;
+}): Promise<{ uploadUrl: string; mediaId: string; storagePath: string; contentType: string }> {
+  const bucket = getAdminBucket();
+  if (!bucket) throw new Error("unavailable");
+
+  const kind = resolveStudentMediaKind(params.contentType, params.fileName);
+  if (!kind) throw new Error("invalid_type");
+  assertStudentMediaConstraints({
+    kind,
+    size: params.size,
+    durationSeconds: params.durationSeconds,
+  });
+  await assertQuotaAvailable(params.studentUid);
+
+  const contentType = normalizeStudentMediaContentType(params.contentType, params.fileName, kind);
+  const mediaId = randomUUID();
+  const ext = studentMediaExtension(contentType, params.fileName, kind);
+  const storagePath = studentMediaObjectPath(params.studentUid, mediaId, ext);
+  await ensureDirectUploadCors(bucket);
+
+  const [uploadUrl] = await bucket.file(storagePath).getSignedUrl({
+    version: "v4",
+    action: "write",
+    expires: Date.now() + 15 * 60 * 1000,
+    contentType,
+  });
+
+  return { uploadUrl, mediaId, storagePath, contentType };
+}
+
+export async function completeStudentMediaUpload(params: {
+  studentUid: string;
+  mediaId: string;
+  storagePath: string;
+  contentType: string;
+  fileName: string;
+  durationSeconds?: number | null;
+}): Promise<{ media: StudentMediaItem; publishedToGallery: boolean }> {
+  const db = getAdminDb();
+  const bucket = getAdminBucket();
+  if (!db || !bucket) throw new Error("unavailable");
+  if (!isOwnedStudentMediaPath(params.studentUid, params.mediaId, params.storagePath)) {
+    throw new Error("forbidden");
+  }
+
+  const kind = resolveStudentMediaKind(params.contentType, params.fileName);
+  if (!kind) throw new Error("invalid_type");
+  assertStudentMediaConstraints({
+    kind,
+    size: 1,
+    durationSeconds: params.durationSeconds,
+  });
+  await assertQuotaAvailable(params.studentUid);
+
+  const file = bucket.file(params.storagePath);
+  const [exists] = await file.exists();
+  if (!exists) throw new Error("upload_incomplete");
+
+  const [metadata] = await file.getMetadata();
+  const size = Number(metadata.size ?? 0);
+  if (!Number.isFinite(size) || size <= 0) throw new Error("upload_incomplete");
+  assertStudentMediaConstraints({
+    kind,
+    size,
+    durationSeconds: params.durationSeconds,
+  });
+
+  const contentType = normalizeStudentMediaContentType(params.contentType, params.fileName, kind);
+  const token = randomUUID();
+  await file.setMetadata({
+    contentType,
+    metadata: { firebaseStorageDownloadTokens: token },
+    cacheControl: "public, max-age=31536000",
+  });
+
+  const media = buildStudentMediaItem({
+    mediaId: params.mediaId,
+    studentUid: params.studentUid,
+    kind,
+    src: publicStorageUrl(bucket.name, params.storagePath, token),
+    storagePath: params.storagePath,
+    contentType,
+    fileName: params.fileName,
+  });
+  await db.collection(STUDENT_MEDIA_COLLECTION).doc(params.mediaId).set(media);
+  return { media, publishedToGallery: false };
+}
+
 export async function createStudentMediaFromUpload(params: {
   studentUid: string;
   displayName: string;
   file: File;
-  /** Client-reported duration for videos (seconds). Required for videos. */
+  /** Client-reported duration for videos (seconds). Best-effort on mobile. */
   durationSeconds?: number | null;
 }): Promise<{ media: StudentMediaItem; publishedToGallery: boolean }> {
   const db = getAdminDb();
@@ -198,27 +333,17 @@ export async function createStudentMediaFromUpload(params: {
 
   const kind = resolveStudentMediaKind(params.file.type, params.file.name);
   if (!kind) throw new Error("invalid_type");
+  assertStudentMediaConstraints({
+    kind,
+    size: params.file.size,
+    durationSeconds: params.durationSeconds,
+  });
+  await assertQuotaAvailable(params.studentUid);
 
-  const maxBytes = kind === "image" ? STUDENT_MEDIA_IMAGE_MAX_BYTES : STUDENT_MEDIA_VIDEO_MAX_BYTES;
-  if (params.file.size > maxBytes) throw new Error("file_too_large");
-
-  if (kind === "video") {
-    const duration = params.durationSeconds;
-    if (typeof duration !== "number" || !Number.isFinite(duration) || duration <= 0) {
-      throw new Error("duration_required");
-    }
-    if (duration > STUDENT_MEDIA_VIDEO_MAX_SECONDS + 0.25) {
-      throw new Error("video_too_long");
-    }
-  }
-
-  const existing = await listStudentMediaForUid(params.studentUid);
-  if (existing.length >= STUDENT_MEDIA_MAX_PER_USER) throw new Error("media_limit");
-
-  const contentType = normalizeContentType(params.file.type, kind);
+  const contentType = normalizeStudentMediaContentType(params.file.type, params.file.name, kind);
   const mediaId = randomUUID();
-  const ext = extensionFor(contentType, params.file.name, kind);
-  const storagePath = `${STUDENT_MEDIA_STORAGE_PREFIX}/${params.studentUid}/${mediaId}.${ext}`;
+  const ext = studentMediaExtension(contentType, params.file.name, kind);
+  const storagePath = studentMediaObjectPath(params.studentUid, mediaId, ext);
   const buffer = Buffer.from(await params.file.arrayBuffer());
   const token = randomUUID();
 
@@ -230,26 +355,15 @@ export async function createStudentMediaFromUpload(params: {
     },
   });
 
-  const src = publicStorageUrl(bucket.name, storagePath, token);
-  const now = new Date().toISOString();
-
-  const media: StudentMediaItem = {
-    id: mediaId,
+  const media = buildStudentMediaItem({
+    mediaId,
     studentUid: params.studentUid,
     kind,
-    src,
+    src: publicStorageUrl(bucket.name, storagePath, token),
     storagePath,
     contentType,
     fileName: params.file.name,
-    createdAt: now,
-    forCorrection: true,
-    correctionNotes: "",
-    reviewedAt: null,
-    reviewedByInstructorSlug: "",
-    liveGalleryId: null,
-    publishedToGallery: false,
-  };
-
+  });
   await db.collection(STUDENT_MEDIA_COLLECTION).doc(mediaId).set(media);
   return { media, publishedToGallery: false };
 }

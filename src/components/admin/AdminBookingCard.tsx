@@ -104,8 +104,8 @@ export function AdminBookingCard({
   }
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.04)]">
-      <div className="flex flex-col gap-4 border-b border-hielo/8 bg-gradient-to-r from-frost/30 via-white to-white px-5 py-4 sm:flex-row sm:items-start sm:justify-between sm:px-6">
+    <article className="overflow-hidden rounded-xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.04)] sm:rounded-2xl">
+      <div className="flex flex-col gap-3 border-b border-hielo/8 bg-gradient-to-r from-frost/30 via-white to-white px-3.5 py-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4 sm:px-6 sm:py-4">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusTone(status)}`}>
@@ -120,7 +120,7 @@ export function AdminBookingCard({
               </span>
             ) : null}
           </div>
-          <h2 className="mt-2 font-display text-xl font-semibold text-pizarra">{lead.name}</h2>
+          <h2 className="mt-1.5 font-display text-lg font-semibold text-pizarra sm:mt-2 sm:text-xl">{lead.name}</h2>
           <p className="mt-1 text-sm">
             <a href={`mailto:${lead.email}`} className="font-medium text-hielo hover:underline">
               {lead.email}
@@ -138,7 +138,7 @@ export function AdminBookingCard({
 
         <div className="shrink-0 sm:text-right">
           {lead.estimatedTotal !== undefined ? (
-            <p className="font-display text-2xl font-semibold text-hielo">{lead.estimatedTotal} €</p>
+            <p className="font-display text-xl font-semibold text-hielo sm:text-2xl">{lead.estimatedTotal} €</p>
           ) : null}
           <p className="text-xs text-muted">
             {items.length} {items.length === 1 ? "clase" : "clases"} · total estimado
@@ -146,7 +146,7 @@ export function AdminBookingCard({
         </div>
       </div>
 
-      <div className="space-y-3 px-5 py-4 sm:px-6">
+      <div className="space-y-3 px-3.5 py-3 sm:px-6 sm:py-4">
         {items.length > 0 ? (
           <ul className="space-y-2">
             {items.map((item, index) => {
@@ -203,7 +203,7 @@ export function AdminBookingCard({
         ) : null}
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-hielo/8 px-5 py-4 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-hielo/8 px-3.5 py-3 sm:gap-3 sm:px-6 sm:py-4">
         <p className="text-xs text-muted">ID: {lead.id}</p>
         <div className="flex flex-wrap items-center justify-end gap-2">
           <LeadActions

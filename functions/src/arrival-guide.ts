@@ -1,4 +1,6 @@
 const FORFAIT_URL = "https://www.sierranevada.es";
+const RENTAL_MAPS_URL =
+  "https://www.google.com/maps/dir/?api=1&destination=Jos%C3%A9+Luis+S%C3%A1ez+Alquiler+Esqu%C3%ADs+Plaza+de+Andaluc%C3%ADa+telecabinas+Al-Andalus+Borreguiles+Pradollano+Sierra+Nevada";
 
 /** Keep in sync with src/lib/arrival-guide-email.ts */
 
@@ -58,6 +60,7 @@ type GuideCopy = {
   meetIdentify: string;
   meetFullDay: string;
   mapsCta: string;
+  rentalMapsCta: string;
   forfaitCta: string;
   checklistTitle: string;
   checklist: string[];
@@ -187,7 +190,8 @@ function copy(isEn: boolean): GuideCopy {
       "Si tu reserva es de día completo con recogida, tu instructor te confirmará el punto de encuentro (puede no ser Borreguiles).",
       "If your booking is a full day with pick-up, your instructor will confirm the meeting point (it may not be Borreguiles).",
     ),
-    mapsCta: pick(isEn, "Abrir en Google Maps", "Open in Google Maps"),
+    mapsCta: pick(isEn, "Abrir punto de encuentro en Google Maps", "Open meeting point in Google Maps"),
+    rentalMapsCta: pick(isEn, "Cómo llegar al alquiler", "Directions to the rental shop"),
     forfaitCta: pick(isEn, "Comprar forfait en sierranevada.es", "Buy a lift pass at sierranevada.es"),
     checklistTitle: pick(isEn, "Check-list de tiempos", "Timing checklist"),
     checklist: isEn
@@ -238,6 +242,7 @@ export function buildArrivalGuideText(isEn: boolean, links: ArrivalGuideLinks): 
     c.gearForfait,
     FORFAIT_URL,
     c.gearRental,
+    RENTAL_MAPS_URL,
     c.gearPersonal,
     "",
     c.gondolaTitle,
@@ -346,6 +351,11 @@ export function buildArrivalGuideHtml(
           </a>
         </p>
         ${p(c.gearRental, brand)}
+        <p style="margin:0 0 10px;">
+          <a href="${escapeHtml(RENTAL_MAPS_URL)}" style="font-size:14px;font-weight:700;color:${brand.hielo};text-decoration:underline;">
+            ${escapeHtml(c.rentalMapsCta)}
+          </a>
+        </p>
         ${p(c.gearPersonal, brand, "0")}
       `,
       brand,

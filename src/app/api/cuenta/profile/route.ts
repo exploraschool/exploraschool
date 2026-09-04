@@ -8,6 +8,7 @@ import type { ProgressDisciplineId } from "@/data/progress-skills";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile, upsertStudentProfile } from "@/lib/student-user-store";
 import { isOnboardingComplete } from "@/lib/student-users";
+import { equipmentSchema } from "@/lib/student-equipment";
 
 export const runtime = "nodejs";
 
@@ -33,15 +34,7 @@ const bodySchema = z.object({
   onboardingCompletedAt: z.string().nullable().optional(),
   completeOnboarding: z.boolean().optional(),
   disciplines: z.array(z.enum(DISCIPLINE_IDS)).max(6).optional(),
-  equipment: z
-    .object({
-      source: z.enum(["own", "rental"]),
-      bootSize: z.string().max(12),
-      heightCm: z.number().min(50).max(250).nullable(),
-      weightKg: z.number().min(15).max(250).nullable(),
-    })
-    .nullable()
-    .optional(),
+  equipment: equipmentSchema.nullable().optional(),
   companions: z.array(companionSchema).max(12).optional(),
   selfSkills: z.record(z.string(), z.array(z.string().min(1).max(80)).max(30)).optional(),
   selfLevel: z.enum(["debutante", "intermedio", "avanzado", "experto"]).nullable().optional(),

@@ -17,7 +17,7 @@ export function StudentLogoutButton({ locale }: { locale: string }) {
     <button
       type="button"
       onClick={() => void logout()}
-      className="rounded-full border border-hielo/15 bg-white px-3.5 py-2 text-xs font-semibold text-pizarra hover:text-accent"
+      className="rounded-full border border-hielo/15 bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-pizarra hover:text-accent sm:px-3.5 sm:py-2 sm:text-xs"
     >
       {t("logout")}
     </button>

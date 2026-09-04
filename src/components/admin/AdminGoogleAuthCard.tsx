@@ -40,7 +40,7 @@ export function AdminGoogleAuthCard({
       footer={footer}
       onSuccess={() => {
         onSuccess?.();
-        router.push("/admin/hoy");
+        router.push("/admin/reservas");
         router.refresh();
       }}
     />

@@ -43,7 +43,7 @@ export function AdminWorkspacePicker({ instructors, currentSlug = null }: AdminW
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-hielo">Administración</p>
         <h2 className="mt-2 font-display text-xl font-semibold text-pizarra sm:text-2xl">Explora</h2>
         <p className="mt-1 max-w-xl text-sm text-muted">
-          Gestión de la escuela: reservas, monitores, fichas, emails, contactos y galería.
+          Gestión de la escuela: reservas, monitores, fichas, contactos y galería.
         </p>
         <button
           type="button"

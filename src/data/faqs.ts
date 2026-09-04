@@ -199,7 +199,7 @@ Lleva:
 - Guantes, gafas y ropa impermeable
 - Protección solar
 
-- [Cómo llegar y dónde alquilar](/como-llegar)
+- [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
 - [Qué llevar el primer día](/blog/que-llevar-primer-dia-nieve)
 - [Reservar](/reserva)
 
@@ -215,7 +215,7 @@ Bring:
 - Gloves, goggles and waterproof clothing
 - Sun protection
 
-- [Getting here and where to rent](/como-llegar)
+- [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
 - [What to bring on day one](/blog/que-llevar-primer-dia-nieve)
 - [Book](/reserva)
 
@@ -237,7 +237,7 @@ El forfait se saca en [sierranevada.es](https://www.sierranevada.es), en los caj
 Para el material recomendamos **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles) con un **20% de descuento** por ser alumno de Explora. Indícalo al alquilar.
 
 - [Clases y tarifas](/clases)
-- [Cómo llegar y dónde alquilar](/como-llegar)
+- [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
 - [Reservar](/reserva)`,
     questionEn: "What is included in the lesson price?",
     answerEn: `Instruction with a qualified instructor. All prices include VAT.
@@ -251,7 +251,7 @@ Get your pass at [sierranevada.es](https://www.sierranevada.es), at the machines
 For equipment we recommend **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas) with **20% off** as an Explora student. Mention it when you rent.
 
 - [Lessons and prices](/clases)
-- [Getting here and where to rent](/como-llegar)
+- [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
 - [Book](/reserva)`,
   },
   {
@@ -298,7 +298,8 @@ El telecabina tarda 10–15 minutos. En hora punta (9:30–11:00) la fila puede 
 
 Aparcamiento recomendado: Parking Subterráneo Plaza de Andalucía. Lleva cadenas o fundas por si son obligatorias.
 
-- [Cómo llegar y dónde alquilar](/como-llegar)
+- [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
+- [Punto de encuentro](/como-llegar)
 
 > La regla es 90 minutos. Más vale sobrar que llegar tarde a la nieve.`,
     questionEn: "How early should I arrive?",
@@ -316,7 +317,8 @@ The gondola ride is 10–15 minutes. At peak times (9:30–11:00 am) the queue c
 
 Recommended parking: Plaza de Andalucía underground car park. Carry snow chains or socks in case they are required.
 
-- [Getting here and where to rent](/como-llegar)
+- [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
+- [Meeting point](/como-llegar)
 
 > The rule is 90 minutes. Better early than late on the snow.`,
   },
@@ -331,6 +333,8 @@ Puedes:
 - Traer el tuyo
 - Alquilarlo con el resto del material en **José Luis Sáez** (20% de descuento con Explora; junto a los telecabinas)
 
+- [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
+
 > En clase, el casco es la opción más segura.`,
     questionEn: "Is a helmet mandatory?",
     answerEn: `It is not mandatory at the resort. At Explora we do recommend it, especially with children.
@@ -338,6 +342,8 @@ Puedes:
 You can:
 - Bring your own
 - Rent it with the rest of the equipment at **José Luis Sáez** (20% off with Explora; next to the gondolas)
+
+- [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
 
 > For lessons, a helmet is the safer choice.`,
   },
