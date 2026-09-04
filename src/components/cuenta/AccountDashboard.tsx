@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { getPistaById } from "@/data/pistas";
 import { progressDisciplineName, type ProgressDisciplineId } from "@/data/progress-skills";
-import { ACCOUNT_MEETING_POINT_EN, ACCOUNT_MEETING_POINT_ES } from "@/data/student-account";
+import { ACCOUNT_MEETING_POINT_EN, ACCOUNT_MEETING_POINT_ES, selfLevelName } from "@/data/student-account";
 import type { ProgressReport } from "@/lib/progress-reports";
 import type { StudentProfile } from "@/lib/student-users";
 import { StudentLogoutButton } from "@/components/cuenta/StudentLogoutButton";
@@ -64,6 +64,11 @@ export function AccountDashboard({
       <p className="eyebrow">{t("areaEyebrow")}</p>
       <h1 className="page-title mt-2">{t("hello", { name: name.split(" ")[0] || name })}</h1>
       <p className="page-lead">{t("areaLead")}</p>
+      {profile?.selfLevel ? (
+        <p className="mt-2 text-sm font-semibold text-hielo">
+          {t("yourLevel")}: {selfLevelName(profile.selfLevel, locale)}
+        </p>
+      ) : null}
 
       <div className="mt-4 flex flex-wrap items-center gap-3">
         {incompleteProfile ? (

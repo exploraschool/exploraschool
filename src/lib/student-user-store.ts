@@ -56,6 +56,7 @@ export async function upsertStudentProfile(
     disciplines: patch.disciplines ?? current?.disciplines ?? [],
     equipment: patch.equipment !== undefined ? patch.equipment : (current?.equipment ?? null),
     companions: patch.companions ?? current?.companions ?? [],
+    selfSkills: patch.selfSkills !== undefined ? patch.selfSkills : (current?.selfSkills ?? {}),
     selfLevel: patch.selfLevel !== undefined ? patch.selfLevel : (current?.selfLevel ?? null),
     createdAt: current?.createdAt ?? now,
     updatedAt: now,

@@ -32,6 +32,8 @@ export type StudentProfile = {
   disciplines: ProgressDisciplineId[];
   equipment: StudentEquipment | null;
   companions: StudentCompanion[];
+  /** Skills the student says they can already do, keyed by discipline */
+  selfSkills: Partial<Record<ProgressDisciplineId, string[]>>;
   selfLevel: SelfLevelId | null;
   createdAt: string;
   updatedAt: string;
@@ -81,6 +83,25 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     ? data.disciplines.filter((item): item is ProgressDisciplineId => typeof item === "string")
     : [];
 
+  const selfSkillsRaw =
+    data.selfSkills && typeof data.selfSkills === "object"
+      ? (data.selfSkills as Record<string, unknown>)
+      : {};
+  const selfSkills: Partial<Record<ProgressDisciplineId, string[]>> = {};
+  for (const [key, value] of Object.entries(selfSkillsRaw)) {
+    if (!Array.isArray(value)) continue;
+    if (
+      key === "esqui" ||
+      key === "snowboard" ||
+      key === "telemark" ||
+      key === "esqui-adaptado" ||
+      key === "freeride" ||
+      key === "freestyle"
+    ) {
+      selfSkills[key] = value.filter((item): item is string => typeof item === "string");
+    }
+  }
+
   const selfLevel =
     data.selfLevel === "debutante" ||
     data.selfLevel === "intermedio" ||
@@ -102,6 +123,7 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     disciplines,
     equipment,
     companions,
+    selfSkills,
     selfLevel,
     createdAt: typeof data.createdAt === "string" ? data.createdAt : new Date().toISOString(),
     updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : new Date().toISOString(),

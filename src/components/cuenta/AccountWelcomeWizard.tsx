@@ -6,13 +6,19 @@ import { useTranslations } from "next-intl";
 import {
   COMPANION_RELATIONS,
   EQUIPMENT_SOURCES,
-  SELF_LEVELS,
+  selfLevelName,
   WIZARD_DISCIPLINES,
   type CompanionRelation,
   type EquipmentSource,
-  type SelfLevelId,
 } from "@/data/student-account";
 import type { ProgressDisciplineId } from "@/data/progress-skills";
+import { progressDisciplineName } from "@/data/progress-skills";
+import {
+  deriveOverallSelfLevel,
+  deriveSelfLevelFromSkills,
+  selfSkillLabel,
+  skillsGroupedByLevel,
+} from "@/data/self-assessment-skills";
 import type { StudentCompanion, StudentProfile } from "@/lib/student-users";
 
 type Step = "ask" | "wizard";
@@ -39,14 +45,35 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
   const [heightCm, setHeightCm] = useState(initialProfile?.equipment?.heightCm?.toString() ?? "");
   const [weightKg, setWeightKg] = useState(initialProfile?.equipment?.weightKg?.toString() ?? "");
   const [companions, setCompanions] = useState<StudentCompanion[]>(initialProfile?.companions ?? []);
-  const [selfLevel, setSelfLevel] = useState<SelfLevelId | null>(initialProfile?.selfLevel ?? null);
+  const [selfSkills, setSelfSkills] = useState<Partial<Record<ProgressDisciplineId, string[]>>>(
+    initialProfile?.selfSkills ?? {},
+  );
+  const [skillDiscipline, setSkillDiscipline] = useState<ProgressDisciplineId | null>(
+    initialProfile?.disciplines?.[0] ?? null,
+  );
+
+  const activeSkillDiscipline = skillDiscipline && disciplines.includes(skillDiscipline)
+    ? skillDiscipline
+    : disciplines[0] ?? null;
+
+  const derivedLevel = useMemo(
+    () => deriveOverallSelfLevel(selfSkills),
+    [selfSkills],
+  );
+
+  const activeDisciplineLevel = useMemo(() => {
+    if (!activeSkillDiscipline) return null;
+    return deriveSelfLevelFromSkills(activeSkillDiscipline, selfSkills[activeSkillDiscipline] ?? []);
+  }, [activeSkillDiscipline, selfSkills]);
 
   const canNext = useMemo(() => {
     if (wizardStep === 1) return disciplines.length > 0;
     if (wizardStep === 2) return bootSize.trim().length > 0;
-    if (wizardStep === 4) return Boolean(selfLevel);
+    if (wizardStep === 4) {
+      return Boolean(derivedLevel) && disciplines.every((id) => (selfSkills[id]?.length ?? 0) > 0);
+    }
     return true;
-  }, [wizardStep, disciplines.length, bootSize, selfLevel]);
+  }, [wizardStep, disciplines, bootSize, derivedLevel, selfSkills]);
 
   async function patchProfile(body: Record<string, unknown>) {
     const res = await fetch("/api/cuenta/profile", {
@@ -83,7 +110,7 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
   }
 
   async function onFinish() {
-    if (!selfLevel) return;
+    if (!derivedLevel) return;
     setBusy(true);
     setError("");
     try {
@@ -97,7 +124,8 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
           weightKg: weightKg ? Number(weightKg) : null,
         },
         companions,
-        selfLevel,
+        selfSkills,
+        selfLevel: derivedLevel,
       });
       await fetch("/api/cuenta/link-bookings", { method: "POST" });
       router.replace(`/${locale}/cuenta`);
@@ -110,9 +138,30 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
   }
 
   function toggleDiscipline(id: ProgressDisciplineId) {
-    setDisciplines((current) =>
-      current.includes(id) ? current.filter((item) => item !== id) : [...current, id],
-    );
+    setDisciplines((current) => {
+      const next = current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+      if (!next.includes(activeSkillDiscipline as ProgressDisciplineId)) {
+        setSkillDiscipline(next[0] ?? null);
+      }
+      setSelfSkills((skills) => {
+        const cleaned = { ...skills };
+        for (const key of Object.keys(cleaned) as ProgressDisciplineId[]) {
+          if (!next.includes(key)) delete cleaned[key];
+        }
+        return cleaned;
+      });
+      return next;
+    });
+  }
+
+  function toggleSkill(discipline: ProgressDisciplineId, skillId: string) {
+    setSelfSkills((current) => {
+      const list = current[discipline] ?? [];
+      const nextList = list.includes(skillId)
+        ? list.filter((item) => item !== skillId)
+        : [...list, skillId];
+      return { ...current, [discipline]: nextList };
+    });
   }
 
   function addCompanion() {
@@ -290,20 +339,81 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
               </div>
             ) : null}
 
-            {wizardStep === 4 ? (
-              <div className="grid grid-cols-2 gap-2">
-                {SELF_LEVELS.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => setSelfLevel(item.id)}
-                    className={`rounded-2xl border px-3 py-3 text-sm font-semibold ${
-                      selfLevel === item.id ? "border-hielo bg-hielo text-white" : "border-hielo/15 bg-nieve"
-                    }`}
-                  >
-                    {locale === "en" ? item.nameEn : item.nameEs}
-                  </button>
+            {wizardStep === 4 && activeSkillDiscipline ? (
+              <div className="space-y-5">
+                {disciplines.length > 1 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {disciplines.map((id) => {
+                      const active = id === activeSkillDiscipline;
+                      const count = selfSkills[id]?.length ?? 0;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => setSkillDiscipline(id)}
+                          className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+                            active
+                              ? "bg-hielo text-white"
+                              : "border border-hielo/15 bg-nieve text-pizarra hover:border-hielo/30"
+                          }`}
+                        >
+                          {progressDisciplineName(id, locale)}
+                          {count > 0 ? ` · ${count}` : ""}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
+
+                {skillsGroupedByLevel(activeSkillDiscipline).map((group) => (
+                  <div key={group.level} className="rounded-2xl border border-hielo/10 bg-nieve/60 p-3 sm:p-4">
+                    <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-hielo">
+                      {locale === "en" ? group.levelNameEn : group.levelNameEs}
+                    </p>
+                    <div className="mt-2.5 flex flex-wrap gap-2">
+                      {group.skills.map((skill) => {
+                        const selected = (selfSkills[activeSkillDiscipline] ?? []).includes(skill.id);
+                        return (
+                          <button
+                            key={skill.id}
+                            type="button"
+                            onClick={() => toggleSkill(activeSkillDiscipline, skill.id)}
+                            className={`rounded-full border px-3 py-2 text-left text-sm font-medium transition ${
+                              selected
+                                ? "border-hielo bg-hielo text-white"
+                                : "border-hielo/15 bg-white text-pizarra hover:border-hielo/30"
+                            }`}
+                          >
+                            {selfSkillLabel(skill, locale)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 ))}
+
+                <div
+                  className={`rounded-2xl border px-4 py-3 ${
+                    derivedLevel ? "border-hielo/20 bg-hielo/5" : "border-dashed border-hielo/20 bg-white"
+                  }`}
+                >
+                  {derivedLevel ? (
+                    <>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-hielo">
+                        {t("levelResultEyebrow")}
+                      </p>
+                      <p className="mt-1 font-display text-xl font-semibold text-pizarra">
+                        {selfLevelName(derivedLevel, locale)}
+                        {activeDisciplineLevel && disciplines.length > 1
+                          ? ` · ${progressDisciplineName(activeSkillDiscipline, locale)}: ${selfLevelName(activeDisciplineLevel, locale)}`
+                          : ""}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">{t("levelResultLead")}</p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-muted">{t("levelResultEmpty")}</p>
+                  )}
+                </div>
               </div>
             ) : null}
           </div>
@@ -322,7 +432,12 @@ export function AccountWelcomeWizard({ locale, initialProfile }: AccountWelcomeW
                 type="button"
                 className="btn-primary !w-auto"
                 disabled={!canNext || busy}
-                onClick={() => setWizardStep((current) => current + 1)}
+                onClick={() => {
+                  if (wizardStep === 1 && !skillDiscipline && disciplines[0]) {
+                    setSkillDiscipline(disciplines[0]);
+                  }
+                  setWizardStep((current) => current + 1);
+                }}
               >
                 {t("next")}
               </button>

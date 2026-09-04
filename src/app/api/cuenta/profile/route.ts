@@ -1,10 +1,24 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import {
+  deriveOverallSelfLevel,
+  isSelfSkillId,
+} from "@/data/self-assessment-skills";
+import type { ProgressDisciplineId } from "@/data/progress-skills";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile, upsertStudentProfile } from "@/lib/student-user-store";
 import { isOnboardingComplete } from "@/lib/student-users";
 
 export const runtime = "nodejs";
+
+const DISCIPLINE_IDS = [
+  "esqui",
+  "snowboard",
+  "telemark",
+  "esqui-adaptado",
+  "freeride",
+  "freestyle",
+] as const;
 
 const companionSchema = z.object({
   id: z.string().min(1).max(80),
@@ -18,10 +32,7 @@ const bodySchema = z.object({
   hasTakenClassesBefore: z.boolean().nullable().optional(),
   onboardingCompletedAt: z.string().nullable().optional(),
   completeOnboarding: z.boolean().optional(),
-  disciplines: z
-    .array(z.enum(["esqui", "snowboard", "telemark", "esqui-adaptado", "freeride", "freestyle"]))
-    .max(6)
-    .optional(),
+  disciplines: z.array(z.enum(DISCIPLINE_IDS)).max(6).optional(),
   equipment: z
     .object({
       source: z.enum(["own", "rental"]),
@@ -32,8 +43,22 @@ const bodySchema = z.object({
     .nullable()
     .optional(),
   companions: z.array(companionSchema).max(12).optional(),
+  selfSkills: z.record(z.string(), z.array(z.string().min(1).max(80)).max(30)).optional(),
   selfLevel: z.enum(["debutante", "intermedio", "avanzado", "experto"]).nullable().optional(),
 });
+
+function sanitizeSelfSkills(
+  raw: Record<string, string[]> | undefined,
+): Partial<Record<ProgressDisciplineId, string[]>> | undefined {
+  if (!raw) return undefined;
+  const next: Partial<Record<ProgressDisciplineId, string[]>> = {};
+  for (const [key, ids] of Object.entries(raw)) {
+    if (!(DISCIPLINE_IDS as readonly string[]).includes(key)) continue;
+    const discipline = key as ProgressDisciplineId;
+    next[discipline] = ids.filter((id) => isSelfSkillId(discipline, id));
+  }
+  return next;
+}
 
 export async function GET() {
   const session = await getStudentSession();
@@ -59,6 +84,10 @@ export async function PATCH(request: Request) {
   }
 
   const completeOnboarding = parsed.data.completeOnboarding === true;
+  const selfSkills = sanitizeSelfSkills(parsed.data.selfSkills);
+  const selfLevel =
+    selfSkills !== undefined ? deriveOverallSelfLevel(selfSkills) : parsed.data.selfLevel;
+
   const profile = await upsertStudentProfile(session.uid, {
     email: session.email,
     displayName: session.name,
@@ -71,7 +100,8 @@ export async function PATCH(request: Request) {
     disciplines: parsed.data.disciplines,
     equipment: parsed.data.equipment,
     companions: parsed.data.companions,
-    selfLevel: parsed.data.selfLevel,
+    selfSkills,
+    selfLevel,
   });
 
   return NextResponse.json({
