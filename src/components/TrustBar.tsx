@@ -38,10 +38,10 @@ export function TrustBar({ locale }: TrustBarProps) {
   return (
     <section className="home-trust-bar relative z-10">
       <div className="container-page">
-        <div className="grid grid-cols-2 gap-2 rounded-2xl border border-hielo/8 bg-white px-3 py-3 shadow-[0_8px_32px_rgba(10,18,25,0.08)] sm:gap-2.5 sm:px-4 sm:py-3.5 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 rounded-2xl border border-hielo/8 bg-white px-3.5 py-3.5 shadow-[0_8px_32px_rgba(10,18,25,0.08)] sm:gap-2.5 sm:px-4 sm:py-3.5 md:grid-cols-4">
           {stats.map((stat, i) => (
             <Reveal key={stat.label} delay={i * 60}>
-              <div className="group rounded-lg p-3 md:p-3.5">
+              <div className="group rounded-lg px-2 py-2.5 sm:p-3 md:p-3.5">
                 <div className="min-w-0">
                   <p className={`font-display text-lg font-semibold leading-none sm:text-xl ${stat.accent}`}>{stat.value}</p>
                   <p className="mt-0.5 truncate text-[0.65rem] font-semibold text-pizarra sm:text-xs">{stat.label}</p>

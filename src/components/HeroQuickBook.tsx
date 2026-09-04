@@ -36,7 +36,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative w-full min-w-0 max-w-xl overflow-visible rounded-2xl border border-white/15 bg-white/10 p-3 pt-3.5 backdrop-blur-xl sm:p-5 sm:pt-5"
+      className="relative w-full min-w-0 max-w-xl overflow-visible rounded-2xl border border-white/15 bg-white/10 p-4 pt-4 backdrop-blur-xl sm:p-5 sm:pt-5"
     >
       <div
         className="hero-offer-sticker"
@@ -57,15 +57,15 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
         </span>
       </div>
 
-      <p className="mb-2.5 pr-16 text-[0.65rem] font-bold uppercase tracking-wider text-oro-light sm:mb-3 sm:text-xs">
+      <p className="mb-3 pr-16 text-[0.7rem] font-bold uppercase tracking-wider text-oro-light sm:mb-3 sm:text-xs">
         {pickLocale(locale, "Reserva rápida", "Quick booking")}
       </p>
 
-      <div className="grid grid-cols-2 items-end gap-2 sm:grid-cols-[1fr_1fr_auto] sm:gap-2">
+      <div className="grid grid-cols-2 items-end gap-2.5 sm:grid-cols-[1fr_1fr_auto] sm:gap-2">
         <div className="min-w-0">
           <span
             id={disciplineLabelId}
-            className="mb-1 block text-[0.65rem] font-semibold uppercase tracking-wider text-nieve/85 sm:mb-1.5 sm:text-xs"
+            className="mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wider text-nieve/85 sm:text-xs"
           >
             {pickLocale(locale, "Disciplina", "Discipline")}
           </span>
@@ -86,7 +86,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
         <div className="min-w-0">
           <span
             id={peopleLabelId}
-            className="mb-1 block text-[0.65rem] font-semibold uppercase tracking-wider text-nieve/85 sm:mb-1.5 sm:text-xs"
+            className="mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wider text-nieve/85 sm:text-xs"
           >
             {pickLocale(locale, "Grupo", "Group")}
           </span>
@@ -106,13 +106,13 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
 
         <button
           type="submit"
-          className="btn-primary col-span-2 mt-0.5 h-10 !w-full py-0 sm:col-span-1 sm:mt-auto sm:h-11 sm:!w-auto sm:px-5"
+          className="btn-primary col-span-2 mt-1.5 h-11 !w-full py-0 sm:col-span-1 sm:mt-auto sm:h-11 sm:!w-auto sm:px-5"
         >
           {pickLocale(locale, "Ver clases", "View lessons")}
         </button>
       </div>
 
-      <p className="mt-2 truncate text-center text-[0.7rem] text-nieve/80 sm:mt-3 sm:text-left sm:text-xs">
+      <p className="mt-2.5 text-center text-[0.7rem] leading-snug text-nieve/80 sm:mt-3 sm:text-left sm:text-xs">
         {pickLocale(
           locale,
           "Sin compromiso · Confirmamos por email",

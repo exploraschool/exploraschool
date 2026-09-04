@@ -54,11 +54,6 @@ export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
               </Link>
               .
             </p>
-            <div className="mt-5">
-              <Link href="/como-llegar" className="btn-secondary !w-auto text-sm">
-                {pickLocale(locale, "Cómo llegar", "How to get here")}
-              </Link>
-            </div>
           </div>
         </Reveal>
       </div>

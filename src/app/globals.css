@@ -835,24 +835,24 @@
 
   .home-landing {
     position: relative;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
   }
 
   .hero-block {
-    min-height: 58svh;
+    min-height: 0;
   }
 
   .hero-block__inner {
     display: flex;
-    min-height: 58svh;
+    min-height: 0;
     flex-direction: column;
     justify-content: flex-start;
-    padding-top: 1rem;
-    padding-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 3.25rem;
   }
 
   .home-trust-bar {
-    margin-top: -1rem;
+    margin-top: -1.15rem;
   }
 
   @media (min-width: 640px) {
