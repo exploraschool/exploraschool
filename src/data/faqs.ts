@@ -189,7 +189,9 @@ Automatic machines:
     category: "estacion",
     sortOrder: 4,
     questionEs: "¿Necesito material de esquí, snowboard o telemark?",
-    answerEs: `Sí. Trae el tuyo o alquila en la estación. Si lo pides al reservar, podemos gestionar el alquiler completo.
+    answerEs: `Sí. Trae el tuyo o alquila en la estación.
+
+Nosotros recomendamos [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/): con Explora obtienes un **20% de descuento**. Están junto a los telecabinas Al-Andalus y Borreguiles.
 
 Lleva:
 - Esquís o tabla, y botas
@@ -197,12 +199,15 @@ Lleva:
 - Guantes, gafas y ropa impermeable
 - Protección solar
 
+- [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/)
 - [Qué llevar el primer día](/blog/que-llevar-primer-dia-nieve)
 - [Reservar](/reserva)
 
 > Si alquilas el mismo día, suma 20–40 minutos extra.`,
     questionEn: "Do I need ski, snowboard or telemark equipment?",
-    answerEn: `Yes. Bring your own or rent at the resort. If you ask when booking, we can arrange full equipment rental.
+    answerEn: `Yes. Bring your own or rent at the resort.
+
+We recommend [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/): with Explora you get **20% off**. They are next to the Al-Andalus and Borreguiles gondolas.
 
 Bring:
 - Skis or board, and boots
@@ -210,6 +215,7 @@ Bring:
 - Gloves, goggles and waterproof clothing
 - Sun protection
 
+- [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/)
 - [What to bring on day one](/blog/que-llevar-primer-dia-nieve)
 - [Book](/reserva)
 
@@ -228,7 +234,10 @@ No incluye:
 
 El forfait se saca en [sierranevada.es](https://www.sierranevada.es), en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía.
 
+Para el material recomendamos [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) con un **20% de descuento** por ser alumno de Explora.
+
 - [Clases y tarifas](/clases)
+- [Alquiler recomendado](https://sierranevadaskirent.com/)
 - [Reservar](/reserva)`,
     questionEn: "What is included in the lesson price?",
     answerEn: `Instruction with a qualified instructor. All prices include VAT.
@@ -239,7 +248,10 @@ It does not include:
 
 Get your pass at [sierranevada.es](https://www.sierranevada.es), at the machines in the car parks and at the Village chairlift (Silla del Pueblo), or at Plaza de Andalucía.
 
+For equipment we recommend [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) with **20% off** as an Explora student.
+
 - [Lessons and prices](/clases)
+- [Recommended rental](https://sierranevadaskirent.com/)
 - [Book](/reserva)`,
   },
   {
@@ -280,11 +292,14 @@ Entre medias suele irse ese tiempo en:
 - Alquilar material, si lo necesitas
 - Subir en el Telecabina Al-Andalus
 
+Si alquilas, ve a [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (junto a los telecabinas): con Explora tienes un **20% de descuento**.
+
 El telecabina tarda 10–15 minutos. En hora punta (9:30–11:00) la fila puede ser de 15–30 minutos: métete en ella 40 minutos antes.
 
 Aparcamiento recomendado: Parking Subterráneo Plaza de Andalucía. Lleva cadenas o fundas por si son obligatorias.
 
 - [Cómo llegar](/como-llegar)
+- [Alquiler recomendado](https://sierranevadaskirent.com/)
 
 > La regla es 90 minutos. Más vale sobrar que llegar tarde a la nieve.`,
     questionEn: "How early should I arrive?",
@@ -296,11 +311,14 @@ That time usually goes on:
 - Renting equipment, if you need it
 - Taking the Al-Andalus gondola
 
+If you rent, go to [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (next to the gondolas): with Explora you get **20% off**.
+
 The gondola ride is 10–15 minutes. At peak times (9:30–11:00 am) the queue can be 15–30 minutes: join it 40 minutes before.
 
 Recommended parking: Plaza de Andalucía underground car park. Carry snow chains or socks in case they are required.
 
 - [Getting here](/como-llegar)
+- [Recommended rental](https://sierranevadaskirent.com/)
 
 > The rule is 90 minutes. Better early than late on the snow.`,
   },
@@ -313,7 +331,7 @@ Recommended parking: Plaza de Andalucía underground car park. Carry snow chains
 
 Puedes:
 - Traer el tuyo
-- Alquilarlo junto al resto del material
+- Alquilarlo junto al resto del material en [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (20% de descuento con Explora)
 
 > En clase, el casco es la opción más segura.`,
     questionEn: "Is a helmet mandatory?",
@@ -321,7 +339,7 @@ Puedes:
 
 You can:
 - Bring your own
-- Rent it with the rest of the equipment
+- Rent it with the rest of the equipment at [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (20% off with Explora)
 
 > For lessons, a helmet is the safer choice.`,
   },

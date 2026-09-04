@@ -133,8 +133,8 @@ function copy(isEn: boolean): GuideCopy {
     ),
     gearRental: pick(
       isEn,
-      "Material de alquiler: si necesitas esquís/tabla, botas o casco, hazlo con tiempo (entre 20 y 40 minutos).",
-      "Rental: if you need skis/board, boots or a helmet, allow 20–40 minutes.",
+      "Material de alquiler: recomendamos Sierra Nevada Ski Rent (https://sierranevadaskirent.com/), junto a los telecabinas Al-Andalus y Borreguiles. Con Explora tienes un 20% de descuento. Reserva o recoge con tiempo (20–40 minutos).",
+      "Rental: we recommend Sierra Nevada Ski Rent (https://sierranevadaskirent.com/), next to the Al-Andalus and Borreguiles gondolas. With Explora you get 20% off. Book or collect with time to spare (20–40 minutes).",
     ),
     gearPersonal: pick(
       isEn,

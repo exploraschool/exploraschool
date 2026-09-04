@@ -16,7 +16,11 @@ export function HomeClosing({ locale }: HomeClosingProps) {
           <div>
             <p className="eyebrow">{pickLocale(locale, "Dudas", "Questions")}</p>
             <h2 className="section-title mt-2">
-              {pickLocale(locale, "Reserva, forfait y encuentro", "Booking, lift pass and meeting point")}
+              {pickLocale(
+                locale,
+                "Reserva, forfait y alquiler",
+                "Booking, lift pass and rental",
+              )}
             </h2>
             <div className="section-body-sm">
               <FAQAccordion locale={locale} limit={3} />

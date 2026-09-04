@@ -55,7 +55,7 @@ En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcu
 
 ## 6. No subestimes el forfait y el material
 
-Si no tienes equipo propio, el alquiler en la estación es cómodo, pero conviene reservarlo con antelación en fechas punta. Pregunta en el alquiler por el nivel de rigidez adecuado a tu peso y experiencia. Un material mal ajustado dificulta el aprendizaje.
+Si no tienes equipo propio, el alquiler en la estación es cómodo, pero conviene reservarlo con antelación en fechas punta. En Explora recomendamos [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/): con nosotros obtienes un 20% de descuento. Están junto a los telecabinas Al-Andalus y Borreguiles. Pregunta por el nivel de rigidez adecuado a tu peso y experiencia: un material mal ajustado dificulta el aprendizaje.
 
 ## 7. Empieza en pistas verdes y ten paciencia
 
@@ -92,7 +92,7 @@ In peak season there are queues at lifts, gondolas and rental shops. Allow at le
 
 ## 6. Do not underestimate the lift pass and equipment
 
-If you do not have your own gear, renting at the resort is convenient, but it is worth booking ahead on busy dates. Ask the rental shop about the right stiffness for your weight and experience. Poorly fitted equipment makes learning much harder.
+If you do not have your own gear, renting at the resort is convenient, but it is worth booking ahead on busy dates. At Explora we recommend [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/): with us you get 20% off. They are next to the Al-Andalus and Borreguiles gondolas. Ask about the right stiffness for your weight and experience. Poorly fitted equipment makes learning much harder.
 
 ## 7. Start on green runs and be patient
 
@@ -543,7 +543,7 @@ Calcetines de esquí o de montaña, sin costuras molestas. Nunca uses dos pares 
 
 ## Para la clase de esquí o snowboard
 
-Si alquilas material en la estación, lleva DNI y la confirmación de reserva. Si tienes equipo propio, revisa que las fijaciones estén revisadas y los cantos afilados. Casco muy recomendable, imprescindible para niños. Ropa interior de recambio para después de la clase.
+Si alquilas material, ve a [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (junto a los telecabinas): con Explora tienes un 20% de descuento. Lleva DNI y la confirmación de reserva. Si tienes equipo propio, revisa fijaciones y cantos. Casco muy recomendable, imprescindible para niños. Ropa interior de recambio para después de la clase.
 
 ## Extras que marcan la diferencia
 
@@ -576,7 +576,7 @@ Ski or hiking socks without annoying seams. Never wear two thick sock layers: th
 
 ## For your ski or snowboard lesson
 
-If you rent at the resort, bring ID and your booking confirmation. If you have your own gear, check that bindings have been serviced and edges are sharp. Helmet highly recommended, essential for children. Spare base layer for after the lesson.
+If you rent, go to [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) (next to the gondolas): with Explora you get 20% off. Bring ID and your booking confirmation. If you have your own gear, check bindings and edges. Helmet highly recommended, essential for children. Spare base layer for after the lesson.
 
 ## Extras that make a difference
 
@@ -1027,7 +1027,7 @@ Lo ideal es contactar con varias semanas de antelación, sobre todo si el grupo 
 
 ## Logística que nos ocupamos nosotros
 
-En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte, pero te orientamos en todo el proceso para que nadie llegue perdido el primer día.
+En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte: para el material recomendamos [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) con un 20% de descuento. Te orientamos en todo el proceso para que nadie llegue perdido el primer día.
 
 ## Ideas para complementar el curso
 
@@ -1060,7 +1060,7 @@ Ideally contact us several weeks ahead, especially if the group exceeds 8 people
 
 ## Logistics we handle
 
-With the Full Day option we include hotel pick-up and drop-off on request. We coordinate the meeting point, schedules and instructor assignment. Lift passes and rental equipment are arranged separately, but we guide you through the process so no one arrives lost on day one.
+With the Full Day option we include hotel pick-up and drop-off on request. We coordinate the meeting point, schedules and instructor assignment. Lift passes and rental equipment are arranged separately: for gear we recommend [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) with 20% off. We guide you through the process so no one arrives lost on day one.
 
 ## Ideas to complement the course
 
@@ -1211,11 +1211,11 @@ Llegar a la estación sin forfait y encontrar una cola de 40 minutos en taquilla
 
 ## ¿El material de esquí está incluido?
 
-No. Al igual que el forfait, el material (esquís, tabla, botas, bastones) se alquila aparte en la estación o traes el tuyo. Los instructores de Explora te orientan sobre qué necesitas sin compromiso. También podemos gestionar el alquiler completo si lo solicitas al reservar.
+No. Al igual que el forfait, el material (esquís, tabla, botas, bastones) se alquila aparte o traes el tuyo. Recomendamos [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/), junto a los telecabinas Al-Andalus y Borreguiles: con Explora obtienes un **20% de descuento**.
 
 ## Resumen rápido
 
-Forfait: cómpralo online, en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía. Seguro de accidentes: recomendado. Clase Explora: incluye solo la enseñanza con instructor titulado. Material: alquiler aparte o propio.
+Forfait: cómpralo online, en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía. Seguro de accidentes: recomendado. Clase Explora: incluye solo la enseñanza con instructor titulado. Material: [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) con 20% de descuento, o propio.
 
 ### Reserva tu clase en Explora
 
@@ -1252,11 +1252,11 @@ Arriving at the resort without a pass and finding a 40-minute queue at the ticke
 
 ## Is ski equipment included?
 
-No. Like the lift pass, equipment (skis, board, boots, poles) is rented separately at the resort or you bring your own. Explora instructors can advise on what you need with no obligation. We can also arrange full rental if you request it when booking.
+No. Like the lift pass, equipment (skis, board, boots, poles) is rented separately or you bring your own. We recommend [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/), next to the Al-Andalus and Borreguiles gondolas: with Explora you get **20% off**.
 
 ## Quick summary
 
-Lift pass: buy online, at the car-park and Village chairlift machines, or at Plaza de Andalucía. Accident insurance: recommended. Explora lesson: instruction with qualified instructor only. Equipment: rental separately or your own.
+Lift pass: buy online, at the car-park and Village chairlift machines, or at Plaza de Andalucía. Accident insurance: recommended. Explora lesson: instruction with qualified instructor only. Equipment: [Sierra Nevada Ski Rent](https://sierranevadaskirent.com/) with 20% off, or your own.
 
 ### Book your lesson at Explora
 

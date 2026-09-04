@@ -63,6 +63,15 @@ export type SiteConfig = {
   aboutLeadEn: string;
   homeMetaDescriptionEs: string;
   homeMetaDescriptionEn: string;
+  rentalPartner: {
+    name: string;
+    url: string;
+    discountPercent: number;
+    locationEs: string;
+    locationEn: string;
+    blurbEs: string;
+    blurbEn: string;
+  };
 };
 
 export const site: SiteConfig = {
@@ -142,4 +151,17 @@ export const site: SiteConfig = {
     "Clases de esquí, snowboard y telemark en Sierra Nevada. Instructores titulados con más de 20 años de experiencia. Explora desde 2010. Reserva online por email.",
   homeMetaDescriptionEn:
     "Ski, snowboard and telemark lessons in Sierra Nevada. Qualified instructors with over 20 years of experience. Explora since 2010. Book online by email.",
+  rentalPartner: {
+    name: "Sierra Nevada Ski Rent",
+    url: "https://sierranevadaskirent.com/",
+    discountPercent: 20,
+    locationEs:
+      "Junto a los telecabinas Al-Andalus y Borreguiles (Pradollano).",
+    locationEn:
+      "Next to the Al-Andalus and Borreguiles gondolas (Pradollano).",
+    blurbEs:
+      "Recomendamos alquilar el material en Sierra Nevada Ski Rent: con Explora obtienes un 20% de descuento. Están junto a los telecabinas Al-Andalus y Borreguiles.",
+    blurbEn:
+      "We recommend renting equipment at Sierra Nevada Ski Rent: with Explora you get 20% off. They are next to the Al-Andalus and Borreguiles gondolas.",
+  },
 };

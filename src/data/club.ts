@@ -182,6 +182,13 @@ export const clubNotIncluded = [
     textEn: "Lift pass",
   },
   {
+    textEs:
+      "Material de alquiler — Sierra Nevada Ski Rent (20% dto. con Explora)",
+    textEn:
+      "Rental equipment — Sierra Nevada Ski Rent (20% off with Explora)",
+    href: "https://sierranevadaskirent.com/",
+  },
+  {
     textEs: "Comidas y bebidas",
     textEn: "Food and drinks",
   },

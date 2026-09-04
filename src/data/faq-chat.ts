@@ -112,8 +112,17 @@ Te recomendamos estar en Pradollano 90 minutos antes para aparcar, alquilar y su
   },
   forfait: {
     id: "forfait",
-    botText: `La clase no incluye forfait ni material de alquiler. Gestiona el forfait en Cetursa y alquila el equipo antes de subir al Telecabina Al-Andalus.`,
+    botText: `La clase no incluye forfait ni material de alquiler.
+
+Forfait: en Cetursa / sierranevada.es, o en los cajeros de la estación.
+
+Material: recomendamos Sierra Nevada Ski Rent (junto a los telecabinas Al-Andalus y Borreguiles). Con Explora tienes un 20% de descuento.`,
     buttons: [
+      {
+        id: "alquiler",
+        label: "Alquiler con 20% de descuento",
+        action: { type: "link", href: site.rentalPartner.url },
+      },
       {
         id: "back",
         label: "Volver",
