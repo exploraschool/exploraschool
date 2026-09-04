@@ -88,6 +88,31 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // Google Identity / Firebase popup auth polls window.closed and then
+  // window.close. COOP: same-origin (or a missing explicit policy in Chrome)
+  // isolates the opener from that popup and aborts sign-in.
+  async headers() {
+    return [
+      {
+        source: "/",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+        ],
+      },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin-allow-popups",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

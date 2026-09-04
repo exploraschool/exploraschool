@@ -6,9 +6,12 @@ import { useRouter } from "next/navigation";
 import {
   GoogleAuthProvider,
   getRedirectResult,
+  onAuthStateChanged,
   signInWithPopup,
   signInWithRedirect,
   signOut,
+  type Auth,
+  type User,
 } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/client";
 import { ADMIN_GOOGLE_EMAIL } from "@/lib/admin-auth-config";
@@ -49,6 +52,36 @@ function mapFirebaseCode(code: string): string {
     default:
       return adminCopy.errors.generic;
   }
+}
+
+function firebaseErrorCode(error: unknown): string {
+  if (error && typeof error === "object" && "code" in error) {
+    return String((error as { code: string }).code);
+  }
+  return "";
+}
+
+/** GIS/COOP can reject the popup while Google still completes sign-in. */
+function waitForSignedInUser(auth: Auth, timeoutMs: number): Promise<User | null> {
+  if (auth.currentUser) return Promise.resolve(auth.currentUser);
+
+  return new Promise((resolve) => {
+    let settled = false;
+    let unsubscribe = () => {};
+
+    const finish = (user: User | null) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      unsubscribe();
+      resolve(user);
+    };
+
+    const timer = window.setTimeout(() => finish(auth.currentUser), timeoutMs);
+    unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) finish(user);
+    });
+  });
 }
 
 type AdminGoogleAuthCardProps = {
@@ -164,10 +197,7 @@ export function AdminGoogleAuthCard({
       const result = await signInWithPopup(auth, provider);
       await finishWithUser(() => result.user.getIdToken(), result.user.email);
     } catch (popupError) {
-      const code =
-        popupError && typeof popupError === "object" && "code" in popupError
-          ? String((popupError as { code: string }).code)
-          : "";
+      const code = firebaseErrorCode(popupError);
 
       if (code === "auth/popup-blocked") {
         try {
@@ -177,6 +207,21 @@ export function AdminGoogleAuthCard({
           setError(adminCopy.errors.popupBlocked);
         }
       } else if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
+        const signedIn = await waitForSignedInUser(auth, 4000);
+        if (signedIn) {
+          try {
+            await finishWithUser(() => signedIn.getIdToken(), signedIn.email);
+            return;
+          } catch (recoverError) {
+            if (recoverError instanceof Error && recoverError.message.includes("permiso")) {
+              setError(recoverError.message);
+            } else {
+              setError(mapFirebaseCode(firebaseErrorCode(recoverError)));
+            }
+            setPhase("ready");
+            return;
+          }
+        }
         setError("");
       } else if (popupError instanceof Error && popupError.message.includes("permiso")) {
         setError(popupError.message);
