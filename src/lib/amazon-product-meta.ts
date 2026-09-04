@@ -2,6 +2,7 @@ import * as cheerio from "cheerio";
 import {
   extractAmazonAsin,
   isAmazonCdnImageUrl,
+  resolveExploraAffiliateUrl,
   toExploraAffiliateUrl,
 } from "@/lib/amazon-affiliates";
 
@@ -184,7 +185,8 @@ export function formatAmazonBrief(meta: AmazonProductMeta): string {
 }
 
 export async function fetchAmazonProductMeta(rawUrl: string): Promise<AmazonProductMeta> {
-  const affiliateUrl = toExploraAffiliateUrl(rawUrl) || rawUrl.trim();
+  const affiliateUrl =
+    (await resolveExploraAffiliateUrl(rawUrl)) || toExploraAffiliateUrl(rawUrl) || rawUrl.trim();
   const asin = extractAmazonAsin(affiliateUrl) || "";
   const meta: AmazonProductMeta = {
     url: affiliateUrl,

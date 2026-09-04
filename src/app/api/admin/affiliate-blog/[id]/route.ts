@@ -7,7 +7,7 @@ import {
   getAffiliatePost,
   saveAffiliatePost,
 } from "@/lib/affiliate-blog";
-import { toExploraAffiliateUrl } from "@/lib/amazon-affiliates";
+import { resolveExploraAffiliateUrl } from "@/lib/amazon-affiliates";
 import { fetchAmazonProductMeta } from "@/lib/amazon-product-meta";
 import { isAdminConfigured } from "@/lib/firebase/admin";
 
@@ -59,7 +59,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
   for (const update of updates) {
     const product = next.products[update.index];
     if (!product) continue;
-    const tagged = toExploraAffiliateUrl(update.affiliateUrl);
+    const tagged = await resolveExploraAffiliateUrl(update.affiliateUrl);
     if (!tagged) {
       return NextResponse.json({ error: "invalid_amazon_url" }, { status: 400 });
     }

@@ -283,7 +283,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                       window.setTimeout(() => void captureUrl(index, pasted), 0);
                     }
                   }}
-                  placeholder="https://www.amazon.es/dp/..."
+                  placeholder="https://www.amazon.es/dp/... o https://amzn.to/..."
                   className="w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
                   inputMode="url"
                   autoCapitalize="off"
