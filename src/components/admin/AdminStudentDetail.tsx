@@ -322,6 +322,7 @@ export function AdminStudentDetail({
                     </p>
                     <p className="text-xs text-muted">
                       {item.publishedToGallery ? "En galería en vivo" : "Solo correcciones"}
+                      {item.kind === "video" ? " · Los vídeos no se publican en la web" : ""}
                       {item.reviewedAt ? ` · Revisado ${item.reviewedAt.slice(0, 10)}` : " · Pendiente"}
                     </p>
                     <textarea
@@ -342,7 +343,7 @@ export function AdminStudentDetail({
                       >
                         Guardar corrección
                       </button>
-                      {item.publishedToGallery ? (
+                      {item.kind === "image" && item.publishedToGallery ? (
                         <button
                           type="button"
                           disabled={busy}
