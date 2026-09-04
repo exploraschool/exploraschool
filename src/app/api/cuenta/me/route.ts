@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { isOnboardingComplete } from "@/lib/student-users";
@@ -6,6 +7,10 @@ import { isOnboardingComplete } from "@/lib/student-users";
 export const runtime = "nodejs";
 
 export async function GET() {
+  if (await isAdminAuthenticated()) {
+    return NextResponse.json({ user: null, role: "staff" });
+  }
+
   const session = await getStudentSession();
   if (!session) {
     return NextResponse.json({ user: null });

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { isAllowedAdminEmail, ADMIN_SESSION_COOKIE } from "@/lib/admin-auth";
 import { ADMIN_SESSION_MAX_AGE_MS } from "@/lib/admin-auth-config";
-import { getAdminAuth, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminAuth, isAdminConfigured } from "@/lib/firebase/admin";
 import { setHttpOnlyCookie, clearHttpOnlyCookie } from "@/lib/http-cookies";
 import { isOnboardingComplete } from "@/lib/student-users";
 import { upsertStudentProfile } from "@/lib/student-user-store";
@@ -52,11 +52,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const sessionCookie = await auth.createSessionCookie(parsed.data.idToken, {
-      expiresIn: ADMIN_SESSION_MAX_AGE_MS,
-    });
-
+    // Corporate Explora account is never a student — always staff panel.
     if (isAllowedAdminEmail(decoded.email)) {
+      const sessionCookie = await auth.createSessionCookie(parsed.data.idToken, {
+        expiresIn: ADMIN_SESSION_MAX_AGE_MS,
+      });
       try {
         await auth.setCustomUserClaims(decoded.uid, { admin: true });
       } catch (claimError) {
@@ -66,6 +66,10 @@ export async function POST(request: Request) {
       await clearHttpOnlyCookie(STUDENT_SESSION_COOKIE);
       return NextResponse.json({ ok: true, role: "staff", email: decoded.email });
     }
+
+    const sessionCookie = await auth.createSessionCookie(parsed.data.idToken, {
+      expiresIn: STUDENT_SESSION_MAX_AGE_MS,
+    });
 
     const profile = await upsertStudentProfile(decoded.uid, {
       email: decoded.email,

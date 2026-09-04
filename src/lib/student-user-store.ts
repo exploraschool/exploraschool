@@ -1,4 +1,5 @@
 import { FieldValue } from "firebase-admin/firestore";
+import { isAllowedAdminEmail } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/firebase/admin";
 import {
   parseStudentProfile,
@@ -11,13 +12,19 @@ export async function getStudentProfile(uid: string): Promise<StudentProfile | n
   if (!db) return null;
   const snap = await db.collection(USERS_COLLECTION).doc(uid).get();
   if (!snap.exists) return null;
-  return parseStudentProfile(uid, snap.data() as Record<string, unknown>);
+  const profile = parseStudentProfile(uid, snap.data() as Record<string, unknown>);
+  if (isAllowedAdminEmail(profile.email)) return null;
+  return profile;
 }
 
 export async function upsertStudentProfile(
   uid: string,
   patch: Partial<StudentProfile> & { email: string },
 ): Promise<StudentProfile> {
+  if (isAllowedAdminEmail(patch.email)) {
+    throw new Error("staff_email_not_student");
+  }
+
   const db = getAdminDb();
   if (!db) throw new Error("database_unavailable");
 
@@ -27,6 +34,10 @@ export async function upsertStudentProfile(
   const current = existing.exists
     ? parseStudentProfile(uid, existing.data() as Record<string, unknown>)
     : null;
+
+  if (current && isAllowedAdminEmail(current.email)) {
+    throw new Error("staff_email_not_student");
+  }
 
   const next: StudentProfile = {
     uid,
@@ -49,6 +60,10 @@ export async function upsertStudentProfile(
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };
+
+  if (isAllowedAdminEmail(next.email)) {
+    throw new Error("staff_email_not_student");
+  }
 
   await ref.set(
     {

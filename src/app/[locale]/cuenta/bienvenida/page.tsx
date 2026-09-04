@@ -4,6 +4,7 @@ import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { AccountWelcomeWizard } from "@/components/cuenta/AccountWelcomeWizard";
 import { buildPageMetadata } from "@/lib/metadata";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { isOnboardingComplete } from "@/lib/student-users";
@@ -25,6 +26,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BienvenidaPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+
+  if (await isAdminAuthenticated()) {
+    redirect("/admin/hoy");
+  }
+
   const session = await getStudentSession();
   if (!session) redirect(`/${locale}/cuenta`);
 
