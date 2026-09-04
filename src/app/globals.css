@@ -105,8 +105,15 @@
 @layer components {
   .container-page {
     @apply mx-auto w-full min-w-0 max-w-6xl lg:max-w-7xl;
-    padding-left: max(1rem, env(safe-area-inset-left, 0px));
-    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  @media (max-width: 639px) and (orientation: landscape) {
+    .container-page {
+      padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+      padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+    }
   }
 
   @media (min-width: 640px) {
@@ -137,6 +144,33 @@
     }
   }
 
+  /* Phone gutters (iPhone + Android portrait). Landscape keeps the notch. */
+  .pad-x-device {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .pad-x-device {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (orientation: landscape) {
+    .pad-x-device {
+      padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+      padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+    }
+  }
+
+  @media (orientation: landscape) and (min-width: 640px) {
+    .pad-x-device {
+      padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+      padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+    }
+  }
+
   .x-scroller {
     min-width: 0;
     max-width: 100%;
@@ -153,11 +187,21 @@
 
   @media (max-width: 639px) {
     .x-scroller--bleed {
-      margin-left: calc(-1 * max(1rem, env(safe-area-inset-left, 0px)));
-      margin-right: calc(-1 * max(1rem, env(safe-area-inset-right, 0px)));
-      padding-left: max(1rem, env(safe-area-inset-left, 0px));
-      padding-right: max(1rem, env(safe-area-inset-right, 0px));
-      scroll-padding-left: max(1rem, env(safe-area-inset-left, 0px));
+      margin-left: -0.75rem;
+      margin-right: -0.75rem;
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+      scroll-padding-left: 0.75rem;
+    }
+  }
+
+  @media (max-width: 639px) and (orientation: landscape) {
+    .x-scroller--bleed {
+      margin-left: calc(-1 * max(0.75rem, env(safe-area-inset-left, 0px)));
+      margin-right: calc(-1 * max(0.75rem, env(safe-area-inset-right, 0px)));
+      padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
+      padding-right: max(0.75rem, env(safe-area-inset-right, 0px));
+      scroll-padding-left: max(0.75rem, env(safe-area-inset-left, 0px));
     }
   }
 
@@ -868,16 +912,15 @@
 
   .hero-offer-sticker {
     position: absolute;
-    top: 0.4rem;
-    right: 0.7rem;
+    top: -0.65rem;
+    right: 0.65rem;
     z-index: 2;
     display: inline-flex;
-    width: 4.1rem;
-    height: 4.1rem;
+    width: 4.55rem;
+    height: 4.55rem;
     flex-shrink: 0;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
     border-radius: 0.72rem;
     background: linear-gradient(155deg, #ff8b8e 0%, var(--color-accent) 42%, var(--color-accent-dark) 100%);
     transform: rotate(8deg);
@@ -1411,11 +1454,13 @@
 html.modal-open,
 body.modal-open {
   overflow: hidden;
+  overflow-x: visible;
   overscroll-behavior: none;
 }
 
 body.modal-open {
   touch-action: none;
+  max-width: none;
 }
 
 body.modal-open [data-cookie-banner] {

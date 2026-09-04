@@ -64,7 +64,7 @@ export default async function ContactoPage({ params }: Props) {
             </div>
           </Reveal>
 
-          <div className="section-body-sm rounded-2xl border border-hielo/10 bg-nieve px-6 py-5 text-center text-sm text-muted sm:px-8 sm:py-6">
+          <div className="section-body-sm rounded-2xl border border-hielo/10 bg-nieve px-4 py-5 text-center text-sm text-muted sm:px-8 sm:py-6">
             {pickLocale(
               locale,
               "¿Tienes dudas antes de escribirnos? Consulta las ",

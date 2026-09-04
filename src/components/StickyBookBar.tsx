@@ -55,7 +55,7 @@ export function StickyBookBar({ locale }: StickyBookBarProps) {
     <div
       ref={barRef}
       data-sticky-book-bar
-      className="fixed inset-x-0 bottom-0 z-40 max-w-full border-t border-hielo/10 bg-white py-3 pl-[max(1rem,env(safe-area-inset-left,0px))] pr-[max(1rem,env(safe-area-inset-right,0px))] pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(10,18,25,0.1)] md:hidden"
+      className="pad-x-device fixed inset-x-0 bottom-0 z-40 max-w-full border-t border-hielo/10 bg-white py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-[0_-8px_24px_rgba(10,18,25,0.1)] md:hidden"
       role="region"
       aria-label={pickLocale(locale, "Reserva rápida", "Quick booking")}
     >

@@ -200,7 +200,7 @@ export function BookingCheckout() {
       <div
         role="status"
         aria-live="polite"
-        className="mx-auto max-w-lg rounded-2xl border border-hielo/10 bg-white p-8 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:p-10"
+        className="mx-auto min-w-0 max-w-lg rounded-2xl border border-hielo/10 bg-white px-4 py-6 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:p-10"
       >
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-hielo/10 text-hielo">
           <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
@@ -241,8 +241,8 @@ export function BookingCheckout() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto max-w-3xl">
-        <div className="rounded-2xl border border-hielo/10 bg-white px-6 py-10 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:px-10 sm:py-12">
+      <div className="mx-auto min-w-0 max-w-3xl">
+        <div className="rounded-2xl border border-hielo/10 bg-white px-4 py-10 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:px-10 sm:py-12">
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-hielo/8 text-hielo">
             <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h15l-1.5 9h-12L6 6z" />
@@ -295,7 +295,7 @@ export function BookingCheckout() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-medium text-muted">{t("lessonsCount", { count: items.length })}</p>
@@ -319,8 +319,8 @@ export function BookingCheckout() {
 
       <EarlyBirdBanner locale={locale} />
 
-      <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr] xl:gap-8">
-        <div className="space-y-4">
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[1.15fr_0.85fr] xl:gap-8">
+        <div className="min-w-0 space-y-4">
           {sortedItems.map((item, index) => (
             <BookingCartLine
               key={item.id}
@@ -339,20 +339,20 @@ export function BookingCheckout() {
           )}
         </div>
 
-        <div className="xl:sticky xl:top-20 xl:max-h-[calc(100dvh-5.5rem)] xl:self-start">
+        <div className="min-w-0 xl:sticky xl:top-20 xl:max-h-[calc(100dvh-5.5rem)] xl:self-start">
           <form
             onSubmit={handleSend}
-            className="flex flex-col rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)] xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-hidden"
+            className="flex min-w-0 flex-col rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.06)] xl:max-h-[calc(100dvh-5.5rem)] xl:overflow-hidden"
           >
-            <div className="shrink-0 border-b border-hielo/10 bg-nieve/60 px-5 py-5 sm:px-6">
+            <div className="shrink-0 border-b border-hielo/10 bg-nieve/60 px-4 py-4 sm:px-6 sm:py-5">
               <h2 className="font-display text-xl font-semibold text-hielo">{t("checkout")}</h2>
               <p className="mt-1.5 text-sm text-muted">
                 {signedIn ? t("checkoutDescSignedIn") : t("checkoutDesc")}
               </p>
             </div>
 
-            <div className="space-y-4 px-5 py-5 sm:px-6 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:overscroll-contain">
-              <div className="rounded-2xl bg-gradient-to-br from-hielo to-hielo-light px-5 py-4 text-white">
+            <div className="space-y-4 px-4 py-4 sm:px-6 sm:py-5 xl:min-h-0 xl:flex-1 xl:overflow-y-auto xl:overscroll-contain">
+              <div className="rounded-2xl bg-gradient-to-br from-hielo to-hielo-light px-4 py-4 text-white sm:px-5">
                 <p className="text-xs font-bold uppercase tracking-wider text-white/80">{t("estimatedTotal")}</p>
                 <p className="mt-1 font-display text-3xl font-semibold">{total} €</p>
                 {showDiscountLabel && (

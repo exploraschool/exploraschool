@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { GoogleAuthCard } from "@/components/auth/GoogleAuthCard";
-import { Link } from "@/i18n/routing";
 
 export type BookingStudentUser = {
   uid: string;
@@ -65,12 +64,6 @@ export function BookingIdentityPanel({
             <p className="truncate font-display text-base font-semibold text-hielo">{label}</p>
             <p className="truncate text-xs text-muted">{user.email}</p>
             <p className="mt-1.5 text-xs leading-relaxed text-muted">{t("signedInHint")}</p>
-            <Link
-              href="/cuenta"
-              className="mt-2 inline-flex text-xs font-semibold text-hielo underline-offset-2 hover:text-accent hover:underline"
-            >
-              {t("openAccount")}
-            </Link>
           </div>
         </div>
       </div>

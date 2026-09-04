@@ -329,9 +329,9 @@ export function AddToCartModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-to-cart-title"
-        className="fixed inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 max-w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
+        className="absolute inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 w-full max-w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
       >
-        <div className="shrink-0 border-b border-hielo/10 bg-white px-4 py-3 sm:px-6 sm:py-4">
+        <div className="pad-x-device shrink-0 border-b border-hielo/10 bg-white py-3 sm:py-4">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="eyebrow text-[0.65rem]">{t("addToCart")}</p>
@@ -351,7 +351,7 @@ export function AddToCartModal({
         </div>
 
         <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div className="modal-scroll min-h-0 flex-1 px-4 py-4 sm:px-6 sm:py-5">
+            <div className="modal-scroll pad-x-device min-h-0 flex-1 py-4 sm:py-5">
               <div className="space-y-4 sm:space-y-5">
               <p className="hidden text-sm text-muted sm:block">
                 {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
@@ -567,7 +567,7 @@ export function AddToCartModal({
               </div>
             </div>
 
-            <div className="shrink-0 space-y-1.5 border-t border-hielo/10 bg-white px-3 py-2 pb-[max(0.375rem,env(safe-area-inset-bottom))] sm:space-y-2 sm:px-5 sm:py-2.5">
+            <div className="pad-x-device shrink-0 space-y-1.5 border-t border-hielo/10 bg-white py-2 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] sm:space-y-2 sm:py-2.5">
               <BookingPriceSummary
                 locale={locale}
                 productId={productId}

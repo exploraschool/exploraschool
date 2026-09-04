@@ -36,7 +36,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="relative w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-3.5 pt-4 backdrop-blur-xl sm:p-5 sm:pt-5"
+      className="relative w-full min-w-0 max-w-xl overflow-visible rounded-2xl border border-white/15 bg-white/10 p-3.5 pt-4 backdrop-blur-xl sm:p-5 sm:pt-5"
     >
       <div
         className="hero-offer-sticker"

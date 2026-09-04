@@ -43,9 +43,19 @@ export function ProductsSection({
           </div>
         </Reveal>
 
-        <div className={`grid items-stretch gap-5 ${compact ? "mt-6 sm:mt-8 lg:grid-cols-3" : "section-body lg:grid-cols-3"}`}>
+        <div
+          className={`x-scroller x-scroller--bleed flex snap-x snap-mandatory gap-4 pb-2 sm:grid sm:overflow-visible sm:snap-none sm:pb-0 lg:grid-cols-3 ${
+            compact ? "mt-6 sm:mt-8 sm:grid-cols-2 sm:gap-5" : "section-body sm:grid-cols-2 md:gap-6"
+          }`}
+          role="list"
+          aria-label={pickLocale(locale, "Los más reservados", "Most booked")}
+        >
           {products.map((product, i) => (
-            <Reveal key={product.id} delay={i * 80}>
+            <Reveal
+              key={product.id}
+              delay={i * 80}
+              className="flex w-[min(19.5rem,calc(100%-2.75rem))] shrink-0 snap-start sm:min-w-0 sm:w-auto"
+            >
               <LessonOfferCard product={product} locale={locale} />
             </Reveal>
           ))}

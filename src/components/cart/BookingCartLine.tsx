@@ -44,7 +44,7 @@ export function BookingCartLine({
 
   return (
     <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(10,18,25,0.04)]">
-      <div className="flex items-start justify-between gap-4 border-b border-hielo/8 bg-nieve/50 px-4 py-3 sm:px-5">
+      <div className="flex items-start justify-between gap-4 border-b border-hielo/8 bg-nieve/50 px-3.5 py-3 sm:px-5">
         <div className="min-w-0">
           <p className="text-[0.65rem] font-bold uppercase tracking-wider text-oro">
             {itemLabel} {index + 1}
@@ -65,7 +65,7 @@ export function BookingCartLine({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+      <div className="flex flex-col gap-4 px-3.5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <ul className="space-y-2">
           <MetaRow
             icon={

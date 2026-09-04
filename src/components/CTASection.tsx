@@ -30,7 +30,7 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
     <section className="section-padding">
       <div className="container-page">
         <Reveal>
-          <div className="relative overflow-hidden rounded-2xl mesh-dark px-5 py-8 text-nieve sm:px-7 sm:py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
+          <div className="relative overflow-hidden rounded-2xl mesh-dark px-4 py-8 text-nieve sm:px-7 sm:py-10 md:px-10 md:py-12 lg:px-12 lg:py-14">
             <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-accent/25 blur-[80px] animate-pulse-glow" aria-hidden />
             <div className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full bg-frost/15 blur-[60px]" aria-hidden />
 
