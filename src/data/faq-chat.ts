@@ -2,7 +2,7 @@ import { site } from "@/data/site";
 import { whatsappHref } from "@/lib/whatsapp";
 
 export const FAQ_CHAT_WHATSAPP_TEXT =
-  "Hola Explora School, tengo dudas sobre las clases y me gustaría consultar disponibilidad.";
+  "Hola Explora School, tengo unas dudas y me gustaría hablar con el equipo.";
 
 export const FAQ_CHAT_WHATSAPP_URL = whatsappHref(FAQ_CHAT_WHATSAPP_TEXT);
 
@@ -29,10 +29,9 @@ export type FaqChatNode = {
 };
 
 export const FAQ_CHAT_WELCOME =
-  "¡Hola! 👋 Bienvenido a Explora School & Club. ¿En qué te podemos ayudar hoy?";
+  "Hola, soy el asistente de Explora. Elige una opción o habla con el equipo si lo prefieres.";
 
-export const FAQ_CHAT_PROMPT =
-  "¡Hola! ¿Tienes dudas con tu clase de esquí/snow?";
+export const FAQ_CHAT_PROMPT = "¿Te ayudamos con tu clase?";
 
 export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
   root: {
@@ -41,27 +40,27 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
     buttons: [
       {
         id: "tarifas",
-        label: "💶 Ver Tarifas y Precios",
+        label: "Tarifas y precios",
         action: { type: "menu", menuId: "tarifas" },
       },
       {
         id: "encuentro",
-        label: "📍 ¿Dónde es el Punto de Encuentro?",
+        label: "Punto de encuentro",
         action: { type: "menu", menuId: "encuentro" },
       },
       {
         id: "forfait",
-        label: "🎟️ ¿La clase incluye Forfait o Material?",
+        label: "Forfait y material",
         action: { type: "menu", menuId: "forfait" },
       },
       {
         id: "disciplinas",
-        label: "🎿 Disciplinas Impartidas",
+        label: "Disciplinas",
         action: { type: "menu", menuId: "disciplinas" },
       },
       {
-        id: "agente",
-        label: "💬 Hablar con un Agente",
+        id: "equipo",
+        label: "Hablar con el equipo",
         action: { type: "whatsapp", href: FAQ_CHAT_WHATSAPP_URL },
       },
     ],
@@ -76,48 +75,48 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
     buttons: [
       {
         id: "reservar-wa",
-        label: "📅 Solicitar Reserva por WhatsApp",
+        label: "Solicitar reserva por WhatsApp",
         action: { type: "whatsapp", href: FAQ_CHAT_RESERVE_WHATSAPP_URL },
       },
       {
         id: "back",
-        label: "← Volver al menú",
+        label: "Volver",
         action: { type: "menu", menuId: "root" },
       },
     ],
   },
   encuentro: {
     id: "encuentro",
-    botText: `Nos encontramos directamente arriba en la estación de Borreguiles:
+    botText: `Nos encontramos arriba en Borreguiles:
 
-📍 Justo a la salida a la nieve al llegar arriba en el Telecabina Al-Andalus.
+Justo a la salida a la nieve al llegar con el Telecabina Al-Andalus.
 
-Te recomendamos estar en Pradollano 90 minutos antes de la clase para aparcar, alquilar y subir con tranquilidad.`,
+Te recomendamos estar en Pradollano 90 minutos antes para aparcar, alquilar y subir con tranquilidad.`,
     buttons: [
       {
         id: "llegada",
-        label: "🗺️ Ver consejos de llegada",
+        label: "Consejos de llegada",
         action: { type: "link", href: "/como-llegar" },
       },
       {
         id: "maps",
-        label: "📍 Ver en Google Maps",
+        label: "Ver en Google Maps",
         action: { type: "link", href: site.meetingPoint.googleMapsUrl },
       },
       {
         id: "back",
-        label: "← Volver al menú",
+        label: "Volver",
         action: { type: "menu", menuId: "root" },
       },
     ],
   },
   forfait: {
     id: "forfait",
-    botText: `La clase no incluye el forfait (pase de esquí) ni el equipo de alquiler. Debes gestionar tu forfait en la web oficial de Cetursa y alquilar tu material antes de subir al Telecabina Al-Andalus.`,
+    botText: `La clase no incluye forfait ni material de alquiler. Gestiona el forfait en Cetursa y alquila el equipo antes de subir al Telecabina Al-Andalus.`,
     buttons: [
       {
         id: "back",
-        label: "← Volver al menú",
+        label: "Volver",
         action: { type: "menu", menuId: "root" },
       },
     ],
@@ -126,16 +125,16 @@ Te recomendamos estar en Pradollano 90 minutos antes de la clase para aparcar, a
     id: "disciplinas",
     botText: `Impartimos clases de:
 
-• Esquí (Pista / Técnico)
+• Esquí (pista / técnico)
 • Snowboard
 • Telemark
-• Esquí / Snowboard Adaptado
-• Freeride (Fuera de pista)
-• Freestyle (Park & Módulos)`,
+• Esquí / snowboard adaptado
+• Freeride
+• Freestyle`,
     buttons: [
       {
         id: "back",
-        label: "← Volver al menú",
+        label: "Volver",
         action: { type: "menu", menuId: "root" },
       },
     ],

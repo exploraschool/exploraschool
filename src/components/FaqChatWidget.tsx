@@ -27,13 +27,22 @@ export function FaqChatWidget() {
   const [lines, setLines] = useState<ChatLine[]>(() => [
     { id: "welcome", role: "bot", text: FAQ_CHAT_NODES.root.botText },
   ]);
-  const endRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const shouldStickBottom = useRef(false);
 
   const node = FAQ_CHAT_NODES[nodeId] ?? FAQ_CHAT_NODES.root;
 
   useEffect(() => {
     if (!open) return;
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    const panel = panelRef.current;
+    if (!panel) return;
+
+    if (!shouldStickBottom.current) {
+      panel.scrollTop = 0;
+      return;
+    }
+
+    panel.scrollTo({ top: panel.scrollHeight, behavior: "smooth" });
   }, [lines, open, nodeId]);
 
   useEffect(() => {
@@ -46,6 +55,7 @@ export function FaqChatWidget() {
   }, [open]);
 
   function openChat() {
+    shouldStickBottom.current = false;
     setPromptVisible(false);
     setOpen(true);
   }
@@ -55,6 +65,7 @@ export function FaqChatWidget() {
   }
 
   function runAction(button: FaqChatButton) {
+    shouldStickBottom.current = true;
     const action = button.action;
     setLines((current) => [...current, { id: lineId(), role: "user", text: button.label }]);
 
@@ -65,7 +76,7 @@ export function FaqChatWidget() {
         {
           id: lineId(),
           role: "bot",
-          text: "Te abrimos WhatsApp para hablar con el equipo. Si no se abre, usa el botón verde de abajo.",
+          text: "Te abrimos WhatsApp para hablar con el equipo. Si no se abre, usa el botón de abajo.",
         },
       ]);
       setNodeId("root");
@@ -96,20 +107,20 @@ export function FaqChatWidget() {
   }
 
   return (
-    <div className="pointer-events-none fixed bottom-[5.5rem] right-3 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
+    <div className="pointer-events-none fixed bottom-[5.5rem] right-3 z-[60] flex flex-col items-end gap-2.5 sm:bottom-6 sm:right-6">
       {!open && promptVisible ? (
-        <div className="pointer-events-auto relative max-w-[min(18rem,calc(100vw-5.5rem))] animate-[fade-up_0.35s_ease-out]">
+        <div className="pointer-events-auto relative max-w-[min(15rem,calc(100vw-5.5rem))] animate-[fade-up_0.3s_ease-out]">
           <button
             type="button"
             onClick={openChat}
-            className="rounded-2xl rounded-br-md border border-hielo/15 bg-white px-3.5 py-3 text-left text-sm font-medium leading-snug text-pizarra shadow-[0_12px_40px_rgba(14,26,36,0.14)] transition hover:border-hielo/30"
+            className="rounded-xl rounded-br-sm border border-hielo/12 bg-white px-3.5 py-2.5 text-left text-sm leading-snug text-pizarra shadow-[0_8px_28px_rgba(14,26,36,0.1)] transition hover:border-hielo/25"
           >
             {FAQ_CHAT_PROMPT}
           </button>
           <button
             type="button"
             onClick={() => setPromptVisible(false)}
-            className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-hielo/15 bg-white text-muted shadow-sm hover:text-hielo"
+            className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full border border-hielo/12 bg-white text-muted hover:text-hielo"
             aria-label="Cerrar aviso"
           >
             <span className="text-xs leading-none">×</span>
@@ -119,79 +130,73 @@ export function FaqChatWidget() {
 
       {open ? (
         <div
-          className="pointer-events-auto flex w-[min(22rem,calc(100vw-1.5rem))] max-h-[min(34rem,calc(100dvh-8rem))] origin-bottom-right animate-[fade-up_0.28s_ease-out] flex-col overflow-hidden rounded-3xl border border-hielo/15 bg-white shadow-[0_20px_60px_rgba(14,26,36,0.18)] sm:max-h-[min(36rem,calc(100dvh-7rem))]"
+          className="pointer-events-auto flex w-[min(20.5rem,calc(100vw-1.5rem))] max-h-[min(32rem,calc(100dvh-8rem))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem))]"
           role="dialog"
           aria-label="Asistente Explora School"
         >
-          <header className="flex items-center gap-3 border-b border-hielo/10 bg-gradient-to-r from-hielo to-hielo-light px-4 py-3 text-white">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/15 p-1.5">
-              <Image src={media.logoMark} alt="" width={28} height={28} className="h-7 w-7 object-contain" />
+          <header className="flex items-center gap-3 border-b border-hielo/10 bg-nieve px-3.5 py-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white p-1.5 ring-1 ring-hielo/10">
+              <Image src={media.logoMark} alt="" width={24} height={24} className="h-6 w-6 object-contain" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate font-display text-base font-semibold leading-tight">Explora School & Club</p>
-              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-white/90">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-300 opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-300" />
-                </span>
-                En línea
+              <p className="truncate font-display text-[0.95rem] font-semibold leading-tight text-pizarra">
+                Explora
               </p>
+              <p className="mt-0.5 text-xs text-muted">Asistente · respuestas rápidas</p>
             </div>
             <button
               type="button"
               onClick={closeChat}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-lg leading-none transition hover:bg-white/20"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-lg leading-none text-muted transition hover:bg-hielo/8 hover:text-hielo"
               aria-label="Cerrar chat"
             >
               ×
             </button>
           </header>
 
-          <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-nieve/50">
-            <div className="flex-1 space-y-3 overflow-y-auto overscroll-contain px-3 py-3 sm:px-4">
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div
+              ref={panelRef}
+              className="flex-1 space-y-2.5 overflow-y-auto overscroll-contain px-3 py-3 sm:px-3.5"
+            >
               {lines.map((line) =>
                 line.role === "bot" ? (
-                  <div key={line.id} className="flex gap-2">
-                    <div className="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-hielo/10 p-1">
-                      <Image src={media.logoMark} alt="" width={20} height={20} className="h-4 w-4 object-contain" />
-                    </div>
-                    <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 text-sm leading-relaxed text-pizarra shadow-sm">
+                  <div key={line.id} className="flex justify-start">
+                    <div className="max-w-[92%] whitespace-pre-wrap rounded-2xl rounded-tl-md bg-nieve px-3 py-2.5 text-sm leading-relaxed text-pizarra">
                       {line.text}
                     </div>
                   </div>
                 ) : (
                   <div key={line.id} className="flex justify-end">
-                    <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-hielo px-3.5 py-2.5 text-sm leading-relaxed text-white">
+                    <div className="max-w-[85%] rounded-2xl rounded-tr-md bg-hielo px-3 py-2.5 text-sm leading-relaxed text-white">
                       {line.text}
                     </div>
                   </div>
                 ),
               )}
 
-              <div className="flex flex-col gap-2 pt-1">
+              <div className="flex flex-col gap-1.5 pt-1">
                 {node.buttons.map((button) => (
                   <button
                     key={`${node.id}-${button.id}-${lines.length}`}
                     type="button"
                     onClick={() => runAction(button)}
-                    className="rounded-2xl border border-hielo/20 bg-white px-3.5 py-2.5 text-left text-sm font-semibold text-hielo shadow-sm transition hover:border-hielo/40 hover:bg-hielo/5 active:scale-[0.99]"
+                    className="rounded-xl border border-hielo/12 bg-white px-3 py-2.5 text-left text-sm font-medium text-hielo transition hover:border-hielo/30 hover:bg-hielo/5 active:scale-[0.99]"
                   >
                     {button.label}
                   </button>
                 ))}
               </div>
-              <div ref={endRef} />
             </div>
 
-            <div className="shrink-0 border-t border-hielo/10 bg-white p-3">
+            <div className="shrink-0 border-t border-hielo/10 bg-nieve/80 p-2.5">
               <a
                 href={FAQ_CHAT_WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(37,211,102,0.35)] transition hover:brightness-105"
+                className="flex w-full items-center justify-center rounded-xl border border-hielo/15 bg-white px-3 py-2.5 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-hielo/5"
               >
-                <span aria-hidden>🟢</span>
-                Hablar directamente por WhatsApp
+                Hablar con el equipo
               </a>
             </div>
           </div>
@@ -201,20 +206,14 @@ export function FaqChatWidget() {
       <button
         type="button"
         onClick={() => (open ? closeChat() : openChat())}
-        className="pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full border border-hielo/15 bg-white shadow-[0_12px_40px_rgba(14,26,36,0.2)] transition hover:scale-105 hover:border-hielo/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo sm:h-16 sm:w-16"
-        aria-label={open ? "Cerrar asistente" : "Abrir asistente de dudas"}
+        className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full border border-hielo/12 bg-white shadow-[0_10px_32px_rgba(14,26,36,0.14)] transition hover:border-hielo/25 hover:shadow-[0_12px_36px_rgba(14,26,36,0.18)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo sm:h-14 sm:w-14"
+        aria-label={open ? "Cerrar asistente" : "Abrir asistente"}
         aria-expanded={open}
       >
         {open ? (
-          <span className="text-2xl leading-none text-hielo">×</span>
+          <span className="text-xl leading-none text-hielo">×</span>
         ) : (
-          <Image
-            src={media.logoMark}
-            alt=""
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain sm:h-10 sm:w-10"
-          />
+          <Image src={media.logoMark} alt="" width={32} height={32} className="h-8 w-8 object-contain" />
         )}
       </button>
     </div>
