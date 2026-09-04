@@ -34,6 +34,10 @@ export async function listLiveGalleryPhotos(): Promise<LiveGalleryPhoto[]> {
       altEn: String(data.altEn ?? "Sierra Nevada live"),
       order: typeof data.order === "number" ? data.order : 0,
       createdAt: String(data.createdAt ?? ""),
+      kind: data.kind === "video" ? ("video" as const) : ("image" as const),
+      source: data.source === "student" ? ("student" as const) : ("admin" as const),
+      studentUid: typeof data.studentUid === "string" ? data.studentUid : undefined,
+      studentMediaId: typeof data.studentMediaId === "string" ? data.studentMediaId : undefined,
     } satisfies LiveGalleryPhoto;
   });
 
@@ -47,7 +51,13 @@ export async function getLiveGalleryForHome(limit = 8): Promise<LiveGalleryDispl
   try {
     const photos = await listLiveGalleryPhotos();
     if (photos.length === 0) return getFallbackLiveGalleryPhotos();
-    return photos.slice(0, limit).map(({ id, src, altEs, altEn }) => ({ id, src, altEs, altEn }));
+    return photos.slice(0, limit).map(({ id, src, altEs, altEn, kind }) => ({
+      id,
+      src,
+      altEs,
+      altEn,
+      kind: kind ?? "image",
+    }));
   } catch (error) {
     console.error("[live-gallery] Failed to load photos:", error);
     return getFallbackLiveGalleryPhotos();

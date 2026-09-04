@@ -254,7 +254,16 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
                 className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(10,18,25,0.04)]"
               >
                 <div className="relative aspect-[4/3] bg-hielo/5">
-                  <Image src={photo.src} alt={photo.altEs} fill className="object-cover" sizes="320px" unoptimized />
+                  {photo.kind === "video" ? (
+                    <video src={photo.src} className="h-full w-full object-cover" muted playsInline controls />
+                  ) : (
+                    <Image src={photo.src} alt={photo.altEs} fill className="object-cover" sizes="320px" unoptimized />
+                  )}
+                  {photo.source === "student" ? (
+                    <span className="absolute left-2 top-2 rounded-full bg-pizarra/70 px-2 py-0.5 text-[0.65rem] font-semibold text-white">
+                      Alumno
+                    </span>
+                  ) : null}
                 </div>
                 <div className="space-y-2 p-4">
                   <p className="line-clamp-2 text-sm text-pizarra">{photo.altEs}</p>

@@ -13,6 +13,10 @@ export type LiveGalleryPhoto = {
   altEn: string;
   order: number;
   createdAt: string;
+  kind?: "image" | "video";
+  source?: "admin" | "student";
+  studentUid?: string;
+  studentMediaId?: string;
 };
 
 export type LiveGalleryDisplayPhoto = {
@@ -20,6 +24,7 @@ export type LiveGalleryDisplayPhoto = {
   src: string;
   altEs: string;
   altEn: string;
+  kind?: "image" | "video";
 };
 
 export function getFallbackLiveGalleryPhotos(): LiveGalleryDisplayPhoto[] {

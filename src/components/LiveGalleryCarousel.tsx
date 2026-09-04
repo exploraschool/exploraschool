@@ -10,6 +10,41 @@ type LiveGalleryCarouselProps = {
   photos: LiveGalleryDisplayPhoto[];
 };
 
+function GallerySlide({
+  item,
+  locale,
+  decorative,
+}: {
+  item: LiveGalleryDisplayPhoto;
+  locale: string;
+  decorative?: boolean;
+}) {
+  const alt = decorative ? "" : pickLocale(locale, item.altEs, item.altEn);
+  if (item.kind === "video") {
+    return (
+      <video
+        src={item.src}
+        className="h-full w-full object-cover"
+        muted
+        playsInline
+        loop
+        autoPlay
+        aria-label={alt || undefined}
+      />
+    );
+  }
+  return (
+    <Image
+      src={item.src}
+      alt={alt}
+      fill
+      className="object-cover"
+      sizes="180px"
+      unoptimized={item.src.includes("firebasestorage.googleapis.com")}
+    />
+  );
+}
+
 export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps) {
   const [reduceMotion, setReduceMotion] = useState(false);
 
@@ -30,14 +65,7 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
       <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-8 sm:grid-cols-4 sm:gap-3">
         {photos.map((item) => (
           <figure key={item.id} className="relative aspect-square overflow-hidden rounded-xl">
-            <Image
-              src={item.src}
-              alt={pickLocale(locale, item.altEs, item.altEn)}
-              fill
-              className="object-cover"
-              sizes="160px"
-              unoptimized={item.src.includes("firebasestorage.googleapis.com")}
-            />
+            <GallerySlide item={item} locale={locale} />
           </figure>
         ))}
       </div>
@@ -57,24 +85,14 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
       role="region"
       aria-label={pickLocale(locale, "Galería de Sierra Nevada", "Sierra Nevada gallery")}
     >
-      <div
-        className="live-gallery-carousel__track"
-        style={{ animationDuration: `${durationSec}s` }}
-      >
+      <div className="live-gallery-carousel__track" style={{ animationDuration: `${durationSec}s` }}>
         {loop.map((item, index) => (
           <figure
             key={`${item.id}-${index}`}
             className="live-gallery-carousel__slide relative aspect-square overflow-hidden rounded-xl"
             aria-hidden={index >= base.length}
           >
-            <Image
-              src={item.src}
-              alt={index < base.length ? pickLocale(locale, item.altEs, item.altEn) : ""}
-              fill
-              className="object-cover"
-              sizes="180px"
-              unoptimized={item.src.includes("firebasestorage.googleapis.com")}
-            />
+            <GallerySlide item={item} locale={locale} decorative={index >= base.length} />
           </figure>
         ))}
       </div>

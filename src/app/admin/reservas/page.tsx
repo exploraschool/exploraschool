@@ -5,7 +5,7 @@ import { AdminBookingFilters } from "@/components/admin/AdminBookingFilters";
 import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { requireExploraWorkspace } from "@/lib/admin-workspace";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
 
@@ -40,7 +40,7 @@ export default async function AdminReservasPage({
 }) {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
-  await requireExploraWorkspace();
+  await requireAdminPanel();
   const instructors = (await listActiveInstructorsFromDb()).map((item) => ({
     slug: item.slug,
     name: item.name,

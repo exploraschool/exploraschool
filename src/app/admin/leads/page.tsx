@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { LeadActions } from "@/components/admin/LeadActions";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { requireExploraWorkspace } from "@/lib/admin-workspace";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { isBookingLead, type StoredBookingItem } from "@/lib/leads";
 
@@ -24,7 +24,7 @@ type Lead = {
 export default async function AdminLeadsPage() {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
-  await requireExploraWorkspace();
+  await requireAdminPanel();
 
   let contacts: Lead[] = [];
 

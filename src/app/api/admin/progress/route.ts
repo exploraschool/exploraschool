@@ -52,15 +52,9 @@ export async function GET(request: Request) {
   if (db === "unavailable") return NextResponse.json({ error: "unavailable" }, { status: 503 });
 
   const { searchParams } = new URL(request.url);
-  const audit = searchParams.get("audit") === "1";
   const leadId = searchParams.get("leadId");
   const itemIndexRaw = searchParams.get("itemIndex");
-  const selectedSlug = await getSelectedInstructorSlug();
-  const instructorFilter = audit
-    ? searchParams.get("instructor")
-    : isExploraWorkspaceSlug(selectedSlug)
-      ? null
-      : selectedSlug;
+  const instructorFilter = searchParams.get("instructor");
 
   if (leadId && itemIndexRaw !== null) {
     const itemIndex = Number(itemIndexRaw);
@@ -84,6 +78,7 @@ const saveSchema = z.object({
   leadId: z.string().min(1).max(80),
   itemIndex: z.number().int().min(0).max(40),
   discipline: z.string().min(1).max(40),
+  instructorSlug: z.string().min(1).max(80).optional(),
   skills: z.record(z.string(), z.number().min(1).max(5)).optional().default({}),
   rating: z.number().min(1).max(5),
   notes: z.string().max(5000).optional().default(""),
@@ -129,9 +124,15 @@ export async function POST(request: Request) {
   }
 
   const selectedRaw = await getSelectedInstructorSlug();
+  const bodySlug = parsed.data.instructorSlug?.trim() || "";
   const selectedSlug =
-    selectedRaw && !isExploraWorkspaceSlug(selectedRaw) ? selectedRaw : effectiveInstructorSlug(item);
+    bodySlug ||
+    (selectedRaw && !isExploraWorkspaceSlug(selectedRaw) ? selectedRaw : "") ||
+    effectiveInstructorSlug(item);
   const instructor = selectedSlug ? await getInstructorFromDb(selectedSlug) : null;
+  if (bodySlug && !instructor) {
+    return NextResponse.json({ error: "invalid_instructor" }, { status: 400 });
+  }
   const slot = TIME_SLOTS[item.timeSlotId as TimeSlotId];
   const product = getProductBySlug(item.productId as ProductId);
   const id = progressReportId(parsed.data.leadId, parsed.data.itemIndex);

@@ -2,14 +2,14 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { requireExploraWorkspace } from "@/lib/admin-workspace";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { parseProgressReport, PROGRESS_REPORTS_COLLECTION } from "@/lib/progress-reports";
 import { progressDisciplineName, type ProgressDisciplineId } from "@/data/progress-skills";
 
 export default async function AdminFichasPage() {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
-  await requireExploraWorkspace();
+  await requireAdminPanel();
 
   let reports: ReturnType<typeof parseProgressReport>[] = [];
   if (isAdminConfigured()) {
@@ -46,12 +46,19 @@ export default async function AdminFichasPage() {
                   </p>
                   <p className="mt-1 text-xs text-muted">{report.media.length} archivo(s)</p>
                 </div>
-                <Link
-                  href={`/admin/evaluacion/${report.leadId}/${report.itemIndex}`}
-                  className="btn-secondary !w-auto"
-                >
-                  Abrir
-                </Link>
+                <div className="flex flex-wrap gap-2">
+                  {report.studentUid ? (
+                    <Link href={`/admin/alumnos/${report.studentUid}`} className="btn-secondary !w-auto">
+                      Alumno
+                    </Link>
+                  ) : null}
+                  <Link
+                    href={`/admin/evaluacion/${report.leadId}/${report.itemIndex}`}
+                    className="btn-secondary !w-auto"
+                  >
+                    Abrir
+                  </Link>
+                </div>
               </div>
             </li>
           ))}

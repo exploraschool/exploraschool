@@ -58,6 +58,7 @@ export async function upsertStudentProfile(
     companions: patch.companions ?? current?.companions ?? [],
     selfSkills: patch.selfSkills !== undefined ? patch.selfSkills : (current?.selfSkills ?? {}),
     selfLevel: patch.selfLevel !== undefined ? patch.selfLevel : (current?.selfLevel ?? null),
+    staffTips: patch.staffTips !== undefined ? patch.staffTips : (current?.staffTips ?? ""),
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };
@@ -75,4 +76,36 @@ export async function upsertStudentProfile(
   );
 
   return next;
+}
+
+export async function listStudentProfiles(): Promise<StudentProfile[]> {
+  const db = getAdminDb();
+  if (!db) return [];
+
+  try {
+    const snap = await db.collection(USERS_COLLECTION).get();
+    return snap.docs
+      .map((doc) => parseStudentProfile(doc.id, doc.data() as Record<string, unknown>))
+      .filter((profile) => profile.email && !isAllowedAdminEmail(profile.email))
+      .sort((a, b) => {
+        const nameA = a.displayName || a.email;
+        const nameB = b.displayName || b.email;
+        return nameA.localeCompare(nameB, "es");
+      });
+  } catch (error) {
+    console.error("[student-user-store] list failed:", error);
+    return [];
+  }
+}
+
+export async function adminUpsertStudentProfile(
+  uid: string,
+  patch: Partial<StudentProfile>,
+): Promise<StudentProfile | null> {
+  const current = await getStudentProfile(uid);
+  if (!current) return null;
+  return upsertStudentProfile(uid, {
+    email: current.email,
+    ...patch,
+  });
 }

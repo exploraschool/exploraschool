@@ -178,6 +178,8 @@ export async function POST(request: Request) {
         altEn,
         order: nextOrder,
         createdAt,
+        kind: "image",
+        source: "admin",
       };
 
       await db.collection(LIVE_GALLERY_COLLECTION).doc(id).set(photo);

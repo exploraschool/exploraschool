@@ -30,7 +30,6 @@ export async function POST() {
       displayName: session.name,
       photoURL: session.picture,
       hasTakenClassesBefore: true,
-      onboardingCompletedAt: new Date().toISOString(),
     });
   }
 

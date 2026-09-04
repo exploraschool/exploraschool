@@ -8,7 +8,7 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
-import { isOnboardingComplete } from "@/lib/student-users";
+import { canAccessStudentDashboard } from "@/lib/student-users";
 import { loadStudentDashboard } from "@/lib/student-dashboard";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -30,7 +30,7 @@ export default async function CuentaPage({ params }: Props) {
   setRequestLocale(locale);
 
   if (await isAdminAuthenticated()) {
-    redirect("/admin/hoy");
+    redirect("/admin/alumnos");
   }
 
   const session = await getStudentSession();
@@ -46,7 +46,7 @@ export default async function CuentaPage({ params }: Props) {
   }
 
   const profile = await getStudentProfile(session.uid);
-  if (!profile || !isOnboardingComplete(profile)) {
+  if (!profile || !canAccessStudentDashboard(profile)) {
     redirect(`/${locale}/cuenta/bienvenida`);
   }
 

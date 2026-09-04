@@ -8,6 +8,7 @@ import { ACCOUNT_MEETING_POINT_EN, ACCOUNT_MEETING_POINT_ES, selfLevelName } fro
 import type { ProgressReport } from "@/lib/progress-reports";
 import type { StudentProfile } from "@/lib/student-users";
 import { StudentLogoutButton } from "@/components/cuenta/StudentLogoutButton";
+import { StudentMediaUploader } from "@/components/cuenta/StudentMediaUploader";
 
 type Lesson = {
   leadId: string;
@@ -56,51 +57,66 @@ export function AccountDashboard({
   lastInstructorName,
 }: AccountDashboardProps) {
   const t = useTranslations("account");
-  const [tab, setTab] = useState<"reservas" | "progreso">("reservas");
-  const incompleteProfile = !profile?.selfLevel || !profile.disciplines?.length;
+  const [tab, setTab] = useState<"reservas" | "progreso" | "medias">("reservas");
 
   return (
     <div className="container-page section-padding pt-8 sm:pt-10">
-      <p className="eyebrow">{t("areaEyebrow")}</p>
-      <h1 className="page-title mt-2">{t("hello", { name: name.split(" ")[0] || name })}</h1>
-      <p className="page-lead">{t("areaLead")}</p>
-      {profile?.selfLevel ? (
-        <p className="mt-2 text-sm font-semibold text-hielo">
-          {t("yourLevel")}: {selfLevelName(profile.selfLevel, locale)}
-        </p>
-      ) : null}
-
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        {incompleteProfile ? (
-          <a
-            href={`/${locale}/cuenta/bienvenida`}
-            className="inline-flex rounded-2xl border border-oro/30 bg-oro/10 px-4 py-3 text-sm font-medium text-pizarra"
-          >
-            {t("completeProfile")}
-          </a>
-        ) : null}
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="eyebrow">{t("areaEyebrow")}</p>
+          <h1 className="page-title mt-2">{t("hello", { name: name.split(" ")[0] || name })}</h1>
+          <p className="page-lead">{t("areaLead")}</p>
+        </div>
         <StudentLogoutButton locale={locale} />
       </div>
 
-      <div className="mt-6 flex gap-2">
-        <button
-          type="button"
-          onClick={() => setTab("reservas")}
-          className={`rounded-full px-4 py-2 text-sm font-semibold ${
-            tab === "reservas" ? "bg-hielo text-white" : "border border-hielo/15 bg-white"
-          }`}
-        >
-          {t("tabReservas")}
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("progreso")}
-          className={`rounded-full px-4 py-2 text-sm font-semibold ${
-            tab === "progreso" ? "bg-hielo text-white" : "border border-hielo/15 bg-white"
-          }`}
-        >
-          {t("tabProgreso")}
-        </button>
+      <section className="mt-6 rounded-2xl border border-hielo/10 bg-white p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("profileSummary")}</p>
+            <p className="mt-1 font-display text-xl text-hielo">
+              {profile?.selfLevel ? selfLevelName(profile.selfLevel, locale) : t("noLevelYet")}
+            </p>
+            {profile?.disciplines?.length ? (
+              <p className="mt-1 text-sm text-muted">
+                {profile.disciplines.map((id) => progressDisciplineName(id, locale)).join(" · ")}
+              </p>
+            ) : null}
+          </div>
+          <a
+            href={`/${locale}/cuenta/bienvenida?edit=1`}
+            className="rounded-full border border-hielo/20 px-4 py-2 text-sm font-semibold text-hielo"
+          >
+            {t("editProfile")}
+          </a>
+        </div>
+        {profile?.staffTips ? (
+          <div className="mt-4 rounded-xl bg-hielo/5 px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm text-pizarra">{profile.staffTips}</p>
+          </div>
+        ) : null}
+      </section>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {(
+          [
+            ["reservas", t("tabReservas")],
+            ["progreso", t("tabProgreso")],
+            ["medias", t("tabMedias")],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTab(id)}
+            className={`rounded-full px-4 py-2 text-sm font-semibold ${
+              tab === id ? "bg-hielo text-white" : "border border-hielo/15 bg-white"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {tab === "reservas" ? (
@@ -129,7 +145,9 @@ export function AccountDashboard({
                   {lesson.date} · {lesson.timeSlotLabel} · {lesson.disciplineLabel}
                 </p>
                 {lesson.instructorName ? (
-                  <p className="mt-1 text-sm text-hielo">{t("instructor")}: {lesson.instructorName}</p>
+                  <p className="mt-1 text-sm text-hielo">
+                    {t("instructor")}: {lesson.instructorName}
+                  </p>
                 ) : null}
                 <div className="mt-3 rounded-xl bg-nieve px-3 py-3 text-sm text-pizarra">
                   {locale === "en" ? ACCOUNT_MEETING_POINT_EN : ACCOUNT_MEETING_POINT_ES}
@@ -157,7 +175,9 @@ export function AccountDashboard({
             ))}
           </LessonGroup>
         </div>
-      ) : (
+      ) : null}
+
+      {tab === "progreso" ? (
         <div className="mt-8 space-y-8">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-hielo/10 bg-white p-5">
@@ -186,14 +206,15 @@ export function AccountDashboard({
                 {progressDisciplineName(report.discipline as ProgressDisciplineId, locale)}
               </p>
               <h2 className="mt-1 font-display text-xl text-pizarra">{report.instructorName || t("yourInstructor")}</h2>
-              <p className="mt-1 text-sm text-muted">{"★".repeat(report.rating)}{"☆".repeat(5 - report.rating)}</p>
+              <p className="mt-1 text-sm text-muted">
+                {"★".repeat(report.rating)}
+                {"☆".repeat(5 - report.rating)}
+              </p>
               {report.notes ? <p className="mt-3 whitespace-pre-wrap text-sm text-pizarra">{report.notes}</p> : null}
               {report.recommendedPistaIds.length ? (
                 <p className="mt-3 text-sm text-muted">
                   {t("pistas")}:{" "}
-                  {report.recommendedPistaIds
-                    .map((id) => getPistaById(id)?.name || id)
-                    .join(", ")}
+                  {report.recommendedPistaIds.map((id) => getPistaById(id)?.name || id).join(", ")}
                 </p>
               ) : null}
               {report.media.length ? (
@@ -217,7 +238,13 @@ export function AccountDashboard({
           </a>
           <p className="text-xs text-muted">{meetingPoint}</p>
         </div>
-      )}
+      ) : null}
+
+      {tab === "medias" ? (
+        <div className="mt-8">
+          <StudentMediaUploader />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -237,7 +264,9 @@ function LessonGroup({
     <section>
       <h2 className="font-display text-2xl text-hielo">{title}</h2>
       <div className="mt-4 space-y-3">
-        {count > 0 ? children : (
+        {count > 0 ? (
+          children
+        ) : (
           <p className="rounded-2xl border border-dashed border-hielo/20 bg-white px-4 py-8 text-sm text-muted">
             {empty}
           </p>

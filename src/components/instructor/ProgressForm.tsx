@@ -11,6 +11,8 @@ import {
 import { PISTA_LEVEL_LABEL, SIERRA_NEVADA_PISTAS } from "@/data/pistas";
 import type { ProgressMedia, ProgressReport } from "@/lib/progress-reports";
 
+type InstructorOption = { slug: string; name: string };
+
 type ProgressFormProps = {
   leadId: string;
   itemIndex: number;
@@ -20,6 +22,8 @@ type ProgressFormProps = {
   defaultDiscipline: string;
   defaultHours: number;
   initial: ProgressReport | null;
+  instructors?: InstructorOption[];
+  defaultInstructorSlug?: string;
 };
 
 export function ProgressForm({
@@ -31,6 +35,8 @@ export function ProgressForm({
   defaultDiscipline,
   defaultHours,
   initial,
+  instructors = [],
+  defaultInstructorSlug = "",
 }: ProgressFormProps) {
   const router = useRouter();
   const initialDiscipline: ProgressDisciplineId = isProgressDiscipline(initial?.discipline || defaultDiscipline)
@@ -40,6 +46,9 @@ export function ProgressForm({
       : "esqui";
 
   const [discipline, setDiscipline] = useState<ProgressDisciplineId>(initialDiscipline);
+  const [instructorSlug, setInstructorSlug] = useState(
+    initial?.instructorSlug || defaultInstructorSlug || instructors[0]?.slug || "",
+  );
   const [skills, setSkills] = useState<Record<string, number>>(initial?.skills ?? {});
   const [rating, setRating] = useState(initial?.rating ?? 3);
   const [notes, setNotes] = useState(initial?.notes ?? "");
@@ -57,6 +66,10 @@ export function ProgressForm({
   }
 
   async function save(nextMedia = media) {
+    if (instructors.length > 0 && !instructorSlug) {
+      setError("Elige qué monitor dio la clase");
+      return;
+    }
     setBusy(true);
     setError("");
     setMessage("");
@@ -68,6 +81,7 @@ export function ProgressForm({
           leadId,
           itemIndex,
           discipline,
+          instructorSlug: instructorSlug || undefined,
           skills,
           rating,
           notes,
@@ -168,6 +182,25 @@ export function ProgressForm({
           {studentEmail} · {dateLabel}
         </p>
       </div>
+
+      {instructors.length > 0 ? (
+        <label className="block text-sm font-semibold">
+          Monitor que dio la clase
+          <select
+            className="mt-1 w-full rounded-xl border border-hielo/15 bg-white px-3 py-2"
+            value={instructorSlug}
+            onChange={(event) => setInstructorSlug(event.target.value)}
+            required
+          >
+            <option value="">Selecciona un monitor</option>
+            {instructors.map((item) => (
+              <option key={item.slug} value={item.slug}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
 
       <label className="block text-sm font-semibold">
         Disciplina de la ficha

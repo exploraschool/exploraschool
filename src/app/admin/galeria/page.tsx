@@ -2,14 +2,14 @@ import { redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { GalleryAdminManager } from "@/components/admin/GalleryAdminManager";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { requireExploraWorkspace } from "@/lib/admin-workspace";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 import { isAdminConfigured } from "@/lib/firebase/admin";
 import { listLiveGalleryPhotos } from "@/lib/live-gallery";
 
 export default async function AdminGaleriaPage() {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
-  await requireExploraWorkspace();
+  await requireAdminPanel();
 
   const photos = isAdminConfigured() ? await listLiveGalleryPhotos() : [];
 

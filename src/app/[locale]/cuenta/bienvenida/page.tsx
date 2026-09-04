@@ -7,9 +7,9 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
-import { isOnboardingComplete } from "@/lib/student-users";
+import { canAccessStudentDashboard } from "@/lib/student-users";
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ edit?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -23,26 +23,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function BienvenidaPage({ params }: Props) {
+export default async function BienvenidaPage({ params, searchParams }: Props) {
   const { locale } = await params;
+  const { edit } = await searchParams;
   setRequestLocale(locale);
 
   if (await isAdminAuthenticated()) {
-    redirect("/admin/hoy");
+    redirect("/admin/alumnos");
   }
 
   const session = await getStudentSession();
   if (!session) redirect(`/${locale}/cuenta`);
 
   const profile = await getStudentProfile(session.uid);
-  if (profile && isOnboardingComplete(profile) && profile.selfLevel) {
+  const editing = edit === "1";
+
+  if (profile && canAccessStudentDashboard(profile) && !editing) {
     redirect(`/${locale}/cuenta`);
   }
 
   return (
     <section className="section-padding">
       <div className="container-page">
-        <AccountWelcomeWizard locale={locale} initialProfile={profile} />
+        <AccountWelcomeWizard locale={locale} initialProfile={profile} editMode={editing} />
       </div>
     </section>
   );

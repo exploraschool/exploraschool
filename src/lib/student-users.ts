@@ -35,16 +35,30 @@ export type StudentProfile = {
   /** Skills the student says they can already do, keyed by discipline */
   selfSkills: Partial<Record<ProgressDisciplineId, string[]>>;
   selfLevel: SelfLevelId | null;
+  /** Permanent tips from the teaching team, visible in the student area */
+  staffTips: string;
   createdAt: string;
   updatedAt: string;
 };
+
+/** Profile has enough self-assessment data to leave the wizard. */
+export function isProfileReady(
+  profile: Pick<StudentProfile, "disciplines" | "selfLevel">,
+): boolean {
+  return Boolean(profile.selfLevel) && profile.disciplines.length > 0;
+}
 
 export function isOnboardingComplete(profile: Pick<StudentProfile, "onboardingCompletedAt">): boolean {
   return Boolean(profile.onboardingCompletedAt);
 }
 
+/** Gate for dashboard access: marked complete AND profile filled. */
+export function canAccessStudentDashboard(profile: StudentProfile): boolean {
+  return isOnboardingComplete(profile) && isProfileReady(profile);
+}
+
 export function profileNeedsWizard(profile: StudentProfile): boolean {
-  return !isOnboardingComplete(profile);
+  return !canAccessStudentDashboard(profile);
 }
 
 export function parseStudentProfile(uid: string, data: Record<string, unknown>): StudentProfile {
@@ -125,6 +139,7 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     companions,
     selfSkills,
     selfLevel,
+    staffTips: typeof data.staffTips === "string" ? data.staffTips : "",
     createdAt: typeof data.createdAt === "string" ? data.createdAt : new Date().toISOString(),
     updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : new Date().toISOString(),
   };

@@ -2,9 +2,10 @@ import { notFound, redirect } from "next/navigation";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { ProgressForm } from "@/components/instructor/ProgressForm";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
-import { getAdminWorkspace } from "@/lib/admin-workspace";
+import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
-import type { StoredLead } from "@/lib/leads";
+import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
+import { effectiveInstructorSlug, type StoredLead } from "@/lib/leads";
 import { parseProgressReport, PROGRESS_REPORTS_COLLECTION, progressReportId } from "@/lib/progress-reports";
 import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
 import { getProductBySlug, type ProductId } from "@/data/products";
@@ -14,8 +15,7 @@ type Props = { params: Promise<{ leadId: string; itemIndex: string }> };
 
 export default async function EvaluacionFichaPage({ params }: Props) {
   if (!(await isAdminAuthenticated())) redirect("/admin/login");
-  const workspace = await getAdminWorkspace();
-  if (!workspace) redirect("/admin/hoy");
+  await requireAdminPanel();
   if (!isAdminConfigured()) notFound();
   const db = getAdminDb();
   if (!db) notFound();
@@ -45,9 +45,14 @@ export default async function EvaluacionFichaPage({ params }: Props) {
       item.modality as ModalityId | undefined,
     ) || item.discipline;
 
+  const instructors = (await listActiveInstructorsFromDb()).map((itemInstructor) => ({
+    slug: itemInstructor.slug,
+    name: itemInstructor.name,
+  }));
+
   return (
     <AdminShell
-      active={workspace.kind === "explora" ? "fichas" : "evaluacion"}
+      active="fichas"
       title="Ficha de progreso"
       description={`${lead.name} · ${item.date} · ${disciplineLabel}`}
     >
@@ -60,6 +65,8 @@ export default async function EvaluacionFichaPage({ params }: Props) {
         defaultDiscipline={item.modality || item.discipline || "esqui"}
         defaultHours={slot?.hours ?? product?.hours ?? 2}
         initial={report}
+        instructors={instructors}
+        defaultInstructorSlug={report?.instructorSlug || effectiveInstructorSlug(item)}
       />
     </AdminShell>
   );
