@@ -6,9 +6,20 @@ import {
   saveAffiliatePost,
   type AffiliateBlogPost,
 } from "@/lib/affiliate-blog";
-import { fetchAmazonProductMeta } from "@/lib/amazon-product-meta";
+import {
+  emptyProductImage,
+  primaryProductImage,
+  productGallery,
+  withPrimaryImage,
+  type AffiliateProductImage,
+  type AffiliateSection,
+  type AffiliateSpec,
+} from "@/lib/affiliate-blog-shared";
+import { fetchAmazonProductMeta, formatAmazonBrief } from "@/lib/amazon-product-meta";
 
-const MODEL = "gemini-2.5-flash";
+const MODELS = ["gemini-2.5-flash"];
+const LOCATIONS = ["europe-west1", "us-central1"];
+const MAX_VISION_IMAGES = 12;
 
 function editorialGuide(): string {
   return blogPosts
@@ -69,53 +80,124 @@ function asStringArray(value: unknown, max = 5): string[] {
     .slice(0, max);
 }
 
+function parseSpecs(value: unknown): AffiliateSpec[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((row) => {
+      const item = row as Record<string, unknown>;
+      return {
+        labelEs: asString(item.labelEs),
+        labelEn: asString(item.labelEn),
+        valueEs: asString(item.valueEs),
+        valueEn: asString(item.valueEn),
+      };
+    })
+    .filter((item) => item.labelEs || item.labelEn)
+    .slice(0, 10);
+}
+
+function parseSections(value: unknown): AffiliateSection[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((row) => {
+      const item = row as Record<string, unknown>;
+      return {
+        headingEs: asString(item.headingEs),
+        headingEn: asString(item.headingEn),
+        bodyEs: asString(item.bodyEs),
+        bodyEn: asString(item.bodyEn),
+      };
+    })
+    .filter((item) => item.headingEs && item.bodyEs)
+    .slice(0, 4);
+}
+
+function applyGeneratedImageCopy(
+  gallery: AffiliateProductImage[],
+  generated: unknown,
+): AffiliateProductImage[] {
+  const rows = Array.isArray(generated) ? generated : [];
+  return gallery.map((image, index) => {
+    const raw = (rows[index] ?? {}) as Record<string, unknown>;
+    return {
+      ...image,
+      altEs: asString(raw.altEs, image.altEs),
+      altEn: asString(raw.altEn, image.altEn),
+      captionEs: asString(raw.captionEs, image.captionEs),
+      captionEn: asString(raw.captionEn, image.captionEn),
+    };
+  });
+}
+
 export async function generateAffiliateArticle(post: AffiliateBlogPost): Promise<AffiliateBlogPost> {
   const metas = await Promise.all(
     post.products.map((product) => fetchAmazonProductMeta(product.affiliateUrl)),
   );
 
+  const visionUrls = post.products.flatMap((product) =>
+    productGallery(product)
+      .slice(0, 2)
+      .map((image) => image.src),
+  ).slice(0, MAX_VISION_IMAGES);
+
   const imageParts = (
-    await Promise.all(post.products.map((product) => imagePartFromUrl(product.imageSrc)))
+    await Promise.all(visionUrls.map((url) => imagePartFromUrl(url)))
   ).filter((part): part is Part => Boolean(part));
 
   const productBrief = post.products
     .map((product, index) => {
       const meta = metas[index];
+      const gallery = productGallery(product);
       return [
-        `Producto ${index + 1}`,
-        `ASIN: ${product.asin || meta.asin || ""}`,
+        `=== Producto ${index + 1} ===`,
         `URL afiliado Explora: ${product.affiliateUrl}`,
-        `Título Amazon/OG: ${meta.title || "(no disponible)"}`,
-        `Precio visible: ${meta.priceText || "(no inventar si vacío)"}`,
-        `Imagen: ${product.imageSrc ? "sí" : "no"}`,
+        `Fotos en galería (${gallery.length}): ${gallery.map((image) => image.src).join(" | ")}`,
+        formatAmazonBrief(meta),
       ].join("\n");
     })
     .join("\n\n");
 
-  const kind = post.type === "ranking" ? "ranking de exactamente 6 productos" : "review de 1 producto";
-  const prompt = `Eres editor senior de Explora School & Club, escuela de esquí, snowboard y telemark en Sierra Nevada (Granada). Redactas guías de compra de afiliados Amazon para esquiadores y snowboarders reales, no para un marketplace genérico.
+  const kind =
+    post.type === "ranking"
+      ? "ranking comparativo de exactamente 6 productos"
+      : "review profunda de 1 producto";
 
-Tarea: ${kind}. Devuelve SOLO un JSON válido, sin markdown.
+  const prompt = `Eres editor senior de Explora School & Club (escuela de esquí, snowboard y telemark en Sierra Nevada, Granada). Escribes guías de compra al nivel de Wirecutter / Outdoor Gear Lab: densas, concretas, bilingües, sin relleno.
 
-Reglas:
-- Español de España y inglés británico (en-GB), tono cercano, útil, sin hype vacío ni “el mejor del mundo”.
-- No digas que Explora vende el material. Explora da clases; Amazon es la compra.
-- No inventes precios. Si no hay precio, deja priceText vacío.
-- Alts de imagen: describe lo que se ve (color, tipo de producto, uso en nieve). Nunca “imagen de producto”.
-- Incluye siempre enlaces internos reales de esta lista (mínimo 3):
+Tarea: ${kind}. Devuelve SOLO un JSON válido, sin markdown ni comentarios.
+
+Voz:
+- Español de España y inglés británico (en-GB). Tono de instructor que ha visto el material en nieve real, no de marketplace.
+- Nunca digas que Explora vende el producto. Explora da clases; Amazon es la compra.
+- No inventes precios, valoraciones ni número de opiniones. Si el dato Amazon está vacío, deja el campo vacío.
+- No uses “el mejor del mundo”, “imprescindible”, “revolucionario”.
+- Alts: describe color, tipo de producto y uso en nieve. Nunca “imagen de producto”.
+- Cada campo Es y En debe ser redacción independiente, no una traducción calcada palabra a palabra.
+
+Longitud mínima (imprescindible):
+- introEs / introEn: 3 o 4 párrafos separados por \\n\\n (80–140 palabras cada párrafo).
+- methodologyEs / methodologyEn: 90–140 palabras.
+- howToChooseEs / howToChooseEn: 140–220 palabras (talla, clima Sierra Nevada, nivel, presupuesto).
+- verdictEs / verdictEn: 50–90 palabras. En ranking, nombra al ganador y un runner-up.
+- sections: 2 bloques extra (p. ej. “Qué mirar antes de comprar”, “Errores habituales”). Cada body 80–140 palabras.
+- Por producto: summary 40–60 palabras; bodyEs/bodyEn 180–280 palabras en 2–3 párrafos \\n\\n; onSnowEs/onSnowEn 50–90 palabras (pistas, hielo, viento de Sierra Nevada); forWhom y skipIf concretos; 3 pros y 3 contras.
+- FAQ: 6 preguntas útiles (talla, clima, clases vs comprar, mantenimiento, alternativas).
+- ranking: comparison con 6 filas útiles (uso, nivel, peso/talla si se conoce, clima, precio si hay dato, veredicto corto). values: un string por producto, mismo orden.
+- review: comparison vacío; winnerIndex 0.
+- CTAs Amazon: "Ver en Amazon" / "See on Amazon".
+- slug kebab-case español, corto.
+- winnerIndex 0-based.
+- relatedSlugs: 1–3 slugs reales de la lista editorial.
+- internalLinks: mínimo 3 href reales de esta lista:
   /clases
   /clases/esqui
   /clases/snowboard
+  /clases/telemark
   /reserva
   /club
   /como-llegar
+  /contacto
 ${editorialGuide()}
-- CTAs Amazon: "Ver en Amazon" / "See on Amazon".
-- winnerIndex es 0-based.
-- ranking: 6 productos, comparison con 4-6 filas (peso/impermeabilidad/para quién/precio si se conoce, etc.).
-- review: 1 producto, comparison puede ir vacío.
-- FAQ: 4 preguntas útiles (talla, clima Sierra Nevada, clases vs comprar, etc.).
-- slug en kebab-case español, corto.
 
 JSON schema:
 {
@@ -128,25 +210,41 @@ JSON schema:
   "coverAltEn": "",
   "introEs": "",
   "introEn": "",
+  "verdictEs": "",
+  "verdictEn": "",
   "methodologyEs": "",
   "methodologyEn": "",
+  "howToChooseEs": "",
+  "howToChooseEn": "",
+  "sections": [{ "headingEs": "", "headingEn": "", "bodyEs": "", "bodyEn": "" }],
   "winnerIndex": 0,
   "products": [{
     "nameEs": "",
     "nameEn": "",
+    "brand": "",
     "priceText": "",
+    "rating": "",
+    "reviewCount": "",
     "summaryEs": "",
     "summaryEn": "",
+    "bodyEs": "",
+    "bodyEn": "",
+    "onSnowEs": "",
+    "onSnowEn": "",
     "forWhomEs": "",
     "forWhomEn": "",
-            "prosEs": ["", ""],
-            "consEs": ["", ""],
-            "prosEn": ["", ""],
-            "consEn": ["", ""],
+    "skipIfEs": "",
+    "skipIfEn": "",
+    "specs": [{ "labelEs": "", "labelEn": "", "valueEs": "", "valueEn": "" }],
+    "prosEs": ["", "", ""],
+    "consEs": ["", "", ""],
+    "prosEn": ["", "", ""],
+    "consEn": ["", "", ""],
     "altEs": "",
     "altEn": "",
     "captionEs": "",
     "captionEn": "",
+    "images": [{ "altEs": "", "altEn": "", "captionEs": "", "captionEn": "" }],
     "ctaLabelEs": "Ver en Amazon",
     "ctaLabelEn": "See on Amazon"
   }],
@@ -160,7 +258,7 @@ JSON schema:
   "seoDescriptionEn": ""
 }
 
-Datos de producto:
+Ficha Amazon (fuente de verdad; no contradigas estos datos):
 ${productBrief}`;
 
   const contents: Array<{ role: string; parts: Part[] }> = [
@@ -171,26 +269,28 @@ ${productBrief}`;
   ];
 
   let text = "";
-  const locations = ["europe-west1", "us-central1"];
   let lastError: unknown;
-  for (const location of locations) {
-    try {
-      const ai = getVertexClient(location);
-      const response = await ai.models.generateContent({
-        model: MODEL,
-        contents,
-        config: {
-          temperature: 0.7,
-          responseMimeType: "application/json",
-          maxOutputTokens: 8192,
-        },
-      });
-      text = response.text ?? "";
-      if (text) break;
-    } catch (error) {
-      lastError = error;
-      console.warn(`[affiliate-gemini] ${location} failed:`, error);
+  for (const location of LOCATIONS) {
+    for (const model of MODELS) {
+      try {
+        const ai = getVertexClient(location);
+        const response = await ai.models.generateContent({
+          model,
+          contents,
+          config: {
+            temperature: 0.55,
+            responseMimeType: "application/json",
+            maxOutputTokens: 16384,
+          },
+        });
+        text = response.text ?? "";
+        if (text) break;
+      } catch (error) {
+        lastError = error;
+        console.warn(`[affiliate-gemini] ${location}/${model} failed:`, error);
+      }
     }
+    if (text) break;
   }
   if (!text) {
     console.error("[affiliate-gemini] generation failed:", lastError);
@@ -201,33 +301,60 @@ ${productBrief}`;
   const generatedProducts = Array.isArray(json.products) ? json.products : [];
   const products = post.products.map((product, index) => {
     const raw = (generatedProducts[index] ?? {}) as Record<string, unknown>;
-    return {
+    const meta = metas[index];
+    const images = applyGeneratedImageCopy(productGallery(product), raw.images);
+    const first = images[0] ?? emptyProductImage(primaryProductImage(product));
+    const specs = parseSpecs(raw.specs);
+    const fallbackSpecs =
+      specs.length > 0
+        ? specs
+        : meta.specs.map((spec) => ({
+            labelEs: spec.label,
+            labelEn: spec.label,
+            valueEs: spec.value,
+            valueEn: spec.value,
+          }));
+    return withPrimaryImage({
       ...product,
-      nameEs: asString(raw.nameEs, product.nameEs),
-      nameEn: asString(raw.nameEn, product.nameEn),
-      priceText: asString(raw.priceText, product.priceText),
+      brand: asString(raw.brand, product.brand || meta.brand),
+      nameEs: asString(raw.nameEs, product.nameEs || meta.title),
+      nameEn: asString(raw.nameEn, product.nameEn || meta.title),
+      priceText: asString(raw.priceText, product.priceText || meta.priceText),
+      rating: asString(raw.rating, product.rating || meta.rating),
+      reviewCount: asString(raw.reviewCount, product.reviewCount || meta.reviewCount),
+      amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,
+      amazonDescription: product.amazonDescription || meta.description,
       summaryEs: asString(raw.summaryEs),
       summaryEn: asString(raw.summaryEn),
+      bodyEs: asString(raw.bodyEs),
+      bodyEn: asString(raw.bodyEn),
+      onSnowEs: asString(raw.onSnowEs),
+      onSnowEn: asString(raw.onSnowEn),
       forWhomEs: asString(raw.forWhomEs),
       forWhomEn: asString(raw.forWhomEn),
-      prosEs: asStringArray(raw.prosEs),
-      consEs: asStringArray(raw.consEs),
-      prosEn: asStringArray(raw.prosEn),
-      consEn: asStringArray(raw.consEn),
-      altEs: asString(raw.altEs, product.altEs),
-      altEn: asString(raw.altEn, product.altEn),
-      captionEs: asString(raw.captionEs),
-      captionEn: asString(raw.captionEn),
+      skipIfEs: asString(raw.skipIfEs),
+      skipIfEn: asString(raw.skipIfEn),
+      specs: fallbackSpecs,
+      prosEs: asStringArray(raw.prosEs, 4),
+      consEs: asStringArray(raw.consEs, 4),
+      prosEn: asStringArray(raw.prosEn, 4),
+      consEn: asStringArray(raw.consEn, 4),
+      altEs: asString(raw.altEs, first.altEs),
+      altEn: asString(raw.altEn, first.altEn),
+      captionEs: asString(raw.captionEs, first.captionEs),
+      captionEn: asString(raw.captionEn, first.captionEn),
+      images,
       ctaLabelEs: asString(raw.ctaLabelEs, "Ver en Amazon"),
       ctaLabelEn: asString(raw.ctaLabelEn, "See on Amazon"),
-    };
+    });
   });
 
   const winnerIndex = Math.min(
     Math.max(0, Number(json.winnerIndex) || 0),
     Math.max(0, products.length - 1),
   );
-  const coverFromWinner = products[winnerIndex]?.imageSrc || products[0]?.imageSrc || post.coverImage;
+  const coverFromWinner =
+    primaryProductImage(products[winnerIndex] ?? products[0]) || post.coverImage;
   const desiredSlug =
     asString(json.slug) || asString(json.titleEs) || `guia-compra-${post.id.slice(0, 8)}`;
   const slug = await ensureUniqueAffiliateSlug(desiredSlug, post.id);
@@ -256,8 +383,13 @@ ${productBrief}`;
     coverAltEn: asString(json.coverAltEn, products[winnerIndex]?.altEn),
     introEs: asString(json.introEs),
     introEn: asString(json.introEn),
+    verdictEs: asString(json.verdictEs),
+    verdictEn: asString(json.verdictEn),
     methodologyEs: asString(json.methodologyEs),
     methodologyEn: asString(json.methodologyEn),
+    howToChooseEs: asString(json.howToChooseEs),
+    howToChooseEn: asString(json.howToChooseEn),
+    sections: parseSections(json.sections),
     winnerIndex,
     products,
     comparison: Array.isArray(json.comparison)
@@ -271,6 +403,7 @@ ${productBrief}`;
             };
           })
           .filter((row) => row.labelEs)
+          .slice(0, 8)
       : [],
     faq: Array.isArray(json.faq)
       ? json.faq
@@ -284,7 +417,7 @@ ${productBrief}`;
             };
           })
           .filter((row) => row.qEs)
-          .slice(0, 6)
+          .slice(0, 8)
       : [],
     internalLinks: Array.isArray(json.internalLinks)
       ? json.internalLinks

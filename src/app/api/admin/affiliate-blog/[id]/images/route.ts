@@ -6,6 +6,7 @@ import {
   completeAffiliateImageUpload,
   getAffiliatePost,
   prepareAffiliateImageUpload,
+  removeAffiliateProductImage,
 } from "@/lib/affiliate-blog";
 import { isAdminConfigured } from "@/lib/firebase/admin";
 
@@ -108,6 +109,30 @@ export async function POST(request: Request, { params }: Ctx) {
     return NextResponse.json({ post });
   } catch (error) {
     const code = error instanceof Error ? error.message : "upload_failed";
+    return NextResponse.json({ error: code }, { status: 500 });
+  }
+}
+
+const removeSchema = z.object({
+  productIndex: z.number().int().min(0).max(5),
+  imageIndex: z.number().int().min(0).max(7),
+});
+
+export async function DELETE(request: Request, { params }: Ctx) {
+  const staff = await getStaffSession();
+  if (!staff) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await params;
+  const parsed = removeSchema.safeParse(await request.json().catch(() => null));
+  if (!parsed.success) return NextResponse.json({ error: "invalid_data" }, { status: 400 });
+  try {
+    const post = await removeAffiliateProductImage({
+      postId: id,
+      productIndex: parsed.data.productIndex,
+      imageIndex: parsed.data.imageIndex,
+    });
+    return NextResponse.json({ post });
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "delete_failed";
     return NextResponse.json({ error: code }, { status: 500 });
   }
 }

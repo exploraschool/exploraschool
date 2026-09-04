@@ -7,6 +7,7 @@ import {
 
 export type PublicBlogCard = {
   kind: "guide" | "affiliate";
+  affiliateType?: "ranking" | "review";
   slug: string;
   titleEs: string;
   titleEn: string;
@@ -36,6 +37,7 @@ function editorialCard(post: BlogPost): PublicBlogCard {
 function affiliateCard(post: AffiliateBlogPost): PublicBlogCard {
   return {
     kind: "affiliate",
+    affiliateType: post.type,
     slug: post.slug,
     titleEs: post.titleEs,
     titleEn: post.titleEn,
@@ -49,10 +51,23 @@ function affiliateCard(post: AffiliateBlogPost): PublicBlogCard {
 }
 
 export async function listPublicBlogCards(): Promise<PublicBlogCard[]> {
-  const affiliate = await listPublishedAffiliatePosts();
-  return [...blogPosts.map(editorialCard), ...affiliate.map(affiliateCard)].sort(
+  const { guides, products } = await listPublicBlogSections();
+  return [...guides, ...products].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
+}
+
+export async function listPublicBlogSections(): Promise<{
+  guides: PublicBlogCard[];
+  products: PublicBlogCard[];
+}> {
+  const affiliate = await listPublishedAffiliatePosts();
+  const byDate = (a: PublicBlogCard, b: PublicBlogCard) =>
+    new Date(b.date).getTime() - new Date(a.date).getTime();
+  return {
+    guides: blogPosts.map(editorialCard).sort(byDate),
+    products: affiliate.map(affiliateCard).sort(byDate),
+  };
 }
 
 export async function resolvePublicBlogPost(slug: string): Promise<

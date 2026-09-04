@@ -107,6 +107,22 @@ export default async function BlogPostPage({ params }: Props) {
               position: index + 1,
               name: pickLocale(locale, product.nameEs, product.nameEn),
               url: product.affiliateUrl,
+              image: product.images?.[0]?.src || product.imageSrc || undefined,
+            })),
+          }
+        : null;
+    const faqLd =
+      post.faq.length > 0
+        ? {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: post.faq.map((item) => ({
+              "@type": "Question",
+              name: pickLocale(locale, item.qEs, item.qEn),
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: pickLocale(locale, item.aEs, item.aEn),
+              },
             })),
           }
         : null;
@@ -121,6 +137,12 @@ export default async function BlogPostPage({ params }: Props) {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd) }}
+          />
+        ) : null}
+        {faqLd ? (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
           />
         ) : null}
         <BreadcrumbJsonLd

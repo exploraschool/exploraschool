@@ -4,31 +4,49 @@ import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/ad
 import { publicStorageUrl } from "@/lib/live-gallery-shared";
 import { ensureDirectUploadCors } from "@/lib/storage-cors";
 import { blogSlugs } from "@/data/blog";
+import type { AmazonProductMeta } from "@/lib/amazon-product-meta";
 import {
   AFFILIATE_BLOG_COLLECTION,
   AFFILIATE_BLOG_MAX_IMAGE_BYTES,
   AFFILIATE_BLOG_STORAGE_PREFIX,
   emptyProduct,
+  emptyProductImage,
+  mergeProductImages,
+  appendProductImage,
+  primaryProductImage,
+  productGallery,
   productSlotCount,
   slugifyAffiliateTitle,
+  withPrimaryImage,
   type AffiliateBlogPost,
   type AffiliatePostType,
   type AffiliateProduct,
+  type AffiliateProductImage,
+  type AffiliateSection,
+  type AffiliateSpec,
 } from "@/lib/affiliate-blog-shared";
 
 export {
   AFFILIATE_BLOG_COLLECTION,
   AFFILIATE_BLOG_MAX_IMAGE_BYTES,
   AFFILIATE_BLOG_STORAGE_PREFIX,
+  AFFILIATE_MAX_PRODUCT_IMAGES,
   emptyProduct,
+  emptyProductImage,
+  mergeProductImages,
+  primaryProductImage,
+  productGallery,
   productSlotCount,
   slugifyAffiliateTitle,
+  withPrimaryImage,
   type AffiliateBlogPost,
   type AffiliateFaq,
   type AffiliateInternalLink,
   type AffiliatePostStatus,
   type AffiliatePostType,
   type AffiliateProduct,
+  type AffiliateProductImage,
+  type AffiliateSection,
 } from "@/lib/affiliate-blog-shared";
 
 function asString(value: unknown, fallback = ""): string {
@@ -40,6 +58,50 @@ function asStringArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
 }
 
+function parseImage(raw: Record<string, unknown>): AffiliateProductImage | null {
+  const src = asString(raw.src);
+  if (!src) return null;
+  return {
+    src,
+    storagePath: asString(raw.storagePath),
+    source: raw.source === "upload" ? "upload" : "amazon",
+    altEs: asString(raw.altEs),
+    altEn: asString(raw.altEn),
+    captionEs: asString(raw.captionEs),
+    captionEn: asString(raw.captionEn),
+  };
+}
+
+function parseSpecs(value: unknown): AffiliateSpec[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((row) => {
+      const item = row as Record<string, unknown>;
+      return {
+        labelEs: asString(item.labelEs),
+        labelEn: asString(item.labelEn),
+        valueEs: asString(item.valueEs),
+        valueEn: asString(item.valueEn),
+      };
+    })
+    .filter((item) => item.labelEs || item.labelEn);
+}
+
+function parseSections(value: unknown): AffiliateSection[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((row) => {
+      const item = row as Record<string, unknown>;
+      return {
+        headingEs: asString(item.headingEs),
+        headingEn: asString(item.headingEn),
+        bodyEs: asString(item.bodyEs),
+        bodyEn: asString(item.bodyEn),
+      };
+    })
+    .filter((item) => item.headingEs || item.bodyEs);
+}
+
 export function parseAffiliatePost(id: string, data: Record<string, unknown>): AffiliateBlogPost {
   const type: AffiliatePostType = data.type === "review" ? "review" : "ranking";
   const slots = productSlotCount(type);
@@ -48,14 +110,28 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
     const raw = rawProducts[index] as Record<string, unknown> | undefined;
     const base = emptyProduct(index);
     if (!raw) return base;
-    return {
+    const parsedImages = Array.isArray(raw.images)
+      ? raw.images
+          .map((item) => parseImage((item ?? {}) as Record<string, unknown>))
+          .filter((item): item is AffiliateProductImage => Boolean(item))
+      : [];
+    const fallbackSrc = asString(raw.imageSrc);
+    const images =
+      parsedImages.length > 0
+        ? parsedImages
+        : fallbackSrc
+          ? [emptyProductImage(fallbackSrc, raw.imageSource === "amazon" ? "amazon" : "upload", asString(raw.imageStoragePath))]
+          : [];
+    return withPrimaryImage({
       ...base,
       index,
       affiliateUrl: asString(raw.affiliateUrl),
       asin: asString(raw.asin),
+      brand: asString(raw.brand),
       imageSrc: asString(raw.imageSrc),
       imageStoragePath: asString(raw.imageStoragePath),
       imageSource: raw.imageSource === "amazon" ? "amazon" : "upload",
+      images,
       altEs: asString(raw.altEs),
       altEn: asString(raw.altEn),
       captionEs: asString(raw.captionEs),
@@ -63,17 +139,28 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
       nameEs: asString(raw.nameEs),
       nameEn: asString(raw.nameEn),
       priceText: asString(raw.priceText),
+      rating: asString(raw.rating),
+      reviewCount: asString(raw.reviewCount),
+      amazonBullets: asStringArray(raw.amazonBullets),
+      amazonDescription: asString(raw.amazonDescription),
       summaryEs: asString(raw.summaryEs),
       summaryEn: asString(raw.summaryEn),
+      bodyEs: asString(raw.bodyEs),
+      bodyEn: asString(raw.bodyEn),
+      onSnowEs: asString(raw.onSnowEs),
+      onSnowEn: asString(raw.onSnowEn),
       forWhomEs: asString(raw.forWhomEs),
       forWhomEn: asString(raw.forWhomEn),
+      skipIfEs: asString(raw.skipIfEs),
+      skipIfEn: asString(raw.skipIfEn),
+      specs: parseSpecs(raw.specs),
       prosEs: asStringArray(raw.prosEs),
       consEs: asStringArray(raw.consEs),
       prosEn: asStringArray(raw.prosEn),
       consEn: asStringArray(raw.consEn),
       ctaLabelEs: asString(raw.ctaLabelEs, base.ctaLabelEs),
       ctaLabelEn: asString(raw.ctaLabelEn, base.ctaLabelEn),
-    } satisfies AffiliateProduct;
+    });
   });
 
   return {
@@ -90,8 +177,13 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
     coverAltEn: asString(data.coverAltEn),
     introEs: asString(data.introEs),
     introEn: asString(data.introEn),
+    verdictEs: asString(data.verdictEs),
+    verdictEn: asString(data.verdictEn),
     methodologyEs: asString(data.methodologyEs),
     methodologyEn: asString(data.methodologyEn),
+    howToChooseEs: asString(data.howToChooseEs),
+    howToChooseEn: asString(data.howToChooseEn),
+    sections: parseSections(data.sections),
     winnerIndex: typeof data.winnerIndex === "number" ? data.winnerIndex : 0,
     products,
     comparison: Array.isArray(data.comparison)
@@ -209,8 +301,13 @@ export async function createAffiliatePost(
     coverAltEn: "",
     introEs: "",
     introEn: "",
+    verdictEs: "",
+    verdictEn: "",
     methodologyEs: "",
     methodologyEn: "",
+    howToChooseEs: "",
+    howToChooseEn: "",
+    sections: [],
     winnerIndex: 0,
     products: Array.from({ length: productSlotCount(type) }, (_, index) => emptyProduct(index)),
     comparison: [],
@@ -346,18 +443,33 @@ export async function completeAffiliateImageUpload(params: {
     /* public URL still works with token */
   }
   const src = publicStorageUrl(bucket.name, params.storagePath, token);
-  const products = post.products.map((product, index) =>
-    index === params.productIndex
-      ? {
-          ...product,
-          imageSrc: src,
-          imageStoragePath: params.storagePath,
-          imageSource: "upload" as const,
-        }
-      : product,
-  );
-  const coverImage = post.type === "review" || params.productIndex === 0 ? src : post.coverImage;
-  return saveAffiliatePost({ ...post, products, coverImage: coverImage || src });
+  const products = post.products.map((product, index) => {
+    if (index !== params.productIndex) return product;
+    return appendProductImage(product, emptyProductImage(src, "upload", params.storagePath));
+  });
+  const coverImage =
+    post.coverImage ||
+    (post.type === "review" || params.productIndex === 0 ? src : "") ||
+    primaryProductImage(products[0] ?? emptyProduct(0));
+  return saveAffiliatePost({ ...post, products, coverImage });
+}
+
+export async function removeAffiliateProductImage(params: {
+  postId: string;
+  productIndex: number;
+  imageIndex: number;
+}): Promise<AffiliateBlogPost> {
+  const post = await getAffiliatePost(params.postId);
+  if (!post) throw new Error("unavailable");
+  const products = post.products.map((product, index) => {
+    if (index !== params.productIndex) return product;
+    const gallery = productGallery(product).filter((_, i) => i !== params.imageIndex);
+    return withPrimaryImage({ ...product, images: gallery, imageSrc: "", imageStoragePath: "" });
+  });
+  const coverImage = post.coverImage && products.some((item) => productGallery(item).some((image) => image.src === post.coverImage))
+    ? post.coverImage
+    : primaryProductImage(products[0] ?? emptyProduct(0));
+  return saveAffiliatePost({ ...post, products, coverImage });
 }
 
 export async function saveAffiliateImageFromUrl(params: {
@@ -367,19 +479,20 @@ export async function saveAffiliateImageFromUrl(params: {
 }): Promise<AffiliateBlogPost> {
   const post = await getAffiliatePost(params.postId);
   if (!post) throw new Error("unavailable");
-  const products = post.products.map((product, index) =>
-    index === params.productIndex
-      ? {
-          ...product,
-          imageSrc: params.imageUrl,
-          imageStoragePath: "",
-          imageSource: "amazon" as const,
-        }
-      : product,
-  );
+  const products = post.products.map((product, index) => {
+    if (index !== params.productIndex) return product;
+    return withPrimaryImage({
+      ...product,
+      images: mergeProductImages(productGallery(product), [
+        emptyProductImage(params.imageUrl, "amazon"),
+      ]),
+    });
+  });
   const coverImage =
-    post.type === "review" || params.productIndex === 0 ? params.imageUrl : post.coverImage;
-  return saveAffiliatePost({ ...post, products, coverImage: coverImage || params.imageUrl });
+    post.coverImage ||
+    (post.type === "review" || params.productIndex === 0 ? params.imageUrl : "") ||
+    params.imageUrl;
+  return saveAffiliatePost({ ...post, products, coverImage });
 }
 
 export async function publishAffiliatePost(id: string): Promise<AffiliateBlogPost> {
@@ -406,6 +519,45 @@ export async function unpublishAffiliatePost(id: string): Promise<AffiliateBlogP
   return next;
 }
 
+export function applyAmazonMetaToProduct(
+  product: AffiliateProduct,
+  meta: AmazonProductMeta,
+  affiliateUrl: string,
+): AffiliateProduct {
+  const existing = productGallery(product);
+  const uploads = existing.filter((image) => image.source === "upload");
+  const amazonImages =
+    meta.images.length > 0
+      ? meta.images.map((src) => emptyProductImage(src, "amazon"))
+      : existing.filter((image) => image.source === "amazon");
+  const specs =
+    product.specs.length > 0
+      ? product.specs
+      : meta.specs.map((spec) => ({
+          labelEs: spec.label,
+          labelEn: spec.label,
+          valueEs: spec.value,
+          valueEn: spec.value,
+        }));
+  return withPrimaryImage({
+    ...product,
+    affiliateUrl,
+    asin: meta.asin || product.asin,
+    brand: product.brand || meta.brand,
+    nameEs: product.nameEs || meta.title,
+    nameEn: product.nameEn || meta.title,
+    priceText: product.priceText || meta.priceText,
+    rating: product.rating || meta.rating,
+    reviewCount: product.reviewCount || meta.reviewCount,
+    amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,
+    amazonDescription: product.amazonDescription || meta.description,
+    specs,
+    images: mergeProductImages(uploads, amazonImages),
+  });
+}
+
 export function isAffiliatePostReadyToGenerate(post: AffiliateBlogPost): boolean {
-  return post.products.every((product) => product.affiliateUrl && product.imageSrc);
+  return post.products.every(
+    (product) => product.affiliateUrl && primaryProductImage(product),
+  );
 }

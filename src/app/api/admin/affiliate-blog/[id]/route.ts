@@ -2,15 +2,17 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getStaffSession } from "@/lib/admin-auth";
 import {
+  applyAmazonMetaToProduct,
   deleteAffiliatePost,
   getAffiliatePost,
   saveAffiliatePost,
 } from "@/lib/affiliate-blog";
-import { toExploraAffiliateUrl, extractAmazonAsin } from "@/lib/amazon-affiliates";
+import { toExploraAffiliateUrl } from "@/lib/amazon-affiliates";
 import { fetchAmazonProductMeta } from "@/lib/amazon-product-meta";
 import { isAdminConfigured } from "@/lib/firebase/admin";
 
 export const runtime = "nodejs";
+export const maxDuration = 60;
 
 type Ctx = { params: Promise<{ id: string }> };
 
@@ -62,22 +64,10 @@ export async function PATCH(request: Request, { params }: Ctx) {
       return NextResponse.json({ error: "invalid_amazon_url" }, { status: 400 });
     }
     const meta = await fetchAmazonProductMeta(tagged);
-    const keepUpload = product.imageSource === "upload" && product.imageSrc;
     next = {
       ...next,
       products: next.products.map((item, index) =>
-        index === update.index
-          ? {
-              ...item,
-              affiliateUrl: tagged,
-              asin: meta.asin || extractAmazonAsin(tagged) || item.asin,
-              nameEs: item.nameEs || meta.title,
-              nameEn: item.nameEn || meta.title,
-              priceText: item.priceText || meta.priceText,
-              imageSrc: keepUpload ? item.imageSrc : meta.image || item.imageSrc,
-              imageSource: keepUpload ? "upload" : meta.image ? "amazon" : item.imageSource,
-            }
-          : item,
+        index === update.index ? applyAmazonMetaToProduct(item, meta, tagged) : item,
       ),
     };
     if (!next.coverImage && next.products[0]?.imageSrc) {

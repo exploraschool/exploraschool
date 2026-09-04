@@ -18,14 +18,14 @@ export default async function AdminBlogEditorPage({ params }: Props) {
 
   if (staff.role === "admin") {
     return (
-      <AdminShell active="blog" title={title} description="URL + foto → Gemini escribe el borrador.">
+      <AdminShell active="blog" title={title} description="Pega Amazon: captamos ficha, fotos y specs. Gemini escribe la guía.">
         {inner}
       </AdminShell>
     );
   }
 
   return (
-    <AffiliateBlogShell title={title} description="Pega el enlace de Amazon y deja que Gemini escriba.">
+    <AffiliateBlogShell title={title} description="Pega el enlace de Amazon. Traemos fotos y ficha; Gemini redacta la guía.">
       {inner}
     </AffiliateBlogShell>
   );

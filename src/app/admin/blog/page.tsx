@@ -63,7 +63,7 @@ export default async function AdminBlogIndexPage() {
   }
 
   return (
-    <AffiliateBlogShell title="Studio de afiliados" description="Pega la URL, sube la foto si hace falta, y genera.">
+    <AffiliateBlogShell title="Studio de afiliados" description="Pega la URL de Amazon. Captamos la ficha y las fotos; tú revisas y publicas.">
       {inner}
     </AffiliateBlogShell>
   );

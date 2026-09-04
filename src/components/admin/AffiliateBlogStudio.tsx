@@ -2,14 +2,21 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import type { AffiliateBlogPost, AffiliatePostType } from "@/lib/affiliate-blog-shared";
+import { AffiliatePostView } from "@/components/AffiliatePostView";
+import {
+  AFFILIATE_MAX_PRODUCT_IMAGES,
+  primaryProductImage,
+  productGallery,
+  type AffiliateBlogPost,
+  type AffiliatePostType,
+} from "@/lib/affiliate-blog-shared";
 import {
   prepareImageForUpload,
   putFileToSignedUrl,
 } from "@/lib/affiliate-image-client";
 
 function isReady(post: AffiliateBlogPost): boolean {
-  return post.products.every((product) => product.affiliateUrl && product.imageSrc);
+  return post.products.every((product) => product.affiliateUrl && primaryProductImage(product));
 }
 
 export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlogPost }) {
@@ -52,70 +59,96 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
     }
   }
 
-  async function uploadImage(index: number, file: File) {
+  async function uploadOne(index: number, file: File) {
+    const prepared = await prepareImageForUpload(file);
+    const putRes = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        fileName: prepared.name || "producto.jpg",
+        contentType: prepared.type || "image/jpeg",
+        size: prepared.size,
+        productIndex: index,
+      }),
+    });
+    const putPayload = (await putRes.json().catch(() => null)) as {
+      uploadUrl?: string;
+      storagePath?: string;
+      contentType?: string;
+    };
+    if (putRes.ok && putPayload?.uploadUrl && putPayload.storagePath) {
+      try {
+        await putFileToSignedUrl(
+          putPayload.uploadUrl,
+          prepared,
+          putPayload.contentType || prepared.type,
+          setProgress,
+        );
+        const completeRes = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            storagePath: putPayload.storagePath,
+            contentType: putPayload.contentType || prepared.type,
+            productIndex: index,
+          }),
+        });
+        const completePayload = (await completeRes.json().catch(() => null)) as {
+          post?: AffiliateBlogPost;
+        };
+        if (!completeRes.ok || !completePayload?.post) throw new Error("upload_failed");
+        setPost(completePayload.post);
+        return;
+      } catch {
+        /* fallback */
+      }
+    }
+    const form = new FormData();
+    form.set("file", prepared);
+    form.set("productIndex", String(index));
+    const fallback = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
+      method: "POST",
+      body: form,
+    });
+    const fallbackPayload = (await fallback.json().catch(() => null)) as { post?: AffiliateBlogPost };
+    if (!fallback.ok || !fallbackPayload?.post) throw new Error("upload_failed");
+    setPost(fallbackPayload.post);
+  }
+
+  async function uploadImages(index: number, files: FileList | File[]) {
+    const list = [...files].slice(0, AFFILIATE_MAX_PRODUCT_IMAGES);
+    if (!list.length) return;
     setBusyIndex(index);
     setProgress(8);
     setError("");
     try {
-      const prepared = await prepareImageForUpload(file);
-      const putRes = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: prepared.name || "producto.jpg",
-          contentType: prepared.type || "image/jpeg",
-          size: prepared.size,
-          productIndex: index,
-        }),
-      });
-      const putPayload = (await putRes.json().catch(() => null)) as {
-        uploadUrl?: string;
-        storagePath?: string;
-        contentType?: string;
-        error?: string;
-      };
-      if (putRes.ok && putPayload?.uploadUrl && putPayload.storagePath) {
-        try {
-          await putFileToSignedUrl(
-            putPayload.uploadUrl,
-            prepared,
-            putPayload.contentType || prepared.type,
-            setProgress,
-          );
-          const completeRes = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              storagePath: putPayload.storagePath,
-              contentType: putPayload.contentType || prepared.type,
-              productIndex: index,
-            }),
-          });
-          const completePayload = (await completeRes.json().catch(() => null)) as {
-            post?: AffiliateBlogPost;
-          };
-          if (!completeRes.ok || !completePayload?.post) throw new Error("upload_failed");
-          setPost(completePayload.post);
-          return;
-        } catch {
-          /* fallback */
-        }
+      for (const file of list) {
+        await uploadOne(index, file);
       }
-      const form = new FormData();
-      form.set("file", prepared);
-      form.set("productIndex", String(index));
-      const fallback = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
-        method: "POST",
-        body: form,
-      });
-      const fallbackPayload = (await fallback.json().catch(() => null)) as { post?: AffiliateBlogPost };
-      if (!fallback.ok || !fallbackPayload?.post) throw new Error("upload_failed");
-      setPost(fallbackPayload.post);
     } catch {
       setError("No se pudo subir la foto. Prueba otra vez o elige un JPG/PNG más ligero.");
     } finally {
       setBusyIndex(null);
       setProgress(null);
+    }
+  }
+
+  async function removeImage(productIndex: number, imageIndex: number) {
+    setBusyIndex(productIndex);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/affiliate-blog/${post.id}/images`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIndex, imageIndex }),
+      });
+      const payload = (await res.json().catch(() => null)) as { post?: AffiliateBlogPost };
+      if (!res.ok || !payload?.post) throw new Error("delete_failed");
+      setPost(payload.post);
+    } catch {
+      setError("No se pudo quitar esa foto.");
+    } finally {
+      setBusyIndex(null);
     }
   }
 
@@ -167,63 +200,97 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {post.products.map((product, index) => (
-          <article key={index} className="rounded-2xl border border-hielo/10 bg-white p-4 shadow-sm">
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-hielo">
-                {post.type === "ranking" ? `Producto ${index + 1}` : "Producto"}
-              </p>
-              {product.asin ? (
-                <span className="truncate text-[0.65rem] text-muted">{product.asin}</span>
-              ) : null}
-            </div>
-            <label className="block text-xs font-semibold text-pizarra">URL de Amazon</label>
-            <input
-              value={urlDrafts[index] ?? ""}
-              onChange={(event) => {
-                const next = [...urlDrafts];
-                next[index] = event.target.value;
-                setUrlDrafts(next);
-              }}
-              onBlur={() => void captureUrl(index)}
-              placeholder="https://www.amazon.es/dp/..."
-              className="mt-1 w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
-              inputMode="url"
-              autoCapitalize="off"
-              autoCorrect="off"
-            />
-            <div className="mt-3 overflow-hidden rounded-xl bg-nieve">
-              {product.imageSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={product.imageSrc} alt="" className="h-40 w-full object-contain bg-white" />
-              ) : (
-                <div className="flex h-40 items-center justify-center text-sm text-muted">Sin foto aún</div>
-              )}
-            </div>
-            <label className="mt-3 flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-hielo/20 bg-white text-sm font-semibold text-hielo">
-              {busyIndex === index
-                ? progress != null
-                  ? `Subiendo ${progress}%`
-                  : "Captando…"
-                : product.imageSrc
-                  ? "Cambiar foto"
-                  : "Elegir foto"}
+        {post.products.map((product, index) => {
+          const gallery = productGallery(product);
+          const hero = primaryProductImage(product);
+          return (
+            <article key={index} className="rounded-2xl border border-hielo/10 bg-white p-4 shadow-sm">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-hielo">
+                  {post.type === "ranking" ? `Producto ${index + 1}` : "Producto"}
+                </p>
+                {product.asin ? (
+                  <span className="truncate text-[0.65rem] text-muted">{product.asin}</span>
+                ) : null}
+              </div>
+              <label className="block text-xs font-semibold text-pizarra">URL de Amazon</label>
               <input
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
-                className="sr-only"
+                value={urlDrafts[index] ?? ""}
                 onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  event.target.value = "";
-                  if (file) void uploadImage(index, file);
+                  const next = [...urlDrafts];
+                  next[index] = event.target.value;
+                  setUrlDrafts(next);
                 }}
+                onBlur={() => void captureUrl(index)}
+                placeholder="https://www.amazon.es/dp/..."
+                className="mt-1 w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
+                inputMode="url"
+                autoCapitalize="off"
+                autoCorrect="off"
               />
-            </label>
-            {product.nameEs ? (
-              <p className="mt-2 line-clamp-2 text-sm font-medium text-pizarra">{product.nameEs}</p>
-            ) : null}
-          </article>
-        ))}
+              <div className="mt-3 overflow-hidden rounded-xl bg-nieve">
+                {hero ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={hero} alt="" className="h-40 w-full bg-white object-contain" />
+                ) : (
+                  <div className="flex h-40 items-center justify-center text-sm text-muted">Sin foto aún</div>
+                )}
+              </div>
+              {gallery.length > 0 ? (
+                <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                  {gallery.map((image, imageIndex) => (
+                    <div key={`${image.src}-${imageIndex}`} className="relative h-14 w-14 shrink-0">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={image.src} alt="" className="h-14 w-14 rounded-lg bg-white object-contain ring-1 ring-hielo/10" />
+                      <button
+                        type="button"
+                        className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-white"
+                        onClick={() => void removeImage(index, imageIndex)}
+                        aria-label="Quitar foto"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              <label className="mt-3 flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-hielo/20 bg-white text-sm font-semibold text-hielo">
+                {busyIndex === index
+                  ? progress != null
+                    ? `Subiendo ${progress}%`
+                    : "Captando Amazon…"
+                  : gallery.length
+                    ? `Añadir fotos (${gallery.length}/${AFFILIATE_MAX_PRODUCT_IMAGES})`
+                    : "Añadir fotos"}
+                <input
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
+                  className="sr-only"
+                  onChange={(event) => {
+                    const files = event.target.files;
+                    event.target.value = "";
+                    if (files?.length) void uploadImages(index, files);
+                  }}
+                />
+              </label>
+              {product.nameEs ? (
+                <p className="mt-2 line-clamp-2 text-sm font-medium text-pizarra">{product.nameEs}</p>
+              ) : null}
+              <p className="mt-1 text-[0.7rem] text-muted">
+                {[
+                  product.brand,
+                  product.priceText,
+                  product.rating,
+                  gallery.length ? `${gallery.length} fotos` : "",
+                  product.amazonBullets.length ? `${product.amazonBullets.length} specs Amazon` : "",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            </article>
+          );
+        })}
       </div>
 
       {generated ? (
@@ -247,15 +314,9 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
               </button>
             </div>
           </div>
-          <p className="mt-3 font-display text-2xl font-semibold">
-            {localePreview === "es" ? post.titleEs : post.titleEn}
-          </p>
-          <p className="mt-2 text-sm text-muted">
-            {localePreview === "es" ? post.excerptEs : post.excerptEn}
-          </p>
-          <p className="mt-4 text-sm leading-relaxed text-pizarra">
-            {localePreview === "es" ? post.introEs : post.introEn}
-          </p>
+          <div className="mt-6">
+            <AffiliatePostView post={post} locale={localePreview} />
+          </div>
         </section>
       ) : null}
 
@@ -324,7 +385,7 @@ export function CreateAffiliateButtons() {
         >
           <p className="font-display text-xl font-semibold text-hielo">Ranking de 6</p>
           <p className="mt-1 text-sm text-muted">
-            {busy === "ranking" ? "Creando…" : "Seis URLs, seis fotos, una guía de compra."}
+            {busy === "ranking" ? "Creando…" : "Seis URLs, fotos de Amazon o tuyas, una guía de compra."}
           </p>
         </button>
         <button
@@ -335,7 +396,7 @@ export function CreateAffiliateButtons() {
         >
           <p className="font-display text-xl font-semibold text-hielo">Review</p>
           <p className="mt-1 text-sm text-muted">
-            {busy === "review" ? "Creando…" : "Un producto, veredicto y CTAs."}
+            {busy === "review" ? "Creando…" : "Un producto, galería, veredicto y CTAs."}
           </p>
         </button>
       </div>
