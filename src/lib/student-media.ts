@@ -130,10 +130,14 @@ async function makeRoomInLiveGallery(): Promise<boolean> {
   const victim = studentSourced[0];
   if (!victim) return false;
 
-  try {
-    if (victim.storagePath) await bucket.file(victim.storagePath).delete({ ignoreNotFound: true });
-  } catch (error) {
-    console.error("[student-media] gallery rotate storage failed:", error);
+  // Student gallery entries reuse student-media storage — only remove the gallery doc.
+  const sharedStudentFile = victim.storagePath.startsWith(`${STUDENT_MEDIA_STORAGE_PREFIX}/`);
+  if (!sharedStudentFile) {
+    try {
+      if (victim.storagePath) await bucket.file(victim.storagePath).delete({ ignoreNotFound: true });
+    } catch (error) {
+      console.error("[student-media] gallery rotate storage failed:", error);
+    }
   }
   await db.collection(LIVE_GALLERY_COLLECTION).doc(victim.id).delete();
 
@@ -150,7 +154,6 @@ async function makeRoomInLiveGallery(): Promise<boolean> {
 async function publishToLiveGallery(params: {
   mediaId: string;
   studentUid: string;
-  kind: StudentMediaKind;
   src: string;
   storagePath: string;
   displayName: string;
@@ -175,7 +178,7 @@ async function publishToLiveGallery(params: {
     altEn: `${name} in Sierra Nevada`,
     order: existing.length,
     createdAt: new Date().toISOString(),
-    kind: params.kind,
+    kind: "image",
     source: "student",
     studentUid: params.studentUid,
     studentMediaId: params.mediaId,
@@ -222,20 +225,6 @@ export async function createStudentMediaFromUpload(params: {
   const src = publicStorageUrl(bucket.name, storagePath, token);
   const now = new Date().toISOString();
 
-  let liveGalleryId: string | null = null;
-  try {
-    liveGalleryId = await publishToLiveGallery({
-      mediaId,
-      studentUid: params.studentUid,
-      kind,
-      src,
-      storagePath,
-      displayName: params.displayName,
-    });
-  } catch (error) {
-    console.error("[student-media] gallery publish failed:", error);
-  }
-
   const media: StudentMediaItem = {
     id: mediaId,
     studentUid: params.studentUid,
@@ -249,12 +238,43 @@ export async function createStudentMediaFromUpload(params: {
     correctionNotes: "",
     reviewedAt: null,
     reviewedByInstructorSlug: "",
-    liveGalleryId,
-    publishedToGallery: Boolean(liveGalleryId),
+    liveGalleryId: null,
+    publishedToGallery: false,
   };
 
   await db.collection(STUDENT_MEDIA_COLLECTION).doc(mediaId).set(media);
-  return { media, publishedToGallery: Boolean(liveGalleryId) };
+  return { media, publishedToGallery: false };
+}
+
+/** Photos only — videos stay for corrections and never go to the live gallery. */
+export async function publishStudentMediaToGallery(params: {
+  mediaId: string;
+  studentUid: string;
+  displayName: string;
+}): Promise<StudentMediaItem> {
+  const db = getAdminDb();
+  if (!db) throw new Error("unavailable");
+
+  const ref = db.collection(STUDENT_MEDIA_COLLECTION).doc(params.mediaId);
+  const snap = await ref.get();
+  if (!snap.exists) throw new Error("not_found");
+
+  const media = parseStudentMedia(params.mediaId, snap.data() as Record<string, unknown>);
+  if (media.studentUid !== params.studentUid) throw new Error("forbidden");
+  if (media.kind !== "image") throw new Error("videos_not_allowed");
+  if (media.publishedToGallery && media.liveGalleryId) return media;
+
+  const liveGalleryId = await publishToLiveGallery({
+    mediaId: media.id,
+    studentUid: media.studentUid,
+    src: media.src,
+    storagePath: media.storagePath,
+    displayName: params.displayName,
+  });
+  if (!liveGalleryId) throw new Error("gallery_full");
+
+  await ref.set({ liveGalleryId, publishedToGallery: true }, { merge: true });
+  return { ...media, liveGalleryId, publishedToGallery: true };
 }
 
 export async function updateStudentMediaCorrection(

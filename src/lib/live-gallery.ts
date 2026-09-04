@@ -57,7 +57,7 @@ export async function getLiveGalleryForHome(limit = 8): Promise<LiveGalleryDispl
       altEs,
       altEn,
       kind: kind ?? "image",
-    }));
+    })).filter((item) => item.kind !== "video");
   } catch (error) {
     console.error("[live-gallery] Failed to load photos:", error);
     return getFallbackLiveGalleryPhotos();

@@ -8,6 +8,7 @@ export function StudentMediaUploader() {
   const t = useTranslations("account");
   const [media, setMedia] = useState<StudentMediaItem[]>([]);
   const [busy, setBusy] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
@@ -39,7 +40,6 @@ export function StudentMediaUploader() {
         const res = await fetch("/api/cuenta/media", { method: "POST", body: form });
         const payload = (await res.json().catch(() => null)) as {
           media?: StudentMediaItem;
-          publishedToGallery?: boolean;
           error?: string;
         } | null;
         if (!res.ok || !payload?.media) {
@@ -52,17 +52,45 @@ export function StudentMediaUploader() {
           );
         }
         uploaded.push(payload.media);
-        if (payload.publishedToGallery) {
-          setMessage(t("mediaPublished"));
-        } else {
-          setMessage(t("mediaUploadedOnly"));
-        }
       }
       setMedia((current) => [...uploaded, ...current]);
+      setMessage(t("mediaUploadedOnly"));
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.save"));
     } finally {
       setBusy(false);
+    }
+  }
+
+  async function setGalleryVisibility(mediaId: string, publish: boolean) {
+    setBusyId(mediaId);
+    setError("");
+    setMessage("");
+    try {
+      const res = await fetch("/api/cuenta/media", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mediaId, action: publish ? "publish" : "unpublish" }),
+      });
+      const payload = (await res.json().catch(() => null)) as {
+        media?: StudentMediaItem;
+        error?: string;
+      } | null;
+      if (!res.ok || !payload?.media) {
+        throw new Error(
+          payload?.error === "gallery_full"
+            ? t("mediaGalleryFull")
+            : payload?.error === "videos_not_allowed"
+              ? t("mediaVideoNoGallery")
+              : t("errors.save"),
+        );
+      }
+      setMedia((current) => current.map((item) => (item.id === mediaId ? payload.media! : item)));
+      setMessage(publish ? t("mediaPublished") : t("mediaUnpublished"));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("errors.save"));
+    } finally {
+      setBusyId(null);
     }
   }
 
@@ -99,11 +127,34 @@ export function StudentMediaUploader() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={item.src} alt="" className="aspect-video w-full object-cover" />
               )}
-              <div className="space-y-1 px-3 py-2 text-xs text-muted">
+              <div className="space-y-2 px-3 py-2 text-xs text-muted">
                 <p>
                   {item.kind === "video" ? t("downloadVideo") : t("downloadPhoto")}
                   {item.publishedToGallery ? ` · ${t("mediaInGallery")}` : ""}
                 </p>
+                {item.kind === "image" ? (
+                  item.publishedToGallery ? (
+                    <button
+                      type="button"
+                      disabled={busyId === item.id}
+                      onClick={() => void setGalleryVisibility(item.id, false)}
+                      className="rounded-full border border-hielo/20 px-3 py-1.5 text-xs font-semibold text-hielo disabled:opacity-50"
+                    >
+                      {busyId === item.id ? t("mediaUploading") : t("mediaHideGallery")}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      disabled={busyId === item.id}
+                      onClick={() => void setGalleryVisibility(item.id, true)}
+                      className="rounded-full bg-hielo px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                    >
+                      {busyId === item.id ? t("mediaUploading") : t("mediaShowGallery")}
+                    </button>
+                  )
+                ) : (
+                  <p className="text-muted">{t("mediaVideoNoGallery")}</p>
+                )}
                 {item.correctionNotes ? (
                   <p className="whitespace-pre-wrap text-sm text-pizarra">
                     <span className="font-semibold text-hielo">{t("mediaCorrection")}: </span>
