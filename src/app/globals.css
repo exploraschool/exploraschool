@@ -953,6 +953,99 @@ body.modal-open [data-sticky-book-bar] {
   }
 }
 
+/* —— Brand loader (spinning logo, integrated with page bg) —— */
+.brand-loader-splash {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: transparent;
+  opacity: 1;
+  transition: opacity 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.brand-loader-splash--out {
+  opacity: 0;
+}
+
+.brand-loader--screen {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: min(70vh, 32rem);
+  padding: 3rem 1rem;
+  background: transparent;
+}
+
+.brand-loader--inline {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+}
+
+.brand-loader__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 7.5rem;
+  height: 7.5rem;
+}
+
+.brand-loader__glow {
+  position: absolute;
+  inset: 8%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgb(90 158 148 / 0.2), transparent 72%);
+  filter: blur(12px);
+  animation: brand-loader-glow 2.8s ease-in-out infinite;
+}
+
+.brand-loader__logo {
+  position: relative;
+  z-index: 1;
+  width: 6.25rem;
+  height: 6.25rem;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 28px rgb(14 14 15 / 0.14));
+  animation: brand-loader-spin 2.6s linear infinite;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+.brand-loader--inline .brand-loader__stage {
+  width: 6.5rem;
+  height: 6.5rem;
+}
+
+.brand-loader--inline .brand-loader__logo {
+  width: 5.25rem;
+  height: 5.25rem;
+}
+
+@keyframes brand-loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes brand-loader-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto !important;
@@ -963,8 +1056,15 @@ body.modal-open [data-sticky-book-bar] {
   .animate-float,
   .animate-float-slow,
   .animate-pulse-glow,
-  .hero-shimmer {
+  .hero-shimmer,
+  .brand-loader__logo,
+  .brand-loader__glow {
     animation: none !important;
     transition: none !important;
   }
+
+  .brand-loader__logo {
+    opacity: 0.92;
+  }
 }
+
