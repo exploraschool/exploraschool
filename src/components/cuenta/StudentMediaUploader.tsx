@@ -2,7 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { StudentMediaItem } from "@/lib/student-media";
+import {
+  STUDENT_MEDIA_VIDEO_MAX_SECONDS,
+  type StudentMediaItem,
+} from "@/lib/student-media-shared";
+
+function readVideoDurationSeconds(file: File): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+    video.onloadedmetadata = () => {
+      const duration = video.duration;
+      URL.revokeObjectURL(url);
+      if (!Number.isFinite(duration) || duration <= 0) {
+        reject(new Error("invalid_duration"));
+        return;
+      }
+      resolve(duration);
+    };
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("invalid_duration"));
+    };
+    video.src = url;
+  });
+}
 
 export function StudentMediaUploader() {
   const t = useTranslations("account");
@@ -35,8 +62,24 @@ export function StudentMediaUploader() {
     try {
       const uploaded: StudentMediaItem[] = [];
       for (const file of [...files].slice(0, 3)) {
+        const isVideo = file.type.startsWith("video/") || /\.(mp4|webm|mov)$/i.test(file.name);
+        let durationSeconds: number | undefined;
+        if (isVideo) {
+          try {
+            durationSeconds = await readVideoDurationSeconds(file);
+          } catch {
+            throw new Error(t("mediaVideoInvalid"));
+          }
+          if (durationSeconds > STUDENT_MEDIA_VIDEO_MAX_SECONDS + 0.25) {
+            throw new Error(t("mediaVideoTooLong", { seconds: STUDENT_MEDIA_VIDEO_MAX_SECONDS }));
+          }
+        }
+
         const form = new FormData();
         form.set("file", file);
+        if (durationSeconds != null) {
+          form.set("durationSeconds", String(durationSeconds));
+        }
         const res = await fetch("/api/cuenta/media", { method: "POST", body: form });
         const payload = (await res.json().catch(() => null)) as {
           media?: StudentMediaItem;
@@ -48,7 +91,9 @@ export function StudentMediaUploader() {
               ? t("mediaTooLarge")
               : payload?.error === "media_limit"
                 ? t("mediaLimit")
-                : t("errors.save"),
+                : payload?.error === "video_too_long"
+                  ? t("mediaVideoTooLong", { seconds: STUDENT_MEDIA_VIDEO_MAX_SECONDS })
+                  : t("errors.save"),
           );
         }
         uploaded.push(payload.media);

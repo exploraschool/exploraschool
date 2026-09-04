@@ -33,18 +33,30 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "invalid_file" }, { status: 400 });
   }
+  const durationRaw = form.get("durationSeconds");
+  const durationSeconds =
+    typeof durationRaw === "string" && durationRaw.trim()
+      ? Number(durationRaw)
+      : null;
 
   try {
     const result = await createStudentMediaFromUpload({
       studentUid: session.uid,
       displayName: profile?.displayName || session.name || "Alumno",
       file,
+      durationSeconds,
     });
     return NextResponse.json(result);
   } catch (error) {
     const code = error instanceof Error ? error.message : "upload_failed";
     const status =
-      code === "invalid_type" || code === "file_too_large" || code === "media_limit" ? 400 : 500;
+      code === "invalid_type" ||
+      code === "file_too_large" ||
+      code === "media_limit" ||
+      code === "video_too_long" ||
+      code === "duration_required"
+        ? 400
+        : 500;
     return NextResponse.json({ error: code }, { status });
   }
 }

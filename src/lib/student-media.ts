@@ -8,31 +8,27 @@ import {
   type LiveGalleryPhoto,
 } from "@/lib/live-gallery";
 import { revalidatePath } from "next/cache";
+import {
+  STUDENT_MEDIA_COLLECTION,
+  STUDENT_MEDIA_IMAGE_MAX_BYTES,
+  STUDENT_MEDIA_MAX_PER_USER,
+  STUDENT_MEDIA_STORAGE_PREFIX,
+  STUDENT_MEDIA_VIDEO_MAX_BYTES,
+  STUDENT_MEDIA_VIDEO_MAX_SECONDS,
+  type StudentMediaItem,
+  type StudentMediaKind,
+} from "@/lib/student-media-shared";
 
-export const STUDENT_MEDIA_COLLECTION = "studentMedia";
-export const STUDENT_MEDIA_STORAGE_PREFIX = "student-media";
-export const STUDENT_MEDIA_MAX_PER_USER = 24;
-export const STUDENT_MEDIA_IMAGE_MAX_BYTES = 6 * 1024 * 1024;
-export const STUDENT_MEDIA_VIDEO_MAX_BYTES = 50 * 1024 * 1024;
-
-export type StudentMediaKind = "image" | "video";
-
-export type StudentMediaItem = {
-  id: string;
-  studentUid: string;
-  kind: StudentMediaKind;
-  src: string;
-  storagePath: string;
-  contentType: string;
-  fileName: string;
-  createdAt: string;
-  forCorrection: true;
-  correctionNotes: string;
-  reviewedAt: string | null;
-  reviewedByInstructorSlug: string;
-  liveGalleryId: string | null;
-  publishedToGallery: boolean;
-};
+export {
+  STUDENT_MEDIA_COLLECTION,
+  STUDENT_MEDIA_IMAGE_MAX_BYTES,
+  STUDENT_MEDIA_MAX_PER_USER,
+  STUDENT_MEDIA_STORAGE_PREFIX,
+  STUDENT_MEDIA_VIDEO_MAX_BYTES,
+  STUDENT_MEDIA_VIDEO_MAX_SECONDS,
+  type StudentMediaItem,
+  type StudentMediaKind,
+} from "@/lib/student-media-shared";
 
 const IMAGE_TYPES = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 const VIDEO_TYPES = new Set(["video/mp4", "video/webm", "video/quicktime"]);
@@ -193,6 +189,8 @@ export async function createStudentMediaFromUpload(params: {
   studentUid: string;
   displayName: string;
   file: File;
+  /** Client-reported duration for videos (seconds). Required for videos. */
+  durationSeconds?: number | null;
 }): Promise<{ media: StudentMediaItem; publishedToGallery: boolean }> {
   const db = getAdminDb();
   const bucket = getAdminBucket();
@@ -203,6 +201,16 @@ export async function createStudentMediaFromUpload(params: {
 
   const maxBytes = kind === "image" ? STUDENT_MEDIA_IMAGE_MAX_BYTES : STUDENT_MEDIA_VIDEO_MAX_BYTES;
   if (params.file.size > maxBytes) throw new Error("file_too_large");
+
+  if (kind === "video") {
+    const duration = params.durationSeconds;
+    if (typeof duration !== "number" || !Number.isFinite(duration) || duration <= 0) {
+      throw new Error("duration_required");
+    }
+    if (duration > STUDENT_MEDIA_VIDEO_MAX_SECONDS + 0.25) {
+      throw new Error("video_too_long");
+    }
+  }
 
   const existing = await listStudentMediaForUid(params.studentUid);
   if (existing.length >= STUDENT_MEDIA_MAX_PER_USER) throw new Error("media_limit");
