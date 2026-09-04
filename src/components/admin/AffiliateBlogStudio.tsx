@@ -1,12 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { Component, useMemo, useState, type ReactNode } from "react";
 import { AffiliatePostView } from "@/components/AffiliatePostView";
 import {
-  AFFILIATE_MAX_PRODUCT_IMAGES,
-  primaryProductImage,
   productGallery,
+  productImageLimits,
+  productMeetsImageRequirement,
   type AffiliateBlogPost,
   type AffiliatePostType,
 } from "@/lib/affiliate-blog-shared";
@@ -15,8 +15,41 @@ import {
   putFileToSignedUrl,
 } from "@/lib/affiliate-image-client";
 
+class StudioPreviewBoundary extends Component<{ children: ReactNode }, { message: string }> {
+  state = { message: "" };
+
+  static getDerivedStateFromError(error: unknown) {
+    return { message: error instanceof Error ? error.message : "Error en el preview" };
+  }
+
+  render() {
+    if (this.state.message) {
+      return (
+        <p className="rounded-xl border border-accent/20 bg-accent/5 px-4 py-3 text-sm text-accent">
+          No se pudo mostrar el preview ({this.state.message}). Recarga la página o vuelve a generar el borrador.
+        </p>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function isReady(post: AffiliateBlogPost): boolean {
-  return post.products.every((product) => product.affiliateUrl && primaryProductImage(product));
+  return (post.products ?? []).every(
+    (product) => product.affiliateUrl && productMeetsImageRequirement(product, post.type),
+  );
+}
+
+function missingPhotosLabel(post: AffiliateBlogPost): string {
+  if (post.type === "review") {
+    const count = post.products[0] ? productGallery(post.products[0]).length : 0;
+    const need = productImageLimits("review").min;
+    return `La review necesita ${need} fotos. Ahora hay ${count}. Sube las que falten.`;
+  }
+  const missing = post.products.filter(
+    (product) => !product.affiliateUrl || !productMeetsImageRequirement(product, "ranking"),
+  ).length;
+  return `Falta URL o foto en ${missing} producto${missing === 1 ? "" : "s"} del ranking.`;
 }
 
 export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlogPost }) {
@@ -35,8 +68,8 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
   const ready = useMemo(() => isReady(post), [post]);
   const generated = Boolean(post.titleEs);
 
-  async function captureUrl(index: number) {
-    const url = urlDrafts[index]?.trim();
+  async function captureUrl(index: number, rawUrl?: string) {
+    const url = (rawUrl ?? urlDrafts[index])?.trim();
     if (!url) return;
     setBusyIndex(index);
     setError("");
@@ -52,6 +85,20 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       }
       setPost(payload.post);
       setUrlDrafts(payload.post.products.map((item) => item.affiliateUrl));
+      const captured = payload.post.products[index];
+      const galleryCount = captured ? productGallery(captured).length : 0;
+      const need = productImageLimits(payload.post.type).min;
+      if (galleryCount === 0) {
+        setError(
+          payload.post.type === "review"
+            ? "Amazon no trajo fotos. Sube al menos 6 imágenes de la review."
+            : "Amazon no trajo foto. Sube 1 imagen para este producto.",
+        );
+      } else if (galleryCount < need) {
+        setError(
+          `Amazon trajo ${galleryCount} foto${galleryCount === 1 ? "" : "s"}. Faltan ${need - galleryCount} para llegar a ${need}.`,
+        );
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "No se pudo captar el producto.");
     } finally {
@@ -116,7 +163,10 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
   }
 
   async function uploadImages(index: number, files: FileList | File[]) {
-    const list = [...files].slice(0, AFFILIATE_MAX_PRODUCT_IMAGES);
+    const max = productImageLimits(post.type).max;
+    const already = productGallery(post.products[index] ?? post.products[0]).length;
+    const remaining = Math.max(1, max - already);
+    const list = [...files].slice(0, remaining);
     if (!list.length) return;
     setBusyIndex(index);
     setProgress(8);
@@ -161,7 +211,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       if (!res.ok || !payload?.post) {
         throw new Error(
           payload?.error === "not_ready"
-            ? "Falta URL o foto en algún producto."
+            ? missingPhotosLabel(post)
             : "Gemini no pudo generar el borrador. Revisa Vertex o inténtalo de nuevo.",
         );
       }
@@ -202,7 +252,9 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       <div className="grid gap-3 sm:grid-cols-2">
         {post.products.map((product, index) => {
           const gallery = productGallery(product);
-          const hero = primaryProductImage(product);
+          const hero = gallery[0]?.src || "";
+          const limits = productImageLimits(post.type);
+          const photosOk = productMeetsImageRequirement(product, post.type);
           return (
             <article key={index} className="rounded-2xl border border-hielo/10 bg-white p-4 shadow-sm">
               <div className="mb-3 flex items-center justify-between gap-2">
@@ -214,20 +266,43 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                 ) : null}
               </div>
               <label className="block text-xs font-semibold text-pizarra">URL de Amazon</label>
-              <input
-                value={urlDrafts[index] ?? ""}
-                onChange={(event) => {
-                  const next = [...urlDrafts];
-                  next[index] = event.target.value;
-                  setUrlDrafts(next);
-                }}
-                onBlur={() => void captureUrl(index)}
-                placeholder="https://www.amazon.es/dp/..."
-                className="mt-1 w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
-                inputMode="url"
-                autoCapitalize="off"
-                autoCorrect="off"
-              />
+              <div className="mt-1 flex gap-2">
+                <input
+                  value={urlDrafts[index] ?? ""}
+                  onChange={(event) => {
+                    const next = [...urlDrafts];
+                    next[index] = event.target.value;
+                    setUrlDrafts(next);
+                  }}
+                  onPaste={(event) => {
+                    const pasted = event.clipboardData.getData("text").trim();
+                    if (pasted) {
+                      const next = [...urlDrafts];
+                      next[index] = pasted;
+                      setUrlDrafts(next);
+                      window.setTimeout(() => void captureUrl(index, pasted), 0);
+                    }
+                  }}
+                  placeholder="https://www.amazon.es/dp/..."
+                  className="w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
+                  inputMode="url"
+                  autoCapitalize="off"
+                  autoCorrect="off"
+                />
+                <button
+                  type="button"
+                  disabled={busyIndex === index || !urlDrafts[index]?.trim()}
+                  onClick={() => void captureUrl(index)}
+                  className="shrink-0 rounded-xl bg-hielo px-3 text-sm font-semibold text-white disabled:opacity-40"
+                >
+                  {busyIndex === index && progress == null ? "…" : "Captar"}
+                </button>
+              </div>
+              <p className="mt-2 text-[0.7rem] text-muted">
+                {post.type === "review"
+                  ? `Review: mínimo ${limits.min} fotos (Amazon las trae al captar; si faltan, súbelas).`
+                  : "Ranking: 1 foto por producto. Captar el enlace o súbela tú."}
+              </p>
               <div className="mt-3 overflow-hidden rounded-xl bg-nieve">
                 {hero ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -260,11 +335,17 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                     ? `Subiendo ${progress}%`
                     : "Captando Amazon…"
                   : gallery.length
-                    ? `Añadir fotos (${gallery.length}/${AFFILIATE_MAX_PRODUCT_IMAGES})`
-                    : "Añadir fotos"}
+                    ? post.type === "review"
+                      ? photosOk
+                        ? `Añadir o cambiar fotos (${gallery.length}/${limits.max})`
+                        : `Faltan ${limits.min - gallery.length} fotos (${gallery.length}/${limits.min})`
+                      : "Cambiar foto"
+                    : post.type === "review"
+                      ? "Subir las 6 fotos"
+                      : "Subir foto"}
                 <input
                   type="file"
-                  multiple
+                  multiple={post.type === "review"}
                   accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
                   className="sr-only"
                   onChange={(event) => {
@@ -315,7 +396,9 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
             </div>
           </div>
           <div className="mt-6">
-            <AffiliatePostView post={post} locale={localePreview} />
+            <StudioPreviewBoundary>
+              <AffiliatePostView post={post} locale={localePreview} />
+            </StudioPreviewBoundary>
           </div>
         </section>
       ) : null}
@@ -385,7 +468,7 @@ export function CreateAffiliateButtons() {
         >
           <p className="font-display text-xl font-semibold text-hielo">Ranking de 6</p>
           <p className="mt-1 text-sm text-muted">
-            {busy === "ranking" ? "Creando…" : "Seis URLs, fotos de Amazon o tuyas, una guía de compra."}
+            {busy === "ranking" ? "Creando…" : "Seis URLs y una foto por producto."}
           </p>
         </button>
         <button
@@ -396,7 +479,7 @@ export function CreateAffiliateButtons() {
         >
           <p className="font-display text-xl font-semibold text-hielo">Review</p>
           <p className="mt-1 text-sm text-muted">
-            {busy === "review" ? "Creando…" : "Un producto, galería, veredicto y CTAs."}
+            {busy === "review" ? "Creando…" : "Un producto y al menos 6 fotos."}
           </p>
         </button>
       </div>

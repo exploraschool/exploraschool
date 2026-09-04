@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BlogMarkdown } from "@/components/BlogMarkdown";
 import { AffiliatePostView } from "@/components/AffiliatePostView";
+import { BlogViewTracker } from "@/components/BlogViewTracker";
 import { Link } from "@/i18n/routing";
 import { blogPosts, getBlogPost } from "@/data/blog";
 import { pickLocale } from "@/lib/locale";
@@ -11,7 +12,17 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
 import { media } from "@/lib/media";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
+import { BlogToc } from "@/components/blog/BlogToc";
+import { BlogLessonCta } from "@/components/blog/BlogLessonCta";
 import { resolvePublicBlogPost } from "@/lib/blog-catalog";
+import {
+  faqFromMarkdown,
+  headingsFromMarkdown,
+  inferBlogDiscipline,
+  parseExploraScore,
+} from "@/lib/blog-article";
+import { primaryProductImage } from "@/lib/affiliate-blog-shared";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -111,24 +122,48 @@ export default async function BlogPostPage({ params }: Props) {
             })),
           }
         : null;
-    const faqLd =
-      post.faq.length > 0
+    const winner = post.products[post.winnerIndex] ?? post.products[0];
+    const exploraScore = parseExploraScore(post.score);
+    const faqItems = post.faq.map((item) => ({
+      question: pickLocale(locale, item.qEs, item.qEn),
+      answer: pickLocale(locale, item.aEs, item.aEn),
+    }));
+    const reviewLd =
+      post.type === "review" && winner
         ? {
             "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: post.faq.map((item) => ({
-              "@type": "Question",
-              name: pickLocale(locale, item.qEs, item.qEn),
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: pickLocale(locale, item.aEs, item.aEn),
-              },
-            })),
+            "@type": "Review",
+            name: postTitle,
+            reviewBody: pickLocale(
+              locale,
+              post.verdictEs || post.excerptEs,
+              post.verdictEn || post.excerptEn,
+            ),
+            itemReviewed: {
+              "@type": "Product",
+              name: pickLocale(locale, winner.nameEs, winner.nameEn),
+              image: primaryProductImage(winner) || post.coverImage,
+              brand: winner.brand
+                ? { "@type": "Brand", name: winner.brand }
+                : undefined,
+            },
+            reviewRating:
+              exploraScore > 0
+                ? {
+                    "@type": "Rating",
+                    ratingValue: Number(exploraScore.toFixed(1)),
+                    bestRating: 5,
+                    worstRating: 1,
+                  }
+                : undefined,
+            author: { "@type": "Organization", name: "Explora School & Club" },
+            publisher: { "@type": "Organization", name: "Explora School & Club" },
           }
         : null;
 
     return (
       <>
+        <BlogViewTracker slug={post.slug} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
@@ -139,12 +174,13 @@ export default async function BlogPostPage({ params }: Props) {
             dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd) }}
           />
         ) : null}
-        {faqLd ? (
+        {reviewLd ? (
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewLd) }}
           />
         ) : null}
+        <FaqJsonLd items={faqItems} />
         <BreadcrumbJsonLd
           locale={locale}
           items={[
@@ -180,6 +216,9 @@ export default async function BlogPostPage({ params }: Props) {
   const related = post.relatedSlugs
     .map((s) => getBlogPost(s))
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
+  const tocItems = headingsFromMarkdown(content);
+  const editorialFaqs = faqFromMarkdown(content);
+  const discipline = inferBlogDiscipline(`${post.slug} ${post.titleEs} ${post.titleEn} ${content}`);
 
   const postTitle = pickLocale(locale, post.titleEs, post.titleEn);
   const siteUrl = getSiteUrl();
@@ -209,10 +248,12 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <>
+      <BlogViewTracker slug={post.slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
+      <FaqJsonLd items={editorialFaqs} />
       <BreadcrumbJsonLd
         locale={locale}
         items={[
@@ -253,15 +294,13 @@ export default async function BlogPostPage({ params }: Props) {
 
       <article className="section-padding pt-8 sm:pt-10">
         <div className="container-page content-narrow">
-          <BlogMarkdown content={content} />
+          <div className="mb-10">
+            <BlogToc items={tocItems} locale={locale} />
+          </div>
+          <BlogMarkdown content={content} locale={locale} />
 
-          <div className="mt-10 flex flex-wrap gap-3 border-t border-hielo/10 pt-8">
-            <Link href="/clases" className="btn-primary !w-auto">
-              {pickLocale(locale, "Ver clases", "View lessons")}
-            </Link>
-            <Link href="/reserva" className="btn-secondary !w-auto">
-              {pickLocale(locale, "Reservar", "Book now")}
-            </Link>
+          <div className="mt-12">
+            <BlogLessonCta locale={locale} discipline={discipline} />
           </div>
         </div>
       </article>

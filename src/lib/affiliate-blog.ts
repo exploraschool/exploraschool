@@ -5,6 +5,7 @@ import { publicStorageUrl } from "@/lib/live-gallery-shared";
 import { ensureDirectUploadCors } from "@/lib/storage-cors";
 import { blogSlugs } from "@/data/blog";
 import type { AmazonProductMeta } from "@/lib/amazon-product-meta";
+import { parseExploraScore } from "@/lib/blog-article";
 import {
   AFFILIATE_BLOG_COLLECTION,
   AFFILIATE_BLOG_MAX_IMAGE_BYTES,
@@ -15,6 +16,8 @@ import {
   appendProductImage,
   primaryProductImage,
   productGallery,
+  productImageLimits,
+  productMeetsImageRequirement,
   productSlotCount,
   slugifyAffiliateTitle,
   withPrimaryImage,
@@ -36,12 +39,15 @@ export {
   mergeProductImages,
   primaryProductImage,
   productGallery,
+  productImageLimits,
+  productMeetsImageRequirement,
   productSlotCount,
   slugifyAffiliateTitle,
   withPrimaryImage,
   type AffiliateBlogPost,
   type AffiliateFaq,
   type AffiliateInternalLink,
+  type AffiliateAlternative,
   type AffiliatePostStatus,
   type AffiliatePostType,
   type AffiliateProduct,
@@ -160,6 +166,8 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
       consEn: asStringArray(raw.consEn),
       ctaLabelEs: asString(raw.ctaLabelEs, base.ctaLabelEs),
       ctaLabelEn: asString(raw.ctaLabelEn, base.ctaLabelEn),
+      pickRoleEs: asString(raw.pickRoleEs),
+      pickRoleEn: asString(raw.pickRoleEn),
     });
   });
 
@@ -179,6 +187,15 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
     introEn: asString(data.introEn),
     verdictEs: asString(data.verdictEs),
     verdictEn: asString(data.verdictEn),
+    score: parseExploraScore(
+      typeof data.score === "number" || typeof data.score === "string" ? data.score : undefined,
+    ),
+    tldrBestEs: asString(data.tldrBestEs),
+    tldrBestEn: asString(data.tldrBestEn),
+    tldrWorstEs: asString(data.tldrWorstEs),
+    tldrWorstEn: asString(data.tldrWorstEn),
+    instructorNoteEs: asString(data.instructorNoteEs),
+    instructorNoteEn: asString(data.instructorNoteEn),
     methodologyEs: asString(data.methodologyEs),
     methodologyEn: asString(data.methodologyEn),
     howToChooseEs: asString(data.howToChooseEs),
@@ -223,6 +240,20 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
           })
           .filter((row) => row.href.startsWith("/"))
       : [],
+    alternatives: Array.isArray(data.alternatives)
+      ? data.alternatives
+          .map((row) => {
+            const item = row as Record<string, unknown>;
+            return {
+              titleEs: asString(item.titleEs),
+              titleEn: asString(item.titleEn),
+              whyEs: asString(item.whyEs),
+              whyEn: asString(item.whyEn),
+              href: asString(item.href),
+            };
+          })
+          .filter((row) => row.titleEs && row.href.startsWith("/"))
+      : [],
     seoTitleEs: asString(data.seoTitleEs),
     seoTitleEn: asString(data.seoTitleEn),
     seoDescriptionEs: asString(data.seoDescriptionEs),
@@ -252,8 +283,15 @@ export async function listAffiliatePosts(): Promise<AffiliateBlogPost[]> {
   if (!db) return [];
   const snap = await db.collection(AFFILIATE_BLOG_COLLECTION).get();
   return snap.docs
-    .map((doc) => parseAffiliatePost(doc.id, doc.data() as Record<string, unknown>))
-    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    .flatMap((doc) => {
+      try {
+        return [parseAffiliatePost(doc.id, doc.data() as Record<string, unknown>)];
+      } catch (error) {
+        console.error("[affiliate-blog] parse failed", doc.id, error);
+        return [];
+      }
+    })
+    .sort((a, b) => (b.updatedAt || "").localeCompare(a.updatedAt || ""));
 }
 
 export async function listPublishedAffiliatePosts(): Promise<AffiliateBlogPost[]> {
@@ -303,6 +341,13 @@ export async function createAffiliatePost(
     introEn: "",
     verdictEs: "",
     verdictEn: "",
+    score: 0,
+    tldrBestEs: "",
+    tldrBestEn: "",
+    tldrWorstEs: "",
+    tldrWorstEn: "",
+    instructorNoteEs: "",
+    instructorNoteEn: "",
     methodologyEs: "",
     methodologyEn: "",
     howToChooseEs: "",
@@ -313,6 +358,7 @@ export async function createAffiliatePost(
     comparison: [],
     faq: [],
     internalLinks: [],
+    alternatives: [],
     seoTitleEs: "",
     seoTitleEn: "",
     seoDescriptionEs: "",
@@ -443,9 +489,14 @@ export async function completeAffiliateImageUpload(params: {
     /* public URL still works with token */
   }
   const src = publicStorageUrl(bucket.name, params.storagePath, token);
+  const maxImages = productImageLimits(post.type).max;
   const products = post.products.map((product, index) => {
     if (index !== params.productIndex) return product;
-    return appendProductImage(product, emptyProductImage(src, "upload", params.storagePath));
+    return appendProductImage(
+      product,
+      emptyProductImage(src, "upload", params.storagePath),
+      maxImages,
+    );
   });
   const coverImage =
     post.coverImage ||
@@ -523,12 +574,14 @@ export function applyAmazonMetaToProduct(
   product: AffiliateProduct,
   meta: AmazonProductMeta,
   affiliateUrl: string,
+  type: AffiliatePostType = "review",
 ): AffiliateProduct {
+  const maxImages = productImageLimits(type).max;
   const existing = productGallery(product);
   const uploads = existing.filter((image) => image.source === "upload");
   const amazonImages =
     meta.images.length > 0
-      ? meta.images.map((src) => emptyProductImage(src, "amazon"))
+      ? meta.images.slice(0, maxImages).map((src) => emptyProductImage(src, "amazon"))
       : existing.filter((image) => image.source === "amazon");
   const specs =
     product.specs.length > 0
@@ -539,25 +592,28 @@ export function applyAmazonMetaToProduct(
           valueEs: spec.value,
           valueEn: spec.value,
         }));
-  return withPrimaryImage({
-    ...product,
-    affiliateUrl,
-    asin: meta.asin || product.asin,
-    brand: product.brand || meta.brand,
-    nameEs: product.nameEs || meta.title,
-    nameEn: product.nameEn || meta.title,
-    priceText: product.priceText || meta.priceText,
-    rating: product.rating || meta.rating,
-    reviewCount: product.reviewCount || meta.reviewCount,
-    amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,
-    amazonDescription: product.amazonDescription || meta.description,
-    specs,
-    images: mergeProductImages(uploads, amazonImages),
-  });
+  return withPrimaryImage(
+    {
+      ...product,
+      affiliateUrl,
+      asin: meta.asin || product.asin,
+      brand: product.brand || meta.brand,
+      nameEs: product.nameEs || meta.title,
+      nameEn: product.nameEn || meta.title,
+      priceText: product.priceText || meta.priceText,
+      rating: product.rating || meta.rating,
+      reviewCount: product.reviewCount || meta.reviewCount,
+      amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,
+      amazonDescription: product.amazonDescription || meta.description,
+      specs,
+      images: mergeProductImages(uploads, amazonImages, maxImages),
+    },
+    maxImages,
+  );
 }
 
 export function isAffiliatePostReadyToGenerate(post: AffiliateBlogPost): boolean {
   return post.products.every(
-    (product) => product.affiliateUrl && primaryProductImage(product),
+    (product) => product.affiliateUrl && productMeetsImageRequirement(product, post.type),
   );
 }

@@ -67,7 +67,7 @@ export async function PATCH(request: Request, { params }: Ctx) {
     next = {
       ...next,
       products: next.products.map((item, index) =>
-        index === update.index ? applyAmazonMetaToProduct(item, meta, tagged) : item,
+        index === update.index ? applyAmazonMetaToProduct(item, meta, tagged, post.type) : item,
       ),
     };
     if (!next.coverImage && next.products[0]?.imageSrc) {

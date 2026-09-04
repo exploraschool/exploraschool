@@ -1,8 +1,14 @@
 import { setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import { BlogPagination } from "@/components/BlogPagination";
 import { SectionHeader } from "@/components/SectionHeader";
-import { listPublicBlogSections, type PublicBlogCard } from "@/lib/blog-catalog";
+import {
+  listPublicBlogSections,
+  paginateBlogCards,
+  parseBlogListPages,
+  type PublicBlogCard,
+} from "@/lib/blog-catalog";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
@@ -10,7 +16,18 @@ import type { Metadata } from "next";
 
 export const revalidate = 60;
 
-type Props = { params: Promise<{ locale: string }> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ guias?: string | string[]; productos?: string | string[] }>;
+};
+
+function blogHref(guidesPage: number, productsPage: number, hash: "#guias" | "#productos"): string {
+  const params = new URLSearchParams();
+  if (guidesPage > 1) params.set("guias", String(guidesPage));
+  if (productsPage > 1) params.set("productos", String(productsPage));
+  const query = params.toString();
+  return `/blog${query ? `?${query}` : ""}${hash}`;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -97,11 +114,15 @@ function BlogCardGrid({
   );
 }
 
-export default async function BlogPage({ params }: Props) {
+export default async function BlogPage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const query = await searchParams;
+  const { guidesPage, productsPage } = parseBlogListPages(query);
   const { guides, products } = await listPublicBlogSections();
+  const guidesPageData = paginateBlogCards(guides, guidesPage);
+  const productsPageData = paginateBlogCards(products, productsPage);
 
   return (
     <>
@@ -140,8 +161,8 @@ export default async function BlogPage({ params }: Props) {
             title={pickLocale(locale, "Guías para la nieve", "Guides for the snow")}
             description={pickLocale(
               locale,
-              "Consejos para clases, forfait, familias y tu primer día en Sierra Nevada.",
-              "Advice for lessons, lift passes, families and your first day in Sierra Nevada.",
+              "Consejos para clases, forfait, familias y tu primer día en Sierra Nevada. Ordenadas por las más leídas.",
+              "Advice for lessons, lift passes, families and your first day in Sierra Nevada. Sorted by the most read.",
             )}
           />
           {guides.length === 0 ? (
@@ -156,7 +177,18 @@ export default async function BlogPage({ params }: Props) {
             </div>
           ) : (
             <div className="mt-8">
-              <BlogCardGrid posts={guides} locale={locale} />
+              <BlogCardGrid posts={guidesPageData.items} locale={locale} />
+              <BlogPagination
+                locale={locale}
+                page={guidesPageData.page}
+                totalPages={guidesPageData.totalPages}
+                totalItems={guidesPageData.totalItems}
+                hrefForPage={(page) => blogHref(page, productsPageData.page, "#guias")}
+                itemLabel={{
+                  es: { singular: "guía", plural: "guías" },
+                  en: { singular: "guide", plural: "guides" },
+                }}
+              />
             </div>
           )}
         </div>
@@ -169,8 +201,8 @@ export default async function BlogPage({ params }: Props) {
             title={pickLocale(locale, "Productos", "Products")}
             description={pickLocale(
               locale,
-              "Rankings y reviews de material de esquí y snowboard, pensados para Sierra Nevada. Como afiliados de Amazon, podemos recibir comisión por compras que cumplan los requisitos.",
-              "Ski and snowboard rankings and reviews, written for Sierra Nevada. As an Amazon Associate, we may earn from qualifying purchases.",
+              "Rankings y reviews de material de esquí y snowboard, pensados para Sierra Nevada, ordenados por popularidad. Como afiliados de Amazon, podemos recibir comisión por compras que cumplan los requisitos.",
+              "Ski and snowboard rankings and reviews, written for Sierra Nevada and sorted by popularity. As an Amazon Associate, we may earn from qualifying purchases.",
             )}
           />
           {products.length === 0 ? (
@@ -188,7 +220,18 @@ export default async function BlogPage({ params }: Props) {
             </div>
           ) : (
             <div className="mt-8">
-              <BlogCardGrid posts={products} locale={locale} />
+              <BlogCardGrid posts={productsPageData.items} locale={locale} />
+              <BlogPagination
+                locale={locale}
+                page={productsPageData.page}
+                totalPages={productsPageData.totalPages}
+                totalItems={productsPageData.totalItems}
+                hrefForPage={(page) => blogHref(guidesPageData.page, page, "#productos")}
+                itemLabel={{
+                  es: { singular: "producto", plural: "productos" },
+                  en: { singular: "product", plural: "products" },
+                }}
+              />
             </div>
           )}
         </div>

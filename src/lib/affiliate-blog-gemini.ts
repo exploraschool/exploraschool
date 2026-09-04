@@ -165,6 +165,11 @@ export async function generateAffiliateArticle(post: AffiliateBlogPost): Promise
   const prompt = `Eres editor senior de Explora School & Club (escuela de esquí, snowboard y telemark en Sierra Nevada, Granada). Escribes guías de compra al nivel de Wirecutter / Outdoor Gear Lab: densas, concretas, bilingües, sin relleno.
 
 Tarea: ${kind}. Devuelve SOLO un JSON válido, sin markdown ni comentarios.
+${
+  post.type === "review"
+    ? "En review, la tarjeta TL;DR (score, tldrBest, tldrWorst, forWhom del producto) y instructorNote son obligatorios. Escribe como un instructor que ha usado el producto en pistas de Sierra Nevada, no como un unboxing."
+    : "En ranking, score/tldrBest/tldrWorst se refieren al ganador (winnerIndex). pickRoleEs/En es una etiqueta corta y distinta por producto: Nuestra elección, Finalista, Mejor calidad-precio, Para principiantes, Para nieve dura, Si buscas ligereza. El winnerIndex debe coincidir con “Nuestra elección”. La comparativa va al inicio mental del lector: 6 filas concretas, sin relleno."
+}
 
 Voz:
 - Español de España y inglés británico (en-GB). Tono de instructor que ha visto el material en nieve real, no de marketplace.
@@ -179,12 +184,16 @@ Longitud mínima (imprescindible):
 - methodologyEs / methodologyEn: 90–140 palabras.
 - howToChooseEs / howToChooseEn: 140–220 palabras (talla, clima Sierra Nevada, nivel, presupuesto).
 - verdictEs / verdictEn: 50–90 palabras. En ranking, nombra al ganador y un runner-up.
+- score: nota Explora de 1 a 5 con un decimal (ej. 4.3). Es juicio de instructor en Sierra Nevada; no copies Amazon si no hay dato real.
+- tldrBestEs/En y tldrWorstEs/En: una frase corta (máx. 18 palabras) para la tarjeta TL;DR.
+- instructorNoteEs/En: consejo de pista, 40–80 palabras, tono de profesor (talla, hielo, viento, forfait).
 - sections: 2 bloques extra (p. ej. “Qué mirar antes de comprar”, “Errores habituales”). Cada body 80–140 palabras.
 - Por producto: summary 40–60 palabras; bodyEs/bodyEn 180–280 palabras en 2–3 párrafos \\n\\n; onSnowEs/onSnowEn 50–90 palabras (pistas, hielo, viento de Sierra Nevada); forWhom y skipIf concretos; 3 pros y 3 contras.
-- FAQ: 6 preguntas útiles (talla, clima, clases vs comprar, mantenimiento, alternativas).
+- FAQ: 6 preguntas útiles (talla, clima, clases vs comprar, mantenimiento, alternativas). Cada respuesta 40–80 palabras, concreta, sin relleno.
 - ranking: comparison con 6 filas útiles (uso, nivel, peso/talla si se conoce, clima, precio si hay dato, veredicto corto). values: un string por producto, mismo orden.
 - review: comparison vacío; winnerIndex 0.
-- CTAs Amazon: "Ver en Amazon" / "See on Amazon".
+- alternatives (review): 2 o 3 salidas honestas si el producto no encaja (clase Explora, alquiler, otro uso). href de la lista permitida. No inventes URLs de Amazon.
+- CTAs Amazon: acción concreta, no “haz clic aquí”. Ej. "Comprobar talla y precio en Amazon" / "Check size and price on Amazon".
 - slug kebab-case español, corto.
 - winnerIndex 0-based.
 - relatedSlugs: 1–3 slugs reales de la lista editorial.
@@ -212,6 +221,13 @@ JSON schema:
   "introEn": "",
   "verdictEs": "",
   "verdictEn": "",
+  "score": 4.3,
+  "tldrBestEs": "",
+  "tldrBestEn": "",
+  "tldrWorstEs": "",
+  "tldrWorstEn": "",
+  "instructorNoteEs": "",
+  "instructorNoteEn": "",
   "methodologyEs": "",
   "methodologyEn": "",
   "howToChooseEs": "",
@@ -245,11 +261,14 @@ JSON schema:
     "captionEs": "",
     "captionEn": "",
     "images": [{ "altEs": "", "altEn": "", "captionEs": "", "captionEn": "" }],
-    "ctaLabelEs": "Ver en Amazon",
-    "ctaLabelEn": "See on Amazon"
+    "ctaLabelEs": "Comprobar talla y precio en Amazon",
+    "ctaLabelEn": "Check size and price on Amazon",
+    "pickRoleEs": "Nuestra elección",
+    "pickRoleEn": "Our pick"
   }],
   "comparison": [{ "labelEs": "", "labelEn": "", "values": ["...uno por producto"] }],
   "faq": [{ "qEs": "", "qEn": "", "aEs": "", "aEn": "" }],
+  "alternatives": [{ "titleEs": "", "titleEn": "", "whyEs": "", "whyEn": "", "href": "/clases/esqui" }],
   "internalLinks": [{ "href": "/clases", "labelEs": "", "labelEn": "" }],
   "relatedSlugs": ["slug-editorial"],
   "seoTitleEs": "",
@@ -344,8 +363,10 @@ ${productBrief}`;
       captionEs: asString(raw.captionEs, first.captionEs),
       captionEn: asString(raw.captionEn, first.captionEn),
       images,
-      ctaLabelEs: asString(raw.ctaLabelEs, "Ver en Amazon"),
-      ctaLabelEn: asString(raw.ctaLabelEn, "See on Amazon"),
+      ctaLabelEs: asString(raw.ctaLabelEs, "Comprobar talla y precio en Amazon"),
+      ctaLabelEn: asString(raw.ctaLabelEn, "Check size and price on Amazon"),
+      pickRoleEs: asString(raw.pickRoleEs),
+      pickRoleEn: asString(raw.pickRoleEn),
     });
   });
 
@@ -385,6 +406,13 @@ ${productBrief}`;
     introEn: asString(json.introEn),
     verdictEs: asString(json.verdictEs),
     verdictEn: asString(json.verdictEn),
+    score: Math.min(5, Math.max(0, Number(json.score) || 0)),
+    tldrBestEs: asString(json.tldrBestEs),
+    tldrBestEn: asString(json.tldrBestEn),
+    tldrWorstEs: asString(json.tldrWorstEs),
+    tldrWorstEn: asString(json.tldrWorstEn),
+    instructorNoteEs: asString(json.instructorNoteEs),
+    instructorNoteEn: asString(json.instructorNoteEn),
     methodologyEs: asString(json.methodologyEs),
     methodologyEn: asString(json.methodologyEn),
     howToChooseEs: asString(json.howToChooseEs),
@@ -418,6 +446,21 @@ ${productBrief}`;
           })
           .filter((row) => row.qEs)
           .slice(0, 8)
+      : [],
+    alternatives: Array.isArray(json.alternatives)
+      ? json.alternatives
+          .map((row) => {
+            const item = row as Record<string, unknown>;
+            return {
+              titleEs: asString(item.titleEs),
+              titleEn: asString(item.titleEn),
+              whyEs: asString(item.whyEs),
+              whyEn: asString(item.whyEn),
+              href: asString(item.href),
+            };
+          })
+          .filter((row) => row.titleEs && allowedHrefs.has(row.href))
+          .slice(0, 3)
       : [],
     internalLinks: Array.isArray(json.internalLinks)
       ? json.internalLinks

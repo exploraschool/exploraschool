@@ -13,7 +13,8 @@ Nunca subas claves al repositorio. GitHub solo aloja código; los secretos viven
 | `ADMIN_GOOGLE_EMAIL` | Código (`admin-auth-config.ts`) | `explora.sclub@gmail.com` = panel completo; `alemv.mlg@gmail.com` = solo studio de blog |
 | `AMAZON_ASSOCIATE_TAG` | Código / Vercel opcional | Tag `explorashop08-21` para enlaces de Amazon.es |
 | `LEAD_CONFIRM_SECRET` | Vercel **y** Firebase | Enlace de confirmación en emails al equipo |
-| `NEXT_PUBLIC_SITE_URL` | Vercel | URLs canónicas |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Vercel | GA4 (`G-…`) para el script del sitio |
+| `GA4_PROPERTY_ID` | Vercel | ID numérico de la propiedad GA4 para ordenar el blog por visitas |
 | `RESEND_API_KEY` | Vercel **y** Firebase Functions | Envío de emails (mismo valor en ambos) |
 | `LEAD_NOTIFICATION_EMAIL` | Vercel **y** Firebase Functions | Destino alertas equipo (`explora.sclub@gmail.com`) |
 | `RESEND_FROM` | Vercel **y** Firebase Functions | Remitente verificado en Resend |
@@ -70,6 +71,17 @@ Cada push a `main` en GitHub redeploya Vercel automáticamente si el repo está 
 APIs habilitadas en el proyecto GCP `exploraschool-9ea82`: `aiplatform.googleapis.com` y `generativelanguage.googleapis.com`. La service account de Firebase Admin tiene `roles/aiplatform.user`. No uses `GEMINI_API_KEY` ni el CSV de Login with Amazon (client secret OAuth) en el repo ni en Vercel.
 
 Tag de afiliados (público, aparece en las URLs): `AMAZON_ASSOCIATE_TAG=explorashop08-21`.
+
+### Blog ordenado por Analytics
+
+El listado público del blog pide a la **GA4 Data API** las visitas de 90 días (`screenPageViews` por `/blog/…`). La service account `firebase-adminsdk-fbsvc@exploraschool-9ea82.iam.gserviceaccount.com` tiene que ser **Viewer** de la propiedad GA4:
+
+1. [analytics.google.com](https://analytics.google.com) → Admin → Property access management → Add users
+2. Email: `firebase-adminsdk-fbsvc@exploraschool-9ea82.iam.gserviceaccount.com`
+3. Rol: **Viewer**
+4. En Vercel, `GA4_PROPERTY_ID` = el número de Admin → Property settings (sin el prefijo `properties/`)
+
+Hasta que GA4 responda, el orden usa las visitas registradas en el propio sitio (solo si el visitante aceptó cookies de analítica). Si no hay datos, las más recientes van primero.
 
 ---
 

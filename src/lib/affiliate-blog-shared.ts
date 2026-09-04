@@ -3,6 +3,9 @@ export const AFFILIATE_BLOG_STORAGE_PREFIX = "public/affiliate-blog";
 export const AFFILIATE_BLOG_MAX_IMAGE_BYTES = 12 * 1024 * 1024;
 export const AFFILIATE_RANKING_SIZE = 6;
 export const AFFILIATE_MAX_PRODUCT_IMAGES = 8;
+export const AFFILIATE_REVIEW_MIN_IMAGES = 6;
+export const AFFILIATE_RANKING_MIN_IMAGES = 1;
+export const AFFILIATE_RANKING_MAX_IMAGES = 1;
 
 export type AffiliatePostType = "ranking" | "review";
 export type AffiliatePostStatus = "draft" | "published";
@@ -69,6 +72,8 @@ export type AffiliateProduct = {
   consEn: string[];
   ctaLabelEs: string;
   ctaLabelEn: string;
+  pickRoleEs: string;
+  pickRoleEn: string;
 };
 
 export type AffiliateFaq = {
@@ -82,6 +87,14 @@ export type AffiliateInternalLink = {
   href: string;
   labelEs: string;
   labelEn: string;
+};
+
+export type AffiliateAlternative = {
+  titleEs: string;
+  titleEn: string;
+  whyEs: string;
+  whyEn: string;
+  href: string;
 };
 
 export type AffiliateComparisonRow = {
@@ -106,6 +119,13 @@ export type AffiliateBlogPost = {
   introEn: string;
   verdictEs: string;
   verdictEn: string;
+  score: number;
+  tldrBestEs: string;
+  tldrBestEn: string;
+  tldrWorstEs: string;
+  tldrWorstEn: string;
+  instructorNoteEs: string;
+  instructorNoteEn: string;
   methodologyEs: string;
   methodologyEn: string;
   howToChooseEs: string;
@@ -116,6 +136,7 @@ export type AffiliateBlogPost = {
   comparison: AffiliateComparisonRow[];
   faq: AffiliateFaq[];
   internalLinks: AffiliateInternalLink[];
+  alternatives: AffiliateAlternative[];
   seoTitleEs: string;
   seoTitleEn: string;
   seoDescriptionEs: string;
@@ -179,8 +200,10 @@ export function emptyProduct(index: number): AffiliateProduct {
     consEs: [],
     prosEn: [],
     consEn: [],
-    ctaLabelEs: "Ver en Amazon",
-    ctaLabelEn: "See on Amazon",
+    ctaLabelEs: "Comprobar talla y precio en Amazon",
+    ctaLabelEn: "Check size and price on Amazon",
+    pickRoleEs: "",
+    pickRoleEn: "",
   };
 }
 
@@ -198,6 +221,19 @@ export function primaryProductImage(product: AffiliateProduct): string {
 
 export function productSlotCount(type: AffiliatePostType): number {
   return type === "ranking" ? AFFILIATE_RANKING_SIZE : 1;
+}
+
+export function productImageLimits(type: AffiliatePostType): { min: number; max: number } {
+  return type === "review"
+    ? { min: AFFILIATE_REVIEW_MIN_IMAGES, max: AFFILIATE_MAX_PRODUCT_IMAGES }
+    : { min: AFFILIATE_RANKING_MIN_IMAGES, max: AFFILIATE_RANKING_MAX_IMAGES };
+}
+
+export function productMeetsImageRequirement(
+  product: AffiliateProduct,
+  type: AffiliatePostType,
+): boolean {
+  return productGallery(product).length >= productImageLimits(type).min;
 }
 
 export function slugifyAffiliateTitle(value: string): string {
@@ -218,6 +254,7 @@ function imageKey(src: string): string {
 export function mergeProductImages(
   existing: AffiliateProductImage[],
   incoming: AffiliateProductImage[],
+  max = AFFILIATE_MAX_PRODUCT_IMAGES,
 ): AffiliateProductImage[] {
   const seen = new Set<string>();
   const out: AffiliateProductImage[] = [];
@@ -227,7 +264,7 @@ export function mergeProductImages(
     if (seen.has(key)) continue;
     seen.add(key);
     out.push(image);
-    if (out.length >= AFFILIATE_MAX_PRODUCT_IMAGES) break;
+    if (out.length >= max) break;
   }
   return out;
 }
@@ -235,20 +272,21 @@ export function mergeProductImages(
 export function appendProductImage(
   product: AffiliateProduct,
   image: AffiliateProductImage,
+  max = AFFILIATE_MAX_PRODUCT_IMAGES,
 ): AffiliateProduct {
   const gallery = productGallery(product);
   const next =
-    gallery.length >= AFFILIATE_MAX_PRODUCT_IMAGES
-      ? [...gallery.slice(0, AFFILIATE_MAX_PRODUCT_IMAGES - 1), image]
-      : mergeProductImages(gallery, [image]);
-  return withPrimaryImage({ ...product, images: next });
+    gallery.length >= max
+      ? [...gallery.slice(0, Math.max(0, max - 1)), image]
+      : mergeProductImages(gallery, [image], max);
+  return withPrimaryImage({ ...product, images: next }, max);
 }
 
-export function withPrimaryImage(product: AffiliateProduct): AffiliateProduct {
-  const gallery = mergeProductImages(productGallery(product), []).slice(
-    0,
-    AFFILIATE_MAX_PRODUCT_IMAGES,
-  );
+export function withPrimaryImage(
+  product: AffiliateProduct,
+  max = AFFILIATE_MAX_PRODUCT_IMAGES,
+): AffiliateProduct {
+  const gallery = mergeProductImages(productGallery(product), [], max);
   const first = gallery[0];
   return {
     ...product,

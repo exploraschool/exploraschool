@@ -32,6 +32,7 @@ const FETCH_HEADERS = {
 const MAX_IMAGES = 8;
 const MAX_BULLETS = 12;
 const MAX_SPECS = 16;
+const MIN_IMAGE_BYTES = 4000;
 
 function pickMeta($: cheerio.CheerioAPI, names: string[]): string {
   for (const name of names) {
@@ -79,19 +80,84 @@ function uniqueImages(urls: string[]): string[] {
 
 function collectScriptImages(html: string): string[] {
   const urls: string[] = [];
-  const hiRes = html.matchAll(/"hiRes"\s*:\s*"(https:\\\/\\\/[^"]+|https:\/\/[^"]+)"/g);
-  for (const match of hiRes) {
-    urls.push(match[1].replace(/\\\//g, "/"));
+  const patterns = [
+    /"hiRes"\s*:\s*"(https:\\\/\\\/[^"]+|https:\/\/[^"]+)"/g,
+    /'hiRes'\s*:\s*'(https:\\\/\\\/[^']+|https:\/\/[^']+)'/g,
+    /"large"\s*:\s*"(https:\\\/\\\/[^"]+|https:\/\/[^"]+)"/g,
+    /'large'\s*:\s*'(https:\\\/\\\/[^']+|https:\/\/[^']+)'/g,
+  ];
+  for (const pattern of patterns) {
+    for (const match of html.matchAll(pattern)) {
+      urls.push(match[1].replace(/\\\//g, "/"));
+    }
   }
-  const large = html.matchAll(/"large"\s*:\s*"(https:\\\/\\\/[^"]+|https:\/\/[^"]+)"/g);
-  for (const match of large) {
-    urls.push(match[1].replace(/\\\//g, "/"));
-  }
-  const landing = html.matchAll(/https:\/\/m\.media-amazon\.com\/images\/[IS]\/[A-Za-z0-9+_%-]+\.(?:jpe?g|png|webp)/gi);
+  const landing = html.matchAll(
+    /https:\/\/m\.media-amazon\.com\/images\/[IS]\/[A-Za-z0-9+_%.-]+\.(?:jpe?g|png|webp)/gi,
+  );
   for (const match of landing) {
     urls.push(match[0]);
   }
+  const ids = html.matchAll(/\/images\/I\/([A-Za-z0-9+_-]{10,})/g);
+  for (const match of ids) {
+    urls.push(`https://m.media-amazon.com/images/I/${match[1]}._AC_SL1500_.jpg`);
+  }
   return urls;
+}
+
+async function imageExists(url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, { method: "HEAD", redirect: "follow", signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return false;
+    const type = (res.headers.get("content-type") || "").toLowerCase();
+    if (!type.includes("jpeg") && !type.includes("jpg") && !type.includes("png") && !type.includes("webp")) {
+      return false;
+    }
+    const length = Number(res.headers.get("content-length") || 0);
+    return length === 0 || length >= MIN_IMAGE_BYTES;
+  } catch {
+    return false;
+  }
+}
+
+export async function fetchAmazonImagesByAsin(asin: string, limit = MAX_IMAGES): Promise<string[]> {
+  if (!asin) return [];
+  const candidates = [
+    `https://m.media-amazon.com/images/P/${asin}.01.MAIN._SCRM_.jpg`,
+    ...Array.from({ length: 12 }, (_, index) => {
+      const n = String(index + 1).padStart(2, "0");
+      return `https://m.media-amazon.com/images/P/${asin}.01.PT${n}._SCRM_.jpg`;
+    }),
+    `https://m.media-amazon.com/images/P/${asin}.01.LZZZZZZZ.jpg`,
+  ];
+  const checks = await Promise.all(
+    candidates.map(async (url) => ({ url, ok: await imageExists(url) })),
+  );
+  return uniqueImages(checks.filter((item) => item.ok).map((item) => item.url)).slice(0, limit);
+}
+
+async function fetchAmazonHtml(asin: string): Promise<string> {
+  const headers = FETCH_HEADERS;
+  const urls = [
+    `https://www.amazon.es/dp/${asin}`,
+    `https://www.amazon.es/gp/aw/d/${asin}`,
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, {
+        headers,
+        redirect: "follow",
+        signal: AbortSignal.timeout(12000),
+      });
+      if (!res.ok) continue;
+      const html = await res.text();
+      if (html.length < 8000) continue;
+      if (/captcha|robot check/i.test(html.slice(0, 4000))) continue;
+      return html;
+    } catch {
+      /* try next */
+    }
+  }
+  return "";
 }
 
 function cleanText(value: string): string {
@@ -135,101 +201,111 @@ export async function fetchAmazonProductMeta(rawUrl: string): Promise<AmazonProd
     specs: [],
   };
 
-  try {
-    const res = await fetch(affiliateUrl, {
-      headers: FETCH_HEADERS,
-      redirect: "follow",
-      signal: AbortSignal.timeout(14000),
-    });
-    if (!res.ok) return meta;
-    const html = await res.text();
-    const $ = cheerio.load(html);
+  const [html, cdnImages] = await Promise.all([
+    asin ? fetchAmazonHtml(asin) : Promise.resolve(""),
+    asin ? fetchAmazonImagesByAsin(asin, MAX_IMAGES) : Promise.resolve([] as string[]),
+  ]);
 
-    meta.title =
-      pickMeta($, ["og:title", "twitter:title"]) ||
-      $("#productTitle").text().trim() ||
-      $("title").first().text().trim();
-    meta.brand =
-      $("#bylineInfo").text().replace(/visita la tienda de|marca:|brand:/gi, "").trim() ||
-      $("a#bylineInfo").text().trim() ||
-      $("#brand").text().trim();
+  if (html) {
+    try {
+      const $ = cheerio.load(html);
 
-    const ogImage = pickMeta($, ["og:image", "twitter:image"]);
-    const landing =
-      $("#landingImage").attr("data-old-hires") ||
-      $("#landingImage").attr("src") ||
-      $("#imgBlkFront").attr("src") ||
-      "";
-    const dynamic: string[] = [];
-    $("[data-a-dynamic-image]").each((_, el) => {
-      const raw = $(el).attr("data-a-dynamic-image") || "";
-      try {
-        const parsed = JSON.parse(raw) as Record<string, unknown>;
-        dynamic.push(...Object.keys(parsed));
-      } catch {
-        /* ignore */
-      }
-    });
-    $("#altImages img, #imageBlock img, #main-image-container img").each((_, el) => {
-      const src = $(el).attr("data-old-hires") || $(el).attr("data-src") || $(el).attr("src") || "";
-      if (src.startsWith("http")) dynamic.push(src);
-    });
+      meta.title =
+        pickMeta($, ["og:title", "twitter:title"]) ||
+        $("#productTitle").text().trim() ||
+        $("title").first().text().trim();
+      meta.brand =
+        $("#bylineInfo").text().replace(/visita la tienda de|marca:|brand:/gi, "").trim() ||
+        $("a#bylineInfo").text().trim() ||
+        $("#brand").text().trim();
 
-    meta.images = uniqueImages([ogImage, landing, ...dynamic, ...collectScriptImages(html)]);
-    meta.image = meta.images[0] || "";
+      const ogImage = pickMeta($, ["og:image", "twitter:image"]);
+      const landing =
+        $("#landingImage").attr("data-old-hires") ||
+        $("#landingImage").attr("src") ||
+        $("#imgBlkFront").attr("src") ||
+        "";
+      const dynamic: string[] = [];
+      $("[data-a-dynamic-image]").each((_, el) => {
+        const raw = $(el).attr("data-a-dynamic-image") || "";
+        try {
+          const parsed = JSON.parse(raw) as Record<string, unknown>;
+          dynamic.push(...Object.keys(parsed));
+        } catch {
+          /* ignore */
+        }
+      });
+      $("#altImages img, #imageBlock img, #main-image-container img").each((_, el) => {
+        const src = $(el).attr("data-old-hires") || $(el).attr("data-src") || $(el).attr("src") || "";
+        if (src.startsWith("http")) dynamic.push(src);
+      });
 
-    const price =
-      $(".a-price .a-offscreen").first().text().trim() ||
-      $("#priceblock_ourprice, #priceblock_dealprice, #priceblock_saleprice").first().text().trim() ||
-      pickMeta($, ["product:price:amount"]);
-    meta.priceText = price.slice(0, 48);
+      meta.images = uniqueImages([
+        ...cdnImages,
+        ogImage,
+        landing,
+        ...dynamic,
+        ...collectScriptImages(html),
+      ]);
 
-    meta.rating =
-      $("#acrPopover").attr("title") ||
-      $("span[data-hook='rating-out-of-text']").first().text().trim() ||
-      $("i.a-icon-star span").first().text().trim();
-    meta.reviewCount =
-      $("#acrCustomerReviewText").first().text().trim() ||
-      $("span[data-hook='total-review-count']").first().text().trim();
+      const price =
+        $(".a-price .a-offscreen").first().text().trim() ||
+        $("#priceblock_ourprice, #priceblock_dealprice, #priceblock_saleprice").first().text().trim() ||
+        pickMeta($, ["product:price:amount"]);
+      meta.priceText = price.slice(0, 48);
 
-    const bullets = new Set<string>();
-    $("#feature-bullets li, #featurebullets_feature_div li").each((_, el) => {
-      const text = cleanText($(el).text());
-      if (text.length > 12 && !/hacer clic|click aquí|ver más/i.test(text)) bullets.add(text);
-    });
-    meta.bullets = [...bullets].slice(0, MAX_BULLETS);
+      meta.rating =
+        $("#acrPopover").attr("title") ||
+        $("span[data-hook='rating-out-of-text']").first().text().trim() ||
+        $("i.a-icon-star span").first().text().trim();
+      meta.reviewCount =
+        $("#acrCustomerReviewText").first().text().trim() ||
+        $("span[data-hook='total-review-count']").first().text().trim();
 
-    meta.description = cleanText(
-      $("#productDescription").text() ||
-        $("#productDescription_feature_div").text() ||
-        $("#aplus").text().slice(0, 1500),
-    ).slice(0, 1800);
+      const bullets = new Set<string>();
+      $("#feature-bullets li, #featurebullets_feature_div li").each((_, el) => {
+        const text = cleanText($(el).text());
+        if (text.length > 12 && !/hacer clic|click aquí|ver más/i.test(text)) bullets.add(text);
+      });
+      meta.bullets = [...bullets].slice(0, MAX_BULLETS);
 
-    const specs: AmazonSpec[] = [];
-    $(
-      "#productDetails_techSpec_section_1 tr, #productDetails_detailBullets_sections1 tr, #prodDetails tr, table.a-keyvalue tr",
-    ).each((_, el) => {
-      const label = cleanText($(el).find("th").first().text());
-      const value = cleanText($(el).find("td").first().text());
-      if (label && value && label.length < 80 && value.length < 160) {
-        specs.push({ label, value });
-      }
-    });
-    $("#detailBullets_feature_div li").each((_, el) => {
-      const label = cleanText($(el).find(".a-text-bold").first().text().replace(":", ""));
-      const value = cleanText($(el).clone().children().remove().end().text());
-      if (label && value) specs.push({ label, value });
-    });
-    const seenSpec = new Set<string>();
-    meta.specs = specs.filter((spec) => {
-      const key = spec.label.toLowerCase();
-      if (seenSpec.has(key)) return false;
-      seenSpec.add(key);
-      return true;
-    }).slice(0, MAX_SPECS);
-  } catch (error) {
-    console.warn("[amazon-meta] fetch failed:", error);
+      meta.description = cleanText(
+        $("#productDescription").text() ||
+          $("#productDescription_feature_div").text() ||
+          $("#aplus").text().slice(0, 1500),
+      ).slice(0, 1800);
+
+      const specs: AmazonSpec[] = [];
+      $(
+        "#productDetails_techSpec_section_1 tr, #productDetails_detailBullets_sections1 tr, #prodDetails tr, table.a-keyvalue tr",
+      ).each((_, el) => {
+        const label = cleanText($(el).find("th").first().text());
+        const value = cleanText($(el).find("td").first().text());
+        if (label && value && label.length < 80 && value.length < 160) {
+          specs.push({ label, value });
+        }
+      });
+      $("#detailBullets_feature_div li").each((_, el) => {
+        const label = cleanText($(el).find(".a-text-bold").first().text().replace(":", ""));
+        const value = cleanText($(el).clone().children().remove().end().text());
+        if (label && value) specs.push({ label, value });
+      });
+      const seenSpec = new Set<string>();
+      meta.specs = specs.filter((spec) => {
+        const key = spec.label.toLowerCase();
+        if (seenSpec.has(key)) return false;
+        seenSpec.add(key);
+        return true;
+      }).slice(0, MAX_SPECS);
+    } catch (error) {
+      console.warn("[amazon-meta] parse failed:", error);
+    }
   }
+
+  if (!meta.images.length) {
+    meta.images = uniqueImages(cdnImages);
+  }
+  meta.image = meta.images[0] || "";
 
   return meta;
 }
