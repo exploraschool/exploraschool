@@ -61,6 +61,7 @@ export async function upsertStudentProfile(
     selfSkills: patch.selfSkills !== undefined ? patch.selfSkills : (current?.selfSkills ?? {}),
     selfLevel: patch.selfLevel !== undefined ? patch.selfLevel : (current?.selfLevel ?? null),
     staffTips: patch.staffTips !== undefined ? patch.staffTips : (current?.staffTips ?? ""),
+    progressSeenAt: patch.progressSeenAt !== undefined ? patch.progressSeenAt : (current?.progressSeenAt ?? null),
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };
@@ -78,6 +79,15 @@ export async function upsertStudentProfile(
   );
 
   return next;
+}
+
+export async function markStudentProgressSeen(uid: string): Promise<void> {
+  const db = getAdminDb();
+  if (!db) return;
+  const ref = db.collection(USERS_COLLECTION).doc(uid);
+  const snap = await ref.get();
+  if (!snap.exists) return;
+  await ref.set({ progressSeenAt: new Date().toISOString() }, { merge: true });
 }
 
 export async function listStudentProfiles(): Promise<StudentProfile[]> {

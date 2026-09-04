@@ -243,11 +243,9 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
       } | null;
       if (!res.ok || !payload?.media) {
         throw new Error(
-          payload?.error === "gallery_full"
-            ? t("mediaGalleryFull")
-            : payload?.error === "videos_not_allowed"
-              ? t("mediaVideoNoGallery")
-              : t("errors.save"),
+          payload?.error === "videos_not_allowed"
+            ? t("mediaVideoNoGallery")
+            : t("errors.save"),
         );
       }
       setMedia((current) => current.map((item) => (item.id === mediaId ? payload.media! : item)));

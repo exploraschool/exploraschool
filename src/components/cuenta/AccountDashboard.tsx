@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
@@ -20,6 +20,7 @@ import {
 } from "@/data/student-account";
 import { formatEquipmentSummary } from "@/lib/student-equipment";
 import type { ProgressReport } from "@/lib/progress-reports";
+import { progressReportIsNew, progressReportIsUnread } from "@/lib/progress-reports";
 import type { StudentProfile } from "@/lib/student-users";
 import type { StudentTip } from "@/lib/student-tips";
 import { buildSkillTimeline } from "@/lib/skill-bridge";
@@ -146,6 +147,12 @@ export function AccountDashboard({
   );
   const nextLesson = useMemo(() => pickNextLesson(confirmedSorted), [confirmedSorted]);
   const latestReport = reportsSorted[0] ?? null;
+  const unreadReports = useMemo(
+    () => reportsSorted.filter((report) => progressReportIsUnread(report, profile?.progressSeenAt ?? null)),
+    [reportsSorted, profile?.progressSeenAt],
+  );
+  const unreadIds = useMemo(() => new Set(unreadReports.map((report) => report.id)), [unreadReports]);
+  const seenPosted = useRef(false);
   const pinnedTip = useMemo(() => tips.find((tip) => tip.pinned) ?? null, [tips]);
   const tipHistory = useMemo(
     () => tips.filter((tip) => !tip.pinned).slice(0, 8),
@@ -156,6 +163,27 @@ export function AccountDashboard({
     const hash = window.location.hash.replace("#", "");
     if (isTabId(hash)) setTab(hash);
   }, []);
+
+  function markProgressSeen() {
+    if (seenPosted.current) return;
+    seenPosted.current = true;
+    void fetch("/api/cuenta/progress-seen", { method: "POST" }).catch(() => {
+      seenPosted.current = false;
+    });
+  }
+
+  useEffect(() => {
+    if (unreadIds.size === 0) {
+      if (!profile?.progressSeenAt) markProgressSeen();
+      return;
+    }
+    if (tab === "progreso") {
+      markProgressSeen();
+      return;
+    }
+    const timer = window.setTimeout(markProgressSeen, 2500);
+    return () => window.clearTimeout(timer);
+  }, [tab, unreadIds.size, profile?.progressSeenAt]);
 
   function goTab(id: TabId) {
     setTab(id);
@@ -209,6 +237,30 @@ export function AccountDashboard({
           compact
         />
       </div>
+
+      {unreadReports.length > 0 ? (
+        <button
+          type="button"
+          onClick={() => {
+            markProgressSeen();
+            goTab("progreso");
+          }}
+          className="mt-4 flex w-full items-start gap-3 rounded-2xl border border-accent/30 bg-accent/[0.07] px-3.5 py-3.5 text-left shadow-sm sm:mt-5 sm:px-5 sm:py-4"
+        >
+          <span className="mt-0.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-accent" aria-hidden />
+          <span className="min-w-0">
+            <span className="block text-[0.65rem] font-bold uppercase tracking-wider text-accent">
+              {unreadReports.length === 1 ? t("progressUpdated") : t("tabProgreso")}
+            </span>
+            <span className="mt-1 block text-sm font-semibold text-pizarra">
+              {unreadReports.length === 1
+                ? t("progressUnreadBanner")
+                : t("progressUnreadBannerMany", { count: unreadReports.length })}
+            </span>
+            <span className="mt-1 block text-xs font-semibold text-hielo">{t("seeProgress")} →</span>
+          </span>
+        </button>
+      ) : null}
 
       {nextLesson ? (
         <NextLessonCard
@@ -267,8 +319,21 @@ export function AccountDashboard({
       ) : null}
 
       {latestReport?.nextFocus ? (
-        <aside className="mt-3 overflow-hidden rounded-2xl border border-hielo/15 bg-white px-3.5 py-3.5 shadow-sm sm:px-5 sm:py-4">
-          <p className="text-[0.65rem] font-bold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
+        <aside
+          className={`mt-3 overflow-hidden rounded-2xl px-3.5 py-3.5 shadow-sm sm:px-5 sm:py-4 ${
+            unreadIds.has(latestReport.id)
+              ? "border border-accent/30 bg-accent/[0.06]"
+              : "border border-hielo/15 bg-white"
+          }`}
+        >
+          <p className="text-[0.65rem] font-bold uppercase tracking-wider text-hielo">
+            {t("nextFocus")}
+            {unreadIds.has(latestReport.id) ? (
+              <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-white">
+                {progressReportIsNew(latestReport) ? t("progressNew") : t("progressUpdated")}
+              </span>
+            ) : null}
+          </p>
           <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{latestReport.nextFocus}</p>
           <button
             type="button"
@@ -302,7 +367,7 @@ export function AccountDashboard({
                 type="button"
                 aria-current={tab === id ? "page" : undefined}
                 onClick={() => goTab(id)}
-                className={`shrink-0 rounded-full px-3 py-1.5 text-[0.8rem] font-semibold transition sm:px-4 sm:py-2 sm:text-sm ${
+                className={`relative shrink-0 rounded-full px-3 py-1.5 text-[0.8rem] font-semibold transition sm:px-4 sm:py-2 sm:text-sm ${
                   tab === id
                     ? "bg-hielo text-white shadow-sm"
                     : "border border-hielo/15 bg-white text-pizarra hover:border-hielo/30"
@@ -310,6 +375,9 @@ export function AccountDashboard({
               >
                 {label}
                 {count ? <span className="ml-1.5 tabular-nums opacity-80">{count}</span> : null}
+                {id === "progreso" && unreadIds.size > 0 ? (
+                  <span className="ml-1.5 inline-block h-2 w-2 rounded-full bg-accent align-middle" aria-hidden />
+                ) : null}
               </button>
             );
           })}
@@ -332,6 +400,7 @@ export function AccountDashboard({
                 locale={locale}
                 t={t}
                 featured
+                fresh={unreadIds.has(latestReport.id)}
                 hideNextFocus={Boolean(latestReport.nextFocus)}
                 onOpenProgress={() => goTab("progreso")}
               />
@@ -414,6 +483,7 @@ export function AccountDashboard({
           )}
           latestReportId={latestReport?.id ?? null}
           hideNextFocusGlobally={Boolean(latestReport?.nextFocus)}
+          unreadIds={unreadIds}
           profile={profile}
           locale={locale}
           t={t}
@@ -760,6 +830,7 @@ function ProgressPanel({
   tipHistory,
   latestReportId,
   hideNextFocusGlobally,
+  unreadIds,
   profile,
   locale,
   t,
@@ -771,6 +842,7 @@ function ProgressPanel({
   tipHistory: StudentTip[];
   latestReportId: string | null;
   hideNextFocusGlobally: boolean;
+  unreadIds: Set<string>;
   profile: StudentProfile | null;
   locale: string;
   t: ReturnType<typeof useTranslations<"account">>;
@@ -862,6 +934,7 @@ function ProgressPanel({
           t={t}
           featured
           defaultOpen
+          fresh={unreadIds.has(latest.id)}
           hideNextFocus={hideNextFocusGlobally && latest.id === latestReportId}
           compactSkills={Boolean(skillTimeline.length)}
         />
@@ -878,6 +951,7 @@ function ProgressPanel({
               report={report}
               locale={locale}
               t={t}
+              fresh={unreadIds.has(report.id)}
               hideNextFocus={false}
               compactSkills={Boolean(skillTimeline.length)}
             />
@@ -916,6 +990,7 @@ function ReportCard({
   locale,
   t,
   featured,
+  fresh,
   hideNextFocus,
   compactSkills,
   defaultOpen,
@@ -925,6 +1000,7 @@ function ReportCard({
   locale: string;
   t: ReturnType<typeof useTranslations<"account">>;
   featured?: boolean;
+  fresh?: boolean;
   hideNextFocus?: boolean;
   compactSkills?: boolean;
   defaultOpen?: boolean;
@@ -952,6 +1028,11 @@ function ReportCard({
             <span className="rounded-full bg-oro/15 px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-oro">
               {featured ? t("latestReport") : disciplineLabel}
             </span>
+            {fresh ? (
+              <span className="rounded-full bg-accent px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-white">
+                {progressReportIsNew(report) ? t("progressNew") : t("progressUpdated")}
+              </span>
+            ) : null}
             {report.hours ? (
               <span className="rounded-full bg-nieve px-2.5 py-0.5 text-[0.65rem] font-semibold text-muted">
                 {t("reportHours", { hours: report.hours })}
@@ -982,7 +1063,11 @@ function ReportCard({
   );
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-sm">
+    <article
+      className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${
+        fresh ? "border-accent/35 ring-2 ring-accent/15" : "border-hielo/10"
+      }`}
+    >
       {featured && !onOpenProgress ? (
         header
       ) : (

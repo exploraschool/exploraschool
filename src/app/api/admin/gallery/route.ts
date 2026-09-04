@@ -4,7 +4,6 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
   LIVE_GALLERY_COLLECTION,
-  LIVE_GALLERY_MAX_PHOTOS,
   LIVE_GALLERY_MAX_UPLOAD_BATCH,
   LIVE_GALLERY_STORAGE_PREFIX,
   listLiveGalleryPhotos,
@@ -91,13 +90,6 @@ export async function POST(request: Request) {
 
   try {
     const existing = await listLiveGalleryPhotos();
-    const slotsLeft = LIVE_GALLERY_MAX_PHOTOS - existing.length;
-    if (slotsLeft <= 0) {
-      return NextResponse.json(
-        { error: `Máximo ${LIVE_GALLERY_MAX_PHOTOS} fotos en la galería` },
-        { status: 400 },
-      );
-    }
 
     const form = await request.formData();
     const files = collectFiles(form);
@@ -108,15 +100,6 @@ export async function POST(request: Request) {
     if (files.length > LIVE_GALLERY_MAX_UPLOAD_BATCH) {
       return NextResponse.json(
         { error: `Máximo ${LIVE_GALLERY_MAX_UPLOAD_BATCH} fotos por subida` },
-        { status: 400 },
-      );
-    }
-
-    if (files.length > slotsLeft) {
-      return NextResponse.json(
-        {
-          error: `Solo caben ${slotsLeft} foto${slotsLeft === 1 ? "" : "s"} más (máximo ${LIVE_GALLERY_MAX_PHOTOS})`,
-        },
         { status: 400 },
       );
     }

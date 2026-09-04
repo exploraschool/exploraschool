@@ -143,3 +143,20 @@ export function earnedBadges(reports: ProgressReport[], locale: string): { id: s
 export function totalProgressHours(reports: ProgressReport[]): number {
   return reports.reduce((sum, report) => sum + (Number(report.hours) || 0), 0);
 }
+
+const UNSEEN_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
+
+/** True until the student has opened the area after this report was saved. */
+export function progressReportIsUnread(report: ProgressReport, seenAt: string | null): boolean {
+  if (!report.updatedAt) return false;
+  if (seenAt) return report.updatedAt > seenAt;
+  const updated = Date.parse(report.updatedAt);
+  return Number.isFinite(updated) && Date.now() - updated < UNSEEN_WINDOW_MS;
+}
+
+export function progressReportIsNew(report: ProgressReport): boolean {
+  const created = Date.parse(report.createdAt);
+  const updated = Date.parse(report.updatedAt);
+  if (!Number.isFinite(created) || !Number.isFinite(updated)) return true;
+  return Math.abs(updated - created) < 2 * 60 * 1000;
+}

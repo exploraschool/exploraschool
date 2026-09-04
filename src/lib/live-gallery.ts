@@ -2,6 +2,7 @@ import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
   getFallbackLiveGalleryPhotos,
   LIVE_GALLERY_COLLECTION,
+  LIVE_GALLERY_HOME_LIMIT,
   type LiveGalleryDisplayPhoto,
   type LiveGalleryPhoto,
 } from "@/lib/live-gallery-shared";
@@ -9,7 +10,7 @@ import {
 export {
   getFallbackLiveGalleryPhotos,
   LIVE_GALLERY_COLLECTION,
-  LIVE_GALLERY_MAX_PHOTOS,
+  LIVE_GALLERY_HOME_LIMIT,
   LIVE_GALLERY_MAX_UPLOAD_BATCH,
   LIVE_GALLERY_STORAGE_PREFIX,
   publicStorageUrl,
@@ -43,21 +44,26 @@ export async function listLiveGalleryPhotos(): Promise<LiveGalleryPhoto[]> {
 
   return photos
     .filter((photo) => photo.src)
-    .sort((a, b) => a.order - b.order || a.createdAt.localeCompare(b.createdAt));
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt) || b.order - a.order);
 }
 
-/** Photos for the public homepage section (Firestore or static fallback). */
-export async function getLiveGalleryForHome(limit = 8): Promise<LiveGalleryDisplayPhoto[]> {
+/** Newest photos for the public homepage section (Firestore or static fallback). */
+export async function getLiveGalleryForHome(
+  limit = LIVE_GALLERY_HOME_LIMIT,
+): Promise<LiveGalleryDisplayPhoto[]> {
   try {
     const photos = await listLiveGalleryPhotos();
     if (photos.length === 0) return getFallbackLiveGalleryPhotos();
-    return photos.slice(0, limit).map(({ id, src, altEs, altEn, kind }) => ({
-      id,
-      src,
-      altEs,
-      altEn,
-      kind: kind ?? "image",
-    })).filter((item) => item.kind !== "video");
+    return photos
+      .filter((item) => (item.kind ?? "image") !== "video")
+      .slice(0, limit)
+      .map(({ id, src, altEs, altEn, kind }) => ({
+        id,
+        src,
+        altEs,
+        altEn,
+        kind: kind ?? "image",
+      }));
   } catch (error) {
     console.error("[live-gallery] Failed to load photos:", error);
     return getFallbackLiveGalleryPhotos();

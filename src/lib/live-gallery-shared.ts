@@ -2,7 +2,8 @@ import { media } from "@/lib/media";
 
 export const LIVE_GALLERY_COLLECTION = "liveGallery";
 export const LIVE_GALLERY_STORAGE_PREFIX = "public/live-gallery";
-export const LIVE_GALLERY_MAX_PHOTOS = 12;
+/** How many of the newest photos the homepage carousel shows. Storage has no cap. */
+export const LIVE_GALLERY_HOME_LIMIT = 12;
 export const LIVE_GALLERY_MAX_UPLOAD_BATCH = 5;
 
 export type LiveGalleryPhoto = {

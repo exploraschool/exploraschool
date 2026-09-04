@@ -17,7 +17,7 @@ export default async function AdminGaleriaPage() {
     <AdminShell
       active="galeria"
       title="Galería en directo"
-      description="Fotos de la sección «La estación, en directo» en la página de inicio."
+      description="Fotos de la sección «La estación, en directo». La home muestra las 12 más recientes; aquí puedes guardar todas las que quieras."
     >
       {!isAdminConfigured() ? (
         <p className="mb-6 rounded-2xl border border-oro/30 bg-oro/10 px-4 py-3 text-sm text-pizarra">

@@ -48,6 +48,8 @@ export type StudentProfile = {
   selfLevel: SelfLevelId | null;
   /** Permanent tips from the teaching team, visible in the student area */
   staffTips: string;
+  /** ISO time of last visit that acknowledged progress updates in the student area */
+  progressSeenAt: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -159,6 +161,7 @@ export function parseStudentProfile(uid: string, data: Record<string, unknown>):
     selfSkills,
     selfLevel,
     staffTips: typeof data.staffTips === "string" ? data.staffTips : "",
+    progressSeenAt: typeof data.progressSeenAt === "string" ? data.progressSeenAt : null,
     createdAt: typeof data.createdAt === "string" ? data.createdAt : new Date().toISOString(),
     updatedAt: typeof data.updatedAt === "string" ? data.updatedAt : new Date().toISOString(),
   };

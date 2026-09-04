@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, type FormEvent } from "react";
 import type { LiveGalleryPhoto } from "@/lib/live-gallery-shared";
 import {
-  LIVE_GALLERY_MAX_PHOTOS,
+  LIVE_GALLERY_HOME_LIMIT,
   LIVE_GALLERY_MAX_UPLOAD_BATCH,
 } from "@/lib/live-gallery-shared";
 
@@ -76,19 +76,6 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
 
     if (selected.length > LIVE_GALLERY_MAX_UPLOAD_BATCH) {
       setError(`Máximo ${LIVE_GALLERY_MAX_UPLOAD_BATCH} fotos por subida.`);
-      return;
-    }
-
-    const slotsLeft = LIVE_GALLERY_MAX_PHOTOS - photos.length;
-    if (slotsLeft <= 0) {
-      setError(`Máximo ${LIVE_GALLERY_MAX_PHOTOS} fotos.`);
-      return;
-    }
-
-    if (selected.length > slotsLeft) {
-      setError(
-        `Solo caben ${slotsLeft} foto${slotsLeft === 1 ? "" : "s"} más (máximo ${LIVE_GALLERY_MAX_PHOTOS}).`,
-      );
       return;
     }
 
@@ -175,7 +162,7 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
         <h2 className="font-display text-xl font-semibold text-hielo">Subir fotos</h2>
         <p className="mt-1 text-sm text-muted">
           JPG, PNG o WebP · máx. 6 MB cada una · hasta {LIVE_GALLERY_MAX_UPLOAD_BATCH} a la vez
-          (se suben una por una) · {LIVE_GALLERY_MAX_PHOTOS} en total en la sección.
+          (se suben una por una). En la home se muestran las {LIVE_GALLERY_HOME_LIMIT} más recientes.
         </p>
 
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -243,7 +230,7 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
             <p className="mt-1 text-sm text-muted">
               {photos.length === 0
                 ? "Sin fotos subidas: la home muestra las imágenes por defecto."
-                : `${photos.length} foto${photos.length === 1 ? "" : "s"} en «La estación, en directo».`}
+                : `${photos.length} foto${photos.length === 1 ? "" : "s"} guardadas. En «La estación, en directo» se ven las ${LIVE_GALLERY_HOME_LIMIT} más recientes.`}
             </p>
           </div>
           <span

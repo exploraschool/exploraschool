@@ -175,7 +175,6 @@ export async function PATCH(request: Request) {
     const code = error instanceof Error ? error.message : "publish_failed";
     const status =
       code === "videos_not_allowed" ||
-      code === "gallery_full" ||
       code === "not_found" ||
       code === "forbidden"
         ? 400

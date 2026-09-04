@@ -2,7 +2,6 @@ import { randomUUID } from "crypto";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
   LIVE_GALLERY_COLLECTION,
-  LIVE_GALLERY_MAX_PHOTOS,
   listLiveGalleryPhotos,
   publicStorageUrl,
   type LiveGalleryPhoto,
@@ -84,57 +83,15 @@ function revalidateGalleryPages() {
   revalidatePath("/en");
 }
 
-async function makeRoomInLiveGallery(): Promise<boolean> {
-  const db = getAdminDb();
-  const bucket = getAdminBucket();
-  if (!db || !bucket) return false;
-
-  const existing = await listLiveGalleryPhotos();
-  if (existing.length < LIVE_GALLERY_MAX_PHOTOS) return true;
-
-  const studentSourced = existing
-    .filter((photo) => photo.source === "student")
-    .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-
-  const victim = studentSourced[0];
-  if (!victim) return false;
-
-  // Student gallery entries reuse student-media storage — only remove the gallery doc.
-  const sharedStudentFile = victim.storagePath.startsWith(`${STUDENT_MEDIA_STORAGE_PREFIX}/`);
-  if (!sharedStudentFile) {
-    try {
-      if (victim.storagePath) await bucket.file(victim.storagePath).delete({ ignoreNotFound: true });
-    } catch (error) {
-      console.error("[student-media] gallery rotate storage failed:", error);
-    }
-  }
-  await db.collection(LIVE_GALLERY_COLLECTION).doc(victim.id).delete();
-
-  if (victim.studentMediaId) {
-    await db.collection(STUDENT_MEDIA_COLLECTION).doc(victim.studentMediaId).set(
-      { liveGalleryId: null, publishedToGallery: false },
-      { merge: true },
-    );
-  }
-
-  return true;
-}
-
 async function publishToLiveGallery(params: {
   mediaId: string;
   studentUid: string;
   src: string;
   storagePath: string;
   displayName: string;
-}): Promise<string | null> {
+}): Promise<string> {
   const db = getAdminDb();
-  if (!db) return null;
-
-  const hasRoom = await makeRoomInLiveGallery();
-  if (!hasRoom) {
-    const existing = await listLiveGalleryPhotos();
-    if (existing.length >= LIVE_GALLERY_MAX_PHOTOS) return null;
-  }
+  if (!db) throw new Error("unavailable");
 
   const existing = await listLiveGalleryPhotos();
   const galleryId = randomUUID();
@@ -145,7 +102,7 @@ async function publishToLiveGallery(params: {
     storagePath: params.storagePath,
     altEs: `${name} en Sierra Nevada`,
     altEn: `${name} in Sierra Nevada`,
-    order: existing.length,
+    order: existing.length > 0 ? Math.max(...existing.map((item) => item.order)) + 1 : 0,
     createdAt: new Date().toISOString(),
     kind: "image",
     source: "student",
@@ -365,7 +322,6 @@ export async function publishStudentMediaToGallery(params: {
     storagePath: media.storagePath,
     displayName: params.displayName,
   });
-  if (!liveGalleryId) throw new Error("gallery_full");
 
   await ref.set({ liveGalleryId, publishedToGallery: true }, { merge: true });
   return { ...media, liveGalleryId, publishedToGallery: true };
