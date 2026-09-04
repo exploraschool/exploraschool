@@ -26,8 +26,8 @@ type AdminShellProps = {
 
 /** Day-to-day first, then content & outreach. Fichas live inside each alumno. */
 const NAV = [
-  { href: "/admin/alumnos", id: "alumnos" as const, label: "Alumnos" },
   { href: "/admin/reservas", id: "reservas" as const, label: "Reservas" },
+  { href: "/admin/alumnos", id: "alumnos" as const, label: "Alumnos" },
   { href: "/admin/instructores", id: "instructores" as const, label: "Monitores" },
   { href: "/admin/galeria", id: "galeria" as const, label: "Galería" },
   { href: "/admin/leads", id: "leads" as const, label: "Contactos" },
