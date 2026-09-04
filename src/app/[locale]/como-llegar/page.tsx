@@ -21,6 +21,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Punto de encuentro oficial de Explora School & Club en la estación de esquí de Sierra Nevada (Granada). Indicaciones y Google Maps.",
       "Official meeting point of Explora School & Club at Sierra Nevada ski resort (Granada). Directions and Google Maps.",
     ),
+    ogImage: "/images/stock/gallery-06-gondola.jpg",
+    ogImageAlt: pickLocale(
+      locale,
+      "Subida en telecabina a la estación de Sierra Nevada",
+      "Gondola ride up to Sierra Nevada ski resort",
+    ),
   });
 }
 

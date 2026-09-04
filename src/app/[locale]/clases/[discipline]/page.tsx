@@ -9,7 +9,6 @@ import { DisciplineProducts } from "@/components/cart/DisciplineProducts";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
@@ -24,12 +23,12 @@ export async function generateStaticParams() {
 
 const SEO_TITLES: Record<string, { es: string; en: string }> = {
   esqui: {
-    es: `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-    en: `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
+    es: "Clases de esquí en Sierra Nevada",
+    en: "Ski lessons in Sierra Nevada",
   },
   snowboard: {
-    es: `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-    en: `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
+    es: "Clases de snowboard en Sierra Nevada",
+    en: "Snowboard lessons in Sierra Nevada",
   },
   telemark: {
     es: "Clases de telemark en Sierra Nevada",
@@ -40,8 +39,8 @@ const SEO_TITLES: Record<string, { es: string; en: string }> = {
     en: "Adaptive skiing in Sierra Nevada",
   },
   ninos: {
-    es: `Clases de esquí para niños en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-    en: `Kids ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
+    es: "Clases de esquí para niños en Sierra Nevada",
+    en: "Kids ski lessons in Sierra Nevada",
   },
 };
 
@@ -88,6 +87,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? pickLocale(locale, seo.es, seo.en)
       : pickLocale(locale, d.nameEs, d.nameEn),
     description: pickLocale(locale, d.descriptionEs, d.descriptionEn),
+    ogImage: d.image,
+    ogImageAlt: pickLocale(
+      locale,
+      `${d.nameEs} en Sierra Nevada`,
+      `${d.nameEn} in Sierra Nevada`,
+    ),
   });
 }
 
@@ -148,7 +153,11 @@ export default async function DisciplinePage({ params }: Props) {
           <div className="relative aspect-[16/10] overflow-hidden rounded-2xl shadow-xl">
             <Image
               src={d.image}
-              alt={pickLocale(locale, d.nameEs, d.nameEn)}
+              alt={pickLocale(
+                locale,
+                `${d.nameEs} en Sierra Nevada`,
+                `${d.nameEn} in Sierra Nevada`,
+              )}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"

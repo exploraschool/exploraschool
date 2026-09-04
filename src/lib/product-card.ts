@@ -94,3 +94,44 @@ function peopleBit(product: Product, locale: string): string {
   const max = product.maxPeople ?? 8;
   return pickLocale(locale, `${min}–${max} pers.`, `${min}–${max} people`);
 }
+
+export function productImageAlt(product: Product, locale: string): string {
+  switch (product.id) {
+    case "full-day":
+      return pickLocale(
+        locale,
+        "Clase de día completo de esquí en Sierra Nevada",
+        "Full-day ski lesson in Sierra Nevada",
+      );
+    case "particular":
+      return pickLocale(
+        locale,
+        "Clase particular de esquí en Sierra Nevada",
+        "Private ski lesson in Sierra Nevada",
+      );
+    case "medio-dia":
+      return pickLocale(
+        locale,
+        "Clases de medio día en las pistas de Sierra Nevada",
+        "Half-day lessons on the Sierra Nevada slopes",
+      );
+    case "curso-snow":
+      return pickLocale(
+        locale,
+        "Grupo de snowboard en un curso en Sierra Nevada",
+        "Snowboard group on a course in Sierra Nevada",
+      );
+    case "curso-empresa":
+      return pickLocale(
+        locale,
+        "Curso de esquí de varios días en Sierra Nevada",
+        "Multi-day ski course in Sierra Nevada",
+      );
+    default:
+      return pickLocale(
+        locale,
+        `${product.titleEs} en Sierra Nevada`,
+        `${product.titleEn} in Sierra Nevada`,
+      );
+  }
+}

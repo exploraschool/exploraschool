@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, post.titleEs, post.titleEn),
     description: pickLocale(locale, post.excerptEs, post.excerptEn),
     ogImage: post.coverImage,
+    ogImageAlt: pickLocale(locale, post.coverAltEs, post.coverAltEn),
     ogType: "article",
   });
 }

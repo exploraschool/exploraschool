@@ -24,6 +24,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Guías prácticas de esquí, snowboard y clases en Sierra Nevada: tips para principiantes, familias, forfait, seguridad y más.",
       "Practical ski and snowboard guides for Sierra Nevada: beginner tips, families, lift passes, safety and more.",
     ),
+    ogImage: "/images/blog/blog-primera-vez.jpg",
+    ogImageAlt: pickLocale(
+      locale,
+      "Principiante en su primera vez esquiando en Sierra Nevada",
+      "Beginner on a first ski day in Sierra Nevada",
+    ),
   });
 }
 

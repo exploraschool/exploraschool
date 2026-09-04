@@ -3,6 +3,7 @@ import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { media } from "@/lib/media";
 import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
+import { tripAdvisorSummary } from "@/data/reviews";
 
 type JsonLdProps = {
   locale: string;
@@ -86,6 +87,13 @@ export function JsonLd({ locale }: JsonLdProps) {
         closes: "20:00",
       },
       priceRange: `€${FULL_DAY_HOURLY_EUR}/h`,
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: tripAdvisorSummary.rating,
+        reviewCount: tripAdvisorSummary.reviewCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
       sameAs,
       knowsLanguage: ["es", "en"],
       hasOfferCatalog: {

@@ -66,7 +66,11 @@ export function DisciplineModalities({ locale, parentId }: DisciplineModalitiesP
                   <div className="relative aspect-[16/9] bg-hielo/5">
                     <Image
                       src={modality.image}
-                      alt={pickLocale(locale, modality.nameEs, modality.nameEn)}
+                      alt={pickLocale(
+                        locale,
+                        `${modality.nameEs} en Sierra Nevada`,
+                        `${modality.nameEn} in Sierra Nevada`,
+                      )}
                       fill
                       className={modality.id === "freeride" ? "object-cover object-[center_45%]" : "object-cover"}
                       sizes="(max-width: 640px) 100vw, 50vw"

@@ -18,14 +18,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/clases",
     title: pickLocale(
       locale,
-      `Clases de esquí y snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-      `Ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
+      "Precios de clases de esquí y snowboard en Sierra Nevada",
+      "Ski and snowboard lesson prices in Sierra Nevada",
     ),
     description: pickLocale(
       locale,
       `Precios de clases particulares en Sierra Nevada: desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Esquí, snowboard y telemark. IVA incluido. Reserva online.`,
       `Private lesson prices in Sierra Nevada: from €${FULL_DAY_HOURLY_EUR}/h on a full day. Ski, snowboard and telemark. VAT included. Book online.`,
     ),
+    ogImage: media.clasesHero.src,
+    ogImageAlt: pickLocale(locale, media.clasesHero.altEs, media.clasesHero.altEn),
   });
 }
 
@@ -41,12 +43,11 @@ export default async function ClasesPage({ params }: Props) {
       />
       <PageHero
         locale={locale}
-        eyebrow="Sierra Nevada · Granada"
         title={pickLocale(locale, "Clases de esquí y snowboard", "Ski and snowboard lessons")}
         description={pickLocale(
           locale,
-          "Instructores titulados. Grupos de 1 a 8. Elige 2 h, 3 h o día completo y reserva online.",
-          "Qualified instructors. Groups of 1 to 8. Choose 2 h, 3 h or a full day and book online.",
+          "Instructores titulados con más de 20 años de experiencia. Grupos de 1 a 8, de 2 horas al día completo. Reserva online en minutos.",
+          "Qualified instructors with over 20 years of experience. Groups of 1 to 8, from 2 hours to a full day. Book online in minutes.",
         )}
         imageSrc={media.clasesHero.src}
         imageAltEs={media.clasesHero.altEs}

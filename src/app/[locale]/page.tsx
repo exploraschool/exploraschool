@@ -29,6 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `Ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
     ),
     description: pickLocale(locale, site.homeMetaDescriptionEs, site.homeMetaDescriptionEn),
+    ogImage: "/images/stock/hero.jpg",
+    ogImageAlt: pickLocale(
+      locale,
+      "Esquí en la estación de Sierra Nevada (Granada)",
+      "Skiing at Sierra Nevada ski resort (Granada)",
+    ),
   });
 }
 

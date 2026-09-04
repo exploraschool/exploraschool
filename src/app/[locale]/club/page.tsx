@@ -45,6 +45,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Club de esquí y snowboard para jóvenes en Sierra Nevada. Membresía, días sueltos, bonos y actividades con Explora School & Club.",
       "Ski and snowboard club for young people in Sierra Nevada. Membership, day passes, vouchers and activities with Explora School & Club.",
     ),
+    ogImage: media.clubAbout.src,
+    ogImageAlt: pickLocale(locale, media.clubAbout.altEs, media.clubAbout.altEn),
   });
 }
 

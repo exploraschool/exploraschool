@@ -12,6 +12,7 @@ type PageMeta = {
   title: string;
   description: string;
   ogImage?: string;
+  ogImageAlt?: string;
   ogType?: "website" | "article";
   noIndex?: boolean;
 };
@@ -28,6 +29,7 @@ export function buildPageMetadata({
   title,
   description,
   ogImage = DEFAULT_OG,
+  ogImageAlt,
   ogType = "website",
   noIndex = false,
 }: PageMeta): Metadata {
@@ -39,6 +41,11 @@ export function buildPageMetadata({
   languages["x-default"] = buildLocalizedPageUrl(siteUrl, routing.defaultLocale, path);
   const fullTitle = title.includes("Explora") ? title : `${title} | Explora School & Club`;
   const isSpanish = locale !== "en";
+  const imageAlt =
+    ogImageAlt ??
+    (isSpanish
+      ? `${site.name} — clases de esquí y snowboard en Sierra Nevada`
+      : `${site.name} — ski and snowboard lessons in Sierra Nevada`);
 
   return {
     title: { absolute: fullTitle },
@@ -66,9 +73,7 @@ export function buildPageMetadata({
           url: ogImage,
           width: 1200,
           height: 630,
-          alt: isSpanish
-            ? `${site.name} — clases de esquí y snowboard en Sierra Nevada`
-            : `${site.name} — ski and snowboard lessons in Sierra Nevada`,
+          alt: imageAlt,
         },
       ],
     },

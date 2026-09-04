@@ -143,9 +143,9 @@ export const site: SiteConfig = {
   instructorQualificationsShortEs: "TD I, II y III",
   instructorQualificationsShortEn: "TD I, II and III",
   heroLeadEs:
-    "Instructores titulados. Grupos de 1 a 8. Reserva online en minutos.",
+    "Instructores titulados con más de 20 años de experiencia. Explora desde 2010. Reserva online en minutos.",
   heroLeadEn:
-    "Qualified instructors. Groups of 1 to 8. Book online in minutes.",
+    "Qualified instructors with over 20 years of experience. Explora since 2010. Book online in minutes.",
   aboutLeadEs:
     "Agrupación de instructores con nombre y cara. Esquí, snowboard, telemark y más, en grupos reducidos.",
   aboutLeadEn:

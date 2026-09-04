@@ -39,7 +39,11 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                   <div className="relative aspect-[4/3] bg-hielo/5">
                     <Image
                       src={d.image}
-                      alt={pickLocale(locale, d.nameEs, d.nameEn)}
+                      alt={pickLocale(
+                        locale,
+                        `${d.nameEs} en Sierra Nevada`,
+                        `${d.nameEn} in Sierra Nevada`,
+                      )}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-105"
                       sizes="160px"
@@ -75,7 +79,11 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                 <div className="relative aspect-[16/10] overflow-hidden bg-hielo/5">
                   <Image
                     src={d.image}
-                    alt={pickLocale(locale, d.nameEs, d.nameEn)}
+                    alt={pickLocale(
+                      locale,
+                      `${d.nameEs} en Sierra Nevada`,
+                      `${d.nameEn} in Sierra Nevada`,
+                    )}
                     fill
                     className="object-cover transition duration-700 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, 33vw"
