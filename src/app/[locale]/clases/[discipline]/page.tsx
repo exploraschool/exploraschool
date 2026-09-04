@@ -138,7 +138,7 @@ export default async function DisciplinePage({ params }: Props) {
 
       {showModalities && <DisciplineModalities locale={locale} parentId={d.id} />}
 
-      <section id="clases-disponibles" className="section-padding bg-nieve scroll-mt-24">
+      <section id="clases-disponibles" className="section-padding scroll-target bg-nieve">
         <div className="container-page">
           <Reveal>
             <h2 className="section-title">

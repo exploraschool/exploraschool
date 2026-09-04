@@ -8,7 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { estimateCartTotal } from "@/lib/cart";
 import { buildBookingEmail } from "@/lib/booking-email";
 import { pickLocale } from "@/lib/locale";
-import { earlyBirdDiscountLabel, isEarlyBirdActive } from "@/lib/promotions";
+import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 import { site } from "@/data/site";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { BookingCartLine } from "@/components/cart/BookingCartLine";
@@ -46,6 +46,8 @@ export function BookingCheckout() {
   const total = estimateCartTotal(items);
   const highlighted = getHighlightedProducts().slice(0, 3);
   const itemsMissingDiscipline = items.some((item) => !item.discipline);
+  const showDiscountLabel =
+    isEarlyBirdActive() || items.some((item) => isDiscountActiveForProduct(item.productId));
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
@@ -182,7 +184,7 @@ export function BookingCheckout() {
                 </h3>
                 {product.fromPrice && (
                   <p className="mt-2">
-                    <PriceTag price={product.fromPrice} locale={locale} prefix={pickLocale(locale, "desde ", "from ")} size="sm" />
+                    <PriceTag price={product.fromPrice} locale={locale} productId={product.id} prefix={pickLocale(locale, "desde ", "from ")} size="sm" />
                   </p>
                 )}
                 <AddToCartButton productId={product.id} className="mt-auto pt-4 !w-full" />
@@ -253,7 +255,7 @@ export function BookingCheckout() {
               <div className="rounded-2xl bg-gradient-to-br from-hielo to-hielo-light px-5 py-4 text-white">
                 <p className="text-xs font-bold uppercase tracking-wider text-white/80">{t("estimatedTotal")}</p>
                 <p className="mt-1 font-display text-3xl font-semibold">{total} €</p>
-                {isEarlyBirdActive() && (
+                {showDiscountLabel && (
                   <p className="mt-2 text-xs font-medium text-oro-light">{earlyBirdDiscountLabel(locale)}</p>
                 )}
                 <p className="mt-1 text-xs text-white/75">{t("vatIncluded")}</p>

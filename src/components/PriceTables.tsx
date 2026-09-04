@@ -13,7 +13,7 @@ type PriceTablesProps = {
 export function PriceTables({ locale }: PriceTablesProps) {
   return (
     <>
-      <section id="formatos" className="scroll-mt-24">
+      <section id="formatos" className="scroll-target">
         <SectionHeader
           eyebrow={pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `Season ${CURRENT_SEASON.label}`)}
           title={pickLocale(locale, "Elige tu formato", "Choose your format")}
@@ -32,7 +32,7 @@ export function PriceTables({ locale }: PriceTablesProps) {
         </div>
       </section>
 
-      <section id="tarifas" className="scroll-mt-24 border-t border-hielo/10 pt-10 sm:pt-12 md:pt-14">
+      <section id="tarifas" className="scroll-target border-t border-hielo/10 pt-10 sm:pt-12 md:pt-14">
         <SectionHeader
           eyebrow={pickLocale(locale, "Consulta detallada", "Detailed lookup")}
           title={pickLocale(locale, "Tarifas por horario", "Prices by time slot")}

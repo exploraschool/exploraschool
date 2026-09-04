@@ -50,15 +50,19 @@ export function DisciplineProducts({
   }
 
   return (
-    <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="flex flex-wrap justify-center gap-4">
       {filtered.map((product, i) => {
         const snowboardOnly =
           alsoIncludeDisciplineIds.includes("snowboard") &&
           isExclusiveToDiscipline(product, "snowboard");
 
         return (
-          <Reveal key={product.id} delay={i * 80} className="h-full">
-            <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white transition hover:border-accent/25 hover:shadow-[0_12px_32px_rgba(10,18,25,0.08)]">
+          <Reveal
+            key={product.id}
+            delay={i * 80}
+            className="flex w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]"
+          >
+            <article className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white transition hover:border-accent/25 hover:shadow-[0_12px_32px_rgba(10,18,25,0.08)]">
               <div className="relative isolate overflow-hidden px-4 pb-3.5 pt-4 sm:px-5 sm:pb-4 sm:pt-5">
                 <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
                   <Image
@@ -91,6 +95,7 @@ export function DisciplineProducts({
                     <PriceTag
                       price={product.fromPrice}
                       locale={locale}
+                      productId={product.id}
                       prefix={pickLocale(locale, "desde ", "from ")}
                       size="sm"
                     />

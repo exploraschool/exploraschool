@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DisclosureItem, DisclosurePanel } from "@/components/DisclosureItem";
 import { FAQ_CATEGORIES, faqs, type Faq, type FaqCategory } from "@/data/faqs";
 import { pickLocale } from "@/lib/locale";
+import { scrollToHash } from "@/lib/scroll-to-anchor";
 
 type FAQAccordionProps = {
   locale: string;
@@ -26,6 +27,7 @@ function FaqItem({ faq, locale, defaultOpen = false }: { faq: Faq; locale: strin
 export function FAQAccordion({ locale, limit, grouped = false, showSearch = false }: FAQAccordionProps) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<FaqCategory | "all">("all");
+  const pendingScrollCategory = useRef<FaqCategory | null>(null);
 
   const baseItems = limit ? faqs.slice(0, limit) : faqs;
 
@@ -40,6 +42,18 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
       return question.includes(q) || answer.includes(q);
     });
   }, [activeCategory, baseItems, locale, query]);
+
+  useEffect(() => {
+    const target = pendingScrollCategory.current;
+    if (!target || activeCategory !== target) return;
+    pendingScrollCategory.current = null;
+    return scrollToHash(`#faq-${target}`, { retries: 12, behavior: "smooth" });
+  }, [activeCategory]);
+
+  function selectCategory(category: FaqCategory | "all") {
+    pendingScrollCategory.current = category === "all" ? null : category;
+    setActiveCategory(category);
+  }
 
   if (!grouped) {
     return (
@@ -88,7 +102,7 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setActiveCategory("all")}
+              onClick={() => selectCategory("all")}
               className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                 activeCategory === "all"
                   ? "bg-gradient-to-r from-hielo to-hielo-light text-white shadow-[0_4px_14px_rgb(45_107_100_/_0.28)]"
@@ -101,7 +115,7 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
               <button
                 key={category.id}
                 type="button"
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => selectCategory(category.id)}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                   activeCategory === category.id
                     ? "bg-gradient-to-r from-hielo to-hielo-light text-white shadow-[0_4px_14px_rgb(45_107_100_/_0.28)]"
@@ -135,7 +149,7 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
             if (categoryFaqs.length === 0) return null;
 
             return (
-              <section key={category.id} id={`faq-${category.id}`} className="scroll-mt-24">
+              <section key={category.id} id={`faq-${category.id}`} className="scroll-target">
                 <div className="mb-4">
                   <h2 className="font-display text-xl font-semibold text-hielo sm:text-2xl">
                     {pickLocale(locale, category.labelEs, category.labelEn)}

@@ -43,7 +43,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             {t("skipToContent")}
           </a>
           <Header locale={locale} />
-          <main id="main-content" className="flex-1">
+          <main id="main-content" className="scroll-target flex-1">
             {children}
           </main>
           <Footer />

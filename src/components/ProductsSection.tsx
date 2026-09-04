@@ -53,7 +53,7 @@ export function ProductsSection({
                       sizes="(max-width: 1024px) 100vw, 33vw"
                     />
                     {product.fromPrice && (() => {
-                      const price = resolvePriceDisplay(product.fromPrice);
+                      const price = resolvePriceDisplay(product.fromPrice, new Date(), product.id);
                       return (
                         <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-2.5 py-0.5 text-xs font-bold text-white">
                           {pickLocale(locale, "desde", "from")} {price.finalPrice} €
@@ -113,7 +113,7 @@ export function ProductsSection({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 to-transparent" />
                   {product.fromPrice && (() => {
-                    const price = resolvePriceDisplay(product.fromPrice);
+                    const price = resolvePriceDisplay(product.fromPrice, new Date(), product.id);
                     return (
                       <span className="absolute right-3 top-3 rounded-full bg-accent-dark px-3 py-1 text-xs font-bold text-white">
                         {pickLocale(locale, "desde", "from")} {price.finalPrice} €

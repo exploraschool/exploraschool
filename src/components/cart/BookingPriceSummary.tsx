@@ -27,8 +27,8 @@ export function BookingPriceSummary({
 
   const perPerson = productId ? getFlatUnitPrice(productId) : null;
   const showPerPerson = productId ? usesPerPersonPricing(productId) : false;
-  const unitPrice = perPerson ? resolvePriceDisplay(perPerson) : null;
-  const display = resolvePriceDisplay(sessionPrice);
+  const unitPrice = perPerson ? resolvePriceDisplay(perPerson, new Date(), productId) : null;
+  const display = resolvePriceDisplay(sessionPrice, new Date(), productId);
   const perSession = display.discountActive ? display.finalPrice : sessionPrice;
   const total = perSession * Math.max(1, datesCount);
   const hasDates = datesCount > 0;

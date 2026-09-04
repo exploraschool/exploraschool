@@ -32,9 +32,15 @@
   }
 
   html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    --header-offset: calc(3.35rem + 0.7rem);
+    scroll-padding-top: var(--header-offset);
     scroll-padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 640px) {
+    html {
+      --header-offset: calc(4rem + 0.75rem);
+    }
   }
 
   body {
@@ -659,8 +665,10 @@
     transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.reveal.h-full > * {
+.reveal.h-full > *,
+.reveal.flex > * {
   height: 100%;
+  width: 100%;
 }
 
 .reveal-visible {

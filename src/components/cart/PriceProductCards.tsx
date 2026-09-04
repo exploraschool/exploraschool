@@ -30,6 +30,7 @@ export function PriceProductCards({ locale }: PriceProductCardsProps) {
               <PriceTag
                 price={product.fromPrice}
                 locale={locale}
+                productId={product.id as ProductId}
                 prefix={pickLocale(locale, "desde ", "from ")}
                 size="sm"
               />

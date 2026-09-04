@@ -61,7 +61,7 @@ export function DisciplineModalities({ locale, parentId }: DisciplineModalitiesP
               <Reveal key={modality.id} delay={i * 80}>
                 <article
                   id={modality.id}
-                  className="card-interactive flex h-full flex-col overflow-hidden p-0 scroll-mt-28"
+                  className="card-interactive flex h-full flex-col overflow-hidden p-0 scroll-target"
                 >
                   <div className="relative aspect-[16/9] bg-hielo/5">
                     <Image

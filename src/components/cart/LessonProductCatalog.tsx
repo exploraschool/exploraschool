@@ -106,6 +106,7 @@ function ProductCard({
             <PriceTag
               price={fromPrice}
               locale={locale}
+              productId={product.id}
               prefix={pickLocale(locale, "desde ", "from ")}
               suffix={priceSuffix(product, locale)}
               size={featured ? "lg" : "md"}

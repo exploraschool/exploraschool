@@ -45,7 +45,12 @@ type Props = {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="es" suppressHydrationWarning className={`${plusJakarta.variable} ${fraunces.variable}`}>
+    <html
+      lang="es"
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      className={`${plusJakarta.variable} ${fraunces.variable}`}
+    >
       <body className="min-h-screen bg-nieve text-pizarra antialiased">
         <GoogleAnalytics />
         {children}

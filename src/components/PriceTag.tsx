@@ -1,4 +1,5 @@
 import { resolvePriceDisplay } from "@/lib/promotions";
+import type { ProductId } from "@/data/products";
 
 type PriceTagProps = {
   price: number;
@@ -7,6 +8,7 @@ type PriceTagProps = {
   suffix?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
+  productId?: ProductId;
 };
 
 const sizeClasses = {
@@ -22,8 +24,9 @@ export function PriceTag({
   suffix,
   size = "md",
   className = "",
+  productId,
 }: PriceTagProps) {
-  const display = resolvePriceDisplay(price);
+  const display = resolvePriceDisplay(price, new Date(), productId);
   const sizes = sizeClasses[size];
 
   if (!display.discountActive) {

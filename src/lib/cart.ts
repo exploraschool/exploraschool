@@ -2,7 +2,7 @@ import type { MainDisciplineId, ModalityId } from "@/data/disciplines";
 import type { ProductId } from "@/data/products";
 import type { TimeSlotId } from "@/lib/booking-config";
 import { calculateSessionPrice } from "@/lib/booking-config";
-import { applyEarlyBirdDiscount, isEarlyBirdActive } from "@/lib/promotions";
+import { applyEarlyBirdDiscount, isDiscountActiveForProduct } from "@/lib/promotions";
 
 export type CartItem = {
   id: string;
@@ -62,8 +62,8 @@ export function buildCartItem(
   const listUnitPrice = calculateSessionPrice(input.productId, input.participants, input.timeSlotId);
   if (listUnitPrice === null) return null;
 
-  const discountActive = isEarlyBirdActive();
-  const unitPrice = applyEarlyBirdDiscount(listUnitPrice);
+  const discountActive = isDiscountActiveForProduct(input.productId);
+  const unitPrice = applyEarlyBirdDiscount(listUnitPrice, new Date(), input.productId);
 
   return {
     ...input,

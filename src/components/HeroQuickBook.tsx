@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
 import { parseQuickBookPeople } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
+import { setPendingHash } from "@/lib/scroll-to-anchor";
 
 type HeroQuickBookProps = {
   locale: string;
@@ -25,7 +26,8 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const count = parseQuickBookPeople(people) ?? 2;
-    router.push(`/${locale}/clases/${discipline}?people=${count}#clases-disponibles`);
+    setPendingHash("#clases-disponibles");
+    router.push(`/clases/${discipline}?people=${count}`, { scroll: false });
   }
 
   return (

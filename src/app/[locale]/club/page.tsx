@@ -105,7 +105,7 @@ export default async function ClubPage({ params }: Props) {
       </section>
 
       {/* Ofertas */}
-      <section id="ofertas" className="section-padding scroll-mt-24">
+      <section id="ofertas" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
             <SectionHeader
@@ -161,7 +161,7 @@ export default async function ClubPage({ params }: Props) {
       </section>
 
       {/* Membresía */}
-      <section id="membresia" className="section-padding scroll-mt-24 bg-nieve">
+      <section id="membresia" className="section-padding scroll-target bg-nieve">
         <div className="container-page">
           <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-start">
             <Reveal>
@@ -202,7 +202,7 @@ export default async function ClubPage({ params }: Props) {
       </section>
 
       {/* Jornada tipo */}
-      <section id="jornada" className="section-padding scroll-mt-24">
+      <section id="jornada" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
             <SectionHeader
@@ -272,7 +272,7 @@ export default async function ClubPage({ params }: Props) {
       </section>
 
       {/* Información importante */}
-      <section id="info" className="section-padding scroll-mt-24">
+      <section id="info" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
             <SectionHeader
@@ -316,7 +316,7 @@ export default async function ClubPage({ params }: Props) {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="section-padding scroll-mt-24 bg-nieve">
+      <section id="faq" className="section-padding scroll-target bg-nieve">
         <div className="container-page">
           <Reveal>
             <SectionHeader

@@ -23,6 +23,7 @@ export function CurrentPriceCards({ locale }: CurrentPriceCardsProps) {
               <PriceTag
                 price={price.fromPrice}
                 locale={locale}
+                productId={price.productId as ProductId}
                 prefix={pickLocale(locale, "desde ", "from ")}
                 suffix={
                   price.unit === "person"
