@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
   consumePendingHash,
+  consumePopNavigation,
+  markPopNavigation,
   normalizeHash,
   scrollToHash,
+  scrollToPageTop,
   setPendingHash,
 } from "@/lib/scroll-to-anchor";
 
@@ -17,20 +20,35 @@ function pathsMatch(a: string, b: string): boolean {
   return normalize(a) === normalize(b);
 }
 
+function stripLocationHash() {
+  if (!window.location.hash) return;
+  history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+}
+
 export function ScrollToTop() {
   const pathname = usePathname();
   const router = useRouter();
+  const firstLoad = useRef(true);
 
   useEffect(() => {
-    const hash = consumePendingHash() || window.location.hash;
-    if (!hash) {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-      return;
+    history.scrollRestoration = "manual";
+  }, []);
+
+  useEffect(() => {
+    const first = firstLoad.current;
+    firstLoad.current = false;
+    const intended =
+      consumePendingHash() || (first || consumePopNavigation() ? window.location.hash : "");
+
+    if (intended) {
+      if (window.location.hash !== intended) {
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}${intended}`);
+      }
+      return scrollToHash(intended, { retries: 36, behavior: first ? "auto" : "smooth" });
     }
-    if (window.location.hash !== hash) {
-      history.replaceState(null, "", `${window.location.pathname}${window.location.search}${hash}`);
-    }
-    return scrollToHash(hash, { retries: 36, behavior: "smooth" });
+
+    stripLocationHash();
+    return scrollToPageTop();
   }, [pathname]);
 
   useEffect(() => {
@@ -41,8 +59,11 @@ export function ScrollToTop() {
     }
 
     function onPopState() {
+      markPopNavigation();
       if (window.location.hash) {
         scrollToHash(window.location.hash, { retries: 16, behavior: "auto" });
+      } else {
+        scrollToPageTop();
       }
     }
 
@@ -85,7 +106,10 @@ export function ScrollToTop() {
           history.pushState(null, "", `${url.pathname}${url.search}`);
         }
         window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+        return;
       }
+
+      setPendingHash("");
     }
 
     window.addEventListener("hashchange", onHashChange);

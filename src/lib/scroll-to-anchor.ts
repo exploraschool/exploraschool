@@ -2,6 +2,7 @@ const HEADER_GAP = 10;
 const SETTLE_MS = 900;
 
 let pendingHash = "";
+let lastNavWasPop = false;
 
 export function setPendingHash(hash: string): void {
   pendingHash = normalizeHash(hash);
@@ -11,6 +12,16 @@ export function consumePendingHash(): string {
   const hash = pendingHash;
   pendingHash = "";
   return hash;
+}
+
+export function markPopNavigation(): void {
+  lastNavWasPop = true;
+}
+
+export function consumePopNavigation(): boolean {
+  const wasPop = lastNavWasPop;
+  lastNavWasPop = false;
+  return wasPop;
 }
 
 export function normalizeHash(hash: string): string {
@@ -58,6 +69,21 @@ export function getAnchorTop(el: HTMLElement): number {
 export function scrollToElement(el: HTMLElement, behavior: ScrollBehavior = "smooth"): void {
   prepareTarget(el);
   window.scrollTo({ top: getAnchorTop(el), left: 0, behavior: resolveScrollBehavior(behavior) });
+}
+
+export function scrollToPageTop(): () => void {
+  let cancelled = false;
+  const run = () => {
+    if (!cancelled) window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  };
+  run();
+  const frame = window.requestAnimationFrame(run);
+  const timers = [50, 160].map((ms) => window.setTimeout(run, ms));
+  return () => {
+    cancelled = true;
+    window.cancelAnimationFrame(frame);
+    timers.forEach((timer) => window.clearTimeout(timer));
+  };
 }
 
 type ScrollToHashOptions = {

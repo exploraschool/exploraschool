@@ -497,7 +497,7 @@ function RankingArticle({
       id: sectionIds[index],
       label: pickLocale(locale, section.headingEs, section.headingEn),
     })),
-    { id: "productos", label: pickLocale(locale, "Los 6 productos", "The 6 products") },
+    { id: "los-productos", label: pickLocale(locale, "Los 6 productos", "The 6 products") },
     faq.length ? { id: "faq", label: pickLocale(locale, "Preguntas frecuentes", "FAQ") } : null,
     { id: "clases", label: pickLocale(locale, "Clases en Sierra Nevada", "Lessons in Sierra Nevada") },
   ].filter((item): item is BlogTocItem => Boolean(item));
@@ -596,7 +596,7 @@ function RankingArticle({
         </section>
       ))}
 
-      <section id="productos" className="scroll-mt-28 space-y-10">
+      <section id="los-productos" className="scroll-mt-28 space-y-10">
         <h2 className={BLOG_H2_CLASS}>
           {pickLocale(locale, "Los 6 productos, uno a uno", "The 6 products, one by one")}
         </h2>
