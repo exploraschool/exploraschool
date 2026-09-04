@@ -17,7 +17,11 @@ Las fotografías en `public/images/stock/` proceden de [Wikimedia Commons](https
 | `fueraDePista` | [Fuera de pista en Fuente del Tesoro](https://commons.wikimedia.org/wiki/File:Fuera_de_pista_en_Fuente_del_Tesoro_(128818670).jpg) — acebal, CC BY 2.0 |
 | `saltoFallido` | [El salto fallido de Santi](https://commons.wikimedia.org/wiki/File:Sierra_Nevada_Ski_Station_(128819805).jpg) — acebal, CC BY 2.0 |
 
-## Licencias
+| `product-private.jpg` | [Pexels — Riccardo Vespa](https://www.pexels.com/photo/18510146/) — Pexels License |
+| `product-half-day.jpg` | [Pexels — Yagmur Bayrak](https://www.pexels.com/photo/20756537/) — Pexels License |
+| `discipline-telemark.jpg` | [Pexels — Vome](https://www.pexels.com/photo/15318901/) — Pexels License |
+| `product-snowboard-course.jpg` | [Pexels — Meyra](https://www.pexels.com/photo/35550676/) — Pexels License |
+| `discipline-freeride.jpg` | [Pexels — Ema Reynares](https://www.pexels.com/photo/18351583/) — Pexels License |
 
 - **CC BY-SA 4.0**: reutilización permitida con atribución y misma licencia en obras derivadas.
 - **CC BY 2.0**: reutilización permitida con atribución.

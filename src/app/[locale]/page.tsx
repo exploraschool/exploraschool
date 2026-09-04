@@ -38,8 +38,10 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <div className="pb-[calc(3.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
-      <Hero locale={locale} />
-      <TrustBar locale={locale} />
+      <div className="home-landing">
+        <Hero locale={locale} />
+        <TrustBar locale={locale} />
+      </div>
       <AboutVisual locale={locale} compact />
       <DisciplinesGrid locale={locale} compact />
       <ProductsSection locale={locale} limit={3} compact />

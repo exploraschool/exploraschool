@@ -40,11 +40,9 @@ export function PriceTag({
 
   return (
     <span className={`inline-flex flex-wrap items-baseline gap-x-2 gap-y-1 ${className}`}>
-      <span className={`text-muted line-through ${sizes.list}`}>
-        {prefix}
-        {display.listPrice} €{suffix}
-      </span>
+      <span className={`text-muted line-through ${sizes.list}`}>{display.listPrice} €</span>
       <span className={`text-accent-dark ${sizes.price}`}>
+        {prefix}
         {display.finalPrice} €{suffix}
       </span>
       <span

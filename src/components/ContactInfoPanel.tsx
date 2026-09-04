@@ -8,7 +8,6 @@ type ContactInfoPanelProps = {
   bookingTitle: string;
   bookingDesc: string;
   emailTitle: string;
-  phoneTitle: string;
   hoursTitle: string;
 };
 
@@ -25,7 +24,6 @@ export function ContactInfoPanel({
   bookingTitle,
   bookingDesc,
   emailTitle,
-  phoneTitle,
   hoursTitle,
 }: ContactInfoPanelProps) {
   return (
@@ -118,33 +116,21 @@ export function ContactInfoPanel({
                 {pickLocale(locale, "Ubicación", "Location")}
               </h2>
               <p className="mt-1 text-sm text-muted">
-                {site.nap.addressLocality}, {site.nap.addressRegion} {site.nap.postalCode}
-              </p>
-              <p className="mt-2 text-sm text-muted">
-                {pickLocale(locale, site.meetingPointEs, site.meetingPointEn)}
+                {site.nap.addressLocality}, {site.nap.addressRegion}
               </p>
               <div className="mt-3">
-                <a
-                  href={site.meetingPoint.googleMapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/como-llegar"
                   className="text-sm font-semibold text-hielo hover:text-accent"
                 >
-                  Google Maps →
-                </a>
+                  {pickLocale(locale, "Cómo llegar →", "Getting here →")}
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-hielo/10 bg-nieve px-5 py-4">
-        <p className="text-sm text-muted">
-          <span className="font-semibold text-pizarra">{phoneTitle}:</span> {site.phoneDisplay}
-          <span className="mx-2 text-hielo/30">·</span>
-          <span className="font-semibold text-pizarra">{hoursTitle}:</span> {site.openingHours}
-        </p>
-      </div>
     </div>
   );
 }

@@ -68,7 +68,7 @@ export function DisciplineModalities({ locale, parentId }: DisciplineModalitiesP
                       src={modality.image}
                       alt={pickLocale(locale, modality.nameEs, modality.nameEn)}
                       fill
-                      className="object-cover"
+                      className={modality.id === "freeride" ? "object-cover object-[center_45%]" : "object-cover"}
                       sizes="(max-width: 640px) 100vw, 50vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 via-pizarra/10 to-transparent" />

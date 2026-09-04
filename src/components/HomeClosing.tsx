@@ -35,13 +35,13 @@ export function HomeClosing({ locale }: HomeClosingProps) {
           <div className="rounded-2xl mesh-dark px-5 py-7 text-nieve sm:px-7 sm:py-8">
             <p className="eyebrow-dark">{pickLocale(locale, "Reservas", "Bookings")}</p>
             <h2 className="mt-2 font-display text-2xl font-semibold text-nieve">
-              {pickLocale(locale, "¿Listo para la nieve?", "Ready for the snow?")}
+              {pickLocale(locale, "Envía tu solicitud", "Send your request")}
             </h2>
             <p className="mt-4 text-sm text-on-dark-muted">
               {pickLocale(
                 locale,
-                "Elige clases, añade al carrito y envía tu solicitud. Sin pago online.",
-                "Pick lessons, add to cart and send your request. No online payment.",
+                "Elige clases, añade al carrito y envía tu solicitud.",
+                "Pick lessons, add to cart and send your request.",
               )}
             </p>
             <div className="btn-stack mt-5 sm:mt-6">

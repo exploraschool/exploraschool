@@ -26,7 +26,7 @@ export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-pizarra/40 to-transparent" />
             <div className="absolute bottom-3 left-3 rounded-lg bg-pizarra/60 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
-              Estación de esquí · Sierra Nevada
+              Estación · Borreguiles
             </div>
           </div>
         </Reveal>
@@ -35,7 +35,7 @@ export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
           <div>
             <SectionHeader
               eyebrow={pickLocale(locale, "Explora School & Club", "Explora School & Club")}
-              title={pickLocale(locale, "Tu escuela en Sierra Nevada", "Your school in Sierra Nevada")}
+              title={pickLocale(locale, "Quiénes somos", "Who we are")}
             />
             <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
               {pickLocale(locale, site.aboutLeadEs, site.aboutLeadEn)}

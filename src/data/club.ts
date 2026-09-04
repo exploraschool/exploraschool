@@ -40,9 +40,9 @@ export const club = {
   aboutLeadEn:
     "Creando Aventuras was born from a shared passion for the mountains and the desire to build a community united by sport and nature.",
   aboutBodyEs:
-    "Hoy, Creando Aventuras es una familia en crecimiento, con miembros de todas las edades y niveles, unidos por la misma pasión que nos impulsó desde el primer día. Diseñado para niños de 5 a 18 años, el club busca ofrecer una progresión continua y técnica en el mundo de la nieve y la montaña, con diversas disciplinas de los deportes de invierno para asegurar una formación integral.",
+    "Diseñado para niños y jóvenes de 5 a 18 años: progresión técnica en nieve y montaña, con varias disciplinas de invierno.",
   aboutBodyEn:
-    "Today, Creando Aventuras is a growing family, with members of all ages and levels, united by the same passion that drove us from day one. Designed for children aged 5 to 18, the club offers continuous technical progression in snow and mountain sports, across winter disciplines for well-rounded training.",
+    "Designed for children and young people aged 5 to 18: technical progression in snow and mountains, across winter disciplines.",
   federativeNoteEs:
     "Al inscribirse y federarse en nuestro club, podrás aprovechar nuestras ofertas exclusivas.",
   federativeNoteEn:

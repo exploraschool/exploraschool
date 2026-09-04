@@ -63,8 +63,8 @@ export const products: Product[] = [
     category: "full-day",
     titleEs: "Día completo",
     titleEn: "Full Day",
-    shortDescriptionEs: `5 h de clase · desde ${FULL_DAY_HOURLY_EUR} €/h. Experiencia personalizada.`,
-    shortDescriptionEn: `5 h lesson · from €${FULL_DAY_HOURLY_EUR}/h. Personalised experience.`,
+    shortDescriptionEs: "El mejor precio por hora de la oferta.",
+    shortDescriptionEn: "The best hourly rate in the offer.",
     descriptionEs:
       "Actividad de día completo con 5 horas de clase efectivas y 1 hora de comodín para recogida en hotel, retrasos, descansos y comidas. Horario ajustado a tus necesidades y punto de encuentro personalizado.",
     descriptionEn:
@@ -212,8 +212,8 @@ export const products: Product[] = [
     category: "half-day",
     titleEs: "Clases Forfait medio día",
     titleEn: "Half-day lift pass lessons",
-    shortDescriptionEs: "3 h de 14:00 a 17:00.",
-    shortDescriptionEn: "3 h from 2:00 to 5:00 pm.",
+    shortDescriptionEs: "Tarde, si llegas después de comer o ya has esquiado por la mañana.",
+    shortDescriptionEn: "Afternoon, if you arrive after lunch or already skied in the morning.",
     descriptionEs:
       "Clases de medio día en franja de tarde. 3 horas de clase de 14:00 a 17:00. Ideal si ya tienes forfait de mañana o llegas a la estación después de comer.",
     descriptionEn:
@@ -238,7 +238,7 @@ export const products: Product[] = [
     season: CURRENT_SEASON.key,
     highlighted: false,
     sortOrder: 7,
-    image: "/images/stock/product-afternoon.jpg",
+    image: "/images/stock/product-half-day.jpg",
   },
   {
     id: "curso-snow",
@@ -246,8 +246,8 @@ export const products: Product[] = [
     category: "course",
     titleEs: "Curso de snowboard",
     titleEn: "Snowboard course",
-    shortDescriptionEs: `${CURSO_COLECTIVO_PER_PERSON_EUR} € / persona · mínimo 4 personas.`,
-    shortDescriptionEn: `€${CURSO_COLECTIVO_PER_PERSON_EUR} / person · minimum 4 people.`,
+    shortDescriptionEs: "Curso colectivo de mañana. Se confirma a partir de 4 personas.",
+    shortDescriptionEn: "Morning group course. Confirmed from 4 people.",
     descriptionEs:
       `Curso de snowboard de 3 horas (10:00–13:00). ${CURSO_COLECTIVO_PER_PERSON_EUR} € por persona. Mínimo 4 personas para realizar el curso; máximo 8.`,
     descriptionEn:
@@ -261,7 +261,6 @@ export const products: Product[] = [
     scheduleEn: "10:00 am–1:00 pm",
     featuresEs: [
       "Rendimiento Asegurado",
-      `${CURSO_COLECTIVO_PER_PERSON_EUR} € / persona`,
       "Mínimo 4 personas para realizar el curso",
       "Máximo 8 personas",
       "3 horas de clase efectivas",
@@ -269,7 +268,6 @@ export const products: Product[] = [
     ],
     featuresEn: [
       "Guaranteed Progress",
-      `€${CURSO_COLECTIVO_PER_PERSON_EUR} / person`,
       "Minimum 4 people required to run the course",
       "Maximum 8 people",
       "3 hours of effective lesson time",
@@ -286,8 +284,8 @@ export const products: Product[] = [
     category: "private",
     titleEs: "Clases particulares",
     titleEn: "Private lessons",
-    shortDescriptionEs: `1 y 2 personas: mismo precio · desde ${SESSION_2H_STANDARD[0]} € (2 h mañana).`,
-    shortDescriptionEn: `1 and 2 people: same price · from €${SESSION_2H_STANDARD[0]} (2 h morning).`,
+    shortDescriptionEs: "Tú eliges horario y disciplina. Todos los niveles.",
+    shortDescriptionEn: "You choose time and discipline. All levels.",
     descriptionEs:
       "Clases particulares de 1 a 8 participantes. Duración mínima 2 horas. 1 y 2 personas pagan el mismo precio total; a partir de la 3.ª persona se suma un extra. Elige horario y disciplina.",
     descriptionEn:
@@ -315,7 +313,7 @@ export const products: Product[] = [
     season: CURRENT_SEASON.key,
     highlighted: true,
     sortOrder: 10,
-    image: "/images/stock/product-private-zona.jpg",
+    image: "/images/stock/product-private.jpg",
   },
   {
     id: "curso-empresa",
@@ -323,8 +321,8 @@ export const products: Product[] = [
     category: "course",
     titleEs: "Cursos de 2 a 5 días",
     titleEn: "2 to 5-day courses",
-    shortDescriptionEs: `Desde ${SESSION_CLUB_EMPRESA[0]} €/día (1–2 personas). 2 a 5 días.`,
-    shortDescriptionEn: `From €${SESSION_CLUB_EMPRESA[0]}/day (1–2 people). 2 to 5 days.`,
+    shortDescriptionEs: "Para empresas, clubes y grupos. De 2 a 5 días consecutivos.",
+    shortDescriptionEn: "For companies, clubs and groups. 2 to 5 consecutive days.",
     descriptionEs:
       `Cursos de 2 a 5 días en jornada completa (10:00–16:00) para viajes de empresa, clubes deportivos y grupos. ${SESSION_CLUB_EMPRESA[0]} €/día para 1 o 2 personas; +25 €/día por persona extra. Grupo máximo 8.`,
     descriptionEn:

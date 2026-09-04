@@ -4,7 +4,6 @@ import { ContactForm } from "@/components/ContactForm";
 import { ContactInfoPanel } from "@/components/ContactInfoPanel";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
-import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
@@ -32,30 +31,21 @@ export default async function ContactoPage({ params }: Props) {
     <>
       <BreadcrumbJsonLd
         locale={locale}
-        items={[{ name: t("title"), path: "/contacto" }]}
+        items={[{ name: pickLocale(locale, "Contacto", "Contact"), path: "/contacto" }]}
       />
       <section className="page-header">
         <div className="container-page relative">
           <p className="eyebrow">{pickLocale(locale, "Contacto", "Contact")}</p>
-          <h1 className="page-title mt-2 sm:mt-2.5">{t("title")}</h1>
-          <p className="page-lead">{t("subtitle")}</p>
-
-          <div className="page-actions">
-            <a
-              href={site.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary !w-auto"
-            >
-              WhatsApp
-            </a>
-            <a href={`tel:${site.phone}`} className="btn-secondary !w-auto">
-              {site.phoneDisplay}
-            </a>
-            <Link href="/reserva" className="btn-secondary !w-auto">
-              {pickLocale(locale, "Ir a mi reserva", "Go to my booking")}
-            </Link>
-          </div>
+          <h1 className="page-title mt-2 sm:mt-2.5">
+            {pickLocale(locale, "¿Hablamos?", "Get in touch")}
+          </h1>
+          <p className="page-lead">
+            {pickLocale(
+              locale,
+              "WhatsApp, teléfono o el formulario. Te respondemos lo antes posible.",
+              "WhatsApp, phone or the form. We reply as soon as we can.",
+            )}
+          </p>
         </div>
       </section>
 
@@ -69,7 +59,6 @@ export default async function ContactoPage({ params }: Props) {
                 bookingTitle={t("bookingTitle")}
                 bookingDesc={t("bookingDesc")}
                 emailTitle={t("emailTitle")}
-                phoneTitle={t("phoneTitle")}
                 hoursTitle={t("hoursTitle")}
               />
             </div>

@@ -22,9 +22,18 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
               eyebrow={pickLocale(locale, "Opiniones", "Reviews")}
               title={pickLocale(locale, "Lo que dicen nuestros clientes", "What our guests say")}
             />
-            <span className="inline-flex shrink-0 cursor-default items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-semibold text-white pointer-events-none">
-              {site.tripAdvisor.rating} ★ TripAdvisor
-            </span>
+            <a
+              href={site.tripAdvisor.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+            >
+              {pickLocale(
+                locale,
+                `${site.tripAdvisor.reviewCount} reseñas`,
+                `${site.tripAdvisor.reviewCount} reviews`,
+              )}
+            </a>
           </div>
         </Reveal>
 

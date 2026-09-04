@@ -179,8 +179,6 @@ export const priceNotes = {
     "Importe total del grupo (no por persona). 1 y 2 personas pagan el mismo precio. Duración mínima: 2 horas.",
   groupTotalEn:
     "Total price for the group (not per person). 1 and 2 people pay the same price. Minimum duration: 2 hours.",
-  tablesIntroEs:
-    `Para clases particulares. El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h. Duración mínima 2 horas.`,
-  tablesIntroEn:
-    `For private lessons. The best hourly rate is the full day: €${FULL_DAY_HOURLY_EUR}/h. 2-hour minimum.`,
+  tablesIntroEs: "Para clases particulares. Duración mínima 2 horas.",
+  tablesIntroEn: "For private lessons. 2-hour minimum.",
 };

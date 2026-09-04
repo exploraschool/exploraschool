@@ -104,9 +104,9 @@ export const site: SiteConfig = {
       "https://www.google.com/maps/place/Explora+School+%26+Club/@37.0711362,-3.3890244,17z/data=!4m6!3m5!1s0xd71c39cb043a92b:0xe698582ffd83b140!8m2!3d37.0711362!4d-3.3890244!16s%2Fg%2F11v9j767kd?hl=es",
   },
   meetingPointEs:
-    "Explora School & Club en la estación de esquí de Sierra Nevada — ubicación oficial en Google Maps. El/la instructor/a va con uniforme Explora. En día completo: recogida y entrega donde se solicite.",
+    "El/la instructor/a va con uniforme Explora. En día completo: recogida y entrega donde se solicite.",
   meetingPointEn:
-    "Explora School & Club at Sierra Nevada ski resort — official location on Google Maps. Your instructor wears the Explora uniform. Full-Day: pick-up and drop-off on request.",
+    "Your instructor wears the Explora uniform. Full day: pick-up and drop-off on request.",
   nap: {
     name: "Explora School & Club",
     streetAddress: "Estación de esquí de Sierra Nevada, Borreguiles, Pradollano",
@@ -143,13 +143,13 @@ export const site: SiteConfig = {
   instructorQualificationsShortEs: "TD I, II y III",
   instructorQualificationsShortEn: "TD I, II and III",
   heroLeadEs:
-    "Instructores titulados con más de 20 años de experiencia. Explora desde 2010. Reserva online en minutos.",
+    "Instructores titulados. Grupos de 1 a 8. Reserva online en minutos.",
   heroLeadEn:
-    "Qualified instructors with over 20 years of experience. Explora since 2010. Book online in minutes.",
+    "Qualified instructors. Groups of 1 to 8. Book online in minutes.",
   aboutLeadEs:
-    "Agrupación de instructores titulados con años de experiencia en la nieve. Explora School & Club desde 2010. Clases de 1 a 8 participantes y cursos en esquí, snowboard, telemark y más. Punto de encuentro en la estación de esquí de Sierra Nevada.",
+    "Agrupación de instructores con nombre y cara. Esquí, snowboard, telemark y más, en grupos reducidos.",
   aboutLeadEn:
-    "A group of qualified instructors with years of experience on the snow. Explora School & Club since 2010. Lessons for 1 to 8 participants and courses in ski, snowboard, telemark and more. Meeting point at Sierra Nevada ski resort.",
+    "A group of named instructors. Ski, snowboard, telemark and more, in small groups.",
   homeMetaDescriptionEs:
     `Clases de esquí y snowboard baratas en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Instructores titulados, grupos de 1 a 8. Reserva online.`,
   homeMetaDescriptionEn:

@@ -45,11 +45,7 @@ export default async function BlogPage({ params }: Props) {
         <div className="container-page">
           <p className="eyebrow">Blog</p>
           <h1 className="page-title mt-2 sm:mt-2.5">
-            {pickLocale(
-              locale,
-              "Blog de esquí y snowboard en Sierra Nevada",
-              "Ski and snowboard blog for Sierra Nevada",
-            )}
+            {pickLocale(locale, "Guías para la nieve", "Guides for the snow")}
           </h1>
           <p className="mt-3 max-w-2xl text-muted">
             {pickLocale(

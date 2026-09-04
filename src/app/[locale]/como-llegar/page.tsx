@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: pickLocale(
       locale,
       "Punto de encuentro oficial de Explora School & Club en la estación de esquí de Sierra Nevada (Granada). Indicaciones y Google Maps.",
-      site.meetingPointEn,
+      "Official meeting point of Explora School & Club at Sierra Nevada ski resort (Granada). Directions and Google Maps.",
     ),
   });
 }
@@ -43,10 +43,11 @@ export default async function ComoLlegarPage({ params }: Props) {
       />
       <PageHeader
         eyebrow={pickLocale(locale, "Ubicación", "Location")}
-        title={pickLocale(
+        title={pickLocale(locale, "Cómo llegar", "Getting here")}
+        description={pickLocale(
           locale,
-          "Cómo llegar a Explora School en Sierra Nevada",
-          "Getting to Explora School in Sierra Nevada",
+          "Punto de encuentro en la estación, subida desde Pradollano y alquiler de material.",
+          "Meeting point at the resort, getting up from Pradollano, and equipment rental.",
         )}
       />
 
@@ -77,15 +78,8 @@ export default async function ComoLlegarPage({ params }: Props) {
             <p>
               {pickLocale(
                 locale,
-                "Sierra Nevada está a unos 30 km de Granada. Puedes llegar en coche, autobús desde Granada o servicios de transfer. Sube en telecabina a la estación y acude al punto de encuentro de Explora School & Club (mapa adjunto).",
-                "Sierra Nevada is about 30 km from Granada. You can arrive by car, bus from Granada or transfer services. Take the gondola up to the resort and head to the Explora School & Club meeting point (map below).",
-              )}
-            </p>
-            <p>
-              {pickLocale(
-                locale,
-                "El forfait se saca en sierranevada.es, en los cajeros de los parkings y de la Silla del Pueblo (estación media y superior), o en Plaza de Andalucía. Si necesitas indicaciones concretas para tu día, escríbenos.",
-                "Lift passes are available at sierranevada.es, at the automatic machines in the car parks and at the Village chairlift (middle and top stations), or at Plaza de Andalucía. Email us if you need specific directions for your day.",
+                "Sierra Nevada está a unos 30 km de Granada, en coche, autobús o transfer. El forfait se saca en sierranevada.es, en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía.",
+                "Sierra Nevada is about 30 km from Granada, by car, bus or transfer. Lift passes are at sierranevada.es, at the car park and Village chairlift machines, or at Plaza de Andalucía.",
               )}
             </p>
 
@@ -124,11 +118,7 @@ export default async function ComoLlegarPage({ params }: Props) {
               />
             </div>
             <p className="text-xs text-hielo/70 sm:text-sm">
-              {pickLocale(
-                locale,
-                `Punto de encuentro oficial: ${site.meetingPoint.name} (estación de esquí de Sierra Nevada).`,
-                `Official meeting point: ${site.meetingPoint.name} (Sierra Nevada ski resort).`,
-              )}
+              {pickLocale(locale, "El pin marca el punto de encuentro.", "The pin is the meeting point.")}
             </p>
           </div>
         </div>

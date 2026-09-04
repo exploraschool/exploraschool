@@ -1,5 +1,4 @@
 import { setRequestLocale } from "next-intl/server";
-import { CTASection } from "@/components/CTASection";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { FAQHighlights } from "@/components/FAQHighlights";
 import { FAQQuickHelp } from "@/components/FAQQuickHelp";
@@ -61,8 +60,8 @@ export default async function FaqsPage({ params }: Props) {
         title={pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
         description={pickLocale(
           locale,
-          "Reserva, forfait, punto de encuentro y el día de la clase. Si no está aquí, te respondemos de 9:00 a 20:00.",
-          "Booking, lift pass, meeting point and lesson day. If it is not here, we reply from 9:00 am to 8:00 pm.",
+          "Reserva, forfait, punto de encuentro y el día de la clase.",
+          "Booking, lift pass, meeting point and lesson day.",
         )}
       >
         <nav
@@ -102,8 +101,8 @@ export default async function FaqsPage({ params }: Props) {
             title={pickLocale(locale, "Elige un tema o busca", "Pick a topic or search")}
             description={pickLocale(
               locale,
-              "Reservas, la subida a la estación y el día de clase. Escribe forfait, cajero o encuentro si vienes con una duda concreta.",
-              "Bookings, getting up the mountain and lesson day. Type lift pass, machine or meeting point if you have a specific question.",
+              "Escribe forfait, cajero o encuentro si vienes con una duda concreta.",
+              "Type lift pass, machine or meeting point if you have a specific question.",
             )}
           />
           <div className="section-body">
@@ -120,8 +119,8 @@ export default async function FaqsPage({ params }: Props) {
               title={pickLocale(locale, "Te respondemos", "We reply")}
               description={pickLocale(
                 locale,
-                "WhatsApp, teléfono o email. También puedes enviar la reserva desde la web.",
-                "WhatsApp, phone or email. You can also send the booking from the website.",
+                "WhatsApp, teléfono, email o la reserva online.",
+                "WhatsApp, phone, email or book online.",
               )}
             />
           </Reveal>
@@ -130,8 +129,6 @@ export default async function FaqsPage({ params }: Props) {
           </div>
         </div>
       </section>
-
-      <CTASection locale={locale} />
     </>
   );
 }

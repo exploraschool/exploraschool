@@ -41,15 +41,12 @@ export default async function ClasesPage({ params }: Props) {
       />
       <PageHero
         locale={locale}
-        title={pickLocale(
-          locale,
-          `Clases de esquí y snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-          `Ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
-        )}
+        eyebrow="Sierra Nevada · Granada"
+        title={pickLocale(locale, "Clases de esquí y snowboard", "Ski and snowboard lessons")}
         description={pickLocale(
           locale,
-          `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (5 h de clase). Compara horarios de 2 h y 3 h y reserva online. IVA incluido.`,
-          `The best hourly rate is the full day: €${FULL_DAY_HOURLY_EUR}/h (5 h of teaching). Compare 2 h and 3 h slots and book online. VAT included.`,
+          "Instructores titulados. Grupos de 1 a 8. Elige 2 h, 3 h o día completo y reserva online.",
+          "Qualified instructors. Groups of 1 to 8. Choose 2 h, 3 h or a full day and book online.",
         )}
         imageSrc={media.clasesHero.src}
         imageAltEs={media.clasesHero.altEs}

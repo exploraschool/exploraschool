@@ -720,6 +720,79 @@
     @apply text-[0.65rem] font-bold uppercase tracking-[0.2em] text-oro-light sm:text-xs;
   }
 
+  .home-landing {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .hero-block {
+    min-height: 58svh;
+  }
+
+  .hero-block__inner {
+    display: flex;
+    min-height: 58svh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding-top: 1.25rem;
+    padding-bottom: 2rem;
+  }
+
+  .home-trust-bar {
+    margin-top: -1rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-block,
+    .hero-block__inner {
+      min-height: 62svh;
+    }
+
+    .hero-block__inner {
+      justify-content: center;
+      padding-top: 2.5rem;
+      padding-bottom: 2.75rem;
+    }
+
+    .home-landing {
+      padding-bottom: 1.25rem;
+    }
+
+    .home-trust-bar {
+      margin-top: -1.25rem;
+    }
+  }
+
+  /* First screen: header + hero + trust bar, with a little air under the white card */
+  @media (min-width: 1024px) {
+    .home-landing {
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100svh - var(--header-height));
+      padding-bottom: 1.5rem;
+    }
+
+    .hero-block {
+      display: flex;
+      flex: 1 1 auto;
+      min-height: 0;
+      flex-direction: column;
+    }
+
+    .hero-block__inner {
+      flex: 1 1 auto;
+      min-height: 0;
+      justify-content: center;
+      padding-top: 1.5rem;
+      padding-bottom: 3.25rem;
+    }
+
+    .home-trust-bar {
+      flex-shrink: 0;
+      margin-top: -1.75rem;
+    }
+  }
+
   .eyebrow-pill {
     @apply inline-flex items-center gap-2 rounded-full border border-oro-light/40 bg-oro-light/10 px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-oro-light backdrop-blur-sm sm:px-4 sm:py-1.5 sm:text-xs;
   }

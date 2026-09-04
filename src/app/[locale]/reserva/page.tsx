@@ -40,17 +40,13 @@ export default async function ReservaPage({ params }: Props) {
         <div className="container-page">
           <div className="mb-8 max-w-2xl">
             <h1 className="page-title">
-              {pickLocale(
-                locale,
-                "Reservar clases de esquí en Sierra Nevada",
-                "Book ski lessons in Sierra Nevada",
-              )}
+              {pickLocale(locale, "Tu reserva", "Your booking")}
             </h1>
             <p className="page-lead mt-3">
               {pickLocale(
                 locale,
-                "Revisa las clases añadidas, completa tus datos y envía la solicitud. Te confirmamos por email sin pago online.",
-                "Review your lessons, fill in your details and send the request. We confirm by email with no online payment.",
+                "Revisa las clases, completa los datos y envía la solicitud.",
+                "Review your lessons, fill in the details and send the request.",
               )}
             </p>
           </div>

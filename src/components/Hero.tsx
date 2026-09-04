@@ -15,7 +15,7 @@ export function Hero({ locale }: HeroProps) {
   const showEarlyBird = isEarlyBirdActive();
 
   return (
-    <section className="relative min-h-[64svh] overflow-hidden bg-pizarra text-nieve sm:min-h-[72svh] lg:min-h-[76vh]">
+    <section className="hero-block relative overflow-hidden bg-pizarra text-nieve">
       <Image
         src={media.hero}
         alt={pickLocale(
@@ -32,7 +32,7 @@ export function Hero({ locale }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-pizarra/90 via-pizarra/55 to-hielo/15" />
       <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/15 to-pizarra/35 sm:from-pizarra/80 sm:via-transparent sm:to-transparent" />
 
-      <div className="container-page relative flex min-h-[64svh] flex-col justify-start pt-5 pb-8 sm:min-h-[72svh] sm:justify-center sm:py-16 lg:min-h-[76vh] lg:py-20">
+      <div className="hero-block__inner container-page relative">
         <div className="grid items-start gap-5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           <div className="max-w-xl animate-fade-up">
             <p className="eyebrow-pill">
@@ -45,7 +45,6 @@ export function Hero({ locale }: HeroProps) {
               <span className="text-oro-light">
                 {pickLocale(locale, "esquí y snowboard", "lessons")}
               </span>
-              {pickLocale(locale, " en Sierra Nevada", " in Sierra Nevada")}
             </h1>
 
             <p className="mt-2.5 text-sm leading-relaxed text-nieve/90 sm:mt-4 sm:text-base">

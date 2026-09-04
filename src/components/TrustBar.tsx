@@ -3,7 +3,6 @@ import { tripAdvisorSummary } from "@/data/reviews";
 import { getActiveInstructors } from "@/data/instructors";
 import { Reveal } from "@/components/Reveal";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 type TrustBarProps = {
   locale: string;
@@ -15,8 +14,8 @@ export function TrustBar({ locale }: TrustBarProps) {
 
   const stats = [
     {
-      value: `${FULL_DAY_HOURLY_EUR} €/h`,
-      label: pickLocale(locale, "Mejor precio / hora", "Best hourly rate"),
+      value: pickLocale(locale, "IVA incl.", "VAT incl."),
+      label: pickLocale(locale, "En todas las tarifas", "On all rates"),
       accent: "text-hielo",
     },
     {
@@ -37,7 +36,7 @@ export function TrustBar({ locale }: TrustBarProps) {
   ];
 
   return (
-    <section className="relative z-10 -mt-4 sm:-mt-5">
+    <section className="home-trust-bar relative z-10">
       <div className="container-page">
         <div className="grid grid-cols-2 gap-2 rounded-2xl border border-hielo/8 bg-white px-3 py-3 shadow-[0_8px_32px_rgba(10,18,25,0.08)] sm:gap-2.5 sm:px-4 sm:py-3.5 md:grid-cols-4">
           {stats.map((stat, i) => (

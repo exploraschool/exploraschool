@@ -145,23 +145,6 @@ export default async function ClubPage({ params }: Props) {
               </Reveal>
             ))}
           </div>
-          <Reveal>
-            <p className="section-body-sm text-center text-sm text-muted">
-              {pickLocale(
-                locale,
-                "Consulta precios actualizados y reserva en la web oficial del club.",
-                "Check current prices and book on the club's official website.",
-              )}{" "}
-              <a
-                href={club.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-hielo underline decoration-hielo/30 underline-offset-2 hover:decoration-hielo"
-              >
-                creandoaventuras.com
-              </a>
-            </p>
-          </Reveal>
         </div>
       </section>
 
@@ -175,8 +158,8 @@ export default async function ClubPage({ params }: Props) {
                 title={pickLocale(locale, "Beneficios para socios", "Member benefits")}
                 description={pickLocale(
                   locale,
-                  "Únete a nuestra comunidad y disfruta de todos los beneficios del club deportivo.",
-                  "Join our community and enjoy all the benefits of the sports club.",
+                  "Esto es lo que incluye ser socio.",
+                  "This is what membership includes.",
                 )}
               />
             </Reveal>

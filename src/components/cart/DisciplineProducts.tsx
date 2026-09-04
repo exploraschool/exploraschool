@@ -1,13 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { products, type Product, type ProductId } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import { isBookableProduct } from "@/lib/product-pricing";
 import { productMatchesDiscipline, type MainDisciplineId } from "@/data/disciplines";
-import { AddToCartButton } from "@/components/cart/AddToCartButton";
-import { PriceTag } from "@/components/PriceTag";
+import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 import { pickLocale } from "@/lib/locale";
-import { CURSO_COLECTIVO_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { Reveal } from "@/components/Reveal";
 
 type DisciplineProductsProps = {
@@ -63,65 +60,16 @@ export function DisciplineProducts({
             delay={i * 80}
             className="flex w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]"
           >
-            <article className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white transition hover:border-accent/25 hover:shadow-[0_12px_32px_rgba(10,18,25,0.08)]">
-              <div className="relative isolate overflow-hidden px-4 pb-3.5 pt-4 sm:px-5 sm:pb-4 sm:pt-5">
-                <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-                  <Image
-                    src={product.image}
-                    alt=""
-                    fill
-                    className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-                    sizes="(max-width: 1024px) 100vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-white/80" />
-                  <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
-                </div>
-
-                {snowboardOnly ? (
-                  <span className="mb-2 inline-block rounded-full bg-hielo px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-white">
-                    {pickLocale(locale, "Snowboard", "Snowboard")}
-                  </span>
-                ) : null}
-                <h3 className="font-display text-lg font-semibold text-hielo">
-                  {pickLocale(locale, product.titleEs, product.titleEn)}
-                </h3>
-                <p className="mt-2 text-sm text-muted line-clamp-2">
-                  {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
-                </p>
-              </div>
-
-              <div className="mt-auto flex flex-1 flex-col border-t border-hielo/6 p-4 sm:p-5">
-                {product.fromPrice ? (
-                  <p>
-                    <PriceTag
-                      price={product.fromPrice}
-                      locale={locale}
-                      productId={product.id}
-                      prefix={pickLocale(locale, "desde ", "from ")}
-                      size="sm"
-                    />
-                    {product.id === "curso-snow" ? (
-                      <span className="mt-1 block text-xs font-semibold text-hielo">
-                        {pickLocale(
-                          locale,
-                          `~${CURSO_COLECTIVO_HOURLY_EUR} €/h por persona · 3 h · mín. 4`,
-                          `~€${CURSO_COLECTIVO_HOURLY_EUR}/h per person · 3 h · min. 4`,
-                        )}
-                      </span>
-                    ) : null}
-                  </p>
-                ) : null}
-                <AddToCartButton
-                  productId={product.id as ProductId}
-                  defaultDiscipline={defaultDisciplineForProduct(
-                    product,
-                    disciplineId,
-                    alsoIncludeDisciplineIds,
-                  )}
-                  className="mt-auto !w-full pt-4"
-                />
-              </div>
-            </article>
+            <LessonOfferCard
+              product={product}
+              locale={locale}
+              badge={snowboardOnly ? pickLocale(locale, "Snowboard", "Snowboard") : undefined}
+              defaultDiscipline={defaultDisciplineForProduct(
+                product,
+                disciplineId,
+                alsoIncludeDisciplineIds,
+              )}
+            />
           </Reveal>
         );
       })}

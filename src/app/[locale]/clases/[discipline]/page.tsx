@@ -9,7 +9,7 @@ import { DisciplineProducts } from "@/components/cart/DisciplineProducts";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR, CURSO_COLECTIVO_PER_PERSON_EUR } from "@/lib/lesson-pricing";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
@@ -45,6 +45,37 @@ const SEO_TITLES: Record<string, { es: string; en: string }> = {
   },
 };
 
+const PAGE_TITLES: Record<string, { es: string; en: string }> = {
+  esqui: { es: "Clases de esquí", en: "Ski lessons" },
+  snowboard: { es: "Clases de snowboard", en: "Snowboard lessons" },
+  telemark: { es: "Clases de telemark", en: "Telemark lessons" },
+  "esqui-adaptado": { es: "Esquí adaptado", en: "Adaptive skiing" },
+  ninos: { es: "Clases para niños", en: "Kids lessons" },
+};
+
+const PAGE_LEADS: Record<string, { es: string; en: string }> = {
+  esqui: {
+    es: "En pista, freeride y freestyle. Grupos de 1 a 8, todas las edades y niveles.",
+    en: "On piste, freeride and freestyle. Groups of 1 to 8, all ages and levels.",
+  },
+  snowboard: {
+    es: "De iniciación a snowpark y fuera de pista. También hay curso colectivo por las mañanas.",
+    en: "From first turns to snowpark and off-piste. There is also a morning group course.",
+  },
+  telemark: {
+    es: "Técnica nórdica en pista, con instructores especializados.",
+    en: "Nordic-style technique on piste, with specialist instructors.",
+  },
+  "esqui-adaptado": {
+    es: "Clases individualizadas e inclusivas, con seguridad y ritmo propio.",
+    en: "Individualized, inclusive lessons at your own pace.",
+  },
+  ninos: {
+    es: "Esquí y snowboard desde 3 años. Grupos de 1 a 8.",
+    en: "Ski and snowboard from age 3. Groups of 1 to 8.",
+  },
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, discipline: slug } = await params;
   const d = getDisciplineBySlug(slug);
@@ -68,12 +99,17 @@ export default async function DisciplinePage({ params }: Props) {
 
   const showModalities = disciplinesWithModalities.includes(d.id);
   const isEsquiPage = d.id === "esqui";
-  const isSnowboardPage = d.id === "snowboard";
 
   const heading = pickLocale(
     locale,
-    SEO_TITLES[d.id]?.es ?? d.nameEs,
-    SEO_TITLES[d.id]?.en ?? d.nameEn,
+    PAGE_TITLES[d.id]?.es ?? d.nameEs,
+    PAGE_TITLES[d.id]?.en ?? d.nameEn,
+  );
+
+  const lead = pickLocale(
+    locale,
+    PAGE_LEADS[d.id]?.es ?? d.descriptionEs,
+    PAGE_LEADS[d.id]?.en ?? d.descriptionEn,
   );
 
   return (
@@ -92,54 +128,11 @@ export default async function DisciplinePage({ params }: Props) {
               {pickLocale(locale, "Todas las clases", "All lessons")}
             </BackLink>
             <h1 className="page-title mt-4">{heading}</h1>
-            <p className="page-lead">
-              {isEsquiPage
-                ? pickLocale(
-                    locale,
-                    `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. De 1 a 8 participantes, todas las edades y niveles. En pista, freeride y freestyle con instructores titulados.`,
-                    `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1 to 8, all ages and levels. On piste, freeride and freestyle with qualified instructors.`,
-                  )
-                : isSnowboardPage
-                  ? pickLocale(
-                      locale,
-                      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. De iniciación a snowpark y fuera de pista, con instructores especializados.`,
-                      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. From first turns to snowpark and off-piste, with specialist instructors.`,
-                    )
-                  : pickLocale(locale, d.descriptionEs, d.descriptionEn)}
-            </p>
-            {isSnowboardPage ? (
-              <p className="mt-3 text-sm font-medium text-hielo">
-                {pickLocale(
-                  locale,
-                  `Curso colectivo desde ${CURSO_COLECTIVO_PER_PERSON_EUR} €/persona (3 h).`,
-                  `Group course from €${CURSO_COLECTIVO_PER_PERSON_EUR}/person (3 h).`,
-                )}
-              </p>
-            ) : null}
+            <p className="page-lead">{lead}</p>
             <p className="mt-4 text-sm text-muted">
-              {isEsquiPage
-                ? pickLocale(
-                    locale,
-                    "Mismo punto de encuentro oficial en la estación (Google Maps). Más abajo verás todos los formatos de esquí y el curso de snowboard.",
-                    "Same official meeting point at the resort (Google Maps). Below you will find all ski formats and the snowboard course.",
-                  )
-                : showModalities
-                  ? pickLocale(
-                      locale,
-                      "Clases en pista, freeride y freestyle con instructores titulados. Punto de encuentro oficial en la estación de Sierra Nevada (Google Maps).",
-                      "Piste, freeride and freestyle lessons with qualified instructors. Official meeting point at Sierra Nevada ski resort (Google Maps).",
-                    )
-                  : d.id === "esqui-adaptado"
-                    ? pickLocale(
-                        locale,
-                        "Clases individualizadas con instructores especializados. Punto de encuentro en la estación de Sierra Nevada.",
-                        "Individualized lessons with specialist instructors. Meeting point at Sierra Nevada ski resort.",
-                      )
-                    : pickLocale(
-                      locale,
-                      "Clases de 1 a 8 participantes con instructores con nombre y cara. Punto de encuentro en la estación de Sierra Nevada.",
-                      "Lessons for 1 to 8 participants with named instructors. Meeting point at Sierra Nevada ski resort.",
-                    )}
+              <Link href="/como-llegar" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
+                {pickLocale(locale, "Cómo llegar y punto de encuentro", "Getting here and meeting point")}
+              </Link>
             </p>
             {isEsquiPage && (
               <p className="mt-3 text-sm">
