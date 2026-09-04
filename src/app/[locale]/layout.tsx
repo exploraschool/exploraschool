@@ -5,6 +5,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
+import { FaqChatWidget } from "@/components/FaqChatWidget";
 import { JsonLd } from "@/components/JsonLd";
 import { LocaleHtmlLang } from "@/components/LocaleHtmlLang";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -48,6 +49,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           </main>
           <Footer />
           <CookieBanner />
+          <FaqChatWidget />
           <JsonLd />
         </CartProvider>
       </NextIntlClientProvider>
