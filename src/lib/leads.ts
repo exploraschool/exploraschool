@@ -38,6 +38,10 @@ export type StoredLead = {
   cancelledAt?: string;
   confirmationEmailSentAt?: string;
   cancellationEmailSentAt?: string;
+  /** Internal Explora alert ~1 day after booking if student ficha still incomplete. */
+  profileReminderTeamSentAt?: string;
+  /** Student reminder ~2 days after booking if ficha still incomplete. */
+  profileReminderStudentSentAt?: string;
   privacyAccepted?: boolean;
 };
 
