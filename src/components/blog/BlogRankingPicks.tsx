@@ -19,14 +19,23 @@ export function BlogRankingWinner({
   product,
   index,
   cta,
+  eyebrow,
+  secondaryHref,
+  secondaryLabel,
 }: {
   locale: string;
   product: AffiliateProduct;
   index: number;
   cta: { href: string; label: string };
+  eyebrow?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
 }) {
   const image = primaryProductImage(product);
   const name = pickLocale(locale, product.nameEs, product.nameEn);
+  const jumpHref = secondaryHref ?? `#producto-${index + 1}`;
+  const jumpLabel =
+    secondaryLabel ?? pickLocale(locale, "Ver por qué gana", "See why it wins");
   return (
     <aside className="overflow-hidden rounded-2xl border border-hielo/20 bg-white shadow-[0_12px_32px_rgb(45_107_100_/_0.1)]">
       <div className="grid sm:grid-cols-[220px_1fr]">
@@ -37,7 +46,7 @@ export function BlogRankingWinner({
         </div>
         <div className="p-5 sm:p-6">
           <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-hielo">
-            {pickLocale(locale, "Si solo te llevas uno", "If you only buy one")}
+            {eyebrow ?? pickLocale(locale, "Si solo te llevas uno", "If you only buy one")}
           </p>
           <h2 className="mt-2 font-display text-2xl font-bold text-pizarra">{name}</h2>
           {product.priceText ? (
@@ -59,8 +68,8 @@ export function BlogRankingWinner({
                 {cta.label}
               </a>
             ) : null}
-            <a href={`#producto-${index + 1}`} className="btn-secondary !w-auto">
-              {pickLocale(locale, "Ver por qué gana", "See why it wins")}
+            <a href={jumpHref} className="btn-secondary !w-auto">
+              {jumpLabel}
             </a>
           </div>
         </div>

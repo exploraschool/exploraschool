@@ -6,13 +6,15 @@ export function BlogVerdict({
   productName,
   text,
   score,
+  cta,
 }: {
   locale: string;
   productName?: string;
   text: string;
   score?: number;
+  cta?: { href: string; label: string } | null;
 }) {
-  if (!text) return null;
+  if (!text && !cta?.href) return null;
   return (
     <aside
       id="veredicto"
@@ -35,7 +37,19 @@ export function BlogVerdict({
       {productName ? (
         <p className="mt-2 font-display text-2xl font-bold text-pizarra">{productName}</p>
       ) : null}
-      <p className="mt-3 max-w-prose text-[1.05rem] leading-relaxed text-pizarra/90">{text}</p>
+      {text ? (
+        <p className="mt-3 max-w-prose text-[1.05rem] leading-relaxed text-pizarra/90">{text}</p>
+      ) : null}
+      {cta?.href ? (
+        <a
+          href={cta.href}
+          target="_blank"
+          rel="sponsored noopener noreferrer"
+          className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full border border-hielo/20 bg-white px-5 py-2.5 text-sm font-semibold text-hielo shadow-[0_6px_16px_rgb(45_107_100_/_0.08)] transition hover:border-hielo hover:bg-hielo hover:text-white"
+        >
+          {cta.label}
+        </a>
+      ) : null}
     </aside>
   );
 }

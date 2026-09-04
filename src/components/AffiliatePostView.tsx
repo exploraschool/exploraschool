@@ -74,6 +74,25 @@ function amazonNote(locale: string): string {
   );
 }
 
+function ReviewAmazonCta({
+  product,
+  locale,
+}: {
+  product?: AffiliateProduct;
+  locale: string;
+}) {
+  if (!product?.affiliateUrl) return null;
+  return (
+    <BlogAmazonCta
+      href={product.affiliateUrl}
+      title={pickLocale(locale, product.nameEs, product.nameEn)}
+      meta={amazonMeta(product, locale)}
+      label={amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn)}
+      note={amazonNote(locale)}
+    />
+  );
+}
+
 export function AffiliateDisclosure({ locale }: { locale: string }) {
   return (
     <p className="rounded-2xl border border-oro/25 bg-oro/10 px-4 py-3 text-sm leading-relaxed text-pizarra">
@@ -226,6 +245,7 @@ function ReviewProduct({
           {pickLocale(locale, product.summaryEs, product.summaryEn)}
         </p>
       ) : null}
+      <ReviewAmazonCta product={product} locale={locale} />
       <Prose text={pickLocale(locale, product.bodyEs, product.bodyEn)} />
       {onSnow && onSnow !== instructorNote ? (
         <BlogCallout locale={locale} title={pickLocale(locale, "En Sierra Nevada", "On Sierra Nevada snow")}>
@@ -243,15 +263,7 @@ function ReviewProduct({
           value: pickLocale(locale, spec.valueEs, spec.valueEn),
         }))}
       />
-      {product.affiliateUrl ? (
-        <BlogAmazonCta
-          href={product.affiliateUrl}
-          title={pickLocale(locale, product.nameEs, product.nameEn)}
-          meta={amazonMeta(product, locale)}
-          label={amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn)}
-          note={amazonNote(locale)}
-        />
-      ) : null}
+      <ReviewAmazonCta product={product} locale={locale} />
     </section>
   );
 }
@@ -296,7 +308,12 @@ function ReviewArticle({
   );
 
   const toc: BlogTocItem[] = [
-    verdict ? { id: "veredicto", label: pickLocale(locale, "Veredicto", "Verdict") } : null,
+    product?.affiliateUrl
+      ? { id: "eleccion", label: pickLocale(locale, "Nuestra elección", "Our pick") }
+      : null,
+    verdict || product?.affiliateUrl
+      ? { id: "veredicto", label: pickLocale(locale, "Veredicto", "Verdict") }
+      : null,
     pickLocale(locale, post.introEs, post.introEn)
       ? { id: "guia", label: pickLocale(locale, "La review", "The review") }
       : null,
@@ -329,11 +346,37 @@ function ReviewArticle({
         worst={worst}
         forWhom={forWhom}
       />
+
+      {product?.affiliateUrl ? (
+        <div id="eleccion" className="scroll-mt-28">
+          <BlogRankingWinner
+            locale={locale}
+            product={product}
+            index={0}
+            eyebrow={pickLocale(locale, "Nuestra elección", "Our pick")}
+            cta={{
+              href: product.affiliateUrl,
+              label: amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn),
+            }}
+            secondaryHref="#producto"
+            secondaryLabel={pickLocale(locale, "Ver el análisis", "Read the review")}
+          />
+        </div>
+      ) : null}
+
       <BlogVerdict
         locale={locale}
         productName={product ? pickLocale(locale, product.nameEs, product.nameEn) : ""}
         text={verdict}
         score={exploraScore}
+        cta={
+          product?.affiliateUrl
+            ? {
+                href: product.affiliateUrl,
+                label: amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn),
+              }
+            : null
+        }
       />
       <BlogToc items={toc} locale={locale} />
 
@@ -371,6 +414,7 @@ function ReviewArticle({
 
       <BlogAlternatives locale={locale} items={alternatives} />
       <FaqBlock locale={locale} faq={post.faq ?? []} />
+      <ReviewAmazonCta product={product} locale={locale} />
 
       {(post.internalLinks ?? []).length > 0 ? (
         <div className="flex flex-wrap gap-3">
