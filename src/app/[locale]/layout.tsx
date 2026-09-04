@@ -31,7 +31,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const t = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh min-w-0 max-w-full flex-col">
       <NextIntlClientProvider locale={locale} messages={messages}>
         <CartProvider>
           <ScrollToTop />
@@ -42,7 +42,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             {t("skipToContent")}
           </a>
           <Header locale={locale} />
-          <main id="main-content" className="scroll-target flex-1">
+          <main id="main-content" className="scroll-target min-w-0 flex-1 overflow-x-clip">
             {children}
           </main>
           <Footer />

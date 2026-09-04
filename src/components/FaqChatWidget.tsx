@@ -128,10 +128,10 @@ export function FaqChatWidget() {
   if (!stickyVisible && !open) return null;
 
   return (
-    <div className="pointer-events-none fixed bottom-[calc(var(--sticky-book-bar-h,0px)+1.5rem)] right-3 z-[60] flex flex-col items-end gap-3 transition-[bottom] duration-200 md:bottom-6 md:right-6">
+    <div className="pointer-events-none fixed bottom-[calc(var(--sticky-book-bar-h,0px)+1.5rem)] right-[max(0.75rem,env(safe-area-inset-right,0px))] z-[60] flex max-w-[calc(100dvw-1.5rem)] flex-col items-end gap-3 transition-[bottom] duration-200 md:bottom-6 md:right-6">
       {open ? (
         <div
-          className="pointer-events-auto flex w-[min(20.5rem,calc(100vw-1.5rem))] max-h-[min(32rem,calc(100dvh-8rem-var(--sticky-book-bar-h,0px)))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem-var(--sticky-book-bar-h,0px)))]"
+          className="pointer-events-auto flex w-[min(20.5rem,calc(100dvw-1.5rem-env(safe-area-inset-left,0px)-env(safe-area-inset-right,0px)))] max-h-[min(32rem,calc(100dvh-8rem-var(--sticky-book-bar-h,0px)))] origin-bottom-right animate-[fade-up_0.22s_ease-out] flex-col overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_16px_48px_rgba(14,26,36,0.14)] sm:max-h-[min(34rem,calc(100dvh-7rem-var(--sticky-book-bar-h,0px)))]"
           role="dialog"
           aria-label="Asistente Explora School"
         >

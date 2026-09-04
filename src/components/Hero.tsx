@@ -33,8 +33,8 @@ export function Hero({ locale }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/15 to-pizarra/35 sm:from-pizarra/80 sm:via-transparent sm:to-transparent" />
 
       <div className="hero-block__inner container-page relative">
-        <div className="grid items-start gap-5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
-          <div className="max-w-xl animate-fade-up">
+        <div className="grid min-w-0 items-start gap-5 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+          <div className="max-w-xl min-w-0 animate-fade-up">
             <p className="eyebrow-pill">
               <span className="h-1.5 w-1.5 rounded-full bg-oro-light" aria-hidden />
               Sierra Nevada · Granada
@@ -68,7 +68,7 @@ export function Hero({ locale }: HeroProps) {
             </div>
           </div>
 
-          <div className="relative w-full max-w-xl animate-fade-up lg:justify-self-end" style={{ animationDelay: "0.1s" }}>
+          <div className="relative min-w-0 w-full max-w-xl animate-fade-up lg:justify-self-end" style={{ animationDelay: "0.1s" }}>
             <HeroQuickBook locale={locale} />
           </div>
         </div>

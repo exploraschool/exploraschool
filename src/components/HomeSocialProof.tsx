@@ -33,20 +33,31 @@ export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
                 "Ver vídeos de Explora School en Instagram",
                 "Watch Explora School videos on Instagram",
               )}
-              className="group relative block aspect-video overflow-hidden rounded-2xl border border-white/10"
+              className="group relative block overflow-hidden rounded-2xl border border-white/10"
             >
               <Image
                 src={media.video.poster}
                 alt={pickLocale(locale, "Explora School en Instagram", "Explora School on Instagram")}
-                fill
-                className="object-cover transition duration-500 group-hover:scale-105"
+                width={1280}
+                height={720}
+                className="aspect-video h-auto w-full object-cover transition duration-500 group-hover:scale-105"
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              <div className="absolute inset-0 bg-pizarra/25 transition group-hover:bg-pizarra/10" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-accent shadow-lg transition group-hover:scale-110">
-                  <svg className="ml-0.5 h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden>
-                    <path d="M8 5v14l11-7z" />
+              <div className="pointer-events-none absolute inset-0 bg-pizarra/20 transition group-hover:bg-pizarra/10" />
+              <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <span className="flex h-14 w-14 items-center justify-center drop-shadow-lg transition group-hover:scale-110">
+                  <svg viewBox="0 0 24 24" className="h-14 w-14" aria-hidden>
+                    <defs>
+                      <radialGradient id="explora-ig-mark" cx="0.3" cy="1.1" r="1.2">
+                        <stop offset="0%" stopColor="#fdf497" />
+                        <stop offset="45%" stopColor="#fd5949" />
+                        <stop offset="60%" stopColor="#d6249f" />
+                        <stop offset="90%" stopColor="#285AEB" />
+                      </radialGradient>
+                    </defs>
+                    <rect width="24" height="24" rx="6" fill="url(#explora-ig-mark)" />
+                    <circle cx="12" cy="12" r="4.35" fill="none" stroke="#fff" strokeWidth="1.85" />
+                    <circle cx="17.35" cy="6.65" r="1.15" fill="#fff" />
                   </svg>
                 </span>
               </div>

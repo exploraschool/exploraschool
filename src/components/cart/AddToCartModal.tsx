@@ -329,7 +329,7 @@ export function AddToCartModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-to-cart-title"
-        className="fixed inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
+        className="fixed inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 max-w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
       >
         <div className="shrink-0 border-b border-hielo/10 bg-white px-4 py-3 sm:px-6 sm:py-4">
           <div className="flex items-start justify-between gap-3">

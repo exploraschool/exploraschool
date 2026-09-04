@@ -39,11 +39,11 @@ export function CookieBanner() {
       aria-labelledby="cookie-banner-title"
       aria-live="polite"
       data-cookie-banner
-      className={`fixed inset-x-0 bottom-0 z-50 border-t border-hielo/10 bg-white shadow-[0_-8px_32px_rgba(14,26,36,0.08)] transition-all duration-300 ease-out sm:inset-x-4 sm:bottom-4 sm:rounded-2xl sm:border sm:bg-white/90 sm:backdrop-blur-xl ${
+      className={`fixed inset-x-0 bottom-0 z-50 max-w-full border-t border-hielo/10 bg-white shadow-[0_-8px_32px_rgba(14,26,36,0.08)] transition-all duration-300 ease-out sm:inset-x-4 sm:bottom-4 sm:rounded-2xl sm:border sm:bg-white/90 sm:backdrop-blur-xl ${
         mounted ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 sm:translate-y-4"
       }`}
     >
-      <div className="container-page flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:gap-3 sm:py-2.5 md:max-w-4xl md:py-3">
+      <div className="container-page flex flex-col gap-2 py-2.5 pb-[max(0.65rem,env(safe-area-inset-bottom,0px))] sm:flex-row sm:items-center sm:gap-3 sm:py-2.5 sm:pb-2.5 md:max-w-4xl md:py-3">
         <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center">
           <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-hielo/8 sm:mt-0 sm:h-7 sm:w-7">
             <CookieIcon />

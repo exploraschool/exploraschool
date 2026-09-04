@@ -143,7 +143,7 @@ export function GlassSelect<T extends string>({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="glass-select-window relative z-[1] w-full rounded-t-3xl pb-[max(1.15rem,env(safe-area-inset-bottom))] sm:max-w-[26rem] sm:rounded-3xl sm:pb-6"
+              className="glass-select-window relative z-[1] w-full max-w-full rounded-t-3xl pb-[max(1.15rem,env(safe-area-inset-bottom,0px))] sm:max-w-[26rem] sm:rounded-3xl sm:pb-6"
             >
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/25 sm:hidden" aria-hidden />
 

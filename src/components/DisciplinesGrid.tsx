@@ -18,23 +18,25 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
       <section className="section-padding-sm bg-nieve">
         <div className="container-page">
           <Reveal>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="min-w-0">
               <SectionHeader
                 eyebrow={pickLocale(locale, "Disciplinas", "Disciplines")}
                 title={pickLocale(locale, "¿Qué quieres practicar?", "What do you want to ride?")}
               />
+              </div>
               <Link href="/clases" className="btn-secondary shrink-0 !w-auto">
                 {pickLocale(locale, "Ver todas", "View all")}
               </Link>
             </div>
           </Reveal>
 
-          <div className="section-body-sm flex gap-3 overflow-x-auto pb-2 scrollbar-none sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
+          <div className="x-scroller x-scroller--bleed section-body-sm flex gap-3 pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
             {disciplines.map((d, i) => (
-              <Reveal key={d.id} delay={i * 50}>
+              <Reveal key={d.id} delay={i * 50} className="w-[140px] shrink-0 sm:w-auto">
                 <Link
                   href={`/clases/${d.slug}`}
-                  className="group flex w-[140px] shrink-0 flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md sm:w-auto"
+                  className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md"
                 >
                   <div className="relative aspect-[4/3] bg-hielo/5">
                     <Image

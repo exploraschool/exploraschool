@@ -26,7 +26,7 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
               alt="TripAdvisor"
               width={148}
               height={32}
-              className="h-7 w-auto shrink-0 self-start sm:self-auto sm:mb-1 sm:h-8"
+              className="h-7 w-auto max-w-[9.5rem] shrink-0 self-start sm:mb-1 sm:h-8"
             />
           </div>
         </Reveal>

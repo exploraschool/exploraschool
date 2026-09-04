@@ -46,7 +46,7 @@ export function LessonOfferCard({
             alt={productImageAlt(product, locale)}
             fill
             className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-            sizes="(max-width: 1024px) 100vw, 33vw"
+            sizes="(max-width: 639px) 80vw, (max-width: 1024px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-white/80" />
           <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />

@@ -24,15 +24,17 @@ export function ProductsSection({
     <section className={compact ? "section-padding-sm bg-white" : "section-padding bg-white"}>
       <div className="container-page">
         <Reveal>
-          <div className="flex items-end justify-between gap-4">
-            <SectionHeader
-              eyebrow={pickLocale(locale, compact ? "Clases" : "Nuestras clases", compact ? "Lessons" : "Our lessons")}
-              title={pickLocale(
-                locale,
-                compact ? "Los más reservados" : "Formatos para cada día",
-                compact ? "Most booked" : "Formats for every day",
-              )}
-            />
+          <div className="flex min-w-0 items-end justify-between gap-3">
+            <div className="min-w-0">
+              <SectionHeader
+                eyebrow={pickLocale(locale, compact ? "Clases" : "Nuestras clases", compact ? "Lessons" : "Our lessons")}
+                title={pickLocale(
+                  locale,
+                  compact ? "Los más reservados" : "Formatos para cada día",
+                  compact ? "Most booked" : "Formats for every day",
+                )}
+              />
+            </div>
             {showAllLink && (
               <Link href="/clases" className="btn-secondary shrink-0 !w-auto">
                 {pickLocale(locale, compact ? "Ver todos" : "Ver todas las clases", compact ? "View all" : "View all lessons")}

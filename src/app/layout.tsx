@@ -1,5 +1,5 @@
 import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { getLocale } from "next-intl/server";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
@@ -23,6 +23,13 @@ const fraunces = Fraunces({
 });
 
 const spanishDefaults = buildRootSpanishMetadata();
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#f6f7f7",
+};
 
 export const metadata: Metadata = {
   ...spanishDefaults,
@@ -54,7 +61,7 @@ export default async function RootLayout({ children }: Props) {
       data-scroll-behavior="smooth"
       className={`${plusJakarta.variable} ${fraunces.variable}`}
     >
-      <body className="min-h-screen bg-nieve text-pizarra antialiased">
+      <body className="min-h-dvh bg-nieve text-pizarra antialiased">
         <GoogleAnalytics />
         {children}
       </body>

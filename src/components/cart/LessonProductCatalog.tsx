@@ -1,6 +1,7 @@
 "use client";
 
-import { products } from "@/data/products";
+import type { ReactNode } from "react";
+import { products, type Product } from "@/data/products";
 import { isBookableProduct } from "@/lib/product-pricing";
 import { pickLocale } from "@/lib/locale";
 import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
@@ -8,6 +9,63 @@ import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 type LessonProductCatalogProps = {
   locale: string;
 };
+
+const carouselClass =
+  "x-scroller x-scroller--bleed mt-4 flex snap-x snap-mandatory gap-4 pb-2 sm:overflow-visible sm:snap-none sm:pb-0";
+
+function CatalogSlide({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      role="listitem"
+      className={`flex w-[min(19.5rem,calc(100%-2.75rem))] shrink-0 snap-start sm:min-w-0 sm:w-auto ${className}`.trim()}
+    >
+      {children}
+    </div>
+  );
+}
+
+function CatalogCards({
+  products: list,
+  locale,
+  popular,
+  desktopClassName,
+  slideClassName,
+}: {
+  products: Product[];
+  locale: string;
+  popular?: boolean;
+  desktopClassName: string;
+  slideClassName?: string;
+}) {
+  return (
+    <div
+      className={`${carouselClass} ${desktopClassName}`}
+      role="list"
+      aria-label={
+        popular
+          ? pickLocale(locale, "Los más elegidos", "Most popular")
+          : pickLocale(locale, "Más formatos", "More formats")
+      }
+    >
+      {list.map((product) => (
+        <CatalogSlide key={product.id} className={slideClassName}>
+          <LessonOfferCard
+            product={product}
+            locale={locale}
+            badge={popular ? pickLocale(locale, "Popular", "Popular") : undefined}
+            badgeVariant={popular ? "popular" : "discipline"}
+          />
+        </CatalogSlide>
+      ))}
+    </div>
+  );
+}
 
 export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
   const bookable = products
@@ -23,17 +81,12 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
         <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
           {pickLocale(locale, "Los más elegidos", "Most popular")}
         </h3>
-        <div className="mt-4 grid items-stretch gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((product) => (
-            <LessonOfferCard
-              key={product.id}
-              product={product}
-              locale={locale}
-              badge={pickLocale(locale, "Popular", "Popular")}
-              badgeVariant="popular"
-            />
-          ))}
-        </div>
+        <CatalogCards
+          products={featured}
+          locale={locale}
+          popular
+          desktopClassName="sm:grid sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
+        />
       </div>
 
       {others.length > 0 ? (
@@ -41,16 +94,12 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
           <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
             {pickLocale(locale, "Más formatos", "More formats")}
           </h3>
-          <div className="mt-4 flex flex-wrap justify-center gap-4">
-            {others.map((product) => (
-              <div
-                key={product.id}
-                className="flex w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]"
-              >
-                <LessonOfferCard product={product} locale={locale} />
-              </div>
-            ))}
-          </div>
+          <CatalogCards
+            products={others}
+            locale={locale}
+            desktopClassName="sm:flex-wrap sm:justify-center"
+            slideClassName="sm:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]"
+          />
         </div>
       ) : null}
     </div>
