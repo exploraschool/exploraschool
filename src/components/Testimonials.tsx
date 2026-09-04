@@ -1,7 +1,6 @@
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getFeaturedReviews } from "@/data/reviews";
-import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 
 type TestimonialsProps = {
@@ -22,18 +21,13 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
               eyebrow={pickLocale(locale, "Opiniones", "Reviews")}
               title={pickLocale(locale, "Lo que dicen nuestros clientes", "What our guests say")}
             />
-            <a
-              href={site.tripAdvisor.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-            >
-              {pickLocale(
-                locale,
-                `${site.tripAdvisor.reviewCount} reseñas`,
-                `${site.tripAdvisor.reviewCount} reviews`,
-              )}
-            </a>
+            <img
+              src="/images/tripadvisor-logo.svg"
+              alt="TripAdvisor"
+              width={148}
+              height={32}
+              className="h-7 w-auto shrink-0 self-start sm:self-auto sm:mb-1 sm:h-8"
+            />
           </div>
         </Reveal>
 

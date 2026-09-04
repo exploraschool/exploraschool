@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { PageHero } from "@/components/PageHero";
+import { PageHeader } from "@/components/PageHeader";
 import { PriceTables } from "@/components/PriceTables";
 import { CTASection } from "@/components/CTASection";
 import { media } from "@/lib/media";
@@ -41,17 +41,13 @@ export default async function ClasesPage({ params }: Props) {
         locale={locale}
         items={[{ name: pickLocale(locale, "Clases", "Lessons"), path: "/clases" }]}
       />
-      <PageHero
-        locale={locale}
-        title={pickLocale(locale, "Clases de esquí y snowboard", "Ski and snowboard lessons")}
+      <PageHeader
+        title={pickLocale(locale, "Elige tu clase", "Choose your lesson")}
         description={pickLocale(
           locale,
-          "Instructores titulados con más de 20 años de experiencia. Grupos de 1 a 8, de 2 horas al día completo. Reserva online en minutos.",
-          "Qualified instructors with over 20 years of experience. Groups of 1 to 8, from 2 hours to a full day. Book online in minutes.",
+          "Particulares de 1 a 8 personas. Esquí, snowboard o telemark, de 2 horas al día completo. Instructores titulados. IVA incluido.",
+          "Private groups of 1 to 8. Ski, snowboard or telemark, from 2 hours to a full day. Qualified instructors. VAT included.",
         )}
-        imageSrc={media.clasesHero.src}
-        imageAltEs={media.clasesHero.altEs}
-        imageAltEn={media.clasesHero.altEn}
       />
 
       <section className="section-padding">
