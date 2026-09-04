@@ -12,9 +12,25 @@ export type Instructor = {
   languages: ("es" | "en")[];
   active: boolean;
   sortOrder: number;
-  /** @pending Photo pending — upload to public/images/legacy/instructor-{slug}.webp */
+  /** Empty or default until a real photo is uploaded via admin. */
   photo: string;
 };
+
+/** Generic user silhouette used until each instructor has a real photo. */
+export const DEFAULT_INSTRUCTOR_PHOTO = "/images/instructors/default.svg";
+
+/**
+ * Local invented placeholders → default avatar.
+ * Keeps real uploads (https / storage URLs).
+ */
+export function resolveInstructorPhoto(photo: string | undefined | null): string {
+  const value = typeof photo === "string" ? photo.trim() : "";
+  if (!value) return DEFAULT_INSTRUCTOR_PHOTO;
+  if (value === DEFAULT_INSTRUCTOR_PHOTO) return value;
+  if (value.startsWith("http://") || value.startsWith("https://")) return value;
+  if (value.startsWith("/images/instructors/")) return DEFAULT_INSTRUCTOR_PHOTO;
+  return value;
+}
 
 export const instructors: Instructor[] = [
   {
@@ -28,7 +44,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 1,
-    photo: "/images/instructors/reche.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "patri",
@@ -41,7 +57,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 2,
-    photo: "/images/instructors/patri.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "lalo",
@@ -54,7 +70,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 3,
-    photo: "/images/instructors/lalo.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "jorge",
@@ -67,7 +83,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 4,
-    photo: "/images/instructors/jorge.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "esau",
@@ -80,7 +96,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 5,
-    photo: "/images/instructors/esau.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "aitana",
@@ -93,7 +109,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 6,
-    photo: "/images/instructors/aitana.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "estrella",
@@ -106,7 +122,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 7,
-    photo: "/images/instructors/estrella.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "ale",
@@ -119,7 +135,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 8,
-    photo: "/images/instructors/ale.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "badillo",
@@ -132,7 +148,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 9,
-    photo: "/images/instructors/badillo.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "maria",
@@ -145,7 +161,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 10,
-    photo: "/images/instructors/maria.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "eba",
@@ -158,7 +174,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 11,
-    photo: "/images/instructors/eba.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "ferran",
@@ -171,7 +187,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 12,
-    photo: "/images/instructors/ferran.jpg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "luis",
@@ -184,7 +200,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 13,
-    photo: "/images/instructors/luis.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "rocio",
@@ -197,7 +213,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 14,
-    photo: "/images/instructors/rocio.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "violeta",
@@ -210,7 +226,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 15,
-    photo: "/images/instructors/violeta.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "joan",
@@ -223,7 +239,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 16,
-    photo: "/images/instructors/joan.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
   {
     slug: "benja",
@@ -236,7 +252,7 @@ export const instructors: Instructor[] = [
     languages: ["es", "en"],
     active: true,
     sortOrder: 17,
-    photo: "/images/instructors/benja.svg",
+    photo: DEFAULT_INSTRUCTOR_PHOTO,
   },
 ];
 

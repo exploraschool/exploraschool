@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import type { DisciplineId } from "@/data/disciplines";
+import { DEFAULT_INSTRUCTOR_PHOTO } from "@/data/instructors";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
@@ -7,7 +9,6 @@ import {
   listInstructorsFromDb,
   slugifyInstructorName,
 } from "@/lib/instructors-db";
-import type { DisciplineId } from "@/data/disciplines";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
     languages: parsed.data.languages,
     active: parsed.data.active,
     sortOrder: parsed.data.sortOrder,
-    photo: parsed.data.photo || `/images/instructors/${slug}.jpg`,
+    photo: parsed.data.photo || DEFAULT_INSTRUCTOR_PHOTO,
   };
 
   await db.collection(INSTRUCTORS_COLLECTION).doc(slug).set(record);

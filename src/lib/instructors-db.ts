@@ -1,5 +1,10 @@
 import type { DisciplineId } from "@/data/disciplines";
-import { instructors as staticInstructors, type Instructor } from "@/data/instructors";
+import {
+  DEFAULT_INSTRUCTOR_PHOTO,
+  instructors as staticInstructors,
+  resolveInstructorPhoto,
+  type Instructor,
+} from "@/data/instructors";
 import { getAdminDb } from "@/lib/firebase/admin";
 
 export const INSTRUCTORS_COLLECTION = "instructors";
@@ -23,7 +28,7 @@ function asInstructor(id: string, data: Record<string, unknown>): StoredInstruct
     languages: languages.length ? languages : ["es"],
     active: data.active !== false,
     sortOrder: typeof data.sortOrder === "number" ? data.sortOrder : 99,
-    photo: typeof data.photo === "string" ? data.photo : `/images/instructors/${id}.jpg`,
+    photo: resolveInstructorPhoto(typeof data.photo === "string" ? data.photo : DEFAULT_INSTRUCTOR_PHOTO),
   };
 }
 

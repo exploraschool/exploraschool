@@ -1,4 +1,6 @@
 /** Central media paths — Sierra Nevada (Granada) photography in /images/stock/. */
+import { DEFAULT_INSTRUCTOR_PHOTO } from "@/data/instructors";
+
 export const media = {
   logo: "/images/logo-explora.png",
   logoEmail: "/images/logo-email.png",
@@ -58,6 +60,6 @@ export const media = {
   },
 } as const;
 
-export function instructorPhoto(slug: string): string {
-  return `/images/instructors/${slug}.jpg`;
+export function instructorPhoto(_slug: string): string {
+  return DEFAULT_INSTRUCTOR_PHOTO;
 }
