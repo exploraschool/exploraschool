@@ -11,15 +11,15 @@ import {
   primaryProductImage,
   productGallery,
   withPrimaryImage,
+  type AffiliateProduct,
   type AffiliateProductImage,
   type AffiliateSection,
   type AffiliateSpec,
 } from "@/lib/affiliate-blog-shared";
-import { fetchAmazonProductMeta, formatAmazonBrief } from "@/lib/amazon-product-meta";
+import { formatAmazonBrief, type AmazonProductMeta } from "@/lib/amazon-product-meta";
 
 const MODELS = ["gemini-2.5-flash"];
 const LOCATIONS = ["europe-west1", "us-central1"];
-const MAX_VISION_IMAGES = 12;
 
 function editorialGuide(): string {
   return blogPosts
@@ -65,11 +65,17 @@ function extractJsonObject(raw: string): Record<string, unknown> {
   const start = trimmed.indexOf("{");
   const end = trimmed.lastIndexOf("}");
   if (start < 0 || end <= start) throw new Error("generate_failed");
-  return JSON.parse(trimmed.slice(start, end + 1)) as Record<string, unknown>;
+  try {
+    return JSON.parse(trimmed.slice(start, end + 1)) as Record<string, unknown>;
+  } catch {
+    console.error("[affiliate-gemini] invalid json", trimmed.slice(0, 160), trimmed.slice(-160));
+    throw new Error("generate_failed");
+  }
 }
 
 function asString(value: unknown, fallback = ""): string {
-  return typeof value === "string" ? value.trim() : fallback;
+  if (typeof value === "string") return value.trim();
+  return typeof fallback === "string" ? fallback : "";
 }
 
 function asStringArray(value: unknown, max = 5): string[] {
@@ -94,6 +100,86 @@ function parseSpecs(value: unknown): AffiliateSpec[] {
     })
     .filter((item) => item.labelEs || item.labelEn)
     .slice(0, 10);
+}
+
+function metaFromStoredProduct(product: AffiliateProduct): AmazonProductMeta {
+  const gallery = productGallery(product);
+  return {
+    url: product.affiliateUrl,
+    asin: product.asin,
+    title: product.nameEs || product.nameEn,
+    brand: product.brand,
+    image: primaryProductImage(product),
+    images: gallery.map((image) => image.src).filter(Boolean),
+    priceText: product.priceText,
+    rating: product.rating,
+    reviewCount: product.reviewCount,
+    bullets: (product.amazonBullets ?? []).slice(0, 8),
+    description: (product.amazonDescription || "").slice(0, 800),
+    specs: product.specs.slice(0, 8).map((spec) => ({
+      label: spec.labelEs || spec.labelEn,
+      value: spec.valueEs || spec.valueEn,
+    })),
+  };
+}
+
+function visionUrlsFor(post: AffiliateBlogPost): string[] {
+  const perProduct = post.type === "ranking" ? 1 : 3;
+  const maxVision = post.type === "ranking" ? 6 : 4;
+  return post.products
+    .flatMap((product) =>
+      productGallery(product)
+        .slice(0, perProduct)
+        .map((image) => image.src),
+    )
+    .filter(Boolean)
+    .slice(0, maxVision);
+}
+
+async function requestArticleJson(parts: Part[]): Promise<string> {
+  let lastError: unknown;
+  for (const location of LOCATIONS) {
+    for (const model of MODELS) {
+      try {
+        const ai = getVertexClient(location);
+        const response = await ai.models.generateContent({
+          model,
+          contents: [{ role: "user", parts }],
+          config: {
+            temperature: 0.55,
+            responseMimeType: "application/json",
+            maxOutputTokens: 65536,
+          },
+        });
+        const candidate = response.candidates?.[0] as
+          | { finishReason?: string; content?: { parts?: Array<{ text?: string }> } }
+          | undefined;
+        const finishReason = candidate?.finishReason;
+        if (finishReason && finishReason !== "STOP") {
+          console.warn(`[affiliate-gemini] ${location}/${model} finishReason=${finishReason}`);
+        }
+        const text =
+          response.text ??
+          candidate?.content?.parts?.map((part) => part.text || "").join("") ??
+          "";
+        if (text) return text;
+      } catch (error) {
+        lastError = error;
+        console.warn(`[affiliate-gemini] ${location}/${model} failed:`, error);
+      }
+    }
+  }
+  console.error("[affiliate-gemini] generation failed:", lastError);
+  return "";
+}
+
+function parseGeneratedJson(raw: string): Record<string, unknown> | null {
+  if (!raw.trim()) return null;
+  try {
+    return extractJsonObject(raw);
+  } catch {
+    return null;
+  }
 }
 
 function parseSections(value: unknown): AffiliateSection[] {
@@ -130,16 +216,8 @@ function applyGeneratedImageCopy(
 }
 
 export async function generateAffiliateArticle(post: AffiliateBlogPost): Promise<AffiliateBlogPost> {
-  const metas = await Promise.all(
-    post.products.map((product) => fetchAmazonProductMeta(product.affiliateUrl)),
-  );
-
-  const visionUrls = post.products.flatMap((product) =>
-    productGallery(product)
-      .slice(0, 2)
-      .map((image) => image.src),
-  ).slice(0, MAX_VISION_IMAGES);
-
+  const metas = post.products.map(metaFromStoredProduct);
+  const visionUrls = visionUrlsFor(post);
   const imageParts = (
     await Promise.all(visionUrls.map((url) => imagePartFromUrl(url)))
   ).filter((part): part is Part => Boolean(part));
@@ -280,43 +358,12 @@ JSON schema:
 Ficha Amazon (fuente de verdad; no contradigas estos datos):
 ${productBrief}`;
 
-  const contents: Array<{ role: string; parts: Part[] }> = [
-    {
-      role: "user",
-      parts: [{ text: prompt }, ...imageParts],
-    },
-  ];
-
-  let text = "";
-  let lastError: unknown;
-  for (const location of LOCATIONS) {
-    for (const model of MODELS) {
-      try {
-        const ai = getVertexClient(location);
-        const response = await ai.models.generateContent({
-          model,
-          contents,
-          config: {
-            temperature: 0.55,
-            responseMimeType: "application/json",
-            maxOutputTokens: 16384,
-          },
-        });
-        text = response.text ?? "";
-        if (text) break;
-      } catch (error) {
-        lastError = error;
-        console.warn(`[affiliate-gemini] ${location}/${model} failed:`, error);
-      }
-    }
-    if (text) break;
+  let json = parseGeneratedJson(await requestArticleJson([{ text: prompt }, ...imageParts]));
+  if (!json && imageParts.length) {
+    console.warn("[affiliate-gemini] retrying without vision images");
+    json = parseGeneratedJson(await requestArticleJson([{ text: prompt }]));
   }
-  if (!text) {
-    console.error("[affiliate-gemini] generation failed:", lastError);
-    throw new Error("generate_failed");
-  }
-
-  const json = extractJsonObject(text);
+  if (!json) throw new Error("generate_failed");
   const generatedProducts = Array.isArray(json.products) ? json.products : [];
   const products = post.products.map((product, index) => {
     const raw = (generatedProducts[index] ?? {}) as Record<string, unknown>;
@@ -400,13 +447,16 @@ ${productBrief}`;
     excerptEs: asString(json.excerptEs, post.excerptEs),
     excerptEn: asString(json.excerptEn, post.excerptEn),
     coverImage: coverFromWinner,
-    coverAltEs: asString(json.coverAltEs, products[winnerIndex]?.altEs),
-    coverAltEn: asString(json.coverAltEn, products[winnerIndex]?.altEn),
+    coverAltEs: asString(json.coverAltEs, products[winnerIndex]?.altEs || ""),
+    coverAltEn: asString(json.coverAltEn, products[winnerIndex]?.altEn || ""),
     introEs: asString(json.introEs),
     introEn: asString(json.introEn),
     verdictEs: asString(json.verdictEs),
     verdictEn: asString(json.verdictEn),
-    score: Math.min(5, Math.max(0, Number(json.score) || 0)),
+    score: (() => {
+      const parsed = Number(json.score);
+      return Number.isFinite(parsed) ? Math.min(5, Math.max(0, parsed)) : 0;
+    })(),
     tldrBestEs: asString(json.tldrBestEs),
     tldrBestEn: asString(json.tldrBestEn),
     tldrWorstEs: asString(json.tldrWorstEs),

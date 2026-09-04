@@ -374,6 +374,19 @@ export async function createAffiliatePost(
   return post;
 }
 
+function omitUndefined<T>(value: T): T {
+  if (Array.isArray(value)) return value.map(omitUndefined) as T;
+  if (value && typeof value === "object") {
+    const out: Record<string, unknown> = {};
+    for (const [key, item] of Object.entries(value as Record<string, unknown>)) {
+      if (item === undefined) continue;
+      out[key] = omitUndefined(item);
+    }
+    return out as T;
+  }
+  return value;
+}
+
 export async function saveAffiliatePost(
   post: AffiliateBlogPost,
 ): Promise<AffiliateBlogPost> {
@@ -381,7 +394,7 @@ export async function saveAffiliatePost(
   if (!db) throw new Error("unavailable");
   const next = { ...post, updatedAt: new Date().toISOString() };
   const { id, ...data } = next;
-  await db.collection(AFFILIATE_BLOG_COLLECTION).doc(id).set(data, { merge: true });
+  await db.collection(AFFILIATE_BLOG_COLLECTION).doc(id).set(omitUndefined(data), { merge: true });
   return next;
 }
 
