@@ -325,6 +325,7 @@ export function AccountDashboard({
                 locale={locale}
                 t={t}
                 featured
+                hideNextFocus={Boolean(latestReport.nextFocus)}
                 onOpenProgress={() => goTab("progreso")}
               />
             ) : (
@@ -398,11 +399,14 @@ export function AccountDashboard({
 
       {tab === "progreso" ? (
         <ProgressPanel
-          hours={hours}
-          badges={badges}
           reports={reportsSorted}
-          tips={tips}
-          tipHistory={tipHistory}
+          tipHistory={tipHistory.filter(
+            (tip) =>
+              !latestReport?.nextFocus ||
+              tip.text.trim() !== latestReport.nextFocus.trim(),
+          )}
+          latestReportId={latestReport?.id ?? null}
+          hideNextFocusGlobally={Boolean(latestReport?.nextFocus)}
           profile={profile}
           locale={locale}
           t={t}
@@ -745,11 +749,10 @@ function ProfileSnapshot({
 }
 
 function ProgressPanel({
-  hours,
-  badges,
   reports,
-  tips,
   tipHistory,
+  latestReportId,
+  hideNextFocusGlobally,
   profile,
   locale,
   t,
@@ -757,11 +760,10 @@ function ProgressPanel({
   lastInstructorName,
   meetingPoint,
 }: {
-  hours: number;
-  badges: { id: string; label: string }[];
   reports: ProgressReport[];
-  tips: StudentTip[];
   tipHistory: StudentTip[];
+  latestReportId: string | null;
+  hideNextFocusGlobally: boolean;
   profile: StudentProfile | null;
   locale: string;
   t: ReturnType<typeof useTranslations<"account">>;
@@ -776,39 +778,10 @@ function ProgressPanel({
 
   return (
     <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-5">
-      <div className="grid grid-cols-2 gap-2 sm:gap-3">
-        <div className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("hours")}</p>
-          <p className="mt-1 font-display text-2xl text-hielo sm:text-4xl">{hours}</p>
-        </div>
-        <div className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("badges")}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {badges.length ? (
-              badges.map((badge) => (
-                <span key={badge.id} className="rounded-full bg-hielo/10 px-3 py-1 text-xs font-semibold text-hielo">
-                  {badge.label}
-                </span>
-              ))
-            ) : (
-              <p className="text-sm text-muted">{t("noBadges")}</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {tips.some((tip) => tip.pinned) || tipHistory.length ? (
+      {tipHistory.length ? (
         <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
           <h2 className="font-display text-xl text-hielo">{t("tipsHistory")}</h2>
           <ul className="mt-3 space-y-3">
-            {tips
-              .filter((tip) => tip.pinned)
-              .map((tip) => (
-                <li key={tip.id} className="rounded-xl border border-oro/20 bg-hielo/5 px-3 py-2 text-sm">
-                  <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">{t("staffTips")}</p>
-                  <p className="mt-1 whitespace-pre-wrap text-pizarra">{tip.text}</p>
-                </li>
-              ))}
             {tipHistory.map((tip) => (
               <li key={tip.id} className="rounded-xl bg-nieve/70 px-3 py-2 text-sm">
                 <p className="whitespace-pre-wrap text-pizarra">{tip.text}</p>
@@ -888,7 +861,16 @@ function ProgressPanel({
       )}
 
       {reports.length ? (
-        reports.map((report) => <ReportCard key={report.id} report={report} locale={locale} t={t} />)
+        reports.map((report) => (
+          <ReportCard
+            key={report.id}
+            report={report}
+            locale={locale}
+            t={t}
+            hideNextFocus={hideNextFocusGlobally && report.id === latestReportId}
+            compactSkills={Boolean(skillTimeline.length)}
+          />
+        ))
       ) : (
         <EmptyHint title={t("tabProgreso")} body={t("noReportsYet")} />
       )}
@@ -906,12 +888,16 @@ function ReportCard({
   locale,
   t,
   featured,
+  hideNextFocus,
+  compactSkills,
   onOpenProgress,
 }: {
   report: ProgressReport;
   locale: string;
   t: ReturnType<typeof useTranslations<"account">>;
   featured?: boolean;
+  hideNextFocus?: boolean;
+  compactSkills?: boolean;
   onOpenProgress?: () => void;
 }) {
   const skills = Object.entries(report.skills);
@@ -938,7 +924,7 @@ function ReportCard({
           {progressDisciplineName(report.discipline as ProgressDisciplineId, locale)}
         </p>
       ) : null}
-      {report.nextFocus ? (
+      {!hideNextFocus && report.nextFocus ? (
         <div className="mt-3 rounded-xl bg-hielo/5 px-3 py-2">
           <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-hielo">{t("nextFocus")}</p>
           <p className="mt-1 whitespace-pre-wrap text-sm text-pizarra">{report.nextFocus}</p>
@@ -946,7 +932,7 @@ function ReportCard({
       ) : null}
       {report.notes ? <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-pizarra">{report.notes}</p> : null}
 
-      {skills.length ? (
+      {!compactSkills && skills.length ? (
         <div className="mt-4 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("skillsRated")}</p>
           {skills.map(([id, value]) => (

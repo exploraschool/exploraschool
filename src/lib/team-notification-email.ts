@@ -220,13 +220,24 @@ export function buildTeamNotificationEmail({
   const status = String(data.status ?? (isBooking ? "pending" : "received"));
   const estimatedTotal =
     typeof data.estimatedTotal === "number" ? data.estimatedTotal : undefined;
-  const confirmUrl =
-    isBooking && confirmSecret
-      ? `${baseUrl}/api/bookings/confirm?id=${encodeURIComponent(leadId)}&token=${createLeadConfirmToken(leadId, confirmSecret)}`
+  const confirmToken =
+    typeof data.confirmToken === "string" && data.confirmToken.trim()
+      ? data.confirmToken.trim()
+      : confirmSecret
+        ? createLeadConfirmToken(leadId, confirmSecret)
+        : null;
+  const cancelToken =
+    typeof data.cancelToken === "string" && data.cancelToken.trim()
+      ? data.cancelToken.trim()
+      : confirmSecret
+        ? createLeadCancelToken(leadId, confirmSecret)
+        : null;
+  const confirmUrl = isBooking && confirmToken
+      ? `${baseUrl}/api/bookings/confirm?id=${encodeURIComponent(leadId)}&token=${confirmToken}`
       : null;
   const cancelUrl =
-    isBooking && confirmSecret
-      ? `${baseUrl}/api/bookings/cancel?id=${encodeURIComponent(leadId)}&token=${createLeadCancelToken(leadId, confirmSecret)}`
+    isBooking && cancelToken
+      ? `${baseUrl}/api/bookings/cancel?id=${encodeURIComponent(leadId)}&token=${cancelToken}`
       : null;
 
   const title = isBooking ? "Nueva reserva" : "Nuevo contacto";

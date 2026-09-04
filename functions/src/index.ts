@@ -4,6 +4,8 @@ import { logger } from "firebase-functions";
 import {
   buildCustomerConfirmationEmail,
   buildTeamNotificationEmail,
+  createLeadCancelToken,
+  createLeadConfirmToken,
   sendResendEmail,
 } from "./email.js";
 
@@ -33,12 +35,31 @@ export const onLeadCreated = onDocumentCreated(
     }
 
     const leadId = event.params.leadId;
-    const data = snapshot.data();
+    const data = { ...snapshot.data() };
     const apiKey = resendApiKeyParam.value();
     const siteUrl = siteUrlParam.value().replace(/\/$/, "");
     const confirmSecret = leadConfirmSecretParam.value();
     const to = notificationEmailParam.value();
     const from = resendFromParam.value();
+
+    const isBooking = data.type === "booking" || data.source === "booking-cart";
+    if (isBooking && confirmSecret) {
+      const confirmToken =
+        typeof data.confirmToken === "string" && data.confirmToken.trim()
+          ? data.confirmToken.trim()
+          : createLeadConfirmToken(leadId, confirmSecret);
+      const cancelToken =
+        typeof data.cancelToken === "string" && data.cancelToken.trim()
+          ? data.cancelToken.trim()
+          : createLeadCancelToken(leadId, confirmSecret);
+
+      if (data.confirmToken !== confirmToken || data.cancelToken !== cancelToken) {
+        await snapshot.ref.update({ confirmToken, cancelToken });
+      }
+      data.confirmToken = confirmToken;
+      data.cancelToken = cancelToken;
+    }
+
     const { subject, text, html } = buildTeamNotificationEmail({
       leadId,
       data,

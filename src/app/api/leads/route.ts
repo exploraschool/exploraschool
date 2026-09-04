@@ -5,6 +5,7 @@ import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import { isBookingTooLate, partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
+import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
 import { normalizeEmail } from "@/lib/link-bookings";
 import { getStudentSession } from "@/lib/student-auth";
 import { upsertStudentProfile } from "@/lib/student-user-store";
@@ -150,7 +151,12 @@ export async function POST(request: Request) {
     if (isAdminConfigured()) {
       const db = getAdminDb();
       if (db) {
-        const doc = await db.collection("leads").add(lead);
+        const ref = db.collection("leads").doc();
+        const actionTokens = isBooking ? createStoredLeadActionTokens(ref.id) : null;
+        await ref.set({
+          ...lead,
+          ...(actionTokens ?? {}),
+        });
         // Team email is sent by Firebase onLeadCreated — do not send it here too.
         try {
           await upsertMarketingContact(db, {
@@ -159,14 +165,14 @@ export async function POST(request: Request) {
             phone: lead.phone,
             locale: lead.locale,
             source: isBookingLead(lead) ? "booking" : "contact",
-            leadId: doc.id,
+            leadId: ref.id,
             status: lead.status,
             privacyAccepted: true,
           });
         } catch (marketingError) {
           console.error("[leads] Marketing contact upsert failed:", marketingError);
         }
-        return NextResponse.json({ ok: true, id: doc.id });
+        return NextResponse.json({ ok: true, id: ref.id });
       }
     } else {
       console.info("[leads] Firebase not configured — lead logged:", lead.email);

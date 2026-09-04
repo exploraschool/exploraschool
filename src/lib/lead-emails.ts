@@ -1,7 +1,9 @@
 import { buildCustomerCancellationEmail } from "@/lib/customer-cancellation-email";
 import { buildCustomerConfirmationEmail } from "@/lib/customer-confirmation-email";
 import { createLeadConfirmToken } from "@/lib/lead-confirm";
+import { buildProgressUpdateEmail } from "@/lib/progress-update-email";
 import { buildTeamNotificationEmail } from "@/lib/team-notification-email";
+import type { ProgressReport } from "@/lib/progress-reports";
 
 type ResendPayload = {
   from: string;
@@ -78,5 +80,20 @@ export async function sendCustomerBookingConfirmation(data: Record<string, unkno
 export async function sendCustomerBookingCancellation(data: Record<string, unknown>): Promise<void> {
   const { from, siteUrl, customerEmail } = await requireCustomerMailbox(data);
   const { subject, text, html } = buildCustomerCancellationEmail({ data, siteUrl });
+  await sendResendEmail({ from, to: [customerEmail], subject, text, html });
+}
+
+export async function sendStudentProgressUpdateEmail(
+  report: ProgressReport,
+  options?: { isNew?: boolean },
+): Promise<void> {
+  const { from, siteUrl, customerEmail } = await requireCustomerMailbox({
+    email: report.studentEmail,
+  });
+  const { subject, text, html } = buildProgressUpdateEmail({
+    report,
+    siteUrl,
+    isNew: options?.isNew,
+  });
   await sendResendEmail({ from, to: [customerEmail], subject, text, html });
 }

@@ -25,6 +25,7 @@ import { getProductBySlug, type ProductId } from "@/data/products";
 import { FieldValue } from "firebase-admin/firestore";
 import { findStudentUidByEmail } from "@/lib/student-user-store";
 import { createStudentTip } from "@/lib/student-tips";
+import { sendStudentProgressUpdateEmail } from "@/lib/lead-emails";
 
 export const runtime = "nodejs";
 
@@ -203,7 +204,24 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, report });
+  let studentEmailSent = false;
+  let studentEmailError: string | undefined;
+  if (report.studentEmail?.trim()) {
+    try {
+      await sendStudentProgressUpdateEmail(report, { isNew: !previous });
+      studentEmailSent = true;
+    } catch (emailError) {
+      studentEmailError = emailError instanceof Error ? emailError.message : "Email send failed";
+      console.error("[admin/progress] Student progress email failed:", studentEmailError);
+    }
+  }
+
+  return NextResponse.json({
+    ok: true,
+    report,
+    studentEmailSent,
+    studentEmailError,
+  });
 }
 
 const uploadSchema = z.object({

@@ -37,6 +37,10 @@ export function createLeadConfirmToken(leadId: string, secret: string): string {
   return createHmac("sha256", secret).update(leadId).digest("hex").slice(0, 32);
 }
 
+export function createLeadCancelToken(leadId: string, secret: string): string {
+  return createHmac("sha256", secret).update(`cancel:${leadId}`).digest("hex").slice(0, 32);
+}
+
 type BookingItem = {
   productId?: string;
   date?: string;
@@ -168,9 +172,25 @@ export function buildTeamNotificationEmail(params: {
   const status = String(data.status ?? (isBooking ? "pending" : "received"));
   const estimatedTotal =
     typeof data.estimatedTotal === "number" ? data.estimatedTotal : undefined;
+  const confirmToken =
+    typeof data.confirmToken === "string" && data.confirmToken.trim()
+      ? data.confirmToken.trim()
+      : confirmSecret
+        ? createLeadConfirmToken(leadId, confirmSecret)
+        : null;
+  const cancelToken =
+    typeof data.cancelToken === "string" && data.cancelToken.trim()
+      ? data.cancelToken.trim()
+      : confirmSecret
+        ? createLeadCancelToken(leadId, confirmSecret)
+        : null;
   const confirmUrl =
-    isBooking && confirmSecret
-      ? `${baseUrl}/api/bookings/confirm?id=${encodeURIComponent(leadId)}&token=${createLeadConfirmToken(leadId, confirmSecret)}`
+    isBooking && confirmToken
+      ? `${baseUrl}/api/bookings/confirm?id=${encodeURIComponent(leadId)}&token=${confirmToken}`
+      : null;
+  const cancelUrl =
+    isBooking && cancelToken
+      ? `${baseUrl}/api/bookings/cancel?id=${encodeURIComponent(leadId)}&token=${cancelToken}`
       : null;
 
   const title = isBooking ? "Nueva reserva" : "Nuevo contacto";
@@ -227,6 +247,9 @@ export function buildTeamNotificationEmail(params: {
     "",
     confirmUrl ? "Confirmar reserva (un clic):" : "",
     confirmUrl || "",
+    "",
+    cancelUrl ? "Rechazar reserva (un clic):" : "",
+    cancelUrl || "",
     "",
     "Panel de administración:",
     adminUrl,
@@ -347,12 +370,21 @@ export function buildTeamNotificationEmail(params: {
                   : ""
               }
               ${
-                confirmUrl
+                confirmUrl || cancelUrl
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:28px 0 0;">
                       <tr>
                         <td align="center" style="padding:18px;background:#eef8f3;border:1px solid #b9dfcb;border-radius:14px;">
                           <p style="margin:0 0 14px;font-size:14px;line-height:1.5;color:${BRAND.pizarra};">Al confirmar, el cliente recibe automáticamente el email de confirmación.</p>
-                          <a href="${escapeHtml(confirmUrl)}" style="display:inline-block;padding:14px 24px;background:#1f6b4a;color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;">Confirmar reserva</a>
+                          ${
+                            confirmUrl
+                              ? `<a href="${escapeHtml(confirmUrl)}" style="display:inline-block;min-width:160px;margin:0 6px 8px;padding:14px 24px;background:#1f6b4a;color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;">Confirmar reserva</a>`
+                              : ""
+                          }
+                          ${
+                            cancelUrl
+                              ? `<a href="${escapeHtml(cancelUrl)}" style="display:inline-block;min-width:160px;margin:0 6px 8px;padding:14px 24px;background:${BRAND.accent};color:${BRAND.white};text-decoration:none;border-radius:999px;font-size:15px;font-weight:700;">Rechazar</a>`
+                              : ""
+                          }
                         </td>
                       </tr>
                     </table>`

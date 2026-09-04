@@ -9,6 +9,7 @@ import {
   FAQ_CHAT_WHATSAPP_URL,
   type FaqChatButton,
 } from "@/data/faq-chat";
+import { usePathname } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 
@@ -20,8 +21,13 @@ function lineId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function isHomePath(pathname: string) {
+  return pathname === "/" || pathname === "";
+}
+
 export function FaqChatWidget() {
   const locale = useLocale();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [nodeId, setNodeId] = useState("root");
   const [lines, setLines] = useState<ChatLine[]>(() => [
@@ -107,6 +113,8 @@ export function FaqChatWidget() {
     setNodeId(next.id);
     setLines((current) => [...current, { id: lineId(), role: "bot", text: next.botText }]);
   }
+
+  if (!isHomePath(pathname)) return null;
 
   return (
     <div className="pointer-events-none fixed bottom-[5.5rem] right-3 z-[60] flex flex-col items-end gap-3 sm:bottom-6 sm:right-6">
@@ -200,25 +208,6 @@ export function FaqChatWidget() {
           </span>
         </button>
       )}
-
-      <button
-        type="button"
-        onClick={() => (open ? closeChat() : openChat())}
-        className="pointer-events-auto relative z-0 flex h-14 w-14 items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hielo sm:h-16 sm:w-16"
-        aria-label={open ? "Cerrar asistente" : "Abrir asistente"}
-        aria-expanded={open}
-      >
-        {!open ? (
-          <span className="chat-logo-ring pointer-events-none absolute inset-0 rounded-full bg-hielo/25" aria-hidden />
-        ) : null}
-        <Image
-          src={media.logoMark}
-          alt=""
-          width={64}
-          height={64}
-          className="relative z-[1] h-full w-full object-contain drop-shadow-[0_8px_18px_rgba(14,26,36,0.32)]"
-        />
-      </button>
     </div>
   );
 }

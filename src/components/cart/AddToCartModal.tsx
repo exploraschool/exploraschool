@@ -35,6 +35,7 @@ import {
   usesPairBasePricing,
   type TimeSlotId,
 } from "@/lib/booking-config";
+import { usePathname, useRouter } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { MultiDatePicker } from "@/components/cart/MultiDatePicker";
@@ -64,6 +65,8 @@ export function AddToCartModal({
 }: AddToCartModalProps) {
   const t = useTranslations("cart");
   const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const { addItems } = useCart();
   const product = getProductBySlug(productId);
   const bookingConfig = getProductBookingConfig(productId);
@@ -76,8 +79,6 @@ export function AddToCartModal({
   const [modality, setModality] = useState<ModalityId | "">("");
   const [instructorSlug, setInstructorSlug] = useState(defaultInstructorSlug ?? "");
   const [notes, setNotes] = useState("");
-  const [added, setAdded] = useState(false);
-  const [addedCount, setAddedCount] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [instructorPool, setInstructorPool] = useState<Instructor[] | null>(null);
 
@@ -140,8 +141,6 @@ export function AddToCartModal({
       setModality("");
       setInstructorSlug(preferredInstructor);
       setNotes("");
-      setAdded(false);
-      setAddedCount(0);
     }
   }, [
     open,
@@ -312,9 +311,10 @@ export function AddToCartModal({
     if (newItems.length === 0) return;
 
     addItems(newItems);
-    setAddedCount(newItems.length);
-    setAdded(true);
-    setTimeout(() => onClose(), 1400);
+    onClose();
+    if (pathname !== "/reserva") {
+      router.push("/reserva");
+    }
   }
 
   const modal = (
@@ -350,18 +350,7 @@ export function AddToCartModal({
           </div>
         </div>
 
-        {added ? (
-          <div className="px-6 py-12 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-hielo/10 text-2xl text-hielo">
-              ✓
-            </div>
-            <p className="mt-4 font-semibold text-hielo">{t("added")}</p>
-            <p className="mt-2 text-sm text-muted">
-              {t("addedDays", { count: addedCount })}
-            </p>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
             <div className="modal-scroll min-h-0 flex-1 px-4 py-4 sm:px-6 sm:py-5">
               <div className="space-y-4 sm:space-y-5">
               <p className="hidden text-sm text-muted sm:block">
@@ -623,7 +612,6 @@ export function AddToCartModal({
               </div>
             </div>
           </form>
-        )}
       </div>
     </div>
   );

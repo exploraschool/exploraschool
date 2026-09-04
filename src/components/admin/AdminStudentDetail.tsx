@@ -436,6 +436,24 @@ export function AdminStudentDetail({
             <p className="mt-1 text-xs text-muted">
               {pinnedTip.authorName} · {SOURCE_LABEL[pinnedTip.source]} · {pinnedTip.createdAt.slice(0, 10)}
             </p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <button
+                type="button"
+                disabled={busy}
+                className="rounded-full border px-2.5 py-1 text-xs font-semibold"
+                onClick={() => void pinTip(pinnedTip.id, false)}
+              >
+                Quitar pin
+              </button>
+              <button
+                type="button"
+                disabled={busy}
+                className="rounded-full border border-accent/30 px-2.5 py-1 text-xs font-semibold text-accent"
+                onClick={() => void removeTip(pinnedTip.id)}
+              >
+                Eliminar
+              </button>
+            </div>
           </div>
         ) : (
           <p className="text-sm text-muted">Ningún tip pinado. El alumno no verá tip destacado en el resumen.</p>
@@ -458,14 +476,15 @@ export function AdminStudentDetail({
           </button>
         </div>
 
-        {tips.length > 0 ? (
+        {tips.filter((tip) => !tip.pinned).length > 0 ? (
           <ul className="space-y-2">
-            {tips.map((tip) => (
+            {tips
+              .filter((tip) => !tip.pinned)
+              .map((tip) => (
               <li key={tip.id} className="rounded-xl bg-nieve/70 px-3 py-2 text-sm">
                 <p className="whitespace-pre-wrap text-pizarra">{tip.text}</p>
                 <p className="mt-1 text-xs text-muted">
                   {tip.authorName || "Explora"} · {SOURCE_LABEL[tip.source]} · {tip.createdAt.slice(0, 10)}
-                  {tip.pinned ? " · Pinado" : ""}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
@@ -474,7 +493,7 @@ export function AdminStudentDetail({
                     className="rounded-full border px-2.5 py-1 text-xs font-semibold"
                     onClick={() => void pinTip(tip.id, !tip.pinned)}
                   >
-                    {tip.pinned ? "Quitar pin" : "Pinear"}
+                    Pinear
                   </button>
                   <button
                     type="button"
@@ -686,7 +705,6 @@ export function AdminStudentDetail({
                     {companionLabel(report.companionId)} · {report.instructorName} ·{" "}
                     {progressDisciplineName(report.discipline as ProgressDisciplineId, "es")} · {report.hours}h ·{" "}
                     {"★".repeat(report.rating)}
-                    {report.nextFocus ? ` · Foco: ${report.nextFocus.slice(0, 40)}` : ""}
                   </span>
                   <Link
                     href={`/admin/evaluacion/${report.leadId}/${report.itemIndex}`}

@@ -302,7 +302,7 @@ export function BookingCheckout() {
           <h2 className="font-display text-2xl font-semibold text-hielo sm:text-3xl">{t("yourBooking")}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link href="/clases" className="btn-secondary !w-auto text-sm">
+          <Link href="/clases" className="btn-secondary animate-btn-pulse !w-auto text-sm">
             + {t("addMore")}
           </Link>
           <button

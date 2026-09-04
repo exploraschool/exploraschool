@@ -20,7 +20,7 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
-type ResultKind = "confirm" | "cancel";
+type ResultKind = "confirm" | "cancel" | "error";
 
 type BuildResultPageParams = {
   kind: ResultKind;
@@ -28,6 +28,7 @@ type BuildResultPageParams = {
   emailSent?: boolean;
   emailError?: string;
   siteUrl?: string;
+  message?: string;
 };
 
 export function buildBookingActionResultHtml({
@@ -36,35 +37,42 @@ export function buildBookingActionResultHtml({
   emailSent = false,
   emailError,
   siteUrl = PRODUCTION_SITE_URL,
+  message,
 }: BuildResultPageParams): string {
   const base = siteUrl.replace(/\/$/, "") || PRODUCTION_SITE_URL;
   const logoUrl = `${base}${media.logoEmail}`;
   const adminUrl = `${base}/admin/reservas`;
   const isConfirm = kind === "confirm";
+  const isError = kind === "error";
 
-  const title = already
-    ? isConfirm
-      ? "Reserva ya confirmada"
-      : "Reserva ya rechazada"
-    : isConfirm
-      ? "Reserva confirmada"
-      : "Reserva rechazada";
+  const title = isError
+    ? "No se pudo completar"
+    : already
+      ? isConfirm
+        ? "Reserva ya confirmada"
+        : "Reserva ya rechazada"
+      : isConfirm
+        ? "Reserva confirmada"
+        : "Reserva rechazada";
 
-  const eyebrow = isConfirm ? "Confirmación" : "Rechazo";
-  const accent = isConfirm ? BRAND.success : BRAND.accent;
-  const softBg = isConfirm ? "#eef8f3" : "#fef2f2";
-  const softBorder = isConfirm ? "#b9dfcb" : "#f0c4c5";
+  const eyebrow = isError ? "Aviso" : isConfirm ? "Confirmación" : "Rechazo";
+  const accent = isError ? BRAND.accent : isConfirm ? BRAND.success : BRAND.accent;
+  const softBg = isError || !isConfirm ? "#fef2f2" : "#eef8f3";
+  const softBorder = isError || !isConfirm ? "#f0c4c5" : "#b9dfcb";
 
-  const lead = already
-    ? isConfirm
-      ? "Esta reserva ya estaba confirmada anteriormente."
-      : "Esta reserva ya estaba marcada como rechazada."
-    : isConfirm
-      ? "Has confirmado la reserva correctamente."
-      : "Has rechazado la reserva. El cliente ha sido (o será) informado por email.";
+  const lead = isError
+    ? message ||
+      "No hemos podido procesar este enlace. Confirma o rechaza la reserva desde el panel."
+    : already
+      ? isConfirm
+        ? "Esta reserva ya estaba confirmada anteriormente."
+        : "Esta reserva ya estaba marcada como rechazada."
+      : isConfirm
+        ? "Has confirmado la reserva correctamente."
+        : "Has rechazado la reserva. El cliente ha sido (o será) informado por email.";
 
   let emailBlock = "";
-  if (!already || emailSent || emailError) {
+  if (!isError && (!already || emailSent || emailError)) {
     if (emailSent) {
       emailBlock = isConfirm
         ? "<p style=\"margin:0;font-size:14px;line-height:1.55;color:#0e0e0f;\">El cliente ha recibido el email de confirmación.</p>"
