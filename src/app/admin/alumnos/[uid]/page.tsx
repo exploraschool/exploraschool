@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { AdminStudentDetail } from "@/components/admin/AdminStudentDetail";
+import { AdminStudentDeleteButton } from "@/components/admin/AdminStudentDeleteButton";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { requireAdminPanel } from "@/lib/admin-workspace";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
@@ -93,9 +94,12 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
       title={profile.displayName || profile.email}
       description="Perfil, tips, correcciones y fichas de progreso."
       actions={
-        <Link href="/admin/alumnos" className="rounded-full border border-hielo/15 px-3 py-1.5 text-sm font-semibold">
-          ← Alumnos
-        </Link>
+        <div className="flex items-center gap-2">
+          <AdminStudentDeleteButton uid={profile.uid} label={profile.displayName || profile.email} />
+          <Link href="/admin/alumnos" className="rounded-full border border-hielo/15 px-3 py-1.5 text-sm font-semibold">
+            ← Alumnos
+          </Link>
+        </div>
       }
     >
       <AdminStudentDetail

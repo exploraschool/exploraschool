@@ -6,6 +6,7 @@ import {
   USERS_COLLECTION,
   type StudentProfile,
 } from "@/lib/student-users";
+import { PROGRESS_REPORTS_COLLECTION } from "@/lib/progress-reports";
 
 export async function getStudentProfile(uid: string): Promise<StudentProfile | null> {
   const db = getAdminDb();
@@ -108,4 +109,56 @@ export async function adminUpsertStudentProfile(
     email: current.email,
     ...patch,
   });
+}
+
+/**
+ * Deletes the student profile and related media/gallery links.
+ * Keeps booking leads; clears studentUid so they can re-link after re-registering.
+ */
+export async function deleteStudentProfile(uid: string): Promise<boolean> {
+  const current = await getStudentProfile(uid);
+  if (!current) return false;
+
+  const db = getAdminDb();
+  if (!db) throw new Error("database_unavailable");
+
+  const { deleteAllStudentMediaForUid } = await import("@/lib/student-media");
+  await deleteAllStudentMediaForUid(uid);
+
+  try {
+    const reportSnap = await db.collection(PROGRESS_REPORTS_COLLECTION).where("studentUid", "==", uid).get();
+    const batch = db.batch();
+    let ops = 0;
+    for (const doc of reportSnap.docs) {
+      batch.delete(doc.ref);
+      ops += 1;
+      if (ops >= 400) {
+        await batch.commit();
+        ops = 0;
+      }
+    }
+    if (ops > 0) await batch.commit();
+  } catch (error) {
+    console.error("[student-user-store] delete progress failed:", error);
+  }
+
+  try {
+    const leadSnap = await db.collection("leads").where("studentUid", "==", uid).get();
+    const batch = db.batch();
+    let ops = 0;
+    for (const doc of leadSnap.docs) {
+      batch.update(doc.ref, { studentUid: FieldValue.delete() });
+      ops += 1;
+      if (ops >= 400) {
+        await batch.commit();
+        ops = 0;
+      }
+    }
+    if (ops > 0) await batch.commit();
+  } catch (error) {
+    console.error("[student-user-store] unlink leads failed:", error);
+  }
+
+  await db.collection(USERS_COLLECTION).doc(uid).delete();
+  return true;
 }

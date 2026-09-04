@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 export type AdminStudentListItem = {
@@ -24,17 +25,51 @@ const LEVEL_LABEL: Record<string, string> = {
   experto: "Experto",
 };
 
-export function AdminStudentsDirectory({ initialStudents }: { initialStudents: AdminStudentListItem[] }) {
-  const [q, setQ] = useState("");
+function TrashIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>
+      <path d="M4 7h16" strokeLinecap="round" />
+      <path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" strokeLinecap="round" />
+      <path d="M6.5 7 7.5 19a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4L17.5 7" strokeLinecap="round" />
+      <path d="M10 11v5M14 11v5" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-  const students = useMemo(() => {
+export function AdminStudentsDirectory({ initialStudents }: { initialStudents: AdminStudentListItem[] }) {
+  const router = useRouter();
+  const [q, setQ] = useState("");
+  const [students, setStudents] = useState(initialStudents);
+  const [busyUid, setBusyUid] = useState<string | null>(null);
+  const [error, setError] = useState("");
+
+  const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    if (!needle) return initialStudents;
-    return initialStudents.filter((student) => {
+    if (!needle) return students;
+    return students.filter((student) => {
       const hay = `${student.displayName} ${student.email}`.toLowerCase();
       return hay.includes(needle);
     });
-  }, [initialStudents, q]);
+  }, [students, q]);
+
+  async function removeStudent(student: AdminStudentListItem) {
+    const label = student.displayName || student.email;
+    if (!window.confirm(`¿Eliminar al alumno «${label}»?\nSe borrará su perfil, medias y fichas. Las reservas se conservan.`)) {
+      return;
+    }
+    setBusyUid(student.uid);
+    setError("");
+    try {
+      const res = await fetch(`/api/admin/students/${student.uid}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("No se pudo eliminar");
+      setStudents((current) => current.filter((item) => item.uid !== student.uid));
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Error al eliminar");
+    } finally {
+      setBusyUid(null);
+    }
+  }
 
   return (
     <div className="space-y-5">
@@ -48,17 +83,22 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
         />
       </label>
 
-      {students.length === 0 ? (
+      {error ? <p className="text-sm text-accent">{error}</p> : null}
+
+      {filtered.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-hielo/20 bg-white px-6 py-12 text-center text-sm text-muted">
           No hay alumnos registrados{q ? " con ese filtro" : ""}.
         </p>
       ) : (
         <ul className="space-y-3">
-          {students.map((student) => (
-            <li key={student.uid}>
+          {filtered.map((student) => (
+            <li
+              key={student.uid}
+              className="flex flex-wrap items-center gap-2 rounded-2xl border border-hielo/10 bg-white px-3 py-3 sm:px-5 sm:py-4"
+            >
               <Link
                 href={`/admin/alumnos/${student.uid}`}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-hielo/10 bg-white px-5 py-4 transition hover:border-hielo/30"
+                className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-3 transition hover:opacity-90"
               >
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-nieve text-muted">
@@ -85,8 +125,18 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                     </p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold text-hielo">Abrir →</span>
+                <span className="hidden text-sm font-semibold text-hielo sm:inline">Abrir →</span>
               </Link>
+              <button
+                type="button"
+                disabled={busyUid === student.uid}
+                onClick={() => void removeStudent(student)}
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/25 text-accent transition hover:bg-accent/5 disabled:opacity-50"
+                aria-label={`Eliminar a ${student.displayName || student.email}`}
+                title="Eliminar alumno"
+              >
+                <TrashIcon className="h-5 w-5" />
+              </button>
             </li>
           ))}
         </ul>

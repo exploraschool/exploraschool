@@ -9,6 +9,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import {
   adminUpsertStudentProfile,
+  deleteStudentProfile,
   getStudentProfile,
 } from "@/lib/student-user-store";
 import {
@@ -184,4 +185,23 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 
   return NextResponse.json({ profile });
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+  if (!isAdminConfigured()) {
+    return NextResponse.json({ error: "unavailable" }, { status: 503 });
+  }
+
+  const { uid } = await context.params;
+  try {
+    const ok = await deleteStudentProfile(uid);
+    if (!ok) return NextResponse.json({ error: "not_found" }, { status: 404 });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("[admin/students] delete failed:", error);
+    return NextResponse.json({ error: "delete_failed" }, { status: 500 });
+  }
 }

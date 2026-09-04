@@ -309,3 +309,28 @@ export async function unlinkStudentMediaFromGallery(mediaId: string): Promise<bo
   await ref.set({ liveGalleryId: null, publishedToGallery: false }, { merge: true });
   return true;
 }
+
+export async function deleteAllStudentMediaForUid(uid: string): Promise<number> {
+  const db = getAdminDb();
+  const bucket = getAdminBucket();
+  if (!db) return 0;
+
+  const items = await listStudentMediaForUid(uid);
+  let deleted = 0;
+  for (const item of items) {
+    if (item.liveGalleryId) {
+      await db.collection(LIVE_GALLERY_COLLECTION).doc(item.liveGalleryId).delete().catch(() => undefined);
+    }
+    if (bucket && item.storagePath) {
+      try {
+        await bucket.file(item.storagePath).delete({ ignoreNotFound: true });
+      } catch (error) {
+        console.error("[student-media] storage delete failed:", error);
+      }
+    }
+    await db.collection(STUDENT_MEDIA_COLLECTION).doc(item.id).delete();
+    deleted += 1;
+  }
+  if (deleted > 0) revalidateGalleryPages();
+  return deleted;
+}
