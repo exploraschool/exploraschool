@@ -16,8 +16,11 @@ import {
   buildTeamProfileReminderEmail,
 } from "./profile-reminder-emails.js";
 
-if (!getApps().length) {
-  initializeApp();
+function getDb() {
+  if (!getApps().length) {
+    initializeApp();
+  }
+  return getFirestore();
 }
 
 const resendApiKeyParam = defineSecret("RESEND_API_KEY");
@@ -53,7 +56,7 @@ type FichaStatus = {
 async function resolveFichaStatus(
   data: Record<string, unknown>,
 ): Promise<FichaStatus> {
-  const db = getFirestore();
+  const db = getDb();
   const email = String(data.email ?? "").trim();
   const emailLower = String(data.emailLower ?? email).trim().toLowerCase();
   let uid =
@@ -132,7 +135,7 @@ function windowBounds(centerMs: number, nowMs: number): { startIso: string; endI
 }
 
 async function loadBookingLeadsInWindow(startIso: string, endIso: string) {
-  const db = getFirestore();
+  const db = getDb();
   const snap = await db
     .collection("leads")
     .where("type", "==", "booking")
