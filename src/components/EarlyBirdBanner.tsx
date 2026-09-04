@@ -11,12 +11,14 @@ export function EarlyBirdBanner({ locale, className = "" }: EarlyBirdBannerProps
   const { title, body } = earlyBirdBannerCopy(locale);
 
   return (
-    <div
-      className={`rounded-2xl border border-oro/30 bg-gradient-to-r from-oro/10 via-oro/5 to-accent/5 px-5 py-4 sm:px-6 sm:py-5 ${className}`}
-      role="status"
-    >
-      <p className="text-xs font-bold uppercase tracking-wider text-oro">{title}</p>
-      <p className="mt-1 text-sm leading-relaxed text-pizarra sm:text-base">{body}</p>
+    <div className={`early-bird-banner ${className}`.trim()} role="status">
+      <span className="early-bird-banner__badge" aria-hidden>
+        −10%
+      </span>
+      <div className="early-bird-banner__copy">
+        <p className="early-bird-banner__title">{title}</p>
+        <p className="early-bird-banner__body">{body}</p>
+      </div>
     </div>
   );
 }

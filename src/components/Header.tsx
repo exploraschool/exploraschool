@@ -2,14 +2,17 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import {
   HeaderDesktopNav,
+  HeaderLangSwitch,
   HeaderMenuButton,
   HeaderMobileMenu,
 } from "@/components/HeaderNav";
 import { CartBadge } from "@/components/cart/CartBadge";
+import { AccountNavLink } from "@/components/cuenta/AccountNavLink";
 import { AdminAccessModal } from "@/components/admin/AdminAccessModal";
 
 const ADMIN_LOGO_TAPS = 5;
@@ -56,6 +59,7 @@ type HeaderProps = {
 };
 
 export function Header({ locale }: HeaderProps) {
+  const t = useTranslations("nav");
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [adminOpen, setAdminOpen] = useState(false);
@@ -107,7 +111,7 @@ export function Header({ locale }: HeaderProps) {
   return (
     <>
       <header
-        className={`site-header ${scrolled ? "site-header--scrolled" : "site-header--top"}`}
+        className={`site-header ${scrolled || menuOpen ? "site-header--scrolled" : "site-header--top"}`}
       >
         <div className="container-page site-header__bar">
           <Link href="/" className="site-header__brand" onClick={onBrandClick}>
@@ -135,7 +139,17 @@ export function Header({ locale }: HeaderProps) {
           </div>
 
           <div className="site-header__actions">
+            <span className="hidden lg:inline-flex">
+              <HeaderLangSwitch locale={locale} />
+            </span>
+            <span className="hidden lg:inline-flex">
+              <AccountNavLink locale={locale} />
+            </span>
             <CartBadge />
+            <span className="site-header__divider" aria-hidden />
+            <Link href="/reserva" className="site-header__book">
+              {t("reservar")}
+            </Link>
             <HeaderMenuButton
               open={menuOpen}
               onClick={() => setMenuOpen((value) => !value)}

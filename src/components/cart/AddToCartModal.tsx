@@ -20,7 +20,7 @@ import {
   instructorCanTeachProduct,
   instructorTeachesDiscipline,
   isSnowboardOnlyInstructor,
-  type InstructorSlug,
+  type Instructor,
 } from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
 import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
@@ -78,11 +78,29 @@ export function AddToCartModal({
   const [added, setAdded] = useState(false);
   const [addedCount, setAddedCount] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [instructorPool, setInstructorPool] = useState<Instructor[] | null>(null);
 
   useBodyScrollLock(open && !!product);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/instructors")
+      .then((res) => res.json())
+      .then((payload: { instructors?: Instructor[] }) => {
+        if (!cancelled && Array.isArray(payload.instructors)) {
+          setInstructorPool(payload.instructors);
+        }
+      })
+      .catch(() => {
+        /* fallback to static list */
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -169,6 +187,7 @@ export function AddToCartModal({
   const instructors = getInstructorsForBooking(
     resolvedProduct.disciplines,
     effectiveDiscipline,
+    instructorPool ?? undefined,
   );
 
   const disciplineLocked =
@@ -187,7 +206,8 @@ export function AddToCartModal({
       setParticipants((current) => clampParticipantCount(current, productId, next));
     }
     if (instructorSlug) {
-      const instructor = getInstructorBySlug(instructorSlug as InstructorSlug);
+      const instructor =
+        instructors.find((item) => item.slug === instructorSlug) ?? getInstructorBySlug(instructorSlug);
       if (instructor && next && !instructorTeachesDiscipline(instructor, next)) {
         setInstructorSlug("");
       } else if (instructor && !next && !instructorCanTeachProduct(instructor, resolvedProduct.disciplines)) {

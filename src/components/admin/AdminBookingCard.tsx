@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
 import { AdminDeleteLeadButton } from "@/components/admin/AdminDeleteLeadButton";
@@ -70,15 +71,37 @@ function formatDate(date: string, locale: string) {
   }
 }
 
-export function AdminBookingCard({ lead }: { lead: AdminBookingLead }) {
+export function AdminBookingCard({
+  lead,
+  instructors,
+}: {
+  lead: AdminBookingLead;
+  instructors: { slug: string; name: string }[];
+}) {
   const locale = lead.locale === "en" ? "en" : "es";
   const items = lead.bookingItems ?? [];
   const customerNotes = customerNotesFromLeadMessage(lead.message);
   const [status, setStatus] = useState(lead.status);
+  const [assigning, setAssigning] = useState<number | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     setStatus(lead.status);
   }, [lead.status]);
+
+  async function assignInstructor(itemIndex: number, instructorSlug: string) {
+    setAssigning(itemIndex);
+    try {
+      await fetch(`/api/admin/leads/${lead.id}/assign`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemIndex, instructorSlug }),
+      });
+      router.refresh();
+    } finally {
+      setAssigning(null);
+    }
+  }
 
   return (
     <article className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_8px_32px_rgba(10,18,25,0.04)]">
@@ -148,6 +171,22 @@ export function AdminBookingCard({ lead }: { lead: AdminBookingLead }) {
                   <p className="mt-1 text-xs text-muted">
                     {[discipline, item.instructorName, item.notes].filter(Boolean).join(" · ") || "Sin detalles extra"}
                   </p>
+                  <label className="mt-2 block text-xs font-semibold text-hielo">
+                    Asignar instructor
+                    <select
+                      className="mt-1 w-full rounded-lg border border-hielo/15 bg-white px-2 py-1.5 text-sm font-medium text-pizarra"
+                      defaultValue={item.assignedInstructorSlug || item.instructorSlug || ""}
+                      disabled={assigning === index}
+                      onChange={(event) => void assignInstructor(index, event.target.value)}
+                    >
+                      <option value="">Sin asignar</option>
+                      {instructors.map((instructor) => (
+                        <option key={instructor.slug} value={instructor.slug}>
+                          {instructor.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
                 </li>
               );
             })}

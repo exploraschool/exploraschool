@@ -9,13 +9,17 @@ import { media } from "@/lib/media";
 type AdminShellProps = {
   title: string;
   description?: string;
-  active: "reservas" | "leads" | "emails" | "galeria";
+  active: "reservas" | "leads" | "emails" | "galeria" | "hoy" | "evaluacion" | "instructores" | "fichas";
   children: ReactNode;
   actions?: ReactNode;
 };
 
 const NAV = [
+  { href: "/admin/hoy", id: "hoy" as const, label: "Hoy" },
+  { href: "/admin/evaluacion", id: "evaluacion" as const, label: "Evaluación" },
   { href: "/admin/reservas", id: "reservas" as const, label: "Reservas" },
+  { href: "/admin/instructores", id: "instructores" as const, label: "Instructores" },
+  { href: "/admin/fichas", id: "fichas" as const, label: "Fichas" },
   { href: "/admin/emails", id: "emails" as const, label: "Emails" },
   { href: "/admin/leads", id: "leads" as const, label: "Contactos" },
   { href: "/admin/galeria", id: "galeria" as const, label: "Galería" },
@@ -36,7 +40,7 @@ export async function AdminShell({
         <div className="container-page flex flex-wrap items-center justify-between gap-3 py-4">
           <div className="flex min-w-0 items-start gap-3">
             <Link
-              href="/admin/reservas"
+              href="/admin/hoy"
               className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-hielo/10 bg-nieve"
               aria-label={adminCopy.panelName}
             >
@@ -69,7 +73,7 @@ export async function AdminShell({
             <AdminLogoutButton />
           </div>
         </div>
-        <nav className="container-page flex gap-1 pb-3" aria-label="Admin">
+        <nav className="container-page flex flex-wrap gap-1 pb-3" aria-label="Admin">
           {NAV.map((item) => {
             const isActive = item.id === active;
             return (

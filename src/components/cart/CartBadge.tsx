@@ -11,7 +11,7 @@ export function CartBadge() {
   return (
     <Link
       href="/reserva"
-      className="relative flex h-10 w-10 items-center justify-center rounded-full border border-hielo/12 bg-white/80 text-hielo shadow-sm transition hover:border-hielo/25 hover:bg-white hover:text-accent sm:h-10 sm:w-10"
+      className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-hielo/15 bg-white/80 text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent"
       aria-label={t("viewCart", { count })}
     >
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.75" aria-hidden>

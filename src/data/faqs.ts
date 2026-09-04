@@ -23,22 +23,22 @@ export const FAQ_CATEGORIES: {
     id: "reservas",
     labelEs: "Reservas y precios",
     labelEn: "Bookings & prices",
-    descriptionEs: "Cómo reservar, qué incluye el precio, pago e IVA.",
-    descriptionEn: "How to book, what is included, payment and VAT.",
+    descriptionEs: "Reserva, pago, IVA y quién cabe en la clase.",
+    descriptionEn: "Booking, payment, VAT and group size.",
   },
   {
     id: "estacion",
     labelEs: "Antes de subir",
     labelEn: "Before you go up",
-    descriptionEs: "Forfait, cajeros, material, casco y punto de encuentro.",
-    descriptionEn: "Lift pass, machines, equipment, helmet and meeting point.",
+    descriptionEs: "Forfait, material, casco y cómo llegar a Borreguiles.",
+    descriptionEn: "Lift pass, equipment, helmet and how to reach Borreguiles.",
   },
   {
     id: "clase",
     labelEs: "El día de la clase",
     labelEn: "On lesson day",
-    descriptionEs: "Imprevistos, retrasos, idiomas y cierre de estación.",
-    descriptionEn: "Changes, delays, languages and resort closures.",
+    descriptionEs: "Retrasos, idiomas y qué pasa si cierra Cetursa.",
+    descriptionEn: "Delays, languages and what happens if Cetursa closes.",
   },
 ];
 
@@ -63,8 +63,8 @@ export const FAQ_HIGHLIGHTS: {
     faqId: "forfait",
     titleEs: "Forfait aparte",
     titleEn: "Lift pass separate",
-    bodyEs: "Cajeros en los parkings y en la Silla del Pueblo (estación media y superior).",
-    bodyEn: "Machines in the car parks and at the Village chairlift (middle and top stations).",
+    bodyEs: "Cajeros en los parkings y en la Silla del Pueblo.",
+    bodyEn: "Machines in the car parks and at the Village chairlift.",
   },
   {
     id: "encuentro",
@@ -79,8 +79,8 @@ export const FAQ_HIGHLIGHTS: {
     faqId: "como-pago",
     titleEs: "Sin pago online",
     titleEn: "No online payment",
-    bodyEs: "Reservas por email. El abono se concreta con tu instructor/a.",
-    bodyEn: "Book by email. Payment is arranged with your instructor.",
+    bodyEs: "Envías la solicitud. El pago va con tu instructor/a.",
+    bodyEn: "Send the request. You pay with your instructor.",
   },
 ];
 
@@ -125,206 +125,358 @@ We reply from 9:00 am to 8:00 pm.
     category: "estacion",
     sortOrder: 2,
     questionEs: "¿Necesito forfait para las clases? ¿Dónde lo saco?",
-    answerEs: `Sí. El forfait no está incluido en el precio de la clase: lo vende Cetursa, no Explora. Cada persona que use los remontes necesita el suyo, también los niños.
+    answerEs: `Sí. Lo vende Cetursa, no Explora, y no va incluido en la clase. Cada persona que suba a los remontes necesita el suyo, también los niños.
 
-La opción más cómoda es comprarlo con antelación en [sierranevada.es](https://www.sierranevada.es). El mismo día puedes sacarlo en los cajeros automáticos de forfait:
+1. Cómpralo con antelación en [sierranevada.es](https://www.sierranevada.es)
+2. O recógelo el mismo día en un cajero de forfait
+3. Si prefieres, también en taquilla de Plaza de Andalucía
 
+Cajeros automáticos:
 - En los parkings
 - En la estación media de la Silla del Pueblo
 - En la estación superior de la Silla del Pueblo
 
-Así evitas las colas de taquilla de Plaza de Andalucía. Si prefieres taquilla, Cetursa también vende allí. Recomendamos abonar el seguro de accidentes.
+- [sierranevada.es](https://www.sierranevada.es)
+- [Guía del forfait](/blog/forfait-sierra-nevada-guia-compra)
 
-Guía completa: [Forfait en Sierra Nevada](/blog/forfait-sierra-nevada-guia-compra).`,
+> El cajero te ahorra la cola de taquilla. Añade el seguro de accidentes.`,
     questionEn: "Do I need a lift pass for the lessons? Where do I get it?",
-    answerEn: `Yes. The lift pass is not included in the lesson price: Cetursa sells it, not Explora. Everyone using the lifts needs their own pass, including children.
+    answerEn: `Yes. Cetursa sells it, not Explora, and it is not included in the lesson. Everyone using the lifts needs their own pass, including children.
 
-The easiest option is to buy it in advance at [sierranevada.es](https://www.sierranevada.es). On the day you can also collect it at the automatic forfait machines:
+1. Buy it in advance at [sierranevada.es](https://www.sierranevada.es)
+2. Or collect it on the day at a lift-pass machine
+3. If you prefer, also at the Plaza de Andalucía ticket office
 
+Automatic machines:
 - In the car parks
 - At the middle station of the Village chairlift (Silla del Pueblo)
 - At the top station of the Village chairlift (Silla del Pueblo)
 
-That way you skip the ticket-office queues at Plaza de Andalucía. If you prefer the desk, Cetursa also sells passes there. We recommend adding accident insurance.
+- [sierranevada.es](https://www.sierranevada.es)
+- [Lift-pass guide](/blog/forfait-sierra-nevada-guia-compra)
 
-Full guide: [Lift passes in Sierra Nevada](/blog/forfait-sierra-nevada-guia-compra).`,
+> The machine skips the ticket-office queue. Add accident insurance.`,
   },
   {
     id: "punto-encuentro",
     category: "estacion",
     sortOrder: 3,
     questionEs: "¿Dónde está el punto de encuentro?",
-    answerEs: `Las clases se imparten en la zona alta (Borreguiles, 2.700 m). El punto habitual es justo a la salida a la nieve al llegar arriba en el Telecabina Al-Andalus.
+    answerEs: `En Borreguiles (2.700 m), justo a la salida a la nieve del Telecabina Al-Andalus.
 
-Tu instructor/a te espera con la chaqueta oficial de Explora School & Club. Ubicación en [Google Maps](${site.meetingPoint.googleMapsUrl}) y en [Cómo llegar](/como-llegar).
+1. Sube en el Telecabina Al-Andalus
+2. Sal a la nieve
+3. Busca la chaqueta oficial de Explora School & Club
 
-Si tu reserva es de día completo con recogida, te confirmamos el punto (puede no ser Borreguiles): recogida y entrega donde se solicite.`,
+- [Google Maps](${site.meetingPoint.googleMapsUrl})
+- [Cómo llegar](/como-llegar)
+
+> Si tu reserva es de día completo con recogida, te confirmamos otro punto. Puede no ser Borreguiles.`,
     questionEn: "Where is the meeting point?",
-    answerEn: `Lessons take place in the upper area (Borreguiles, 2,700 m). The usual meeting point is right at the snow exit when you arrive on the Al-Andalus gondola.
+    answerEn: `In Borreguiles (2,700 m), right at the snow exit of the Al-Andalus gondola.
 
-Your instructor will be waiting in the official Explora School & Club jacket. See the pin on [Google Maps](${site.meetingPoint.googleMapsUrl}) and on [Getting here](/como-llegar).
+1. Take the Al-Andalus gondola
+2. Step out onto the snow
+3. Look for the official Explora School & Club jacket
 
-If your booking is a full day with pick-up, we will confirm the meeting point (it may not be Borreguiles): pick-up and drop-off on request.`,
+- [Google Maps](${site.meetingPoint.googleMapsUrl})
+- [Getting here](/como-llegar)
+
+> If your booking is a full day with pick-up, we will confirm another point. It may not be Borreguiles.`,
   },
   {
     id: "material",
     category: "estacion",
     sortOrder: 4,
     questionEs: "¿Necesito material de esquí, snowboard o telemark?",
-    answerEs: `Sí. Puedes traer el tuyo o alquilarlo en la estación. Calcula 20–40 minutos extra si vas a alquilar el mismo día.
+    answerEs: `Sí. Trae el tuyo o alquila en la estación. Si lo pides al reservar, podemos gestionar el alquiler completo.
 
-Incluye esquís o tabla, botas, bastones si esquías, guantes, gafas, ropa impermeable y protección solar. Los instructores te orientan sin compromiso. Si lo pides al reservar, también podemos gestionar el alquiler completo.
+Lleva:
+- Esquís o tabla, y botas
+- Bastones si esquías
+- Guantes, gafas y ropa impermeable
+- Protección solar
 
-Más detalle: [qué llevar el primer día](/blog/que-llevar-primer-dia-nieve).`,
+- [Qué llevar el primer día](/blog/que-llevar-primer-dia-nieve)
+- [Reservar](/reserva)
+
+> Si alquilas el mismo día, suma 20–40 minutos extra.`,
     questionEn: "Do I need ski, snowboard or telemark equipment?",
-    answerEn: `Yes. Bring your own or rent at the resort. Allow an extra 20–40 minutes if you are renting on the day.
+    answerEn: `Yes. Bring your own or rent at the resort. If you ask when booking, we can arrange full equipment rental.
 
-That includes skis or board, boots, poles if you ski, gloves, goggles, waterproof clothing and sun protection. Instructors can advise you with no obligation. If you ask when booking, we can also arrange full equipment rental.
+Bring:
+- Skis or board, and boots
+- Poles if you ski
+- Gloves, goggles and waterproof clothing
+- Sun protection
 
-More detail: [what to bring on day one](/blog/que-llevar-primer-dia-nieve).`,
+- [What to bring on day one](/blog/que-llevar-primer-dia-nieve)
+- [Book](/reserva)
+
+> If you rent on the day, add an extra 20–40 minutes.`,
   },
   {
     id: "que-incluye",
     category: "reservas",
     sortOrder: 5,
     questionEs: "¿Qué incluye el precio de la clase?",
-    answerEs: `Incluye la enseñanza con instructor/a titulado/a. Todos los precios llevan IVA.
+    answerEs: `La enseñanza con instructor/a titulado/a. Todos los precios llevan IVA.
 
-No incluye forfait ni material. El forfait se saca en [sierranevada.es](https://www.sierranevada.es), en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía.
+No incluye:
+- Forfait
+- Material de alquiler
 
-Consulta [clases y tarifas](/clases).`,
+El forfait se saca en [sierranevada.es](https://www.sierranevada.es), en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía.
+
+- [Clases y tarifas](/clases)
+- [Reservar](/reserva)`,
     questionEn: "What is included in the lesson price?",
-    answerEn: `It includes instruction with a qualified instructor. All prices include VAT.
+    answerEn: `Instruction with a qualified instructor. All prices include VAT.
 
-It does not include the lift pass or equipment. Get your pass at [sierranevada.es](https://www.sierranevada.es), at the machines in the car parks and at the Village chairlift (Silla del Pueblo), or at Plaza de Andalucía.
+It does not include:
+- Lift pass
+- Rental equipment
 
-See [lessons and prices](/clases).`,
+Get your pass at [sierranevada.es](https://www.sierranevada.es), at the machines in the car parks and at the Village chairlift (Silla del Pueblo), or at Plaza de Andalucía.
+
+- [Lessons and prices](/clases)
+- [Book](/reserva)`,
   },
   {
     id: "como-pago",
     category: "reservas",
     sortOrder: 6,
     questionEs: "¿Hay que pagar al reservar?",
-    answerEs: `No. La solicitud se envía por email y no cobramos online. Te confirmamos disponibilidad y el importe final se concreta con tu instructor/a al abonar la clase.
+    answerEs: `No. La solicitud va por email y no cobramos online.
 
-Verás un total estimado en la confirmación; el precio definitivo se cierra al confirmar el grupo, el horario y cualquier extra.`,
+1. Envías la reserva
+2. Te confirmamos disponibilidad
+3. Abonas la clase con tu instructor/a
+
+En la confirmación verás un total estimado.
+
+> El precio definitivo se cierra al confirmar grupo, horario y extras.`,
     questionEn: "Do I pay when I book?",
-    answerEn: `No. The request is sent by email and we do not charge online. We confirm availability and the final amount is arranged with your instructor when you pay for the lesson.
+    answerEn: `No. The request goes by email and we do not charge online.
 
-You will see an estimated total in the confirmation; the final price is settled when the group, schedule and any extras are confirmed.`,
+1. You send the booking
+2. We confirm availability
+3. You pay for the lesson with your instructor
+
+You will see an estimated total in the confirmation.
+
+> The final price is settled when the group, schedule and extras are confirmed.`,
   },
   {
     id: "cuanto-tiempo",
     category: "estacion",
     sortOrder: 7,
     questionEs: "¿Con cuánto tiempo debo llegar?",
-    answerEs: `Planifica estar en Pradollano como mínimo 1 hora y 30 minutos antes de tu clase. Entre aparcar, sacar el forfait, alquilar material y subir en el Telecabina Al-Andalus se puede tardar entre 1 h y 1 h 30 min.
+    answerEs: `Estate en Pradollano al menos 1 hora y 30 minutos antes de la clase.
 
-El trayecto en telecabina dura unos 10–15 minutos, pero en hora punta (9:30–11:00) la fila puede ser de 15–30 minutos. Entra a la cola al menos 40 minutos antes de la clase.
+Entre medias suele irse ese tiempo en:
+- Aparcar
+- Sacar el forfait
+- Alquilar material, si lo necesitas
+- Subir en el Telecabina Al-Andalus
 
-Aparcamiento recomendado: Parking Subterráneo Plaza de Andalucía. Lleva cadenas o fundas por si son obligatorias. Indicaciones en [Cómo llegar](/como-llegar).`,
+El telecabina tarda 10–15 minutos. En hora punta (9:30–11:00) la fila puede ser de 15–30 minutos: métete en ella 40 minutos antes.
+
+Aparcamiento recomendado: Parking Subterráneo Plaza de Andalucía. Lleva cadenas o fundas por si son obligatorias.
+
+- [Cómo llegar](/como-llegar)
+
+> La regla es 90 minutos. Más vale sobrar que llegar tarde a la nieve.`,
     questionEn: "How early should I arrive?",
-    answerEn: `Plan to be in Pradollano at least 1 hour 30 minutes before your lesson. Parking, collecting the lift pass, renting equipment and taking the Al-Andalus gondola can take between 1 hour and 1 hour 30 minutes.
+    answerEn: `Be in Pradollano at least 1 hour 30 minutes before the lesson.
 
-The gondola ride is about 10–15 minutes, but at peak times (9:30–11:00 am) the queue can be 15–30 minutes. Join the queue at least 40 minutes before the lesson.
+That time usually goes on:
+- Parking
+- Collecting the lift pass
+- Renting equipment, if you need it
+- Taking the Al-Andalus gondola
 
-Recommended parking: Plaza de Andalucía underground car park. Carry snow chains or socks in case they are required. Directions on [Getting here](/como-llegar).`,
+The gondola ride is 10–15 minutes. At peak times (9:30–11:00 am) the queue can be 15–30 minutes: join it 40 minutes before.
+
+Recommended parking: Plaza de Andalucía underground car park. Carry snow chains or socks in case they are required.
+
+- [Getting here](/como-llegar)
+
+> The rule is 90 minutes. Better early than late on the snow.`,
   },
   {
     id: "casco",
     category: "estacion",
     sortOrder: 8,
     questionEs: "¿El casco es obligatorio?",
-    answerEs: `No es obligatorio en la estación, pero en Explora School & Club recomendamos usarlo, sobre todo con niños. Puedes traer el tuyo o alquilarlo junto al resto del material.`,
+    answerEs: `No es obligatorio en la estación. En Explora sí lo recomendamos, sobre todo con niños.
+
+Puedes:
+- Traer el tuyo
+- Alquilarlo junto al resto del material
+
+> En clase, el casco es la opción más segura.`,
     questionEn: "Is a helmet mandatory?",
-    answerEn: `It is not mandatory at the resort, but Explora School & Club recommends wearing one, especially with children. Bring your own or rent it with the rest of the equipment.`,
+    answerEn: `It is not mandatory at the resort. At Explora we do recommend it, especially with children.
+
+You can:
+- Bring your own
+- Rent it with the rest of the equipment
+
+> For lessons, a helmet is the safer choice.`,
   },
   {
     id: "cierre-estacion",
     category: "clase",
     sortOrder: 9,
     questionEs: "¿Qué ocurre si cierra la estación?",
-    answerEs: `Si Cetursa cierra la estación de forma obligatoria, la clase queda suspendida y te reembolsamos el importe.
+    answerEs: `Si Cetursa cierra de forma obligatoria, la clase se suspende y te devolvemos el importe.
 
-Si la apertura se retrasa, el inicio se desplaza una hora respecto a la apertura oficial, para que puedas llegar con tranquilidad al punto de encuentro. En cualquier caso, reajustamos la sesión para que aproveches al máximo tu tiempo en la nieve.`,
+Si solo se retrasa la apertura:
+1. Esperamos la hora oficial de apertura
+2. La clase empieza una hora después
+3. Reajustamos la sesión para aprovechar la nieve
+
+> Así llegas al punto de encuentro sin ir a la carrera.`,
     questionEn: "What happens if the resort closes?",
-    answerEn: `If Cetursa closes the resort mandatorily, the lesson is cancelled and you receive a full refund.
+    answerEn: `If Cetursa closes the resort mandatorily, the lesson is cancelled and you get a full refund.
 
-If opening is delayed, the lesson starts one hour after the official opening time, so you can reach the meeting point without rushing. Whatever happens, we rearrange the session so you can make the most of your time on the snow.`,
+If opening is only delayed:
+1. We wait for the official opening time
+2. The lesson starts one hour later
+3. We rearrange the session so you still get time on snow
+
+> That way you reach the meeting point without rushing.`,
   },
   {
     id: "llego-tarde",
     category: "clase",
     sortOrder: 10,
     questionEs: "¿Qué ocurre si llego tarde?",
-    answerEs: `Si el retraso está justificado, se puede recuperar tiempo si el instructor tiene disponibilidad. Un retraso al inicio reduce el tiempo efectivo de clase, por eso insistimos en la regla de los 90 minutos.
+    answerEs: `Si el retraso está justificado, se puede recuperar tiempo si tu instructor/a tiene hueco. Un retraso al inicio recorta la clase.
 
-Si hay un imprevisto grave de tráfico o aparcamiento, avísanos al momento por [WhatsApp](${site.whatsappUrl}) para coordinarlo con tu instructor/a.`,
+Si hay un imprevisto grave de tráfico o aparcamiento, avísanos al momento:
+- [WhatsApp](${site.whatsappUrl})
+- [${site.phoneDisplay}](tel:${site.phone})
+
+> La regla de 90 minutos evita casi todos estos apuros.`,
     questionEn: "What happens if I arrive late?",
-    answerEn: `With a justified delay, lost time can be recovered if the instructor has availability. A late start cuts into lesson time, which is why we insist on the 90-minute rule.
+    answerEn: `With a justified delay, lost time can be recovered if your instructor has a slot. A late start cuts the lesson short.
 
-If you have a serious delay with traffic or parking, message us immediately on [WhatsApp](${site.whatsappUrl}) so we can rearrange with your instructor.`,
+If traffic or parking goes seriously wrong, message us straight away:
+- [WhatsApp](${site.whatsappUrl})
+- [${site.phoneDisplay}](tel:${site.phone})
+
+> The 90-minute rule avoids almost all of these scrambles.`,
   },
   {
     id: "idiomas",
     category: "clase",
     sortOrder: 11,
     questionEs: "¿En qué idiomas se imparten las clases?",
-    answerEs: `Las clases y la atención al cliente están en español e inglés. Si necesitas otro idioma, consúltanos al reservar y vemos disponibilidad.`,
+    answerEs: `En español e inglés, también la atención al cliente.
+
+Si necesitas otro idioma, dilo al reservar y vemos disponibilidad.
+
+- [Reservar](/reserva)
+- [WhatsApp](${site.whatsappUrl})`,
     questionEn: "What languages are lessons taught in?",
-    answerEn: `Lessons and customer service are in Spanish and English. If you need another language, ask when you book and we will check availability.`,
+    answerEn: `Spanish and English, including customer service.
+
+If you need another language, say so when you book and we will check availability.
+
+- [Book](/reserva)
+- [WhatsApp](${site.whatsappUrl})`,
   },
   {
     id: "iva",
     category: "reservas",
     sortOrder: 12,
     questionEs: "¿Los precios incluyen IVA?",
-    answerEs: `Sí. Todos los precios publicados tienen el IVA incluido.`,
+    answerEs: `Sí. Todos los precios publicados llevan el IVA incluido.
+
+- [Clases y tarifas](/clases)
+
+> Lo que ves es lo que pagas. Sin extras de impuesto al final.`,
     questionEn: "Do prices include VAT?",
-    answerEn: `Yes. All published prices include VAT.`,
+    answerEn: `Yes. All published prices include VAT.
+
+- [Lessons and prices](/clases)
+
+> What you see is what you pay. No tax surprise at the end.`,
   },
   {
     id: "edades-minimas",
     category: "reservas",
     sortOrder: 13,
     questionEs: "¿Desde qué edad se pueden contratar clases?",
-    answerEs: `Clases con instructor/a desde 3 años. Máximo 8 participantes por sesión.
+    answerEs: `Desde 3 años, con instructor/a. Máximo 8 participantes por sesión.
 
-Para niños y jóvenes de 5 a 18 años también está el [Club Creando Aventuras](/club), con jornadas de progresión durante la temporada.`,
+De 5 a 18 años también puedes apuntarte al Club:
+- [Club Creando Aventuras](/club)
+- [Reservar](/reserva)
+
+> El Club son jornadas de progresión a lo largo de la temporada.`,
     questionEn: "What is the minimum age for lessons?",
-    answerEn: `Lessons with an instructor from 3 years old. Maximum 8 participants per session.
+    answerEn: `From 3 years old, with an instructor. Maximum 8 participants per session.
 
-For children and young people aged 5 to 18 there is also [Club Creando Aventuras](/club), with progression days through the season.`,
+Ages 5 to 18 can also join the Club:
+- [Club Creando Aventuras](/club)
+- [Book](/reserva)
+
+> The Club is progression days through the season.`,
   },
   {
     id: "tamano-grupo",
     category: "reservas",
     sortOrder: 14,
     questionEs: "¿Cuál es el máximo de participantes por clase?",
-    answerEs: `Máximo 8 participantes por clase. Duración mínima: 2 horas.
+    answerEs: `Máximo 8 personas. Duración mínima: 2 horas.
 
-En particulares, 1 y 2 personas pagan el mismo precio total; a partir de la 3.ª se aplica un extra por persona. Tarifas en [clases](/clases).`,
+En particulares:
+- 1 y 2 personas pagan el mismo precio total
+- A partir de la 3.ª persona hay un extra
+
+- [Clases y tarifas](/clases)
+- [Reservar](/reserva)`,
     questionEn: "What is the maximum number of participants per lesson?",
-    answerEn: `Maximum 8 participants per lesson. Minimum duration: 2 hours.
+    answerEn: `Maximum 8 people. Minimum duration: 2 hours.
 
-In private lessons, 1 and 2 people pay the same total; from the 3rd person an extra applies. See [lessons](/clases) for prices.`,
+In private lessons:
+- 1 and 2 people pay the same total
+- From the 3rd person an extra applies
+
+- [Lessons and prices](/clases)
+- [Book](/reserva)`,
   },
   {
     id: "como-llegar",
     category: "estacion",
     sortOrder: 15,
     questionEs: "¿Cómo llego a Sierra Nevada y a Explora?",
-    answerEs: `Sierra Nevada está a unos 30 km de Granada (unos 40 minutos por la A-395). Puedes llegar en coche, autobús o transfer. A partir de las 8:30–9:00 la subida se densifica: deja margen.
+    answerEs: `Sierra Nevada está a unos 30 km de Granada: unos 40 minutos por la A-395. Puedes ir en coche, autobús o transfer.
 
-Aparca en Pradollano (recomendamos el Parking Subterráneo Plaza de Andalucía), saca el forfait si no lo tienes y sube en el Telecabina Al-Andalus hasta Borreguiles.
+1. Sube a Pradollano (a partir de las 8:30–9:00 hay más tráfico)
+2. Aparca: recomendamos el Parking Subterráneo Plaza de Andalucía
+3. Saca el forfait si no lo tienes
+4. Sube en el Telecabina Al-Andalus hasta Borreguiles
 
-Mapa y dirección: [Cómo llegar](/como-llegar).`,
+- [Cómo llegar](/como-llegar)
+- [Google Maps](${site.meetingPoint.googleMapsUrl})
+
+> Deja margen. La subida se llena pronto.`,
     questionEn: "How do I get to Sierra Nevada and Explora?",
-    answerEn: `Sierra Nevada is about 30 km from Granada (around 40 minutes via the A-395). You can arrive by car, bus or transfer. From 8:30–9:00 am the road up gets busier: leave extra time.
+    answerEn: `Sierra Nevada is about 30 km from Granada: around 40 minutes via the A-395. You can come by car, bus or transfer.
 
-Park in Pradollano (we recommend the Plaza de Andalucía underground car park), collect your lift pass if you do not have it yet and take the Al-Andalus gondola up to Borreguiles.
+1. Drive up to Pradollano (from 8:30–9:00 am the road gets busier)
+2. Park: we recommend the Plaza de Andalucía underground car park
+3. Collect your lift pass if you do not have it yet
+4. Take the Al-Andalus gondola up to Borreguiles
 
-Map and address: [Getting here](/como-llegar).`,
+- [Getting here](/como-llegar)
+- [Google Maps](${site.meetingPoint.googleMapsUrl})
+
+> Leave extra time. The road up fills early.`,
   },
 ];
 

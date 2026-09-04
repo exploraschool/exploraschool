@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DisclosureItem, DisclosurePanel } from "@/components/DisclosureItem";
 import { FaqRichText } from "@/components/FaqRichText";
 import { FAQ_CATEGORIES, getFaqsSorted, type Faq, type FaqCategory } from "@/data/faqs";
+import { site } from "@/data/site";
 import { faqAnswerPlainText } from "@/lib/faq-text";
 import { pickLocale } from "@/lib/locale";
 import { scrollToHash } from "@/lib/scroll-to-anchor";
@@ -13,37 +14,6 @@ type FAQAccordionProps = {
   limit?: number;
   grouped?: boolean;
   showSearch?: boolean;
-};
-
-const categoryIcons: Record<FaqCategory, ReactNode> = {
-  reservas: (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5"
-      />
-    </svg>
-  ),
-  estacion: (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-      />
-    </svg>
-  ),
-  clase: (
-    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-    </svg>
-  ),
 };
 
 function FaqItem({ faq, locale, defaultOpen = false }: { faq: Faq; locale: string; defaultOpen?: boolean }) {
@@ -143,7 +113,7 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
   return (
     <div className="space-y-8">
       {showSearch ? (
-        <div className="space-y-4 rounded-2xl border border-hielo/10 bg-white/80 p-4 shadow-[0_2px_16px_rgb(10_18_25_/_0.04)] sm:p-5">
+        <div className="space-y-3">
           <label className="block">
             <span className="sr-only">
               {pickLocale(locale, "Buscar en preguntas frecuentes", "Search FAQs")}
@@ -172,7 +142,7 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
                   "Busca forfait, cajero, encuentro, pago…",
                   "Search lift pass, machine, meeting point, payment…",
                 )}
-                className="w-full rounded-2xl border border-hielo/15 bg-nieve py-3.5 pl-11 pr-4 text-sm text-pizarra placeholder:text-muted transition focus:border-hielo focus:bg-white focus:outline-none focus:shadow-[0_0_0_3px_rgb(45_107_100_/_0.15)]"
+                className="w-full rounded-2xl border border-hielo/15 bg-white py-3.5 pl-11 pr-4 text-sm text-pizarra placeholder:text-muted shadow-[0_2px_16px_rgb(10_18_25_/_0.04)] transition focus:border-hielo focus:outline-none focus:shadow-[0_0_0_3px_rgb(45_107_100_/_0.15)]"
               />
             </div>
           </label>
@@ -206,31 +176,48 @@ export function FAQAccordion({ locale, limit, grouped = false, showSearch = fals
           <p className="mt-2 text-sm text-muted">
             {pickLocale(
               locale,
-              "Prueba con otras palabras o escríbenos y te ayudamos personalmente.",
-              "Try different words or write to us and we will help you personally.",
+              "Prueba con otras palabras o escríbenos.",
+              "Try different words or message us.",
             )}
           </p>
+          <div className="mt-5 flex flex-wrap justify-center gap-2">
+            <a
+              href={site.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full border border-hielo/15 bg-nieve px-3.5 py-1.5 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent"
+            >
+              WhatsApp
+            </a>
+            <a
+              href={`mailto:${site.email}`}
+              className="inline-flex items-center rounded-full border border-hielo/15 bg-nieve px-3.5 py-1.5 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent"
+            >
+              {site.email}
+            </a>
+          </div>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-10">
           {categoriesToShow.map((category) => {
             const categoryFaqs = filteredItems.filter((faq) => faq.category === category.id);
             if (categoryFaqs.length === 0) return null;
+            const categoryNumber = FAQ_CATEGORIES.findIndex((item) => item.id === category.id) + 1;
 
             return (
               <section key={category.id} id={`faq-${category.id}`} className="scroll-target">
-                <div className="mb-4 flex items-start gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-hielo/8 text-hielo">
-                    {categoryIcons[category.id]}
-                  </div>
-                  <div>
+                <div className="mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-hielo text-[0.8rem] font-bold text-white">
+                      {categoryNumber}
+                    </span>
                     <h2 className="font-display text-xl font-semibold text-hielo sm:text-2xl">
                       {pickLocale(locale, category.labelEs, category.labelEn)}
                     </h2>
-                    <p className="mt-1 text-sm text-muted">
-                      {pickLocale(locale, category.descriptionEs, category.descriptionEn)}
-                    </p>
                   </div>
+                  <p className="mt-3 rounded-xl border border-hielo/10 bg-hielo/5 px-3.5 py-2.5 text-sm font-medium text-hielo">
+                    {pickLocale(locale, category.descriptionEs, category.descriptionEn)}
+                  </p>
                 </div>
                 <DisclosurePanel>
                   {categoryFaqs.map((faq) => (

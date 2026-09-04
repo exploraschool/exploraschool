@@ -11,6 +11,8 @@ export type StoredBookingItem = {
   modality?: string;
   instructorSlug?: string;
   instructorName?: string;
+  assignedInstructorSlug?: string;
+  assignedInstructorName?: string;
   unitPrice: number;
   lineTotal: number;
   listUnitPrice?: number;
@@ -22,6 +24,9 @@ export type StoredLead = {
   status: LeadStatus;
   name: string;
   email: string;
+  emailLower?: string;
+  studentUid?: string;
+  instructorSlugs?: string[];
   phone: string;
   message: string;
   locale: string;
@@ -35,6 +40,23 @@ export type StoredLead = {
   cancellationEmailSentAt?: string;
   privacyAccepted?: boolean;
 };
+
+export function effectiveInstructorSlug(item: StoredBookingItem): string {
+  return (item.assignedInstructorSlug || item.instructorSlug || "").trim();
+}
+
+export function effectiveInstructorName(item: StoredBookingItem): string {
+  return (item.assignedInstructorName || item.instructorName || "").trim();
+}
+
+export function collectInstructorSlugs(items: StoredBookingItem[] | undefined): string[] {
+  const slugs = new Set<string>();
+  for (const item of items ?? []) {
+    const slug = effectiveInstructorSlug(item);
+    if (slug) slugs.add(slug);
+  }
+  return [...slugs];
+}
 
 export function isBookingLead(lead: { type?: string; source?: string }): boolean {
   return lead.type === "booking" || lead.source === "booking-cart";

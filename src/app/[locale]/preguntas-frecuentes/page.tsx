@@ -51,19 +51,19 @@ export default async function FaqsPage({ params }: Props) {
         title={pickLocale(locale, "Preguntas frecuentes", "Frequently asked questions")}
         description={pickLocale(
           locale,
-          "Lo esencial para llegar a tiempo, sacar el forfait sin colas y encontrar a tu instructor. Si no está aquí, te respondemos en minutos.",
-          "The essentials to arrive on time, collect your lift pass without queues and find your instructor. If it is not here, we will reply in minutes.",
+          "Reserva, forfait, punto de encuentro y el día de la clase. Si no está aquí, te respondemos de 9:00 a 20:00.",
+          "Booking, lift pass, meeting point and lesson day. If it is not here, we reply from 9:00 am to 8:00 pm.",
         )}
       >
         <nav
-          className="flex flex-wrap gap-2.5"
+          className="flex flex-wrap gap-2"
           aria-label={pickLocale(locale, "Temas de la página", "Page topics")}
         >
           {FAQ_CATEGORIES.map((category) => (
             <a
               key={category.id}
               href={`#faq-${category.id}`}
-              className="inline-flex items-center rounded-full border border-hielo/15 bg-white px-4 py-2 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-nieve"
+              className="inline-flex items-center rounded-full border border-hielo/15 bg-nieve px-3.5 py-1.5 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent"
             >
               {pickLocale(locale, category.labelEs, category.labelEn)}
             </a>
@@ -74,9 +74,9 @@ export default async function FaqsPage({ params }: Props) {
       <section className="section-band bg-white">
         <div className="container-page">
           <Reveal>
-            <p className="eyebrow">{pickLocale(locale, "Lo esencial", "The essentials")}</p>
+            <p className="eyebrow">{pickLocale(locale, "Antes de salir", "Before you go")}</p>
             <h2 className="section-title mt-2">
-              {pickLocale(locale, "Cuatro cosas que conviene tener claras", "Four things worth knowing first")}
+              {pickLocale(locale, "Cuatro datos para no fallar", "Four things not to miss")}
             </h2>
           </Reveal>
           <div className="section-body-sm">
@@ -88,12 +88,12 @@ export default async function FaqsPage({ params }: Props) {
       <section className="section-padding bg-nieve">
         <div className="container-page max-w-4xl">
           <SectionHeader
-            eyebrow={pickLocale(locale, "Dudas habituales", "Common questions")}
-            title={pickLocale(locale, "Todo lo que debes saber", "Everything you need to know")}
+            eyebrow={pickLocale(locale, "Respuestas", "Answers")}
+            title={pickLocale(locale, "Elige un tema o busca", "Pick a topic or search")}
             description={pickLocale(
               locale,
-              "Agrupadas por tema: reservas, estación y el día de la clase. Usa el buscador si vienes con una duda concreta.",
-              "Grouped by topic: bookings, the resort and lesson day. Use the search if you have a specific question.",
+              "Reservas, la subida a la estación y el día de clase. Escribe forfait, cajero o encuentro si vienes con una duda concreta.",
+              "Bookings, getting up the mountain and lesson day. Type lift pass, machine or meeting point if you have a specific question.",
             )}
           />
           <div className="section-body">
@@ -106,12 +106,12 @@ export default async function FaqsPage({ params }: Props) {
         <div className="container-page">
           <Reveal>
             <SectionHeader
-              eyebrow={pickLocale(locale, "¿Sigue la duda?", "Still stuck?")}
-              title={pickLocale(locale, "Habla con el equipo", "Talk to the team")}
+              eyebrow={pickLocale(locale, "¿No está aquí?", "Not here?")}
+              title={pickLocale(locale, "Te respondemos", "We reply")}
               description={pickLocale(
                 locale,
-                "Si tu duda es urgente o prefieres que te orientemos con tu reserva, elige el canal que te resulte más cómodo.",
-                "If your question is urgent or you would rather we help with your booking, choose the channel that suits you.",
+                "WhatsApp, teléfono o email. También puedes enviar la reserva desde la web.",
+                "WhatsApp, phone or email. You can also send the booking from the website.",
               )}
             />
           </Reveal>

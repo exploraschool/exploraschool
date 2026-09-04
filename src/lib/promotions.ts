@@ -62,13 +62,13 @@ export function resolvePriceDisplay(
 export function earlyBirdBannerCopy(locale: string): { title: string; body: string } {
   if (locale === "es") {
     return {
-      title: "10% de descuento en reservas anticipadas",
-      body: "Reserva antes del 1 de noviembre de 2026 y consigue un 10% de descuento en todas las clases. Precios con IVA incluido.",
+      title: "10% de descuento por reserva anticipada",
+      body: "Hasta el 1 de noviembre de 2026, en todas las clases.",
     };
   }
   return {
     title: "10% off early bookings",
-    body: "Book before 1 November 2026 and get 10% off all lessons. Prices include VAT.",
+    body: "Until 1 November 2026, on all lessons.",
   };
 }
 

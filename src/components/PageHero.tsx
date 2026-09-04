@@ -21,20 +21,20 @@ export function PageHero({
   imageAltEn,
 }: PageHeroProps) {
   return (
-    <section className="relative min-h-[36svh] overflow-hidden bg-pizarra text-nieve sm:min-h-[40svh] lg:min-h-[42vh]">
+    <section className="relative overflow-hidden bg-pizarra text-nieve">
       <Image
         src={imageSrc}
         alt={pickLocale(locale, imageAltEs, imageAltEn)}
         fill
         priority
-        className="object-cover object-[center_58%] sm:object-[center_52%]"
+        className="object-cover object-[center_42%] sm:object-[center_48%]"
         sizes="100vw"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-br from-pizarra/88 via-pizarra/50 to-hielo/15" />
-      <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/25 to-pizarra/40 sm:from-pizarra/75 sm:via-pizarra/15 sm:to-pizarra/30" />
+      <div className="absolute inset-0 bg-gradient-to-br from-pizarra/80 via-pizarra/45 to-hielo/20" />
+      <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 via-pizarra/20 to-pizarra/30" />
 
-      <div className="container-page relative flex min-h-[36svh] flex-col justify-end py-8 sm:min-h-[40svh] sm:justify-center sm:py-12 lg:min-h-[42vh] lg:py-14">
+      <div className="container-page relative py-8 sm:py-11 md:py-14">
         <div className="max-w-2xl animate-fade-up">
           {eyebrow ? (
             <p className="eyebrow-pill">
@@ -43,7 +43,7 @@ export function PageHero({
             </p>
           ) : null}
           <h1
-            className={`font-display text-[1.65rem] font-semibold leading-[1.12] text-nieve sm:text-3xl md:text-[2.25rem] lg:text-4xl ${eyebrow ? "mt-3 sm:mt-4" : ""}`}
+            className={`text-balance font-display text-[1.5rem] font-semibold leading-[1.15] text-nieve sm:text-3xl md:text-[2.25rem] lg:text-4xl ${eyebrow ? "mt-3 sm:mt-4" : ""}`}
           >
             {title}
           </h1>

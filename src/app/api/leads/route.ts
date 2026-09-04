@@ -3,7 +3,9 @@ import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
-import { isBookingLead } from "@/lib/leads";
+import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
+import { normalizeEmail } from "@/lib/link-bookings";
+import { getStudentSession } from "@/lib/student-auth";
 
 const bookingItemSchema = z.object({
   productId: z.string().min(1).max(80),
@@ -75,21 +77,28 @@ export async function POST(request: Request) {
     const type: LeadType = isBooking ? "booking" : "contact";
     const status: LeadStatus = isBooking ? "pending" : "received";
 
+    const student = await getStudentSession();
+    const bookingItems = isBooking ? (parsed.data.bookingItems as StoredBookingItem[]) : undefined;
     const lead = {
       type,
       status,
       name: parsed.data.name,
       email: parsed.data.email,
+      emailLower: normalizeEmail(parsed.data.email),
       phone: parsed.data.phone ?? "",
       message: parsed.data.message,
       locale: parsed.data.locale ?? "es",
       source: parsed.data.source ?? "contact-form",
       createdAt: new Date().toISOString(),
       privacyAccepted: true as const,
-      ...(isBooking && parsed.data.bookingItems
+      ...(student && normalizeEmail(student.email) === normalizeEmail(parsed.data.email)
+        ? { studentUid: student.uid }
+        : {}),
+      ...(isBooking && bookingItems
         ? {
-            bookingItems: parsed.data.bookingItems as StoredBookingItem[],
+            bookingItems,
             estimatedTotal: parsed.data.estimatedTotal ?? 0,
+            instructorSlugs: collectInstructorSlugs(bookingItems),
           }
         : {}),
     };

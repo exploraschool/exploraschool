@@ -10,6 +10,10 @@ service cloud.firestore {
         );
     }
 
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
     function isValidLead() {
       let data = request.resource.data;
       return data.keys().hasAll(['name', 'email', 'message'])
@@ -44,10 +48,29 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /users/{userId} {
+      allow read, create, update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
     match /leads/{leadId} {
-      allow read: if isAdmin();
+      allow read: if isAdmin()
+        || (
+          request.auth != null
+          && (
+            resource.data.studentUid == request.auth.uid
+            || resource.data.emailLower == request.auth.token.email
+            || resource.data.email == request.auth.token.email
+          )
+        );
       allow create: if isValidLead();
       allow update, delete: if isAdmin();
+    }
+
+    match /progressReports/{reportId} {
+      allow read: if isAdmin()
+        || (request.auth != null && resource.data.studentUid == request.auth.uid);
+      allow create, update, delete: if isAdmin();
     }
 
     match /{document=**} {

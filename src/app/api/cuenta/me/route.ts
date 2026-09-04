@@ -1,0 +1,24 @@
+import { NextResponse } from "next/server";
+import { getStudentSession } from "@/lib/student-auth";
+import { getStudentProfile } from "@/lib/student-user-store";
+import { isOnboardingComplete } from "@/lib/student-users";
+
+export const runtime = "nodejs";
+
+export async function GET() {
+  const session = await getStudentSession();
+  if (!session) {
+    return NextResponse.json({ user: null });
+  }
+
+  const profile = await getStudentProfile(session.uid);
+  return NextResponse.json({
+    user: {
+      uid: session.uid,
+      email: session.email,
+      displayName: profile?.displayName || session.name,
+      photoURL: profile?.photoURL || session.picture,
+      onboardingComplete: profile ? isOnboardingComplete(profile) : false,
+    },
+  });
+}

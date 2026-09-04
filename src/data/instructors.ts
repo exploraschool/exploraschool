@@ -1,24 +1,7 @@
 import type { DisciplineId, MainDisciplineId } from "./disciplines";
 import { isMainDiscipline } from "./disciplines";
 
-export type InstructorSlug =
-  | "reche"
-  | "patri"
-  | "lalo"
-  | "jorge"
-  | "esau"
-  | "aitana"
-  | "estrella"
-  | "ale"
-  | "badillo"
-  | "maria"
-  | "eba"
-  | "ferran"
-  | "luis"
-  | "rocio"
-  | "violeta"
-  | "joan"
-  | "benja";
+export type InstructorSlug = string;
 
 export type Instructor = {
   slug: InstructorSlug;
@@ -263,7 +246,7 @@ export function isSnowboardOnlyInstructor(slug: string): boolean {
   return (SNOWBOARD_ONLY_INSTRUCTOR_SLUGS as readonly string[]).includes(slug);
 }
 
-export function getInstructorBySlug(slug: InstructorSlug): Instructor | undefined {
+export function getInstructorBySlug(slug: string): Instructor | undefined {
   return instructors.find((i) => i.slug === slug);
 }
 
@@ -293,8 +276,9 @@ export function instructorCanTeachProduct(
 export function getInstructorsForBooking(
   productDisciplines: DisciplineId[],
   selectedDiscipline?: MainDisciplineId,
+  pool?: Instructor[],
 ): Instructor[] {
-  const active = getActiveInstructors();
+  const active = (pool ?? getActiveInstructors()).filter((i) => i.active).sort((a, b) => a.sortOrder - b.sortOrder);
 
   if (selectedDiscipline) {
     return active.filter((instructor) => instructorTeachesDiscipline(instructor, selectedDiscipline));

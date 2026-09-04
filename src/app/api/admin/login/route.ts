@@ -50,6 +50,12 @@ export async function POST(request: Request) {
       );
     }
 
+    try {
+      await auth.setCustomUserClaims(decoded.uid, { admin: true });
+    } catch (claimError) {
+      console.error("[admin/login] custom claims failed:", claimError);
+    }
+
     const sessionCookie = await auth.createSessionCookie(parsed.data.idToken, {
       expiresIn: ADMIN_SESSION_MAX_AGE_MS,
     });
@@ -76,5 +82,6 @@ export async function POST(request: Request) {
 export async function DELETE() {
   const cookieStore = await cookies();
   cookieStore.delete(ADMIN_SESSION_COOKIE);
+  cookieStore.delete("explora_instructor_slug");
   return NextResponse.json({ ok: true });
 }

@@ -4,7 +4,7 @@ import { AdminLoginForm } from "./AdminLoginForm";
 
 export default async function AdminLoginPage() {
   if (await isAdminAuthenticated()) {
-    redirect("/admin/reservas");
+    redirect("/admin/hoy");
   }
 
   return <AdminLoginForm />;

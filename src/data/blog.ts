@@ -205,7 +205,7 @@ Duración estándar: 2 horas. Suficiente para trabajar a fondo sin llegar agotad
 
 ## Medio día: equilibrio entre precio y progreso
 
-La clase de medio día (2 horas a partir de las 13:00) es perfecta si ya tienes forfait de mañana y quieres una sesión guiada después de comer. También encaja bien si es tu primer contacto con la nieve y prefieres probar antes de comprometerte con una jornada completa.
+La clase de medio día (3 horas de 14:00 a 17:00) es perfecta si ya tienes forfait de mañana y quieres una sesión guiada después de comer. También encaja bien si es tu primer contacto con la nieve y prefieres probar antes de comprometerte con una jornada completa.
 
 Es una opción muy popular entre familias y grupos de amigos que quieren compartir instructor sin el coste de una jornada entera.
 
@@ -240,7 +240,7 @@ Standard duration: 2 hours. Enough to work in depth without finishing exhausted.
 
 ## Half day: balance between price and progress
 
-The half-day lesson (2 hours from 13:00) is perfect if you already have a morning lift pass and want a guided session after lunch. It also suits a first contact with snow if you prefer to try before committing to a full day.
+The half-day lesson (3 hours from 2:00 pm to 5:00 pm) is perfect if you already have a morning lift pass and want a guided session after lunch. It also suits a first contact with snow if you prefer to try before committing to a full day.
 
 It is very popular with families and groups of friends who want to share an instructor without the cost of a full day.
 
@@ -1191,7 +1191,7 @@ Tienes varias opciones. La más cómoda: comprarlo online con antelación en sie
 
 ## ¿Qué tipo de forfait necesito?
 
-Depende de cuánto tiempo vayas a estar en la nieve. Si solo tienes clase de medio día (2 horas a partir de las 13:00), puede bastar un forfait de medio día o de pocas horas, según lo que ofrezca la estación esa temporada. Si reservas jornada completa o vas a esquiar por tu cuenta además de la clase, necesitarás forfait de día completo. Consulta las tarifas actualizadas en sierranevada.es.
+Depende de cuánto tiempo vayas a estar en la nieve. Si solo tienes clase de medio día (3 horas de 14:00 a 17:00), puede bastar un forfait de medio día o de pocas horas, según lo que ofrezca la estación esa temporada. Si reservas jornada completa o vas a esquiar por tu cuenta además de la clase, necesitarás forfait de día completo. Consulta las tarifas actualizadas en sierranevada.es.
 
 ## El seguro de accidentes: no lo olvides
 
@@ -1199,7 +1199,7 @@ Además del forfait, Cetursa ofrece una tasa de seguro de accidentes en pista. E
 
 ## Forfait y clase: cómo coordinar horarios
 
-Si tu clase empieza a las 10:00, necesitas el forfait activo antes de subir en telecabina. Si empieza a las 13:00, compra el forfait con tiempo para no llegar corriendo. Recuerda que desde Pradollano hasta el punto de encuentro de Explora en la estación puede pasar una hora entre colas y desplazamientos.
+Si tu clase empieza a las 10:00, necesitas el forfait activo antes de subir en telecabina. Si empieza a las 14:00, compra el forfait con tiempo para no llegar corriendo. Recuerda que desde Pradollano hasta el punto de encuentro de Explora en la estación puede pasar una hora entre colas y desplazamientos.
 
 ## ¿Los niños necesitan forfait?
 
@@ -1232,7 +1232,7 @@ You have several options. The easiest: buy it online in advance at sierranevada.
 
 ## Which type of pass do I need?
 
-It depends how long you will be on snow. If you only have a half-day lesson (2 hours from 1:00 pm), a half-day or short-hours pass may be enough, depending on what the resort offers that season. If you book a full day or plan to ski on your own as well as the lesson, you will need a full-day pass. Check current rates at sierranevada.es.
+It depends how long you will be on snow. If you only have a half-day lesson (3 hours from 2:00 pm to 5:00 pm), a half-day or short-hours pass may be enough, depending on what the resort offers that season. If you book a full day or plan to ski on your own as well as the lesson, you will need a full-day pass. Check current rates at sierranevada.es.
 
 ## Accident insurance: do not forget it
 
@@ -1240,7 +1240,7 @@ In addition to the lift pass, Cetursa offers an on-slope accident insurance fee.
 
 ## Lift pass and lesson: coordinating times
 
-If your lesson starts at 10:00 am, you need an active pass before taking the gondola. If it starts at 1:00 pm, buy your pass in good time so you are not rushing. Remember that from Pradollano to Explora's meeting point at the resort can take an hour with queues and travel.
+If your lesson starts at 10:00 am, you need an active pass before taking the gondola. If it starts at 2:00 pm, buy your pass in good time so you are not rushing. Remember that from Pradollano to Explora's meeting point at the resort can take an hour with queues and travel.
 
 ## Do children need a lift pass?
 

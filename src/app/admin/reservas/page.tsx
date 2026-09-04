@@ -6,6 +6,7 @@ import { AdminPagination } from "@/components/admin/AdminPagination";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
+import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
 
 type SearchParams = Promise<{ status?: string; page?: string }>;
 
@@ -38,6 +39,10 @@ export default async function AdminReservasPage({
 }) {
   const authed = await isAdminAuthenticated();
   if (!authed) redirect("/admin/login");
+  const instructors = (await listActiveInstructorsFromDb()).map((item) => ({
+    slug: item.slug,
+    name: item.name,
+  }));
 
   const params = await searchParams;
   const statusFilter =
@@ -151,7 +156,7 @@ export default async function AdminReservasPage({
         <>
           <div className="space-y-4">
             {bookings.map((lead) => (
-              <AdminBookingCard key={lead.id} lead={lead} />
+              <AdminBookingCard key={lead.id} lead={lead} instructors={instructors} />
             ))}
           </div>
           <AdminPagination
