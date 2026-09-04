@@ -55,6 +55,11 @@ const legacyRedirects = [
   })),
 ];
 
+const firebaseHostingDomain =
+  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    ? `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`
+    : "exploraschool-9ea82.firebaseapp.com";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -68,6 +73,20 @@ const nextConfig: NextConfig = {
       { source: `/es${r.source}`, destination: `/es${r.destination}`, permanent: true },
       { source: `/en${r.source}`, destination: `/en${r.destination}`, permanent: true },
     ]);
+  },
+  // Proxy Firebase Auth handler so authDomain can be www.explora-school.es
+  // (Google then shows that domain instead of *.firebaseapp.com).
+  async rewrites() {
+    return [
+      {
+        source: "/__/auth/:path*",
+        destination: `https://${firebaseHostingDomain}/__/auth/:path*`,
+      },
+      {
+        source: "/__/firebase/init.json",
+        destination: `https://${firebaseHostingDomain}/__/firebase/init.json`,
+      },
+    ];
   },
 };
 
