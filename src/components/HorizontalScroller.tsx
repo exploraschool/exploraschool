@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useId, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import {
+  Children,
+  useCallback,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 type HorizontalScrollerProps = {
   children: ReactNode;
@@ -96,7 +104,11 @@ export function HorizontalScroller({
   return (
     <div className="relative">
       <div ref={scrollerRef} id={scrollerId} className={className} role="list" aria-label={label}>
-        {children}
+        {Children.map(children, (child) => (
+          <div role="listitem" className="flex h-full shrink-0 snap-start sm:min-w-0 sm:w-auto">
+            {child}
+          </div>
+        ))}
       </div>
       <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-[1] flex items-center justify-between px-0.5 sm:hidden">
         <NavButton

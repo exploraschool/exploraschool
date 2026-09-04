@@ -48,7 +48,7 @@ export function LessonOfferCard({
             className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
             sizes="(max-width: 639px) 80vw, (max-width: 1024px) 50vw, 33vw"
           />
-          <div className="absolute inset-0 bg-white/80" />
+          <div className="absolute inset-0 bg-white/92" />
           <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
         </div>
 
@@ -67,7 +67,7 @@ export function LessonOfferCard({
         <h3 className="font-display text-lg font-semibold text-hielo">
           {pickLocale(locale, product.titleEs, product.titleEn)}
         </h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-muted">{summary}</p>
+        <p className="mt-1.5 text-sm leading-relaxed text-pizarra/75">{summary}</p>
 
         {facts.length > 0 ? (
           <ul className="mt-3 flex flex-wrap gap-1.5">

@@ -830,7 +830,7 @@
   }
 
   .eyebrow-dark {
-    @apply text-[0.65rem] font-bold uppercase tracking-[0.2em] text-oro-light sm:text-xs;
+    @apply text-[0.65rem] font-bold uppercase tracking-[0.2em] text-nieve sm:text-xs;
   }
 
   .home-landing {

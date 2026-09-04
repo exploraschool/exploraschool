@@ -46,7 +46,7 @@ export function PriceTag({
         {display.finalPrice} €{suffix}
       </span>
       <span
-        className={`rounded-full bg-oro/15 font-bold uppercase tracking-wide text-oro ${sizes.badge}`}
+        className={`rounded-full bg-hielo font-bold uppercase tracking-wide text-nieve ${sizes.badge}`}
       >
         -{display.discountPercent}%
       </span>

@@ -66,7 +66,7 @@ export async function Footer() {
           </div>
         </div>
 
-        <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-nieve/70">
+        <p className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-nieve/85">
           <a href={`tel:${site.phone}`} className="transition hover:text-oro-light">
             {site.phoneDisplay}
           </a>
@@ -82,7 +82,7 @@ export async function Footer() {
           <FooterNavGroups sections={sections} />
         </div>
 
-        <div className="mt-6 border-t border-white/10 pt-5 text-xs text-nieve/40">
+        <div className="mt-6 border-t border-white/10 pt-5 text-xs text-nieve/70">
           <p>
             © {year} {site.legalName}. {t("rights")}
           </p>

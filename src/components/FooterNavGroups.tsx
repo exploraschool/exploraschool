@@ -32,12 +32,12 @@ function FooterLinkList({ section }: { section: FooterSection }) {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-nieve/65 transition hover:text-oro-light"
+                className="text-sm text-nieve/85 transition hover:text-oro-light"
               >
                 {link.label}
               </a>
             ) : (
-              <Link href={link.href} className="text-sm text-nieve/65 transition hover:text-oro-light">
+              <Link href={link.href} className="text-sm text-nieve/85 transition hover:text-oro-light">
                 {link.label}
               </Link>
             )}
@@ -45,10 +45,10 @@ function FooterLinkList({ section }: { section: FooterSection }) {
         ))}
       </ul>
       {section.note ? (
-        <p className="mt-3 text-[0.7rem] leading-relaxed text-nieve/40">{section.note}</p>
+        <p className="mt-3 text-[0.7rem] leading-relaxed text-nieve/70">{section.note}</p>
       ) : null}
       {section.noteSecondary ? (
-        <p className="mt-1.5 text-[0.7rem] leading-relaxed text-nieve/30">{section.noteSecondary}</p>
+        <p className="mt-1.5 text-[0.7rem] leading-relaxed text-nieve/65">{section.noteSecondary}</p>
       ) : null}
     </>
   );

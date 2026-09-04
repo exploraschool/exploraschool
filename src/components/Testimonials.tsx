@@ -35,15 +35,15 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
           {reviews.map((review, i) => (
             <Reveal key={review.id} delay={i * 80}>
               <blockquote className="flex h-full flex-col rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-5">
-                <div className="mb-2 flex gap-0.5 text-oro text-xs" aria-hidden>
+                <div className="mb-2 flex gap-0.5 text-nieve text-xs" aria-hidden>
                   {Array.from({ length: 5 }).map((_, j) => (
                     <span key={j}>★</span>
                   ))}
                 </div>
-                <p className="flex-1 text-sm leading-relaxed text-on-dark line-clamp-4">
+                <p className="flex-1 text-sm leading-relaxed text-nieve line-clamp-4">
                   &ldquo;{pickLocale(locale, review.textEs, review.textEn)}&rdquo;
                 </p>
-                <footer className="mt-3 border-t border-white/10 pt-3 text-xs text-nieve/85">
+                <footer className="mt-3 border-t border-white/20 pt-3 text-xs text-nieve">
                   <cite className="not-italic font-semibold">{review.author}</cite>
                 </footer>
               </blockquote>

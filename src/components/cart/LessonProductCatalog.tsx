@@ -23,7 +23,6 @@ function CatalogSlide({
 }) {
   return (
     <div
-      role="listitem"
       className={`flex w-[min(19.5rem,calc(100%-2.75rem))] shrink-0 snap-start sm:min-w-0 sm:w-auto ${className}`.trim()}
     >
       {children}
