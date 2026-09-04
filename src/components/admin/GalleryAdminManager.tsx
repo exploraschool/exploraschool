@@ -28,6 +28,7 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
   const [progress, setProgress] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
+  const [publishedOpen, setPublishedOpen] = useState(false);
 
   async function uploadOne(
     file: File,
@@ -230,8 +231,13 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
         {ok ? <p className="mt-3 text-sm font-medium text-hielo">{ok}</p> : null}
       </form>
 
-      <div>
-        <div className="mb-4 flex items-end justify-between gap-3">
+      <div className="rounded-2xl border border-hielo/10 bg-white">
+        <button
+          type="button"
+          onClick={() => setPublishedOpen((open) => !open)}
+          className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left"
+          aria-expanded={publishedOpen}
+        >
           <div>
             <h2 className="font-display text-xl font-semibold text-hielo">Fotos publicadas</h2>
             <p className="mt-1 text-sm text-muted">
@@ -240,47 +246,68 @@ export function GalleryAdminManager({ initialPhotos }: GalleryAdminManagerProps)
                 : `${photos.length} foto${photos.length === 1 ? "" : "s"} en «La estación, en directo».`}
             </p>
           </div>
-        </div>
+          <span
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hielo/15 text-hielo transition ${
+              publishedOpen ? "rotate-180" : ""
+            }`}
+            aria-hidden
+          >
+            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M5 7.5 10 12.5 15 7.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        </button>
 
-        {photos.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-hielo/20 bg-white/70 px-5 py-10 text-center text-sm text-muted">
-            Todavía no hay fotos propias. Sube la primera para sustituir las de stock.
-          </div>
-        ) : (
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {photos.map((photo) => (
-              <li
-                key={photo.id}
-                className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(10,18,25,0.04)]"
-              >
-                <div className="relative aspect-[4/3] bg-hielo/5">
-                  {photo.kind === "video" ? (
-                    <video src={photo.src} className="h-full w-full object-cover" muted playsInline controls />
-                  ) : (
-                    <Image src={photo.src} alt={photo.altEs} fill className="object-cover" sizes="320px" unoptimized />
-                  )}
-                  {photo.source === "student" ? (
-                    <span className="absolute left-2 top-2 rounded-full bg-pizarra/70 px-2 py-0.5 text-[0.65rem] font-semibold text-white">
-                      Alumno
-                    </span>
-                  ) : null}
-                </div>
-                <div className="space-y-2 p-4">
-                  <p className="line-clamp-2 text-sm text-pizarra">{photo.altEs}</p>
-                  <p className="line-clamp-1 text-xs text-muted">{photo.altEn}</p>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => handleDelete(photo.id)}
-                    className="rounded-full border border-accent/25 px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent/5 disabled:opacity-50"
+        {publishedOpen ? (
+          <div className="border-t border-hielo/10 px-5 pb-5 pt-4">
+            {photos.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-hielo/20 bg-nieve/60 px-5 py-10 text-center text-sm text-muted">
+                Todavía no hay fotos propias. Sube la primera para sustituir las de stock.
+              </div>
+            ) : (
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {photos.map((photo) => (
+                  <li
+                    key={photo.id}
+                    className="overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(10,18,25,0.04)]"
                   >
-                    Eliminar
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+                    <div className="relative aspect-[4/3] bg-hielo/5">
+                      {photo.kind === "video" ? (
+                        <video src={photo.src} className="h-full w-full object-cover" muted playsInline controls />
+                      ) : (
+                        <Image
+                          src={photo.src}
+                          alt={photo.altEs}
+                          fill
+                          className="object-cover"
+                          sizes="320px"
+                          unoptimized
+                        />
+                      )}
+                      {photo.source === "student" ? (
+                        <span className="absolute left-2 top-2 rounded-full bg-pizarra/70 px-2 py-0.5 text-[0.65rem] font-semibold text-white">
+                          Alumno
+                        </span>
+                      ) : null}
+                    </div>
+                    <div className="space-y-2 p-4">
+                      <p className="line-clamp-2 text-sm text-pizarra">{photo.altEs}</p>
+                      <p className="line-clamp-1 text-xs text-muted">{photo.altEn}</p>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => handleDelete(photo.id)}
+                        className="rounded-full border border-accent/25 px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent/5 disabled:opacity-50"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   );
