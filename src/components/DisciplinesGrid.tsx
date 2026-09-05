@@ -31,9 +31,9 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
             </div>
           </Reveal>
 
-          <div className="x-scroller x-scroller--bleed section-body-sm flex gap-3 pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-5">
+          <div className="section-body-sm grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
             {disciplines.map((d, i) => (
-              <Reveal key={d.id} delay={i * 50} className="w-[140px] shrink-0 sm:w-auto">
+              <Reveal key={d.id} delay={i * 50} className="min-w-0">
                 <Link
                   href={`/clases/${d.slug}`}
                   className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md"
@@ -48,7 +48,7 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                       )}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-105"
-                      sizes="160px"
+                      sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 20vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 to-transparent" />
                   </div>

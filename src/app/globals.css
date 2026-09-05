@@ -205,6 +205,26 @@
     }
   }
 
+  /* Product cards: peek carousel on the phone, equal grid from tablet up.
+     Column counts come from Tailwind (sm:grid-cols-2 lg:grid-cols-3) so short
+     lists can stay on 1–2 columns instead of looking stranded. */
+  .x-scroller.x-scroller--cards {
+    display: flex;
+    gap: 0.75rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .x-scroller.x-scroller--cards {
+      display: grid;
+      gap: 1.25rem;
+      overflow: visible;
+      scroll-snap-type: none;
+      padding-bottom: 0;
+    }
+  }
+
   .panel-scroller {
     @apply flex gap-1.5 overflow-x-auto overscroll-x-contain [scrollbar-width:none] [-webkit-overflow-scrolling:touch];
   }

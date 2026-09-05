@@ -6,6 +6,7 @@ import { productMatchesDiscipline, type MainDisciplineId } from "@/data/discipli
 import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 import { pickLocale } from "@/lib/locale";
+import { productCardsClass } from "@/lib/product-cards-layout";
 
 type DisciplineProductsProps = {
   locale: string;
@@ -38,20 +39,16 @@ function ProductScroller({
   popular,
   disciplineId,
   alsoIncludeDisciplineIds,
-  desktopClassName,
-  slideClassName = "",
 }: {
   list: Product[];
   locale: string;
   popular?: boolean;
   disciplineId: MainDisciplineId;
   alsoIncludeDisciplineIds: MainDisciplineId[];
-  desktopClassName: string;
-  slideClassName?: string;
 }) {
   return (
     <HorizontalScroller
-      className={`x-scroller x-scroller--bleed mt-3 flex snap-x snap-mandatory gap-4 pb-2 sm:mt-4 sm:overflow-visible sm:snap-none sm:pb-0 ${desktopClassName}`}
+      className={productCardsClass(list.length, "mt-3 sm:mt-4")}
       label={
         popular
           ? pickLocale(locale, "Los más elegidos", "Most popular")
@@ -66,28 +63,24 @@ function ProductScroller({
           isExclusiveToDiscipline(product, "snowboard");
 
         return (
-          <div
+          <LessonOfferCard
             key={product.id}
-            className={`flex w-[min(19.5rem,calc(100%-2.75rem))] shrink-0 snap-start sm:min-w-0 sm:w-auto ${slideClassName}`.trim()}
-          >
-            <LessonOfferCard
-              product={product}
-              locale={locale}
-              badge={
-                popular
-                  ? pickLocale(locale, "Popular", "Popular")
-                  : snowboardOnly
-                    ? pickLocale(locale, "Snowboard", "Snowboard")
-                    : undefined
-              }
-              badgeVariant={popular ? "popular" : "discipline"}
-              defaultDiscipline={defaultDisciplineForProduct(
-                product,
-                disciplineId,
-                alsoIncludeDisciplineIds,
-              )}
-            />
-          </div>
+            product={product}
+            locale={locale}
+            badge={
+              popular
+                ? pickLocale(locale, "Popular", "Popular")
+                : snowboardOnly
+                  ? pickLocale(locale, "Snowboard", "Snowboard")
+                  : undefined
+            }
+            badgeVariant={popular ? "popular" : "discipline"}
+            defaultDiscipline={defaultDisciplineForProduct(
+              product,
+              disciplineId,
+              alsoIncludeDisciplineIds,
+            )}
+          />
         );
       })}
     </HorizontalScroller>
@@ -127,7 +120,6 @@ export function DisciplineProducts({
             popular
             disciplineId={disciplineId}
             alsoIncludeDisciplineIds={alsoIncludeDisciplineIds}
-            desktopClassName="sm:grid sm:grid-cols-2 sm:gap-5 lg:grid-cols-3"
           />
         </div>
       ) : null}
@@ -142,8 +134,6 @@ export function DisciplineProducts({
             locale={locale}
             disciplineId={disciplineId}
             alsoIncludeDisciplineIds={alsoIncludeDisciplineIds}
-            desktopClassName="sm:flex-wrap sm:justify-center"
-            slideClassName="sm:w-[calc(50%-0.5rem)] lg:w-[calc((100%-2rem)/3)]"
           />
         </div>
       ) : null}

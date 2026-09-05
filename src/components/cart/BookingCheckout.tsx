@@ -10,15 +10,17 @@ import { partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import { pickLocale } from "@/lib/locale";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 import { site } from "@/data/site";
-import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { BookingCartLine } from "@/components/cart/BookingCartLine";
+import { LessonOfferCard } from "@/components/cart/LessonOfferCard";
 import {
   BookingIdentityPanel,
   type BookingStudentUser,
 } from "@/components/cart/BookingIdentityPanel";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
-import { PriceTag } from "@/components/PriceTag";
+import { HorizontalScroller } from "@/components/HorizontalScroller";
+import { SectionHeader } from "@/components/SectionHeader";
 import { getHighlightedProducts } from "@/data/products";
+import { productCardsClass } from "@/lib/product-cards-layout";
 
 const inputClass =
   "w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm text-pizarra placeholder:text-muted focus:border-hielo focus:outline-none";
@@ -241,55 +243,64 @@ export function BookingCheckout() {
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto min-w-0 max-w-3xl">
-        <div className="rounded-2xl border border-hielo/10 bg-white px-4 py-10 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:px-10 sm:py-12">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-hielo/8 text-hielo">
-            <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h15l-1.5 9h-12L6 6z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 6 5 3H2" />
-            </svg>
+      <div className="min-w-0">
+        <div className="mx-auto max-w-3xl">
+          <div className="rounded-2xl border border-hielo/10 bg-white px-4 py-10 text-center shadow-[0_8px_32px_rgba(10,18,25,0.06)] sm:px-10 sm:py-12">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-hielo/8 text-hielo">
+              <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h15l-1.5 9h-12L6 6z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 6 5 3H2" />
+              </svg>
+            </div>
+            <h2 className="mt-6 font-display text-2xl font-semibold text-hielo">{t("emptyTitle")}</h2>
+            <p className="mx-auto mt-3 max-w-md text-sm text-muted">{t("emptyDesc")}</p>
+            <Link href="/clases" className="btn-primary mt-8 inline-flex !w-auto">
+              {t("browseClasses")}
+            </Link>
           </div>
-          <h2 className="mt-6 font-display text-2xl font-semibold text-hielo">{t("emptyTitle")}</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-muted">{t("emptyDesc")}</p>
-          <Link href="/clases" className="btn-primary mt-8 inline-flex !w-auto">
-            {t("browseClasses")}
-          </Link>
-        </div>
 
-        <ol className="mt-10 grid gap-4 sm:grid-cols-3">
-          {[
-            { n: "1", title: t("stepClasses"), desc: t("stepClassesDesc") },
-            { n: "2", title: t("stepDetails"), desc: t("stepDetailsDesc") },
-            { n: "3", title: t("stepSend"), desc: t("stepSendDesc") },
-          ].map((step) => (
-            <li key={step.n} className="rounded-2xl border border-hielo/10 bg-nieve/50 p-5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hielo text-sm font-bold text-white">
-                {step.n}
-              </span>
-              <h3 className="mt-3 font-display font-semibold text-hielo">{step.title}</h3>
-              <p className="mt-1.5 text-sm text-muted">{step.desc}</p>
-            </li>
-          ))}
-        </ol>
-
-        <div className="mt-12">
-          <p className="text-center text-sm font-bold uppercase tracking-wider text-hielo">{t("suggestions")}</p>
-          <div className="mt-5 grid gap-4 sm:grid-cols-3">
-            {highlighted.map((product) => (
-              <article key={product.id} className="flex h-full flex-col rounded-2xl border border-hielo/10 bg-white p-5">
-                <h3 className="font-display font-semibold text-pizarra">
-                  {pickLocale(locale, product.titleEs, product.titleEn)}
-                </h3>
-                {product.fromPrice && (
-                  <p className="mt-2">
-                    <PriceTag price={product.fromPrice} locale={locale} productId={product.id} prefix={pickLocale(locale, "desde ", "from ")} size="sm" />
-                  </p>
-                )}
-                <AddToCartButton productId={product.id} className="mt-auto pt-4 !w-full" />
-              </article>
+          <ol className="mt-10 grid gap-4 sm:grid-cols-3">
+            {[
+              { n: "1", title: t("stepClasses"), desc: t("stepClassesDesc") },
+              { n: "2", title: t("stepDetails"), desc: t("stepDetailsDesc") },
+              { n: "3", title: t("stepSend"), desc: t("stepSendDesc") },
+            ].map((step) => (
+              <li key={step.n} className="rounded-2xl border border-hielo/10 bg-nieve/50 p-5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-hielo text-sm font-bold text-white">
+                  {step.n}
+                </span>
+                <h3 className="mt-3 font-display font-semibold text-hielo">{step.title}</h3>
+                <p className="mt-1.5 text-sm text-muted">{step.desc}</p>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
+
+        <section className="mt-12 sm:mt-14">
+          <SectionHeader
+            eyebrow={t("suggestionsEyebrow")}
+            title={t("suggestionsTitle")}
+            description={t("suggestionsDesc")}
+          />
+          <div className="mt-6 sm:mt-8">
+            <HorizontalScroller
+              className={productCardsClass(highlighted.length)}
+              label={t("suggestions")}
+              prevLabel={pickLocale(locale, "Clase anterior", "Previous lesson")}
+              nextLabel={pickLocale(locale, "Clase siguiente", "Next lesson")}
+            >
+              {highlighted.map((product) => (
+                <LessonOfferCard
+                  key={product.id}
+                  product={product}
+                  locale={locale}
+                  badge={pickLocale(locale, "Popular", "Popular")}
+                  badgeVariant="popular"
+                />
+              ))}
+            </HorizontalScroller>
+          </div>
+        </section>
       </div>
     );
   }

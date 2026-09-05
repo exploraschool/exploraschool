@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { getHighlightedProducts } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
+import { productCardsClass } from "@/lib/product-cards-layout";
 
 type ProductsSectionProps = {
   locale: string;
@@ -45,19 +46,13 @@ export function ProductsSection({
         </Reveal>
 
         <HorizontalScroller
-          className={`x-scroller x-scroller--bleed flex snap-x snap-mandatory gap-4 pb-2 sm:grid sm:overflow-visible sm:snap-none sm:pb-0 lg:grid-cols-3 ${
-            compact ? "mt-6 sm:mt-8 sm:grid-cols-2 sm:gap-5" : "section-body sm:grid-cols-2 md:gap-6"
-          }`}
+          className={productCardsClass(products.length, compact ? "mt-6 sm:mt-8" : "section-body")}
           label={pickLocale(locale, "Los más reservados", "Most booked")}
           prevLabel={pickLocale(locale, "Clase anterior", "Previous lesson")}
           nextLabel={pickLocale(locale, "Clase siguiente", "Next lesson")}
         >
           {products.map((product, i) => (
-            <Reveal
-              key={product.id}
-              delay={i * 80}
-              className="flex w-[min(19.5rem,calc(100%-2.75rem))] shrink-0 snap-start sm:min-w-0 sm:w-auto"
-            >
+            <Reveal key={product.id} delay={i * 80} className="flex h-full min-w-0">
               <LessonOfferCard product={product} locale={locale} />
             </Reveal>
           ))}

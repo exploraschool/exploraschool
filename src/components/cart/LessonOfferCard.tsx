@@ -38,32 +38,30 @@ export function LessonOfferCard({
   const summary = pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn);
 
   return (
-    <article className="group flex h-full w-full flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white transition hover:border-accent/25 hover:shadow-[0_12px_32px_rgba(10,18,25,0.08)]">
-      <div className="relative isolate overflow-hidden px-4 pb-3.5 pt-4 sm:px-5 sm:pb-4 sm:pt-5">
-        <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden>
-          <Image
-            src={product.image}
-            alt={productImageAlt(product, locale)}
-            fill
-            className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-            sizes="(max-width: 639px) 80vw, (max-width: 1024px) 50vw, 33vw"
-          />
-          <div className="absolute inset-0 bg-white/92" />
-          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
-        </div>
-
+    <article className="group flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(14,14,15,0.04)] transition hover:border-accent/25 hover:shadow-[0_16px_40px_rgba(10,18,25,0.10)]">
+      <div className="relative aspect-[16/10] overflow-hidden bg-hielo/5">
+        <Image
+          src={product.image}
+          alt={productImageAlt(product, locale)}
+          fill
+          className="object-cover object-center transition duration-500 group-hover:scale-[1.04]"
+          sizes="(max-width: 639px) 85vw, (max-width: 1024px) 50vw, 33vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 via-pizarra/10 to-transparent" />
         {badge ? (
           <span
-            className={`mb-2 inline-block rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide ${
+            className={`absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide ${
               badgeVariant === "popular"
-                ? "bg-accent/15 font-bold tracking-wider text-accent-dark"
+                ? "bg-oro font-bold tracking-wider text-pizarra"
                 : "bg-hielo text-white"
             }`}
           >
             {badge}
           </span>
         ) : null}
+      </div>
 
+      <div className="flex flex-1 flex-col p-4 sm:p-5">
         <h3 className="font-display text-lg font-semibold text-hielo">
           {pickLocale(locale, product.titleEs, product.titleEn)}
         </h3>
@@ -74,18 +72,16 @@ export function LessonOfferCard({
             {facts.map((fact) => (
               <li
                 key={fact}
-                className="rounded-full bg-white/80 px-2.5 py-0.5 text-[0.7rem] font-semibold text-hielo backdrop-blur-sm"
+                className="rounded-full bg-nieve px-2.5 py-0.5 text-[0.7rem] font-semibold text-hielo"
               >
                 {fact}
               </li>
             ))}
           </ul>
         ) : null}
-      </div>
 
-      <div className="mt-auto flex flex-1 flex-col border-t border-hielo/6 p-4 sm:p-5">
         {highlights.length > 0 ? (
-          <ul className="space-y-1.5">
+          <ul className="mt-4 space-y-1.5">
             {highlights.map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-pizarra">
                 <svg
@@ -104,7 +100,7 @@ export function LessonOfferCard({
           </ul>
         ) : null}
 
-        <div className={`flex flex-col gap-3 ${highlights.length > 0 ? "mt-auto pt-4" : ""}`}>
+        <div className="mt-auto flex flex-col gap-3 pt-4">
           {fromPrice !== null ? (
             <p>
               <PriceTag

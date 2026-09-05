@@ -50,7 +50,7 @@ function NavButton({
       aria-controls={controls}
       disabled={disabled}
       onClick={onClick}
-      className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full border border-hielo/15 bg-white text-hielo shadow-[0_4px_18px_rgba(10,18,25,0.16)] transition enabled:hover:bg-nieve enabled:active:scale-95 disabled:pointer-events-none disabled:opacity-0"
+      className="flex h-9 w-9 items-center justify-center rounded-full border border-hielo/15 bg-white text-hielo shadow-[0_4px_18px_rgba(10,18,25,0.16)] transition enabled:hover:bg-nieve enabled:active:scale-95 disabled:pointer-events-none disabled:opacity-40"
     >
       <Chevron dir={dir} />
     </button>
@@ -68,6 +68,7 @@ export function HorizontalScroller({
   const scrollerId = useId();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
+  const count = Children.count(children);
 
   const sync = useCallback(() => {
     const el = scrollerRef.current;
@@ -97,35 +98,43 @@ export function HorizontalScroller({
     const el = scrollerRef.current;
     if (!el) return;
     const card = el.firstElementChild as HTMLElement | null;
-    const amount = card ? card.getBoundingClientRect().width + 16 : el.clientWidth * 0.85;
+    const gap = Number.parseFloat(getComputedStyle(el).columnGap || getComputedStyle(el).gap) || 0;
+    const amount = card ? card.getBoundingClientRect().width + gap : el.clientWidth * 0.85;
     el.scrollBy({ left: direction * amount, behavior: "smooth" });
   }
 
+  const itemClass =
+    count <= 1
+      ? "flex h-full w-full min-w-0 [&>*]:h-full [&>*]:min-w-0 [&>*]:w-full"
+      : "flex h-full w-[calc(100%-2.75rem)] shrink-0 snap-start [&>*]:h-full [&>*]:min-w-0 [&>*]:w-full sm:w-full sm:min-w-0 sm:max-w-none sm:shrink";
+
   return (
-    <div className="relative">
+    <div className="min-w-0">
       <div ref={scrollerRef} id={scrollerId} className={className} role="list" aria-label={label}>
         {Children.map(children, (child) => (
-          <div role="listitem" className="flex h-full shrink-0 snap-start sm:min-w-0 sm:w-auto">
+          <div role="listitem" className={itemClass}>
             {child}
           </div>
         ))}
       </div>
-      <div className="pointer-events-none absolute inset-y-0 left-0 right-0 z-[1] flex items-center justify-between px-0.5 sm:hidden">
-        <NavButton
-          dir="left"
-          label={prevLabel}
-          controls={scrollerId}
-          disabled={!canPrev}
-          onClick={() => scrollByCard(-1)}
-        />
-        <NavButton
-          dir="right"
-          label={nextLabel}
-          controls={scrollerId}
-          disabled={!canNext}
-          onClick={() => scrollByCard(1)}
-        />
-      </div>
+      {canPrev || canNext ? (
+        <div className="mt-3 flex items-center justify-end gap-2 sm:hidden">
+          <NavButton
+            dir="left"
+            label={prevLabel}
+            controls={scrollerId}
+            disabled={!canPrev}
+            onClick={() => scrollByCard(-1)}
+          />
+          <NavButton
+            dir="right"
+            label={nextLabel}
+            controls={scrollerId}
+            disabled={!canNext}
+            onClick={() => scrollByCard(1)}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }
