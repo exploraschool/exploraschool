@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { AmazonAssociateButton } from "@/components/blog/AmazonAssociateButton";
 import { primaryProductImage, type AffiliateProduct } from "@/lib/affiliate-blog-shared";
 import { pickLocale } from "@/lib/locale";
 
@@ -57,17 +58,8 @@ export function BlogRankingWinner({
               {pickLocale(locale, product.summaryEs, product.summaryEn)}
             </p>
           ) : null}
-          <div className="mt-5 flex flex-wrap gap-2.5">
-            {cta.href ? (
-              <a
-                href={cta.href}
-                target="_blank"
-                rel="sponsored noopener noreferrer"
-                className="inline-flex min-h-11 items-center justify-center rounded-full border border-hielo/20 bg-white px-5 py-2.5 text-sm font-semibold text-hielo shadow-[0_6px_16px_rgb(45_107_100_/_0.08)] transition hover:border-hielo hover:bg-hielo hover:text-white"
-              >
-                {cta.label}
-              </a>
-            ) : null}
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+            {cta.href ? <AmazonAssociateButton href={cta.href} locale={locale} /> : null}
             <a href={jumpHref} className="btn-secondary !w-auto">
               {jumpLabel}
             </a>

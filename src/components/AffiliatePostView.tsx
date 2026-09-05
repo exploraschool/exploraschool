@@ -87,7 +87,7 @@ function ReviewAmazonCta({
       href={product.affiliateUrl}
       title={pickLocale(locale, product.nameEs, product.nameEn)}
       meta={amazonMeta(product, locale)}
-      label={amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn)}
+      locale={locale}
       note={amazonNote(locale)}
     />
   );
@@ -690,7 +690,7 @@ function RankingArticle({
                       href={product.affiliateUrl}
                       title={pickLocale(locale, product.nameEs, product.nameEn)}
                       meta={amazonMeta(product, locale)}
-                      label={amazonLabel(locale, product.ctaLabelEs, product.ctaLabelEn)}
+                      locale={locale}
                       note={amazonNote(locale)}
                     />
                   ) : null}

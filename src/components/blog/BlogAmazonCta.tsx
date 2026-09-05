@@ -1,14 +1,16 @@
+import { AmazonAssociateButton } from "@/components/blog/AmazonAssociateButton";
+
 export function BlogAmazonCta({
   href,
   title,
   meta,
-  label,
+  locale,
   note,
 }: {
   href: string;
   title: string;
   meta?: string;
-  label: string;
+  locale: string;
   note?: string;
 }) {
   return (
@@ -18,14 +20,7 @@ export function BlogAmazonCta({
         {meta ? <p className="mt-1 text-sm text-muted">{meta}</p> : null}
         {note ? <p className="mt-2 text-xs leading-relaxed text-muted">{note}</p> : null}
       </div>
-      <a
-        href={href}
-        target="_blank"
-        rel="sponsored noopener noreferrer"
-        className="mt-4 inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border border-hielo/20 bg-white px-5 py-2.5 text-sm font-semibold text-hielo shadow-[0_6px_16px_rgb(45_107_100_/_0.08)] transition hover:border-hielo hover:bg-hielo hover:text-white sm:mt-0"
-      >
-        {label}
-      </a>
+      <AmazonAssociateButton href={href} locale={locale} className="mt-4 shrink-0 sm:mt-0" />
     </div>
   );
 }
