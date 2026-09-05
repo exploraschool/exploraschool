@@ -1,6 +1,7 @@
 import { getMainDisciplines } from "@/data/disciplines";
 import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
@@ -31,14 +32,19 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
             </div>
           </Reveal>
 
-          <div className="section-body-sm grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+          <HorizontalScroller
+            className="x-scroller x-scroller--bleed x-scroller--cards section-body-sm sm:grid-cols-3 lg:grid-cols-5"
+            label={pickLocale(locale, "Disciplinas", "Disciplines")}
+            prevLabel={pickLocale(locale, "Disciplina anterior", "Previous discipline")}
+            nextLabel={pickLocale(locale, "Disciplina siguiente", "Next discipline")}
+          >
             {disciplines.map((d, i) => (
-              <Reveal key={d.id} delay={i * 50} className="min-w-0">
+              <Reveal key={d.id} delay={i * 50} className="flex h-full min-w-0">
                 <Link
                   href={`/clases/${d.slug}`}
                   className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md"
                 >
-                  <div className="relative aspect-[4/3] bg-hielo/5">
+                  <div className="relative aspect-[16/10] bg-hielo/5">
                     <Image
                       src={d.image}
                       alt={pickLocale(
@@ -48,17 +54,17 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                       )}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-105"
-                      sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 20vw"
+                      sizes="(max-width: 639px) 85vw, (max-width: 1023px) 33vw, 20vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 to-transparent" />
                   </div>
-                  <p className="px-3 py-2.5 text-center text-xs font-semibold text-hielo group-hover:text-accent sm:text-sm">
+                  <p className="px-3 py-2.5 text-center text-sm font-semibold text-hielo group-hover:text-accent">
                     {pickLocale(locale, d.nameEs, d.nameEn)}
                   </p>
                 </Link>
               </Reveal>
             ))}
-          </div>
+          </HorizontalScroller>
         </div>
       </section>
     );
