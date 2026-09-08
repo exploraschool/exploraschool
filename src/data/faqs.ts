@@ -236,7 +236,7 @@ Lleva:
 - Protección solar
 
 - [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
-- [Qué llevar el primer día](/blog/que-llevar-primer-dia-nieve)
+- [Qué llevar el primer día](/blog/que-llevar-esqui-sierra-nevada)
 - [Reservar](/reserva)
 
 > Si alquilas el mismo día, suma 20–40 minutos extra.`,
@@ -252,7 +252,7 @@ Bring:
 - Sun protection
 
 - [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
-- [What to bring on day one](/blog/que-llevar-primer-dia-nieve)
+- [What to bring on day one](/blog/que-llevar-esqui-sierra-nevada)
 - [Book](/reserva)
 
 > If you rent on the day, add an extra 20–40 minutes.`,

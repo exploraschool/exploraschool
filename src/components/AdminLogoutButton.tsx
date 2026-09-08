@@ -16,7 +16,7 @@ export function AdminLogoutButton() {
     } catch {
       /* still leave the panel */
     }
-    router.push("/es");
+    router.push("/");
     router.refresh();
   }
 

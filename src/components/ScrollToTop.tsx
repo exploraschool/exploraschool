@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   consumePendingHash,
   consumePopNavigation,
@@ -27,8 +27,11 @@ function stripLocationHash() {
 
 export function ScrollToTop() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const firstLoad = useRef(true);
+  const prevPathname = useRef(pathname);
+  const search = searchParams.toString();
 
   useEffect(() => {
     history.scrollRestoration = "manual";
@@ -37,6 +40,8 @@ export function ScrollToTop() {
   useEffect(() => {
     const first = firstLoad.current;
     firstLoad.current = false;
+    const pathChanged = prevPathname.current !== pathname;
+    prevPathname.current = pathname;
     const intended =
       consumePendingHash() || (first || consumePopNavigation() ? window.location.hash : "");
 
@@ -47,9 +52,11 @@ export function ScrollToTop() {
       return scrollToHash(intended, { retries: 36, behavior: first ? "auto" : "smooth" });
     }
 
+    if (!first && !pathChanged) return;
+
     stripLocationHash();
     return scrollToPageTop();
-  }, [pathname]);
+  }, [pathname, search]);
 
   useEffect(() => {
     function onHashChange() {

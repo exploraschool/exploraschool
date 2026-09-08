@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { GoogleAuthCard } from "@/components/auth/GoogleAuthCard";
+import { localizedPath } from "@/lib/seo-urls";
 
 type StudentGoogleAuthCardProps = {
   locale: string;
@@ -36,7 +37,11 @@ export function StudentGoogleAuthCard({ locale }: StudentGoogleAuthCardProps) {
           router.refresh();
           return;
         }
-        router.push(payload.onboardingComplete ? `/${locale}/cuenta` : `/${locale}/cuenta/bienvenida`);
+        router.push(
+          payload.onboardingComplete
+            ? localizedPath(locale, "/cuenta")
+            : localizedPath(locale, "/cuenta/bienvenida"),
+        );
         router.refresh();
       }}
     />

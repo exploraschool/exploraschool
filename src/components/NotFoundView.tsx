@@ -12,8 +12,8 @@ type NotFoundViewProps = {
 
 export function NotFoundView({
   showBrand = true,
-  homeHref = "/es",
-  clasesHref = "/es/clases",
+  homeHref = "/",
+  clasesHref = "/clases",
 }: NotFoundViewProps) {
   return (
     <section className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-4 py-16 text-center">

@@ -5,6 +5,7 @@ import { HorizontalScroller } from "@/components/HorizontalScroller";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { pickLocale } from "@/lib/locale";
+import { disciplinePath } from "@/lib/seo-urls";
 
 type DisciplinesGridProps = {
   locale: string;
@@ -41,7 +42,7 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
             {disciplines.map((d, i) => (
               <Reveal key={d.id} delay={i * 50} className="flex h-full min-w-0">
                 <Link
-                  href={`/clases/${d.slug}`}
+                  href={disciplinePath(d.id)}
                   className="group flex h-full w-full flex-col overflow-hidden rounded-xl border border-hielo/8 bg-white shadow-sm transition hover:border-accent/25 hover:shadow-md"
                 >
                   <div className="relative aspect-[16/10] bg-hielo/5">
@@ -83,7 +84,7 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
         <div className="section-body grid gap-5 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {disciplines.map((d, i) => (
             <Reveal key={d.id} delay={i * 80}>
-              <Link href={`/clases/${d.slug}`} className="card-interactive group block h-full overflow-hidden p-0">
+              <Link href={disciplinePath(d.id)} className="card-interactive group block h-full overflow-hidden p-0">
                 <div className="relative aspect-[16/10] overflow-hidden bg-hielo/5">
                   <Image
                     src={d.image}

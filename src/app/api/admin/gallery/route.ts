@@ -42,7 +42,6 @@ function resolveImageType(file: File): string | null {
 
 function revalidateGalleryPages() {
   revalidatePath("/");
-  revalidatePath("/es");
   revalidatePath("/en");
 }
 

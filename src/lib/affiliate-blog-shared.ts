@@ -5,7 +5,7 @@ export const AFFILIATE_RANKING_SIZE = 6;
 export const AFFILIATE_MAX_PRODUCT_IMAGES = 8;
 export const AFFILIATE_REVIEW_MIN_IMAGES = 6;
 export const AFFILIATE_RANKING_MIN_IMAGES = 1;
-export const AFFILIATE_RANKING_MAX_IMAGES = 1;
+export const AFFILIATE_RANKING_MAX_IMAGES = AFFILIATE_MAX_PRODUCT_IMAGES;
 
 export type AffiliatePostType = "ranking" | "review";
 export type AffiliatePostStatus = "draft" | "published";
@@ -108,6 +108,8 @@ export type AffiliateBlogPost = {
   type: AffiliatePostType;
   status: AffiliatePostStatus;
   slug: string;
+  slugEn: string;
+  legacySlugs: string[];
   titleEs: string;
   titleEn: string;
   excerptEs: string;
@@ -241,10 +243,16 @@ export function slugifyAffiliateTitle(value: string): string {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
+    .replace(/^(review|analisis|análisis|ranking|los-mejores|the-best)-/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-    .slice(0, 72);
+    .replace(/^(review|analisis|ranking|los-mejores)-/g, "")
+    .slice(0, 60);
   return slug || `guia-compra-${Date.now().toString(36)}`;
+}
+
+export function deriveAffiliateSlugEn(titleEn: string, fallbackEs: string): string {
+  return slugifyAffiliateTitle(titleEn || fallbackEs);
 }
 
 function imageKey(src: string): string {

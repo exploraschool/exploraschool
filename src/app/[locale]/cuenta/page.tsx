@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { redirect as intlRedirect } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { StudentGoogleAuthCard } from "@/components/cuenta/StudentGoogleAuthCard";
@@ -48,7 +49,7 @@ export default async function CuentaPage({ params }: Props) {
 
   const profile = await getStudentProfile(session.uid);
   if (!profile || !canAccessStudentDashboard(profile)) {
-    redirect(`/${locale}/cuenta/bienvenida`);
+    return intlRedirect({ href: "/cuenta/bienvenida", locale: locale === "en" ? "en" : "es" });
   }
 
   const dashboard = await loadStudentDashboard(session);

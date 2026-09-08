@@ -1,5 +1,8 @@
+/** Canonical production host (no protocol). Keep in sync with next.config.ts. */
+export const CANONICAL_HOST = "www.explora-school.es";
+
 /** Production domain — override with NEXT_PUBLIC_SITE_URL in Vercel if needed. */
-export const PRODUCTION_SITE_URL = "https://www.explora-school.es";
+export const PRODUCTION_SITE_URL = `https://${CANONICAL_HOST}`;
 
 /** Public site URL for metadata, canonical links, and JSON-LD. */
 export function getSiteUrl(): string {

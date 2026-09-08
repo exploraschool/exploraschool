@@ -1,4 +1,5 @@
 import { site } from "./site";
+import { editorialSeo } from "./blog-urls";
 
 export type BlogPost = {
   slug: string;
@@ -37,7 +38,7 @@ export const blogPosts: BlogPost[] = [
 
 ## 1. Reserva con antelación, sobre todo en temporada alta
 
-Fines de semana, puentes y vacaciones escolares concentran mucha demanda en forfaits, alojamiento y clases. Si sabes las fechas de tu viaje, reserva lo antes posible. En Explora School & Club puedes [elegir tu tipo de clase](/clases) online y [reservar](/reserva) confirmando por email, sin pagar por adelantado. También te conviene revisar [qué llevar el primer día](/blog/que-llevar-primer-dia-nieve).
+Fines de semana, puentes y vacaciones escolares concentran mucha demanda en forfaits, alojamiento y clases. Si sabes las fechas de tu viaje, reserva lo antes posible. En Explora School & Club puedes [elegir tu tipo de clase](/clases) online y [reservar](/reserva) confirmando por email, sin pagar por adelantado. También te conviene revisar [qué llevar el primer día](/blog/que-llevar-esqui-sierra-nevada).
 
 ## 2. Contrata clases si es tu primera vez (de verdad)
 
@@ -74,7 +75,7 @@ Si quieres empezar con buen pie, en Explora School & Club llevamos más de 15 a�
 
 ## 1. Book ahead, especially in peak season
 
-Weekends, public holidays and school breaks bring high demand for lift passes, accommodation and lessons. If you know your travel dates, book as early as you can. At Explora School & Club you can [choose your lesson type](/clases) online and [book](/reserva) confirming by email, with no upfront payment. It also helps to check [what to pack for your first day](/blog/que-llevar-primer-dia-nieve).
+Weekends, public holidays and school breaks bring high demand for lift passes, accommodation and lessons. If you know your travel dates, book as early as you can. At Explora School & Club you can [choose your lesson type](/clases) online and [book](/reserva) confirming by email, with no upfront payment. It also helps to check [what to pack for your first day](/blog/que-llevar-esqui-sierra-nevada).
 
 ## 2. Take lessons if it is genuinely your first time
 
@@ -147,7 +148,7 @@ Cada día de esquí tiene un coste: forfait, alojamiento, desplazamiento. Si pas
 
 ## Disfrutas más, incluso si ya tienes algo de nivel
 
-Las clases no son solo para principiantes. Muchos esquiadores intermedios se estancan durante años sin saber qué les frena. Un instructor con ojo entrenado detecta ese detalle de técnica que desbloquea tu progreso. También es la mejor forma de iniciarte en [telemark](/clases/telemark), [freestyle o freeride](/blog/freeride-freestyle-telemark-sierra-nevada) o perfeccionar tu carving en [esquí alpino](/clases/esqui).
+Las clases no son solo para principiantes. Muchos esquiadores intermedios se estancan durante años sin saber qué les frena. Un instructor con ojo entrenado detecta ese detalle de técnica que desbloquea tu progreso. También es la mejor forma de iniciarte en [telemark](/clases/telemark), [freestyle o freeride](/blog/freeride-sierra-nevada) o perfeccionar tu carving en [esquí alpino](/clases/esqui).
 
 ### La inversión que más se nota en la montaña
 
@@ -176,7 +177,7 @@ Every ski day has a cost: lift pass, accommodation, travel. If you spend the mor
 
 ## You enjoy yourself more, even if you already have some level
 
-Lessons are not just for beginners. Many intermediate skiers plateau for years without knowing what is holding them back. A trained instructor spots the technique detail that unlocks your progress. It is also the best way to start [telemark](/clases/telemark), [freestyle or freeride](/blog/freeride-freestyle-telemark-sierra-nevada) or refine your carving in [alpine skiing](/clases/esqui).
+Lessons are not just for beginners. Many intermediate skiers plateau for years without knowing what is holding them back. A trained instructor spots the technique detail that unlocks your progress. It is also the best way to start [telemark](/clases/telemark), [freestyle or freeride](/blog/freeride-sierra-nevada) or refine your carving in [alpine skiing](/clases/esqui).
 
 ### The investment you feel most on the mountain
 
@@ -307,7 +308,7 @@ Vestid al niño con ropa de abrigo en capas y lleva recambio de guantes por si s
 
 ## El Club Creando Aventuras: continuidad para jóvenes
 
-Si a tu hijo le engancha la nieve, el [Club Deportivo Creando Aventuras](/club) ofrece progresión continua para niños y jóvenes de 5 a 18 años, con clases técnicas por la mañana y freestyle por la tarde. Más detalles en [nuestra guía del club](/blog/club-creando-aventuras-jovenes-sierra-nevada).
+Si a tu hijo le engancha la nieve, el [Club Deportivo Creando Aventuras](/club) ofrece progresión continua para niños y jóvenes de 5 a 18 años, con clases técnicas por la mañana y freestyle por la tarde. Más detalles en [nuestra guía del club](/club).
 
 ### Reserva la clase de tus hijos con tranquilidad
 
@@ -336,7 +337,7 @@ Dress your child in warm layers and bring spare gloves in case they get wet. Hav
 
 ## Club Creando Aventuras: continuity for young skiers
 
-If your child catches the snow bug, [Club Deportivo Creando Aventuras](/club) offers continuous progression for children and young people aged 5 to 18, with technical lessons in the morning and freestyle in the afternoon. More details in [our club guide](/blog/club-creando-aventuras-jovenes-sierra-nevada).
+If your child catches the snow bug, [Club Deportivo Creando Aventuras](/club) offers continuous progression for children and young people aged 5 to 18, with technical lessons in the morning and freestyle in the afternoon. More details in [our club guide](/club).
 
 ### Book your children's lesson with confidence
 
@@ -381,7 +382,7 @@ Muchos clientes prueban una disciplina un año y al siguiente cambian. No es una
 
 ### Prueba con un instructor antes de comprometerte
 
-Si sigues en duda, [reserva una clase de iniciación](/reserva) en esquí o snowboard. En dos horas tendrás una idea clara de cuál te convence más. También te ayudará leer [por qué las clases aceleran el aprendizaje](/blog/por-que-contratar-clases-esqui-snowboard) y [qué llevar el primer día](/blog/que-llevar-primer-dia-nieve).`,
+Si sigues en duda, [reserva una clase de iniciación](/reserva) en esquí o snowboard. En dos horas tendrás una idea clara de cuál te convence más. También te ayudará leer [por qué las clases aceleran el aprendizaje](/blog/por-que-contratar-clases-esqui-snowboard) y [qué llevar el primer día](/blog/que-llevar-esqui-sierra-nevada).`,
     contentEn: `Ski or snowboard. It is the eternal conversation on the drive to Sierra Nevada. There is no single right answer for everyone, but there are factors that help you decide before renting equipment or booking lessons.
 
 ## Skiing: more intuitive at first for many adults
@@ -406,7 +407,7 @@ Many clients try one discipline one year and switch the next. It is not a decisi
 
 ### Try with an instructor before committing
 
-If you are still unsure, [book an introductory lesson](/reserva) in ski or snowboard. In two hours you will have a clear idea of which suits you best. It also helps to read [why lessons speed up learning](/blog/por-que-contratar-clases-esqui-snowboard) and [what to pack for day one](/blog/que-llevar-primer-dia-nieve).`,
+If you are still unsure, [book an introductory lesson](/reserva) in ski or snowboard. In two hours you will have a clear idea of which suits you best. It also helps to read [why lessons speed up learning](/blog/por-que-contratar-clases-esqui-snowboard) and [what to pack for day one](/blog/que-llevar-esqui-sierra-nevada).`,
   },
   {
     slug: "normas-seguridad-pista-esqui",
@@ -467,7 +468,7 @@ El casco reduce significativamente lesiones en cabeza. Revisa fijaciones, cantos
 
 ### Aprende seguridad con profesionales
 
-En Explora School & Club las normas de montaña forman parte de cada [clase](/clases), no son un apunte aparte. Si es tu primera vez, combina esta guía con nuestros [consejos para debutar en Sierra Nevada](/blog/consejos-primera-vez-sierra-nevada) y [reserva tu clase](/reserva) para bajar con criterio.`,
+En Explora School & Club las normas de montaña forman parte de cada [clase](/clases), no son un apunte aparte. Si es tu primera vez, combina esta guía con nuestros [consejos para debutar en Sierra Nevada](/blog/primera-vez-esqui-sierra-nevada) y [reserva tu clase](/reserva) para bajar con criterio.`,
     contentEn: `Every season we see avoidable situations on the slopes: skiers out of control, dangerous crossings or people stopping in braking zones. Knowing and respecting the rules is not bureaucracy: it is what keeps everyone safe, from beginners to experts.
 
 ## 1. Control your speed and line
@@ -512,7 +513,7 @@ A helmet significantly reduces head injuries. Check bindings, edges and boots be
 
 ### Learn safety with professionals
 
-At Explora School & Club mountain rules are part of every [lesson](/clases), not a separate note. If it is your first time, pair this guide with our [first-time Sierra Nevada tips](/blog/consejos-primera-vez-sierra-nevada) and [book your lesson](/reserva) to descend with sound judgement.`,
+At Explora School & Club mountain rules are part of every [lesson](/clases), not a separate note. If it is your first time, pair this guide with our [first-time Sierra Nevada tips](/blog/primera-vez-esqui-sierra-nevada) and [book your lesson](/reserva) to descend with sound judgement.`,
   },
   {
     slug: "que-llevar-primer-dia-nieve",
@@ -561,7 +562,7 @@ Vaqueros o algodón debajo del mono de esquí. Guantes de punto que se empapan e
 
 ### Combina buen equipamiento con buenas clases
 
-Tener lo necesario en la mochila es el primer paso—incluyendo buenas [gafas de esquí](/blog/como-elegir-gafas-esqui-snowboard). El segundo es aprender con un instructor titulado. [Reserva tu clase](/reserva) en Explora School & Club y empieza con todo bajo control.`,
+Tener lo necesario en la mochila es el primer paso—incluyendo buenas [gafas de esquí](/blog/gafas-esqui-snowboard-sierra-nevada). El segundo es aprender con un instructor titulado. [Reserva tu clase](/reserva) en Explora School & Club y empieza con todo bajo control.`,
     contentEn: `Arriving in Sierra Nevada without the right gear is one of the most common mistakes among beginners. Either you are cold and miserable, or you overheat and end up wet. This list helps you prepare for your first day (and the rest) without forgetting anything important.
 
 ## Warm clothing: the layering rule
@@ -594,7 +595,7 @@ Jeans or cotton under ski pants. Knit gloves that soak through on the first fall
 
 ### Pair good kit with good lessons
 
-Having the right bag is step one—including good [ski goggles](/blog/como-elegir-gafas-esqui-snowboard). Step two is learning with a qualified instructor. [Book your lesson](/reserva) at Explora School & Club and start with everything under control.`,
+Having the right bag is step one—including good [ski goggles](/blog/gafas-esqui-snowboard-sierra-nevada). Step two is learning with a qualified instructor. [Book your lesson](/reserva) at Explora School & Club and start with everything under control.`,
   },
   {
     slug: "esqui-adaptado-sierra-nevada",
@@ -789,7 +790,7 @@ Todas estas modalidades exigen más que buena voluntad. Avalanchas, caídas en e
 
 ### Lleva tu esquí al siguiente nivel
 
-[Reserva una clase](/reserva) de freeride, freestyle o telemark. Conoceremos tu nivel y te propondremos la sesión que mejor encaje. Antes, repasa también las [normas de seguridad en pista](/blog/normas-seguridad-pista-esqui).`,
+[Reserva una clase](/reserva) de freeride. También puedes leer [freestyle](/blog/freestyle-sierra-nevada) y [telemark](/blog/telemark-sierra-nevada). Antes, repasa las [normas de seguridad en pista](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
     contentEn: `Mastering red runs is a great achievement, but the mountain offers far more than marked descents. Freeride, freestyle and telemark are three paths for those who want to keep learning in Sierra Nevada. At Explora School & Club all three are part of our [ski](/clases/esqui), [snowboard](/clases/snowboard) and [telemark](/clases/telemark) offering.
 
 ## Freeride: off-piste snow with sound judgement
@@ -820,7 +821,87 @@ All these disciplines need more than good intentions. Avalanches, park falls and
 
 ### Take your skiing to the next level
 
-[Book a lesson](/reserva) in freeride, freestyle or telemark. We will assess your level and suggest the best session for you. First, also review [slope safety rules](/blog/normas-seguridad-pista-esqui).`,
+[Book a lesson](/reserva) in freeride. You can also read our [freestyle](/blog/freestyle-sierra-nevada) and [telemark](/blog/telemark-sierra-nevada) guides. First, review [slope safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
+  },
+  {
+    slug: "freestyle-sierra-nevada",
+    titleEs: "Clases de freestyle en Sierra Nevada: snowpark con método",
+    titleEn: "Freestyle lessons in Sierra Nevada: snowpark with a method",
+    excerptEs:
+      "Saltos, rails y boxes en Sierra Nevada: cómo empezar en el snowpark con un instructor y progresar con seguridad.",
+    excerptEn:
+      "Jumps, rails and boxes in Sierra Nevada: how to start in the snowpark with an instructor and progress safely.",
+    date: "2026-08-16",
+    author: "Explora School & Club",
+    coverImage: "/images/blog/blog-freeride-freestyle.jpg",
+    coverAltEs: "Freestyle en el snowpark de Sierra Nevada",
+    coverAltEn: "Freestyle in the Sierra Nevada snowpark",
+    relatedSlugs: ["freeride-freestyle-telemark-sierra-nevada", "por-que-contratar-clases-esqui-snowboard", "normas-seguridad-pista-esqui"],
+    migrated: false,
+    contentEs: `El freestyle combina técnica y creatividad en el snowpark: saltos, rails, boxes y halfpipe. En snowboard es la disciplina natural del park; en esquí cada vez más esquiadores se inician en módulos y pequeños saltos.
+
+## Empieza por la seguridad
+
+Las [clases de freestyle](/clases/esqui) en Explora empiezan por la seguridad en el park, la posición en el aire y aterrizajes controlados. Ideal para adolescentes y adultos que buscan adrenalina con método, no solo prueba y error.
+
+## Esquí o snowboard
+
+Tanto en [esquí](/clases/esqui) como en [snowboard](/clases/snowboard) el park exige progresión. Un instructor titulado adapta los módulos a tu nivel real.
+
+También te puede interesar [freeride](/blog/freeride-sierra-nevada) o [telemark](/blog/telemark-sierra-nevada).
+
+[Reserva una clase](/reserva) y te proponemos la sesión que encaje. Repasa las [normas de seguridad](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
+    contentEn: `Freestyle combines technique and creativity in the snowpark: jumps, rails, boxes and halfpipe. On snowboard it is the natural park discipline; on skis more and more riders start on features and small jumps.
+
+## Start with safety
+
+[Freestyle lessons](/clases/esqui) at Explora begin with park safety, air position and controlled landings. Ideal for teenagers and adults who want adrenaline with method, not just trial and error.
+
+## Ski or snowboard
+
+In both [ski](/clases/esqui) and [snowboard](/clases/snowboard) the park needs progression. A qualified instructor matches features to your real level.
+
+You may also like [freeride](/blog/freeride-sierra-nevada) or [telemark](/blog/telemark-sierra-nevada).
+
+[Book a lesson](/reserva) and we will suggest the right session. Review [safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
+  },
+  {
+    slug: "telemark-sierra-nevada",
+    titleEs: "Clases de telemark en Sierra Nevada: técnica nórdica en bajada",
+    titleEn: "Telemark lessons in Sierra Nevada: Nordic technique downhill",
+    excerptEs:
+      "Telemark en Sierra Nevada: talón libre, giro característico y cómo empezar con un instructor especializado.",
+    excerptEn:
+      "Telemark in Sierra Nevada: free heel, distinctive turn and how to start with a specialist instructor.",
+    date: "2026-08-17",
+    author: "Explora School & Club",
+    coverImage: "/images/blog/blog-freeride-freestyle.jpg",
+    coverAltEs: "Esquiador de telemark en Sierra Nevada",
+    coverAltEn: "Telemark skier in Sierra Nevada",
+    relatedSlugs: ["freeride-freestyle-telemark-sierra-nevada", "que-tipo-clases-elegir-sierra-nevada", "por-que-contratar-clases-esqui-snowboard"],
+    migrated: false,
+    contentEs: `El telemark es una técnica de esquí con talón libre y un estilo de giro característico. Es exigente físicamente y muy gratificante cuando encaja. Atrae a esquiadores que buscan un reto técnico distinto y una conexión más clásica con la montaña.
+
+## En pista y fuera
+
+En Sierra Nevada el telemark tiene espacio tanto en pista como fuera de ella. Si llevas años esquiando alpino y quieres renovar tu relación con la nieve, una [clase de telemark](/clases/telemark) puede ser el descubrimiento de la temporada.
+
+## Progresión con instructor
+
+Un instructor especializado adapta el contenido a tu nivel: no hace falta ser experto alpino, pero sí ganas de trabajar la técnica. Combínalo con [freeride](/blog/freeride-sierra-nevada) o [freestyle](/blog/freestyle-sierra-nevada) si quieres explorar otras modalidades.
+
+[Reserva telemark](/reserva) con Explora. Antes, revisa las [normas de seguridad](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
+    contentEn: `Telemark is a skiing technique with a free heel and a distinctive turn style. It is physically demanding and very rewarding when it clicks. It attracts skiers looking for a different technical challenge and a more classic connection with the mountain.
+
+## On and off piste
+
+In Sierra Nevada telemark has room both on and off piste. If you have skied alpine for years and want to refresh your relationship with snow, a [telemark lesson](/clases/telemark) may be your discovery of the season.
+
+## Progress with an instructor
+
+A specialist instructor matches content to your level: you do not need to be an expert alpine skier, just willing to work on technique. Pair it with [freeride](/blog/freeride-sierra-nevada) or [freestyle](/blog/freestyle-sierra-nevada) if you want to explore other disciplines.
+
+[Book telemark](/reserva) with Explora. First, review [safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
   },
   {
     slug: "como-elegir-gafas-esqui-snowboard",
@@ -869,7 +950,7 @@ Técnicamente sí en días muy nublados, pero no lo recomendamos. Un instructor 
 
 ### Equípate bien y aprende mejor
 
-Las gafas son una pieza del puzzle—completa tu checklist con [qué llevar a la nieve](/blog/que-llevar-primer-dia-nieve). La otra pieza es una buena [clase](/clases). [Reserva](/reserva) y combina material adecuado con progresión real en Sierra Nevada.`,
+Las gafas son una pieza del puzzle—completa tu checklist con [qué llevar a la nieve](/blog/que-llevar-esqui-sierra-nevada). La otra pieza es una buena [clase](/clases). [Reserva](/reserva) y combina material adecuado con progresión real en Sierra Nevada.`,
     contentEn: `In Sierra Nevada the sun on snow can be dazzling even in mid-winter. Ski or snowboard goggles are not a fashion accessory: they protect your eyes from UV, wind and spray from other skiers. Choosing well avoids headaches, watering eyes and an uncomfortable day.
 
 ## UV protection: non-negotiable
@@ -902,7 +983,7 @@ Technically yes on very cloudy days, but we do not recommend it. An instructor w
 
 ### Kit up well and learn better
 
-Goggles are one piece of the puzzle—complete your checklist with [what to pack for the snow](/blog/que-llevar-primer-dia-nieve). The other piece is a good [lesson](/clases). [Book](/reserva) and combine proper gear with real progression in Sierra Nevada.`,
+Goggles are one piece of the puzzle—complete your checklist with [what to pack for the snow](/blog/que-llevar-esqui-sierra-nevada). The other piece is a good [lesson](/clases). [Book](/reserva) and combine proper gear with real progression in Sierra Nevada.`,
   },
   {
     slug: "esquiar-en-familia-sierra-nevada",
@@ -1127,7 +1208,7 @@ Cada viaje es distinto según de dónde vengas y a qué hora sea tu clase. Escr�
 
 ### Reserva tu clase y llega con tranquilidad
 
-En Explora llevamos años recibiendo clientes de toda España y del extranjero. [Elige tu clase](/clases), [confirma la fecha](/reserva) y, si es tu primera vez, lee nuestros [consejos de debut](/blog/consejos-primera-vez-sierra-nevada).`,
+En Explora llevamos años recibiendo clientes de toda España y del extranjero. [Elige tu clase](/clases), [confirma la fecha](/reserva) y, si es tu primera vez, lee nuestros [consejos de debut](/blog/primera-vez-esqui-sierra-nevada).`,
     contentEn: `Getting to Sierra Nevada smoothly is the first step to a great day on snow. The resort is about 30 kilometres from Granada; you also have a summary on our [how to get there](/como-llegar) page. Plan ahead so you do not miss your [lesson](/reserva).
 
 ## By car: the most flexible option
@@ -1164,7 +1245,7 @@ Every trip is different depending on where you come from and your lesson time. E
 
 ### Book your lesson and arrive with confidence
 
-At Explora we have been welcoming clients from across Spain and abroad for years. [Choose your lesson](/clases), [confirm the date](/reserva) and, if it is your first time, read our [beginner tips](/blog/consejos-primera-vez-sierra-nevada).`,
+At Explora we have been welcoming clients from across Spain and abroad for years. [Choose your lesson](/clases), [confirm the date](/reserva) and, if it is your first time, read our [beginner tips](/blog/primera-vez-esqui-sierra-nevada).`,
   },
   {
     slug: "forfait-sierra-nevada-guia-compra",
@@ -1181,7 +1262,7 @@ At Explora we have been welcoming clients from across Spain and abroad for years
     coverAltEn: "Lift pass and lift access in Sierra Nevada",
     relatedSlugs: ["como-llegar-sierra-nevada-guia","que-tipo-clases-elegir-sierra-nevada","que-llevar-primer-dia-nieve"],
     migrated: false,
-    contentEs: `Una de las preguntas más frecuentes que recibimos es si el forfait está incluido en el precio de la clase. La respuesta es no: en Explora pagas la [enseñanza](/clases) con instructor titulado, y el forfait lo compras aparte. Combina esta guía con [cómo llegar a Sierra Nevada](/blog/como-llegar-sierra-nevada-guia).
+    contentEs: `Una de las preguntas más frecuentes que recibimos es si el forfait está incluido en el precio de la clase. La respuesta es no: en Explora pagas la [enseñanza](/clases) con instructor titulado, y el forfait lo compras aparte. Combina esta guía con [cómo llegar a Sierra Nevada](/como-llegar).
 
 ## ¿Por qué el forfait va aparte?
 
@@ -1222,7 +1303,7 @@ Forfait: cómpralo online, en los cajeros de los parkings y de la Silla del Pueb
 ### Reserva tu clase en Explora
 
 Una vez tengas claro el forfait, [elige tu tipo de clase](/blog/que-tipo-clases-elegir-sierra-nevada) y [reserva online](/reserva). Confirmamos por email y no cobramos por adelantado. Si reservas antes del 1 de noviembre de 2026, disfrutas de un 10% de descuento.`,
-    contentEn: `One of the most frequent questions we get is whether the lift pass is included in the lesson price. The answer is no: at Explora you pay for [instruction](/clases) with a qualified instructor, and you buy your lift pass separately. Pair this guide with [how to get to Sierra Nevada](/blog/como-llegar-sierra-nevada-guia).
+    contentEn: `One of the most frequent questions we get is whether the lift pass is included in the lesson price. The answer is no: at Explora you pay for [instruction](/clases) with a qualified instructor, and you buy your lift pass separately. Pair this guide with [how to get to Sierra Nevada](/como-llegar).
 
 ## Why is the lift pass separate?
 
@@ -1267,7 +1348,14 @@ Once your lift pass is sorted, [choose your lesson type](/blog/que-tipo-clases-e
 ];
 
 export function getBlogPost(slug: string): BlogPost | undefined {
-  return blogPosts.find((p) => p.slug === slug);
+  return blogPosts.find((p) => {
+    if (p.slug === slug) return true;
+    const seo = editorialSeo(p.slug);
+    return seo.slug === slug || seo.slugEn === slug || seo.legacySlugs.includes(slug);
+  });
 }
 
-export const blogSlugs = blogPosts.map((p) => p.slug);
+export const blogSlugs = blogPosts.flatMap((p) => {
+  const seo = editorialSeo(p.slug);
+  return Array.from(new Set([p.slug, seo.slug, seo.slugEn, ...seo.legacySlugs]));
+});

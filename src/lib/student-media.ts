@@ -79,7 +79,6 @@ export async function listStudentMediaForUid(uid: string): Promise<StudentMediaI
 
 function revalidateGalleryPages() {
   revalidatePath("/");
-  revalidatePath("/es");
   revalidatePath("/en");
 }
 

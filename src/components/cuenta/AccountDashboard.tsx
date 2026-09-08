@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
+import { toHref } from "@/i18n/href";
 import { getPistaById, PISTA_LEVEL_LABEL, sectorName, type PistaLevel, type PistaSectorId } from "@/data/pistas";
 import {
   progressDisciplineName,
@@ -218,7 +219,7 @@ export function AccountDashboard({
         </div>
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <Link
-            href="/cuenta/bienvenida?edit=1"
+            href={{ pathname: "/cuenta/bienvenida", query: { edit: "1" } }}
             className="rounded-full border border-hielo/15 bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-hielo hover:border-hielo/30 sm:px-3.5 sm:py-2 sm:text-xs"
           >
             {t("editProfile")}
@@ -544,7 +545,7 @@ function QuickLink({
     );
   }
   return (
-    <Link href={href} className={className}>
+    <Link href={toHref(href)} className={className}>
       {label}
     </Link>
   );
@@ -793,7 +794,7 @@ function ProfileSnapshot({
     <section className="rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
       <div className="flex items-start justify-between gap-3">
         <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("profileSummary")}</p>
-        <Link href="/cuenta/bienvenida?edit=1" className="text-xs font-semibold text-hielo">
+        <Link href={{ pathname: "/cuenta/bienvenida", query: { edit: "1" } }} className="text-xs font-semibold text-hielo">
           {t("editProfile")}
         </Link>
       </div>

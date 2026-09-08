@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import { toHref } from "@/i18n/href";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import type { ReactNode } from "react";
@@ -110,7 +111,7 @@ export function FAQQuickHelp({ locale }: FAQQuickHelpProps) {
 
           if (channel.internal) {
             return (
-              <Link key={channel.titleEs} href={channel.href} className={className}>
+              <Link key={channel.titleEs} href={toHref(channel.href)} className={className}>
                 {content}
               </Link>
             );

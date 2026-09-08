@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, "Política de cookies", "Cookie policy"),
     description: pickLocale(
       locale,
-      `Política de cookies de ${site.name}. Cookies esenciales, sesión y Google Analytics.`,
-      `Cookie policy for ${site.name}. Essential cookies, session cookies and Google Analytics.`,
+      `Política de cookies de ${site.name}: cookies esenciales, sesión e inicio de sesión, y Google Analytics si las aceptas.`,
+      `Cookie policy for ${site.name}: essential cookies, session cookies and Google Analytics if you accept.`,
     ),
   });
 }

@@ -1,4 +1,5 @@
 import { blogPosts, getBlogPost, type BlogPost } from "@/data/blog";
+import { editorialSeo, isListedEditorial, publicEditorialSlug } from "@/data/blog-urls";
 import {
   getPublishedAffiliatePostBySlug,
   listPublishedAffiliatePosts,
@@ -22,10 +23,10 @@ export type PublicBlogCard = {
   coverAltEn: string;
 };
 
-function editorialCard(post: BlogPost): PublicBlogCard {
+function editorialCard(post: BlogPost, locale: string): PublicBlogCard {
   return {
     kind: "guide",
-    slug: post.slug,
+    slug: publicEditorialSlug(post.slug, locale),
     titleEs: post.titleEs,
     titleEn: post.titleEn,
     excerptEs: post.excerptEs,
@@ -37,11 +38,12 @@ function editorialCard(post: BlogPost): PublicBlogCard {
   };
 }
 
-function affiliateCard(post: AffiliateBlogPost): PublicBlogCard {
+function affiliateCard(post: AffiliateBlogPost, locale: string): PublicBlogCard {
+  const slug = locale === "en" ? post.slugEn || post.slug : post.slug;
   return {
     kind: "affiliate",
     affiliateType: post.type,
-    slug: post.slug,
+    slug,
     titleEs: post.titleEs,
     titleEn: post.titleEn,
     excerptEs: post.excerptEs,
@@ -53,13 +55,13 @@ function affiliateCard(post: AffiliateBlogPost): PublicBlogCard {
   };
 }
 
-export async function listPublicBlogCards(): Promise<PublicBlogCard[]> {
-  const { guides, products } = await listPublicBlogSections();
+export async function listPublicBlogCards(locale = "es"): Promise<PublicBlogCard[]> {
+  const { guides, products } = await listPublicBlogSections(locale);
   const views = await getBlogViewCounts();
   return [...guides, ...products].sort(compareByPopularity(views));
 }
 
-export async function listPublicBlogSections(): Promise<{
+export async function listPublicBlogSections(locale = "es"): Promise<{
   guides: PublicBlogCard[];
   products: PublicBlogCard[];
 }> {
@@ -69,8 +71,11 @@ export async function listPublicBlogSections(): Promise<{
   ]);
   const byPopularity = compareByPopularity(views);
   return {
-    guides: blogPosts.map(editorialCard).sort(byPopularity),
-    products: affiliate.map(affiliateCard).sort(byPopularity),
+    guides: blogPosts
+      .filter((post) => isListedEditorial(post.slug))
+      .map((post) => editorialCard(post, locale))
+      .sort(byPopularity),
+    products: affiliate.map((post) => affiliateCard(post, locale)).sort(byPopularity),
   };
 }
 
@@ -115,10 +120,15 @@ export function parseBlogListPages(searchParams: {
 export async function resolvePublicBlogPost(slug: string): Promise<
   | { kind: "guide"; post: BlogPost }
   | { kind: "affiliate"; post: AffiliateBlogPost }
+  | { kind: "redirect"; href: import("@/i18n/pathnames").AppPathname }
   | null
 > {
   const editorial = getBlogPost(slug);
-  if (editorial) return { kind: "guide", post: editorial };
+  if (editorial) {
+    const seo = editorialSeo(editorial.slug);
+    if (seo.redirectTo) return { kind: "redirect", href: seo.redirectTo };
+    return { kind: "guide", post: editorial };
+  }
   const affiliate = await getPublishedAffiliatePostBySlug(slug);
   if (affiliate) return { kind: "affiliate", post: affiliate };
   return null;

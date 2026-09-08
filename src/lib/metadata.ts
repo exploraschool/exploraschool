@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { routing } from "@/i18n/routing";
 import { site } from "@/data/site";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { getSiteUrl } from "@/lib/site-url";
+import { publicUrl } from "@/lib/seo-urls";
 
 const DEFAULT_OG = "/images/stock/hero.jpg";
 
@@ -15,13 +15,10 @@ type PageMeta = {
   ogImageAlt?: string;
   ogType?: "website" | "article";
   noIndex?: boolean;
+  pathForLocale?: (locale: string) => string;
+  publishedTime?: string;
+  modifiedTime?: string;
 };
-
-function buildLocalizedPageUrl(siteUrl: string, locale: string, path: string): string {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  const pathSuffix = normalizedPath === "/" ? "" : normalizedPath;
-  return `${siteUrl}/${locale}${pathSuffix}`;
-}
 
 export function buildPageMetadata({
   locale,
@@ -32,14 +29,16 @@ export function buildPageMetadata({
   ogImageAlt,
   ogType = "website",
   noIndex = false,
+  pathForLocale,
+  publishedTime,
+  modifiedTime,
 }: PageMeta): Metadata {
   const siteUrl = getSiteUrl();
-  const canonical = buildLocalizedPageUrl(siteUrl, locale, path);
-  const languages = Object.fromEntries(
-    routing.locales.map((loc) => [loc, buildLocalizedPageUrl(siteUrl, loc, path)]),
-  ) as Record<string, string>;
-  languages["x-default"] = buildLocalizedPageUrl(siteUrl, routing.defaultLocale, path);
-  const fullTitle = title.includes("Explora") ? title : `${title} | Explora School & Club`;
+  const canonical = publicUrl(locale, pathForLocale?.(locale) ?? path);
+  const languages = languageAlternatesFromPath(path, pathForLocale);
+  const branded = `${title} | Explora School & Club`;
+  const fullTitle =
+    title.includes("Explora") || branded.length > 62 ? title : branded;
   const isSpanish = locale !== "en";
   const imageAlt =
     ogImageAlt ??
@@ -76,12 +75,19 @@ export function buildPageMetadata({
           alt: imageAlt,
         },
       ],
+      ...(ogType === "article" && publishedTime
+        ? {
+            publishedTime,
+            modifiedTime: modifiedTime ?? publishedTime,
+            authors: [site.name],
+          }
+        : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [ogImage],
+      images: [{ url: ogImage, alt: imageAlt }],
     },
     robots: noIndex
       ? { index: false, follow: false }
@@ -99,11 +105,24 @@ export function buildPageMetadata({
   };
 }
 
+function languageAlternatesFromPath(
+  path: string,
+  pathForLocale?: (locale: string) => string,
+): Record<string, string> {
+  const languages: Record<string, string> = {};
+  for (const loc of routing.locales) {
+    languages[loc] = publicUrl(loc, pathForLocale?.(loc) ?? path);
+  }
+  languages["x-default"] = publicUrl(routing.defaultLocale, pathForLocale?.(routing.defaultLocale) ?? path);
+  return languages;
+}
+
 /** Metadatos por defecto (español) para el layout raíz y fallbacks. */
 export function buildRootSpanishMetadata(): Metadata {
   const siteUrl = getSiteUrl();
-  const title = `Clases de esquí y snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h | Explora School & Club`;
+  const title = "Clases de esquí y snowboard en Sierra Nevada | Explora School & Club";
   const description = site.homeMetaDescriptionEs;
+  const canonical = publicUrl("es", "/");
 
   return {
     metadataBase: new URL(siteUrl),
@@ -118,18 +137,18 @@ export function buildRootSpanishMetadata(): Metadata {
     publisher: site.name,
     category: "Deportes de invierno",
     alternates: {
-      canonical: `${siteUrl}/es`,
+      canonical,
       languages: {
-        es: `${siteUrl}/es`,
-        en: `${siteUrl}/en`,
-        "x-default": `${siteUrl}/es`,
+        es: canonical,
+        en: publicUrl("en", "/"),
+        "x-default": canonical,
       },
     },
     openGraph: {
       type: "website",
       locale: "es_ES",
       alternateLocale: ["en_GB"],
-      url: `${siteUrl}/es`,
+      url: canonical,
       siteName: site.name,
       title,
       description,
@@ -146,7 +165,12 @@ export function buildRootSpanishMetadata(): Metadata {
       card: "summary_large_image",
       title,
       description,
-      images: [DEFAULT_OG],
+      images: [
+        {
+          url: DEFAULT_OG,
+          alt: `${site.name} — clases de esquí y snowboard en Sierra Nevada`,
+        },
+      ],
     },
     robots: {
       index: true,

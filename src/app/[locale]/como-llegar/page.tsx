@@ -15,11 +15,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/como-llegar",
-    title: pickLocale(locale, "Cómo llegar a Explora School en Sierra Nevada", "Getting to Explora School in Sierra Nevada"),
+    title: pickLocale(locale, "Cómo llegar a Sierra Nevada", "Getting to Sierra Nevada"),
     description: pickLocale(
       locale,
-      "Punto de encuentro oficial de Explora School & Club en la estación de esquí de Sierra Nevada (Granada). Indicaciones y Google Maps.",
-      "Official meeting point of Explora School & Club at Sierra Nevada ski resort (Granada). Directions and Google Maps.",
+      "Cómo llegar a Sierra Nevada y al punto de encuentro de Explora en Borreguiles: telecabina, parking, tiempos y Google Maps.",
+      "How to get to Sierra Nevada and Explora’s meeting point in Borreguiles: gondola, parking, timings and Google Maps.",
     ),
     ogImage: "/images/stock/gallery-06-gondola.jpg",
     ogImageAlt: pickLocale(

@@ -1,10 +1,11 @@
 import { randomUUID } from "crypto";
+import { cache } from "react";
 import { revalidatePath } from "next/cache";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { publicStorageUrl } from "@/lib/live-gallery-shared";
 import { ensureDirectUploadCors } from "@/lib/storage-cors";
 import { blogSlugs } from "@/data/blog";
-import type { AmazonProductMeta } from "@/lib/amazon-product-meta";
+import { fetchAmazonProductMeta, type AmazonProductMeta } from "@/lib/amazon-product-meta";
 import { parseExploraScore } from "@/lib/blog-article";
 import {
   AFFILIATE_BLOG_COLLECTION,
@@ -20,6 +21,7 @@ import {
   productMeetsImageRequirement,
   productSlotCount,
   slugifyAffiliateTitle,
+  deriveAffiliateSlugEn,
   withPrimaryImage,
   type AffiliateBlogPost,
   type AffiliatePostType,
@@ -176,6 +178,10 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
     type,
     status: data.status === "published" ? "published" : "draft",
     slug: asString(data.slug),
+    slugEn:
+      asString(data.slugEn) ||
+      deriveAffiliateSlugEn(asString(data.titleEn), asString(data.slug)),
+    legacySlugs: asStringArray(data.legacySlugs),
     titleEs: asString(data.titleEs),
     titleEn: asString(data.titleEn),
     excerptEs: asString(data.excerptEs),
@@ -266,14 +272,22 @@ export function parseAffiliatePost(id: string, data: Record<string, unknown>): A
   };
 }
 
-export function revalidateAffiliateBlog(slug?: string) {
-  revalidatePath("/es/blog");
+export function revalidateAffiliateBlog(slug?: string, slugEn?: string) {
+  revalidatePath("/blog");
   revalidatePath("/en/blog");
-  revalidatePath("/es");
+  revalidatePath("/blog/guias");
+  revalidatePath("/blog/productos");
+  revalidatePath("/en/blog/guides");
+  revalidatePath("/en/blog/gear");
+  revalidatePath("/");
   revalidatePath("/en");
   if (slug) {
-    revalidatePath(`/es/blog/${slug}`);
+    revalidatePath(`/blog/${slug}`);
     revalidatePath(`/en/blog/${slug}`);
+  }
+  if (slugEn && slugEn !== slug) {
+    revalidatePath(`/blog/${slugEn}`);
+    revalidatePath(`/en/blog/${slugEn}`);
   }
 }
 
@@ -310,12 +324,23 @@ export async function getAffiliatePost(id: string): Promise<AffiliateBlogPost | 
   return parseAffiliatePost(snap.id, snap.data() as Record<string, unknown>);
 }
 
-export async function getPublishedAffiliatePostBySlug(
+export const getPublishedAffiliatePostBySlug = cache(async function getPublishedAffiliatePostBySlug(
   slug: string,
 ): Promise<AffiliateBlogPost | null> {
   const posts = await listPublishedAffiliatePosts();
-  return posts.find((post) => post.slug === slug) ?? null;
-}
+  const post =
+    posts.find(
+      (item) =>
+        item.slug === slug ||
+        item.slugEn === slug ||
+        item.legacySlugs?.includes(slug),
+    ) ?? null;
+  if (!post) return null;
+  const looksCapped =
+    post.type === "ranking" &&
+    post.products.some((product) => product.affiliateUrl && productGallery(product).length === 1);
+  return looksCapped ? syncAffiliateGalleriesFromAmazon(post) : post;
+});
 
 export async function createAffiliatePost(
   type: AffiliatePostType,
@@ -330,6 +355,8 @@ export async function createAffiliatePost(
     type,
     status: "draft",
     slug: "",
+    slugEn: "",
+    legacySlugs: [],
     titleEs: "",
     titleEn: "",
     excerptEs: "",
@@ -412,7 +439,7 @@ export async function deleteAffiliatePost(id: string): Promise<void> {
       console.warn("[affiliate-blog] delete files failed:", error);
     }
   }
-  if (post?.slug) revalidateAffiliateBlog(post.slug);
+  if (post?.slug) revalidateAffiliateBlog(post.slug, post.slugEn);
 }
 
 export async function ensureUniqueAffiliateSlug(
@@ -423,7 +450,10 @@ export async function ensureUniqueAffiliateSlug(
   const existing = await listAffiliatePosts();
   const taken = new Set([
     ...blogSlugs,
-    ...existing.filter((post) => post.id !== currentId && post.slug).map((post) => post.slug),
+    ...existing.flatMap((post) => {
+      if (post.id === currentId) return [];
+      return [post.slug, post.slugEn, ...(post.legacySlugs || [])].filter(Boolean);
+    }),
   ]);
   if (!taken.has(base)) return base;
   let i = 2;
@@ -568,7 +598,7 @@ export async function publishAffiliatePost(id: string): Promise<AffiliateBlogPos
     status: "published",
     publishedAt: post.publishedAt || new Date().toISOString(),
   });
-  revalidateAffiliateBlog(next.slug);
+  revalidateAffiliateBlog(next.slug, next.slugEn);
   return next;
 }
 
@@ -579,8 +609,50 @@ export async function unpublishAffiliatePost(id: string): Promise<AffiliateBlogP
     ...post,
     status: "draft",
   });
-  revalidateAffiliateBlog(post.slug);
+  revalidateAffiliateBlog(post.slug, post.slugEn);
   return next;
+}
+
+const gallerySyncAttempted = new Set<string>();
+
+export async function syncAffiliateGalleriesFromAmazon(
+  post: AffiliateBlogPost,
+): Promise<AffiliateBlogPost> {
+  const max = productImageLimits(post.type).max;
+  const needsSync = post.products.some(
+    (product) => product.affiliateUrl && productGallery(product).length < max,
+  );
+  if (!needsSync || gallerySyncAttempted.has(post.id)) return post;
+
+  const products = await Promise.all(
+    post.products.map(async (product) => {
+      if (!product.affiliateUrl || productGallery(product).length >= max) return product;
+      try {
+        const meta = await fetchAmazonProductMeta(product.affiliateUrl);
+        return applyAmazonMetaToProduct(product, meta, product.affiliateUrl, post.type);
+      } catch (error) {
+        console.warn("[affiliate-blog] gallery sync failed", product.asin || product.index, error);
+        return product;
+      }
+    }),
+  );
+
+  const gained = products.some(
+    (product, index) => productGallery(product).length > productGallery(post.products[index]).length,
+  );
+  if (!gained) {
+    gallerySyncAttempted.add(post.id);
+    return post;
+  }
+  const next = { ...post, products };
+  try {
+    const saved = await saveAffiliatePost(next);
+    gallerySyncAttempted.add(post.id);
+    return saved;
+  } catch (error) {
+    console.warn("[affiliate-blog] gallery sync save failed", error);
+    return next;
+  }
 }
 
 export function applyAmazonMetaToProduct(

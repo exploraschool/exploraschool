@@ -615,86 +615,82 @@ function RankingArticle({
                   : "border-hielo/10"
               }`}
             >
-              <div className="grid gap-0 lg:grid-cols-[280px_1fr]">
-                <div className="p-4">
-                  <AffiliateProductGallery
-                    images={gallery}
-                    locale={locale}
-                    badge={rankingPickBadge(locale, product, index, post.winnerIndex)}
-                  />
-                </div>
-                <div className="space-y-5 p-5 sm:p-6">
-                  {product.brand ? (
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-hielo">{product.brand}</p>
+              <div className="space-y-6 p-5 sm:p-6">
+                <h3 className="font-display text-2xl font-bold tracking-tight text-pizarra sm:text-[1.65rem]">
+                  {pickLocale(locale, product.nameEs, product.nameEn)}
+                </h3>
+                <AffiliateProductGallery
+                  images={gallery}
+                  locale={locale}
+                  badge={rankingPickBadge(locale, product, index, post.winnerIndex)}
+                />
+                {product.brand ? (
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-hielo">{product.brand}</p>
+                ) : null}
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                  {product.priceText ? (
+                    <span className="font-semibold text-hielo">{product.priceText}</span>
                   ) : null}
-                  <h3 className="font-display text-2xl font-bold tracking-tight text-pizarra sm:text-[1.65rem]">
-                    {pickLocale(locale, product.nameEs, product.nameEn)}
-                  </h3>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                    {product.priceText ? (
-                      <span className="font-semibold text-hielo">{product.priceText}</span>
-                    ) : null}
-                    {productAmazon > 0 ? (
-                      <span className="inline-flex items-center gap-2 text-muted">
-                        <BlogStarRating score={productAmazon} size="sm" />
-                        <span>
-                          {pickLocale(locale, "Amazon", "Amazon")} {productAmazon.toFixed(1)}
-                          {product.reviewCount ? ` · ${product.reviewCount}` : ""}
-                        </span>
+                  {productAmazon > 0 ? (
+                    <span className="inline-flex items-center gap-2 text-muted">
+                      <BlogStarRating score={productAmazon} size="sm" />
+                      <span>
+                        {pickLocale(locale, "Amazon", "Amazon")} {productAmazon.toFixed(1)}
+                        {product.reviewCount ? ` · ${product.reviewCount}` : ""}
                       </span>
-                    ) : null}
-                  </div>
-                  {pickLocale(locale, product.forWhomEs, product.forWhomEn) ? (
-                    <p className="max-w-prose text-sm leading-relaxed text-pizarra">
-                      <span className="font-semibold">
-                        {pickLocale(locale, "Para quién: ", "Best for: ")}
-                      </span>
-                      {pickLocale(locale, product.forWhomEs, product.forWhomEn)}
-                    </p>
-                  ) : null}
-                  {pickLocale(locale, product.summaryEs, product.summaryEn) ? (
-                    <p className="max-w-prose text-[1.05rem] font-medium leading-relaxed text-pizarra">
-                      {pickLocale(locale, product.summaryEs, product.summaryEn)}
-                    </p>
-                  ) : null}
-                  <Prose text={pickLocale(locale, product.bodyEs, product.bodyEn)} />
-                  {onSnow && onSnow !== instructorNote ? (
-                    <BlogCallout
-                      locale={locale}
-                      title={pickLocale(locale, "En Sierra Nevada", "On Sierra Nevada snow")}
-                    >
-                      <p>{onSnow}</p>
-                    </BlogCallout>
-                  ) : null}
-                  {pickLocale(locale, product.skipIfEs, product.skipIfEn) ? (
-                    <p className="max-w-prose text-sm leading-relaxed text-muted">
-                      <span className="font-semibold text-pizarra">
-                        {pickLocale(locale, "Pásalo si: ", "Skip if: ")}
-                      </span>
-                      {pickLocale(locale, product.skipIfEs, product.skipIfEn)}
-                    </p>
-                  ) : null}
-                  <BlogProsCons
-                    locale={locale}
-                    pros={locale === "en" ? product.prosEn ?? [] : product.prosEs ?? []}
-                    cons={locale === "en" ? product.consEn ?? [] : product.consEs ?? []}
-                  />
-                  <BlogTechTable
-                    rows={(product.specs ?? []).map((spec) => ({
-                      label: pickLocale(locale, spec.labelEs, spec.labelEn),
-                      value: pickLocale(locale, spec.valueEs, spec.valueEn),
-                    }))}
-                  />
-                  {product.affiliateUrl ? (
-                    <BlogAmazonCta
-                      href={product.affiliateUrl}
-                      title={pickLocale(locale, product.nameEs, product.nameEn)}
-                      meta={amazonMeta(product, locale)}
-                      locale={locale}
-                      note={amazonNote(locale)}
-                    />
+                    </span>
                   ) : null}
                 </div>
+                {pickLocale(locale, product.forWhomEs, product.forWhomEn) ? (
+                  <p className="max-w-prose text-sm leading-relaxed text-pizarra">
+                    <span className="font-semibold">
+                      {pickLocale(locale, "Para quién: ", "Best for: ")}
+                    </span>
+                    {pickLocale(locale, product.forWhomEs, product.forWhomEn)}
+                  </p>
+                ) : null}
+                {pickLocale(locale, product.summaryEs, product.summaryEn) ? (
+                  <p className="max-w-prose text-[1.05rem] font-medium leading-relaxed text-pizarra">
+                    {pickLocale(locale, product.summaryEs, product.summaryEn)}
+                  </p>
+                ) : null}
+                <Prose text={pickLocale(locale, product.bodyEs, product.bodyEn)} />
+                {onSnow && onSnow !== instructorNote ? (
+                  <BlogCallout
+                    locale={locale}
+                    title={pickLocale(locale, "En Sierra Nevada", "On Sierra Nevada snow")}
+                  >
+                    <p>{onSnow}</p>
+                  </BlogCallout>
+                ) : null}
+                {pickLocale(locale, product.skipIfEs, product.skipIfEn) ? (
+                  <p className="max-w-prose text-sm leading-relaxed text-muted">
+                    <span className="font-semibold text-pizarra">
+                      {pickLocale(locale, "Pásalo si: ", "Skip if: ")}
+                    </span>
+                    {pickLocale(locale, product.skipIfEs, product.skipIfEn)}
+                  </p>
+                ) : null}
+                <BlogProsCons
+                  locale={locale}
+                  pros={locale === "en" ? product.prosEn ?? [] : product.prosEs ?? []}
+                  cons={locale === "en" ? product.consEn ?? [] : product.consEs ?? []}
+                />
+                <BlogTechTable
+                  rows={(product.specs ?? []).map((spec) => ({
+                    label: pickLocale(locale, spec.labelEs, spec.labelEn),
+                    value: pickLocale(locale, spec.valueEs, spec.valueEn),
+                  }))}
+                />
+                {product.affiliateUrl ? (
+                  <BlogAmazonCta
+                    href={product.affiliateUrl}
+                    title={pickLocale(locale, product.nameEs, product.nameEn)}
+                    meta={amazonMeta(product, locale)}
+                    locale={locale}
+                    note={amazonNote(locale)}
+                  />
+                ) : null}
               </div>
             </article>
           );

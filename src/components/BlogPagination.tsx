@@ -1,3 +1,4 @@
+import type { ComponentProps } from "react";
 import { Link } from "@/i18n/routing";
 import { BLOG_PAGE_SIZE } from "@/lib/blog-catalog";
 import { pickLocale } from "@/lib/locale";
@@ -7,7 +8,7 @@ type BlogPaginationProps = {
   page: number;
   totalPages: number;
   totalItems: number;
-  hrefForPage: (page: number) => string;
+  hrefForPage: (page: number) => ComponentProps<typeof Link>["href"];
   itemLabel: { es: { singular: string; plural: string }; en: { singular: string; plural: string } };
 };
 

@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, "Aviso legal", "Legal notice"),
     description: pickLocale(
       locale,
-      `Aviso legal de ${site.name}. Titular del sitio, condiciones de uso y reservas.`,
-      `Legal notice for ${site.name}. Website owner, terms of use and bookings.`,
+      `Aviso legal de ${site.name}: titular del sitio, condiciones de uso y de las reservas de clases en Sierra Nevada.`,
+      `Legal notice for ${site.name}: website owner, terms of use and ski lesson bookings in Sierra Nevada.`,
     ),
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { scrollToElement } from "@/lib/scroll-to-anchor";
 import {
@@ -154,7 +154,7 @@ export function AccountWelcomeWizard({
         selfLevel: derivedLevel,
       });
       await fetch("/api/cuenta/link-bookings", { method: "POST" });
-      router.replace(`/${locale}/cuenta`);
+      router.replace("/cuenta");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : t("errors.save"));

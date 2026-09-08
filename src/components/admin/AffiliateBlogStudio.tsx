@@ -92,7 +92,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
         setError(
           payload.post.type === "review"
             ? "Amazon no trajo fotos. Sube al menos 6 imágenes de la review."
-            : "Amazon no trajo foto. Sube 1 imagen para este producto.",
+            : "Amazon no trajo fotos. Sube al menos 1 imagen para este producto.",
         );
       } else if (galleryCount < need) {
         setError(
@@ -301,7 +301,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
               <p className="mt-2 text-[0.7rem] text-muted">
                 {post.type === "review"
                   ? `Review: mínimo ${limits.min} fotos (Amazon las trae al captar; si faltan, súbelas).`
-                  : "Ranking: 1 foto por producto. Captar el enlace o súbela tú."}
+                  : `Ranking: Amazon trae las fotos al captar (hasta ${limits.max}). Si faltan, súbelas.`}
               </p>
               <div className="mt-3 overflow-hidden rounded-xl bg-nieve">
                 {hero ? (
@@ -335,17 +335,15 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                     ? `Subiendo ${progress}%`
                     : "Captando Amazon…"
                   : gallery.length
-                    ? post.type === "review"
-                      ? photosOk
-                        ? `Añadir o cambiar fotos (${gallery.length}/${limits.max})`
-                        : `Faltan ${limits.min - gallery.length} fotos (${gallery.length}/${limits.min})`
-                      : "Cambiar foto"
+                    ? photosOk
+                      ? `Añadir o cambiar fotos (${gallery.length}/${limits.max})`
+                      : `Faltan ${limits.min - gallery.length} fotos (${gallery.length}/${limits.min})`
                     : post.type === "review"
                       ? "Subir las 6 fotos"
-                      : "Subir foto"}
+                      : "Subir fotos"}
                 <input
                   type="file"
-                  multiple={post.type === "review"}
+                  multiple
                   accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif"
                   className="sr-only"
                   onChange={(event) => {
@@ -468,7 +466,7 @@ export function CreateAffiliateButtons() {
         >
           <p className="font-display text-xl font-semibold text-hielo">Ranking de 6</p>
           <p className="mt-1 text-sm text-muted">
-            {busy === "ranking" ? "Creando…" : "Seis URLs y una foto por producto."}
+            {busy === "ranking" ? "Creando…" : "Seis URLs. Amazon trae las fotos de cada producto."}
           </p>
         </button>
         <button

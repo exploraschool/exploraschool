@@ -18,8 +18,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/clases",
     title: pickLocale(
       locale,
-      "Precios de clases de esquí y snowboard en Sierra Nevada",
-      "Ski and snowboard lesson prices in Sierra Nevada",
+      "Precios de clases en Sierra Nevada",
+      "Lesson prices in Sierra Nevada",
     ),
     description: pickLocale(
       locale,

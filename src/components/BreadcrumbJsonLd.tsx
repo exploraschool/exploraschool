@@ -1,5 +1,6 @@
-import { pickLocale } from "@/lib/locale";
 import { getSiteUrl } from "@/lib/site-url";
+import { publicUrl } from "@/lib/seo-urls";
+import { pickLocale } from "@/lib/locale";
 
 export type BreadcrumbItem = {
   name: string;
@@ -11,18 +12,11 @@ type BreadcrumbJsonLdProps = {
   items: BreadcrumbItem[];
 };
 
-function absoluteUrl(siteUrl: string, locale: string, path: string): string {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  const suffix = normalized === "/" ? "" : normalized;
-  return `${siteUrl}/${locale}${suffix}`;
-}
-
 export function homeCrumb(locale: string): BreadcrumbItem {
   return { name: pickLocale(locale, "Inicio", "Home"), path: "/" };
 }
 
 export function BreadcrumbJsonLd({ locale, items }: BreadcrumbJsonLdProps) {
-  const siteUrl = getSiteUrl();
   const trail = items[0]?.path === "/" ? items : [homeCrumb(locale), ...items];
 
   const data = {
@@ -32,7 +26,7 @@ export function BreadcrumbJsonLd({ locale, items }: BreadcrumbJsonLdProps) {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: absoluteUrl(siteUrl, locale, item.path),
+      item: publicUrl(locale, item.path),
     })),
   };
 

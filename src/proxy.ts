@@ -1,10 +1,9 @@
 import createMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 import { routing } from "./i18n/routing";
+import { CANONICAL_HOST } from "./lib/site-url";
 
 const intlMiddleware = createMiddleware(routing);
-
-const CANONICAL_HOST = "www.explora-school.es";
 
 /** Old brand domains → permanent redirect to the new site. */
 const LEGACY_HOSTS = new Set([
@@ -26,7 +25,7 @@ export default function proxy(request: NextRequest) {
 
   const response = intlMiddleware(request);
 
-  // next-intl uses 307 for locale prefixing (`/` → `/es`). Canonical locale
+  // next-intl uses 307 for locale prefixing (`/es` → `/`). Canonical locale
   // URLs should be permanent so Google consolidates ranking signals.
   if (response.status === 307 || response.status === 302) {
     const location = response.headers.get("location");
@@ -42,6 +41,7 @@ export const config = {
   matcher: [
     "/",
     "/(es|en)/:path*",
+    "/wp-content/:path*",
     "/((?!api|admin|__|_next|_vercel|.*\\..*).*)",
   ],
 };

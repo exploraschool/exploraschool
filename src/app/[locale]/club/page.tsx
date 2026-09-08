@@ -17,6 +17,7 @@ import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
 import type { Metadata } from "next";
 import Image from "next/image";
 
@@ -59,6 +60,12 @@ export default async function ClubPage({ params }: Props) {
       <BreadcrumbJsonLd
         locale={locale}
         items={[{ name: "Club", path: "/club" }]}
+      />
+      <FaqJsonLd
+        items={clubFaqs.map((faq) => ({
+          question: pickLocale(locale, faq.questionEs, faq.questionEn),
+          answer: pickLocale(locale, faq.answerEs, faq.answerEn),
+        }))}
       />
       <PageHeader
         eyebrow="Club"

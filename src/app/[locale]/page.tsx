@@ -9,7 +9,6 @@ import { HomeSocialProof } from "@/components/HomeSocialProof";
 import { Testimonials } from "@/components/Testimonials";
 import { HomeClosing } from "@/components/HomeClosing";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { site } from "@/data/site";
 import { buildPageMetadata } from "@/lib/metadata";
 import type { Metadata } from "next";
@@ -25,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/",
     title: pickLocale(
       locale,
-      `Clases de esquí y snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h`,
-      `Ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h`,
+      "Clases de esquí y snowboard en Sierra Nevada",
+      "Ski and snowboard lessons in Sierra Nevada",
     ),
     description: pickLocale(locale, site.homeMetaDescriptionEs, site.homeMetaDescriptionEn),
     ogImage: "/images/stock/hero.jpg",

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStaffSession } from "@/lib/admin-auth";
-import { getAffiliatePost, isAffiliatePostReadyToGenerate } from "@/lib/affiliate-blog";
+import { getAffiliatePost, isAffiliatePostReadyToGenerate, syncAffiliateGalleriesFromAmazon } from "@/lib/affiliate-blog";
 import { generateAffiliateArticle } from "@/lib/affiliate-blog-gemini";
 
 export const runtime = "nodejs";
@@ -18,7 +18,8 @@ export async function POST(_request: Request, { params }: Ctx) {
     return NextResponse.json({ error: "not_ready" }, { status: 400 });
   }
   try {
-    const generated = await generateAffiliateArticle(post);
+    const synced = await syncAffiliateGalleriesFromAmazon(post);
+    const generated = await generateAffiliateArticle(synced);
     return NextResponse.json({ post: generated });
   } catch (error) {
     console.error("[affiliate-blog/generate]", error);

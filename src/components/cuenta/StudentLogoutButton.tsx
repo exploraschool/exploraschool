@@ -9,7 +9,7 @@ export function StudentLogoutButton({ locale }: { locale: string }) {
 
   async function logout() {
     await fetch("/api/cuenta/login", { method: "DELETE" });
-    router.push(`/${locale}`);
+    router.push(locale === "en" ? "/en" : "/");
     router.refresh();
   }
 

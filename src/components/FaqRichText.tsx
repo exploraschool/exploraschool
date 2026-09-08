@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import { contentLinkHref } from "@/lib/content-href";
 import { isSingleLinkItem, parseFaqBlocks, splitFaqInline, type FaqInlinePart } from "@/lib/faq-text";
 
 function isInternalHref(href: string): boolean {
@@ -8,10 +9,10 @@ function isInternalHref(href: string): boolean {
 const linkClassName =
   "font-semibold text-hielo transition hover:text-accent";
 
-function FaqLink({ href, label }: { href: string; label: string }) {
+function FaqLink({ href, label, locale }: { href: string; label: string; locale: string }) {
   if (isInternalHref(href)) {
     return (
-      <Link href={href} className={linkClassName}>
+      <Link href={contentLinkHref(href, locale)} className={linkClassName}>
         {label}
       </Link>
     );
@@ -30,24 +31,24 @@ function FaqLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-function InlineText({ text }: { text: string }) {
+function InlineText({ text, locale }: { text: string; locale: string }) {
   return (
     <>
       {splitFaqInline(text).map((part: FaqInlinePart, i) => {
         if (part.type === "text") return <span key={i}>{part.value}</span>;
-        return <FaqLink key={i} href={part.href} label={part.label} />;
+        return <FaqLink key={i} href={part.href} label={part.label} locale={locale} />;
       })}
     </>
   );
 }
 
-function ChipLink({ href, label }: { href: string; label: string }) {
+function ChipLink({ href, label, locale }: { href: string; label: string; locale: string }) {
   const className =
     "inline-flex items-center rounded-full border border-hielo/15 bg-nieve px-3.5 py-1.5 text-sm font-semibold text-hielo transition hover:border-hielo/30 hover:bg-white hover:text-accent";
 
   if (isInternalHref(href)) {
     return (
-      <Link href={href} className={className}>
+      <Link href={contentLinkHref(href, locale)} className={className}>
         {label}
       </Link>
     );
@@ -66,7 +67,7 @@ function ChipLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function FaqRichText({ text }: { text: string }) {
+export function FaqRichText({ text, locale }: { text: string; locale: string }) {
   const blocks = parseFaqBlocks(text);
 
   return (
@@ -75,7 +76,7 @@ export function FaqRichText({ text }: { text: string }) {
         if (block.type === "paragraph") {
           return (
             <p key={i}>
-              <InlineText text={block.text} />
+              <InlineText text={block.text} locale={locale} />
             </p>
           );
         }
@@ -86,7 +87,7 @@ export function FaqRichText({ text }: { text: string }) {
               key={i}
               className="rounded-xl border border-hielo/10 bg-hielo/5 px-3.5 py-2.5 text-sm font-medium text-hielo"
             >
-              <InlineText text={block.text} />
+              <InlineText text={block.text} locale={locale} />
             </p>
           );
         }
@@ -100,7 +101,7 @@ export function FaqRichText({ text }: { text: string }) {
                     {j + 1}
                   </span>
                   <span className="min-w-0 pt-0.5">
-                    <InlineText text={item} />
+                    <InlineText text={item} locale={locale} />
                   </span>
                 </li>
               ))}
@@ -114,7 +115,7 @@ export function FaqRichText({ text }: { text: string }) {
               {block.items.map((item, j) => {
                 const part = splitFaqInline(item)[0];
                 if (part.type !== "link") return null;
-                return <ChipLink key={j} href={part.href} label={part.label} />;
+                return <ChipLink key={j} href={part.href} label={part.label} locale={locale} />;
               })}
             </div>
           );
@@ -126,7 +127,7 @@ export function FaqRichText({ text }: { text: string }) {
               <li key={j} className="flex gap-2.5">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hielo/55" aria-hidden />
                 <span className="min-w-0">
-                  <InlineText text={item} />
+                  <InlineText text={item} locale={locale} />
                 </span>
               </li>
             ))}

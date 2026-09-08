@@ -4,6 +4,7 @@ import { pickLocale } from "@/lib/locale";
 import { media } from "@/lib/media";
 import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
 import { tripAdvisorSummary } from "@/data/reviews";
+import { disciplinePath, homeUrl, publicUrl } from "@/lib/seo-urls";
 
 type JsonLdProps = {
   locale: string;
@@ -11,7 +12,7 @@ type JsonLdProps = {
 
 export function JsonLd({ locale }: JsonLdProps) {
   const isSpanish = locale !== "en";
-  const localeUrl = `${site.domain}/${locale}`;
+  const localeHome = homeUrl(locale);
   const sameAs = [...site.social.map((s) => s.url), site.tripAdvisor.url];
   const tagline = pickLocale(locale, site.taglineEs, site.taglineEn);
   const homeDescription = pickLocale(
@@ -42,7 +43,7 @@ export function JsonLd({ locale }: JsonLdProps) {
     {
       "@type": "WebSite",
       "@id": `${site.domain}/#website`,
-      url: localeUrl,
+      url: localeHome,
       name: site.name,
       description: homeDescription,
       publisher: { "@id": `${site.domain}/#organization` },
@@ -53,7 +54,7 @@ export function JsonLd({ locale }: JsonLdProps) {
       "@id": `${site.domain}/#business`,
       name: site.nap.name,
       description: tagline,
-      url: localeUrl,
+      url: localeHome,
       telephone: site.phone,
       email: site.email,
       image: `${site.domain}${media.og}`,
@@ -103,7 +104,7 @@ export function JsonLd({ locale }: JsonLdProps) {
           {
             "@type": "Offer",
             name: pickLocale(locale, "Día completo", "Full Day"),
-            url: `${localeUrl}/clases`,
+            url: publicUrl(locale, "/clases"),
             price: FULL_DAY_HOURLY_EUR,
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
@@ -139,7 +140,7 @@ export function JsonLd({ locale }: JsonLdProps) {
               "@type": "Service",
               name: pickLocale(locale, d.nameEs, d.nameEn),
               description: pickLocale(locale, d.descriptionEs, d.descriptionEn),
-              url: `${localeUrl}/clases/${d.slug}`,
+              url: publicUrl(locale, disciplinePath(d.id)),
             },
           })),
         ],

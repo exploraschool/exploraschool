@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { redirect as intlRedirect } from "@/i18n/routing";
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
 import { AccountWelcomeWizard } from "@/components/cuenta/AccountWelcomeWizard";
@@ -34,13 +35,15 @@ export default async function BienvenidaPage({ params, searchParams }: Props) {
   }
 
   const session = await getStudentSession();
-  if (!session) redirect(`/${locale}/cuenta`);
+  if (!session) {
+    return intlRedirect({ href: "/cuenta", locale: locale === "en" ? "en" : "es" });
+  }
 
   const profile = await getStudentProfile(session.uid);
   const editing = edit === "1";
 
   if (profile && canAccessStudentDashboard(profile) && !editing) {
-    redirect(`/${locale}/cuenta`);
+    return intlRedirect({ href: "/cuenta", locale: locale === "en" ? "en" : "es" });
   }
 
   return (

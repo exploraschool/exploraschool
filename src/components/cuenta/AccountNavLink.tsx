@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 
 type MeResponse = {
@@ -34,7 +33,7 @@ export function AccountNavLink({ locale, mobile = false, onNavigate }: { locale:
     };
   }, [pathname]);
 
-  const href = `/${locale}/cuenta`;
+  const href = "/cuenta";
   const label = t("account");
 
   if (mobile) {

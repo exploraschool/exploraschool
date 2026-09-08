@@ -81,9 +81,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Telemark",
     nameEn: "Telemark",
     descriptionEs:
-      "Clases de telemark en Sierra Nevada con instructores especializados. Aprende o perfecciona la técnica nórdica en pista.",
+      "Clases de telemark en Sierra Nevada con instructores especializados. Técnica nórdica en pista, todos los niveles. Reserva online.",
     descriptionEn:
-      "Telemark lessons in Sierra Nevada with specialist instructors. Learn or refine Nordic-style technique on the slopes.",
+      "Telemark lessons in Sierra Nevada with specialist instructors. Nordic-style technique on piste, all levels. Book online.",
     image: "/images/stock/discipline-telemark.jpg",
     sortOrder: 3,
   },
@@ -93,9 +93,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Esquí adaptado",
     nameEn: "Adaptive skiing",
     descriptionEs:
-      "Clases de esquí adaptado en Sierra Nevada: individualizadas e inclusivas para disfrutar de la nieve con seguridad.",
+      "Clases de esquí adaptado en Sierra Nevada: individualizadas e inclusivas, con seguridad y ritmo propio. Instructores titulados.",
     descriptionEn:
-      "Adaptive ski lessons in Sierra Nevada: individualized and inclusive so everyone can enjoy the snow safely.",
+      "Adaptive ski lessons in Sierra Nevada: individualized and inclusive, at your own pace, with qualified instructors.",
     image: "/images/stock/discipline-adaptado.jpg",
     sortOrder: 4,
   },
@@ -107,7 +107,7 @@ export const mainDisciplines: Discipline[] = [
     descriptionEs:
       `Clases de esquí y snowboard para niños en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Grupos de 1 a 8, desde 3 años.`,
     descriptionEn:
-      `Kids ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1–8, from age 3.`,
+      `Kids ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1 to 8, from age 3. Qualified instructors.`,
     image: "/images/stock/discipline-ninos-explora.jpg",
     sortOrder: 5,
   },

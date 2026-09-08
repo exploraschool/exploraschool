@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import { toHref } from "@/i18n/href";
 
 type BackLinkProps = {
   href: string;
@@ -8,7 +9,7 @@ type BackLinkProps = {
 
 export function BackLink({ href, children, className = "" }: BackLinkProps) {
   return (
-    <Link href={href} className={`back-link ${className}`.trim()}>
+    <Link href={toHref(href)} className={`back-link ${className}`.trim()}>
       <span aria-hidden>←</span>
       <span>{children}</span>
     </Link>

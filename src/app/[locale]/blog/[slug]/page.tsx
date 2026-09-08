@@ -1,15 +1,18 @@
 import { setRequestLocale } from "next-intl/server";
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BlogMarkdown } from "@/components/BlogMarkdown";
 import { AffiliatePostView } from "@/components/AffiliatePostView";
 import { BlogViewTracker } from "@/components/BlogViewTracker";
 import { Link } from "@/i18n/routing";
+import { blogHref } from "@/i18n/href";
 import { blogPosts, getBlogPost } from "@/data/blog";
+import { editorialSeo, isListedEditorial, publicEditorialSlug } from "@/data/blog-urls";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
+import { localizedPath, publicUrl } from "@/lib/seo-urls";
 import { media } from "@/lib/media";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { FaqJsonLd } from "@/components/FaqJsonLd";
@@ -28,11 +31,16 @@ import type { Metadata } from "next";
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+  return blogPosts.flatMap((p) =>
+    Array.from(new Set([p.slug, publicEditorialSlug(p.slug, "es"), publicEditorialSlug(p.slug, "en")])).map(
+      (slug) => ({ slug }),
+    ),
+  );
 }
 
 export const dynamicParams = true;
 export const revalidate = 60;
+export const maxDuration = 60;
 
 function absoluteImage(siteUrl: string, src: string): string {
   if (src.startsWith("http://") || src.startsWith("https://")) return src;
@@ -42,20 +50,17 @@ function absoluteImage(siteUrl: string, src: string): string {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const resolved = await resolvePublicBlogPost(slug);
-  if (!resolved) {
-    return buildPageMetadata({
-      locale,
-      path: "/blog",
-      title: "Blog de esquí y snowboard en Sierra Nevada",
-      description:
-        "Guías prácticas de esquí, snowboard y clases en Sierra Nevada con Explora School & Club.",
-    });
+  if (!resolved) notFound();
+  if (resolved.kind === "redirect") {
+    return {};
   }
   if (resolved.kind === "affiliate") {
     const post = resolved.post;
+    const canonicalSlug = locale === "en" ? post.slugEn || post.slug : post.slug;
     return buildPageMetadata({
       locale,
-      path: `/blog/${slug}`,
+      path: `/blog/${canonicalSlug}`,
+      pathForLocale: (loc) => `/blog/${loc === "en" ? post.slugEn || post.slug : post.slug}`,
       title: pickLocale(locale, post.seoTitleEs || post.titleEs, post.seoTitleEn || post.titleEn),
       description: pickLocale(
         locale,
@@ -65,17 +70,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ogImage: post.coverImage,
       ogImageAlt: pickLocale(locale, post.coverAltEs, post.coverAltEn),
       ogType: "article",
+      publishedTime: (post.publishedAt || post.updatedAt).slice(0, 10),
+      modifiedTime: post.updatedAt.slice(0, 10),
     });
   }
   const post = resolved.post;
+  const canonicalSlug = publicEditorialSlug(post.slug, locale);
+  const seo = editorialSeo(post.slug);
   return buildPageMetadata({
     locale,
-    path: `/blog/${slug}`,
-    title: pickLocale(locale, post.titleEs, post.titleEn),
-    description: pickLocale(locale, post.excerptEs, post.excerptEn),
+    path: `/blog/${canonicalSlug}`,
+    pathForLocale: (loc) => `/blog/${publicEditorialSlug(post.slug, loc)}`,
+    title: pickLocale(locale, seo.seoTitleEs || post.titleEs, seo.seoTitleEn || post.titleEn),
+    description: pickLocale(
+      locale,
+      seo.seoDescriptionEs || post.excerptEs,
+      seo.seoDescriptionEn || post.excerptEn,
+    ),
     ogImage: post.coverImage,
     ogImageAlt: pickLocale(locale, post.coverAltEs, post.coverAltEn),
     ogType: "article",
+    publishedTime: post.date,
+    modifiedTime: post.date,
   });
 }
 
@@ -86,8 +102,18 @@ export default async function BlogPostPage({ params }: Props) {
   const resolved = await resolvePublicBlogPost(slug);
   if (!resolved) notFound();
 
+  if (resolved.kind === "redirect") {
+    permanentRedirect(localizedPath(locale, resolved.href));
+  }
+
   if (resolved.kind === "affiliate") {
     const post = resolved.post;
+    const canonicalSlug = locale === "en" ? post.slugEn || post.slug : post.slug;
+    if (slug !== canonicalSlug) {
+      permanentRedirect(
+        localizedPath(locale, { pathname: "/blog/[slug]", params: { slug: canonicalSlug } }),
+      );
+    }
     const postTitle = pickLocale(locale, post.titleEs, post.titleEn);
     const siteUrl = getSiteUrl();
     const date = (post.publishedAt || post.updatedAt).slice(0, 10);
@@ -105,7 +131,7 @@ export default async function BlogPostPage({ params }: Props) {
         name: "Explora School & Club",
         logo: { "@type": "ImageObject", url: `${siteUrl}${media.logo}` },
       },
-      mainEntityOfPage: `${siteUrl}/${locale}/blog/${post.slug}`,
+      mainEntityOfPage: publicUrl(locale, `/blog/${canonicalSlug}`),
       inLanguage: locale === "en" ? "en-GB" : "es-ES",
     };
     const listLd =
@@ -185,7 +211,7 @@ export default async function BlogPostPage({ params }: Props) {
           locale={locale}
           items={[
             { name: "Blog", path: "/blog" },
-            { name: postTitle, path: `/blog/${post.slug}` },
+            { name: postTitle, path: `/blog/${canonicalSlug}` },
           ]}
         />
         <section className="page-header">
@@ -211,11 +237,18 @@ export default async function BlogPostPage({ params }: Props) {
     );
   }
 
+  if (resolved.kind !== "guide") notFound();
   const post = resolved.post;
+  const canonicalSlug = publicEditorialSlug(post.slug, locale);
+  if (slug !== canonicalSlug) {
+    permanentRedirect(
+      localizedPath(locale, { pathname: "/blog/[slug]", params: { slug: canonicalSlug } }),
+    );
+  }
   const content = pickLocale(locale, post.contentEs, post.contentEn);
   const related = post.relatedSlugs
     .map((s) => getBlogPost(s))
-    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+    .filter((p): p is NonNullable<typeof p> => p != null && isListedEditorial(p.slug));
   const tocItems = headingsFromMarkdown(content);
   const editorialFaqs = faqFromMarkdown(content);
   const discipline = inferBlogDiscipline(`${post.slug} ${post.titleEs} ${post.titleEn} ${content}`);
@@ -242,7 +275,7 @@ export default async function BlogPostPage({ params }: Props) {
         url: `${siteUrl}${media.logo}`,
       },
     },
-    mainEntityOfPage: `${siteUrl}/${locale}/blog/${post.slug}`,
+    mainEntityOfPage: publicUrl(locale, `/blog/${canonicalSlug}`),
     inLanguage: locale === "en" ? "en-GB" : "es-ES",
   };
 
@@ -258,7 +291,7 @@ export default async function BlogPostPage({ params }: Props) {
         locale={locale}
         items={[
           { name: "Blog", path: "/blog" },
-          { name: postTitle, path: `/blog/${post.slug}` },
+          { name: postTitle, path: `/blog/${canonicalSlug}` },
         ]}
       />
 
@@ -315,7 +348,7 @@ export default async function BlogPostPage({ params }: Props) {
               {related.map((r) => (
                 <Link
                   key={r.slug}
-                  href={`/blog/${r.slug}`}
+                  href={blogHref(publicEditorialSlug(r.slug, locale))}
                   className="group block overflow-hidden rounded-xl border border-hielo/8 transition-colors hover:border-hielo/30"
                 >
                   <div className="relative aspect-[16/10]">

@@ -1,4 +1,5 @@
 import { getDisciplineBySlug, type MainDisciplineId } from "@/data/disciplines";
+import { disciplinePath, publicUrl } from "@/lib/seo-urls";
 
 export const BLOG_H2_CLASS =
   "scroll-mt-28 mt-12 mb-4 font-display text-[1.65rem] font-bold tracking-tight text-pizarra sm:mt-14 sm:text-3xl";
@@ -31,7 +32,14 @@ export function localizedHref(locale: string, href: string): string {
   if (href === "/es" || href === "/en" || href.startsWith("/es/") || href.startsWith("/en/")) {
     return href;
   }
-  return `/${locale}${href}`;
+  const hashIndex = href.indexOf("#");
+  const hash = hashIndex >= 0 ? href.slice(hashIndex) : "";
+  const withoutHash = hashIndex >= 0 ? href.slice(0, hashIndex) : href;
+  const queryIndex = withoutHash.indexOf("?");
+  const pathname = queryIndex >= 0 ? withoutHash.slice(0, queryIndex) : withoutHash;
+  const search = queryIndex >= 0 ? withoutHash.slice(queryIndex) : "";
+  const path = new URL(publicUrl(locale, pathname)).pathname;
+  return `${path}${search}${hash}`;
 }
 
 export function slugifyHeading(value: string): string {
@@ -130,7 +138,7 @@ export function inferBlogDiscipline(text: string): BlogDisciplineCta {
   const hasSki = /esqui|ski/i.test(text);
   const mixedSkiSnow =
     hasSnow && hasSki && !/telemark|adaptado|niñ|kids|famil/i.test(text);
-  const href = mixedSkiSnow ? "/clases" : `/clases/${id}`;
+  const href = mixedSkiSnow ? "/clases" : disciplinePath(id);
   const nameEs = mixedSkiSnow ? "esquí y snowboard" : discipline?.nameEs ?? "Esquí alpino";
   const nameEn = mixedSkiSnow ? "ski and snowboard" : discipline?.nameEn ?? "Alpine skiing";
   const freeride = /freeride|fuera de pista/i.test(text);

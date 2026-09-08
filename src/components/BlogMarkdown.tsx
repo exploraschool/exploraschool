@@ -1,10 +1,11 @@
 import { Link } from "@/i18n/routing";
+import { contentLinkHref } from "@/lib/content-href";
 import type { ReactNode } from "react";
 import { BlogCallout } from "@/components/blog/BlogCallout";
 import { BlogTechTable } from "@/components/blog/BlogTechTable";
 import { BLOG_H2_CLASS, BLOG_H3_CLASS, BLOG_P_CLASS, headingIdFor } from "@/lib/blog-article";
 
-function renderInline(text: string): ReactNode[] {
+function renderInline(text: string, locale: string): ReactNode[] {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*)/g);
 
   return parts.map((part, i) => {
@@ -15,7 +16,7 @@ function renderInline(text: string): ReactNode[] {
         "font-semibold text-hielo underline-offset-2 transition-colors hover:text-accent hover:underline";
       if (href.startsWith("/")) {
         return (
-          <Link key={i} href={href} className={className}>
+          <Link key={i} href={contentLinkHref(href, locale)} className={className}>
             {label}
           </Link>
         );
@@ -103,7 +104,7 @@ export function BlogMarkdown({
                 <tr className="bg-hielo/5">
                   {header.map((cell) => (
                     <th key={cell} className="px-4 py-3 font-semibold text-pizarra">
-                      {renderInline(cell)}
+                      {renderInline(cell, locale)}
                     </th>
                   ))}
                 </tr>
@@ -113,7 +114,7 @@ export function BlogMarkdown({
                   <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-white" : "bg-nieve/80"}>
                     {row.map((cell, cellIndex) => (
                       <td key={`${rowIndex}-${cellIndex}`} className="px-4 py-3 leading-relaxed text-muted">
-                        {renderInline(cell)}
+                        {renderInline(cell, locale)}
                       </td>
                     ))}
                   </tr>
@@ -139,7 +140,7 @@ export function BlogMarkdown({
           <BlogCallout locale={locale}>
             {quote.filter(Boolean).map((item, quoteIndex) => (
               <p key={quoteIndex} className={quoteIndex === 0 ? "" : "mt-2"}>
-                {renderInline(item)}
+                {renderInline(item, locale)}
               </p>
             ))}
           </BlogCallout>
@@ -161,7 +162,7 @@ export function BlogMarkdown({
           {items.map((item, itemIndex) => (
             <li key={itemIndex} className="flex gap-2.5 text-[1.075rem] leading-relaxed text-pizarra/90">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-hielo" aria-hidden />
-              <span>{renderInline(item)}</span>
+              <span>{renderInline(item, locale)}</span>
             </li>
           ))}
         </ul>,
@@ -175,7 +176,7 @@ export function BlogMarkdown({
       const id = headingIdFor(label, seen);
       nodes.push(
         <h2 key={`h2-${index}`} id={id} className={BLOG_H2_CLASS}>
-          {renderInline(label)}
+          {renderInline(label, locale)}
         </h2>,
       );
       continue;
@@ -184,7 +185,7 @@ export function BlogMarkdown({
     if (line.startsWith("### ")) {
       nodes.push(
         <h3 key={`h3-${index}`} className={BLOG_H3_CLASS}>
-          {renderInline(line.slice(4).trim())}
+          {renderInline(line.slice(4).trim(), locale)}
         </h3>,
       );
       continue;
@@ -194,7 +195,7 @@ export function BlogMarkdown({
 
     nodes.push(
       <p key={`p-${index}`} className={BLOG_P_CLASS}>
-        {renderInline(line)}
+        {renderInline(line, locale)}
       </p>,
     );
   }

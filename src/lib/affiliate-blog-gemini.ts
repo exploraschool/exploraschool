@@ -272,10 +272,11 @@ Longitud mínima (imprescindible):
 - review: comparison vacío; winnerIndex 0.
 - alternatives (review): 2 o 3 salidas honestas si el producto no encaja (clase Explora, alquiler, otro uso). href de la lista permitida. No inventes URLs de Amazon.
 - CTAs Amazon: acción concreta, no “haz clic aquí”. Ej. "Comprobar talla y precio en Amazon" / "Check size and price on Amazon".
-- slug kebab-case español, corto.
+- slug kebab-case español, corto (máx. 60). Ranking: mejores-{categoria}-esqui-sierra-nevada. Review: {categoria}-{marca}-{modelo}. Sin "review", SKU ni "los-mejores".
+- slugEn kebab-case inglés, mismo criterio (best-{category}-ski-sierra-nevada o {category}-{brand}-{model}).
 - winnerIndex 0-based.
 - relatedSlugs: 1–3 slugs reales de la lista editorial.
-- internalLinks: mínimo 3 href reales de esta lista:
+- internalLinks: mínimo 3 href reales de esta lista (pathnames internos, nunca /es/...):
   /clases
   /clases/esqui
   /clases/snowboard
@@ -289,6 +290,7 @@ ${editorialGuide()}
 JSON schema:
 {
   "slug": "",
+  "slugEn": "",
   "titleEs": "",
   "titleEn": "",
   "excerptEs": "",
@@ -426,6 +428,18 @@ ${productBrief}`;
   const desiredSlug =
     asString(json.slug) || asString(json.titleEs) || `guia-compra-${post.id.slice(0, 8)}`;
   const slug = await ensureUniqueAffiliateSlug(desiredSlug, post.id);
+  const desiredSlugEn =
+    asString(json.slugEn) || asString(json.titleEn) || slug;
+  const slugEn = await ensureUniqueAffiliateSlug(desiredSlugEn, post.id);
+  const legacySlugs = Array.from(
+    new Set(
+      [
+        ...(post.legacySlugs || []),
+        post.slug && post.slug !== slug ? post.slug : "",
+        post.slugEn && post.slugEn !== slugEn ? post.slugEn : "",
+      ].filter(Boolean),
+    ),
+  );
 
   const allowedHrefs = new Set([
     "/clases",
@@ -442,6 +456,8 @@ ${productBrief}`;
   const next: AffiliateBlogPost = {
     ...post,
     slug,
+    slugEn,
+    legacySlugs,
     titleEs: asString(json.titleEs, post.titleEs),
     titleEn: asString(json.titleEn, post.titleEn),
     excerptEs: asString(json.excerptEs, post.excerptEs),

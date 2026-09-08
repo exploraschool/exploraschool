@@ -49,7 +49,6 @@ export async function DELETE(_request: Request, { params }: Params) {
     await ref.delete();
 
     revalidatePath("/");
-    revalidatePath("/es");
     revalidatePath("/en");
 
     return NextResponse.json({ ok: true });

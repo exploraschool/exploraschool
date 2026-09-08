@@ -26,7 +26,7 @@ export function AffiliateProductGallery({
           alt={pickLocale(locale, current.altEs, current.altEn)}
           fill
           className="object-contain p-4"
-          sizes="(max-width: 768px) 100vw, 360px"
+          sizes="(max-width: 768px) 100vw, 640px"
         />
         {badge ? (
           <span className="absolute left-3 top-3 rounded-full bg-hielo px-2.5 py-1 text-xs font-bold text-white">

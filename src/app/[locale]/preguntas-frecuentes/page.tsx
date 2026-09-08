@@ -22,13 +22,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/preguntas-frecuentes",
     title: pickLocale(
       locale,
-      "Preguntas frecuentes sobre clases de esquí en Sierra Nevada",
-      "FAQs about ski lessons in Sierra Nevada",
+      "Preguntas frecuentes de esquí y snowboard",
+      "Ski and snowboard FAQs in Sierra Nevada",
     ),
     description: pickLocale(
       locale,
-      "Forfait, cajeros en parkings y Silla del Pueblo, punto de encuentro, material y reservas en Explora School & Club, Sierra Nevada.",
-      "Lift pass machines, meeting point, equipment and bookings at Explora School & Club, Sierra Nevada.",
+      "Forfait, cajeros en parkings y Silla del Pueblo, punto de encuentro, material de alquiler y cómo reservar clases en Sierra Nevada.",
+      "Lift pass machines, meeting point, rental gear and how to book ski and snowboard lessons in Sierra Nevada.",
     ),
   });
 }

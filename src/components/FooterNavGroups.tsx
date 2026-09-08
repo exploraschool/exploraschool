@@ -1,6 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/routing";
+import { toHref } from "@/i18n/href";
 import { DisclosureItem, DisclosurePanel } from "@/components/DisclosureItem";
 
 type FooterLink = {
@@ -37,7 +38,7 @@ function FooterLinkList({ section }: { section: FooterSection }) {
                 {link.label}
               </a>
             ) : (
-              <Link href={link.href} className="text-sm text-nieve/85 transition hover:text-oro-light">
+              <Link href={toHref(link.href)} className="text-sm text-nieve/85 transition hover:text-oro-light">
                 {link.label}
               </Link>
             )}

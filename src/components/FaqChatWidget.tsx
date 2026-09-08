@@ -11,6 +11,7 @@ import {
 } from "@/data/faq-chat";
 import { usePathname } from "next/navigation";
 import { media } from "@/lib/media";
+import { localizedHref } from "@/lib/blog-article";
 import { pickLocale } from "@/lib/locale";
 import { useStickyReveal } from "@/hooks/useStickyReveal";
 
@@ -101,7 +102,7 @@ export function FaqChatWidget() {
     if (action.type === "link") {
       const href = action.href.startsWith("http")
         ? action.href
-        : `/${locale}${action.href.startsWith("/") ? action.href : `/${action.href}`}`;
+        : localizedHref(locale, action.href);
       window.open(href, "_blank", "noopener,noreferrer");
       const isMaps = /google\.com\/maps|maps\.google\.com/i.test(action.href);
       setLines((current) => [

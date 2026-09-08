@@ -23,7 +23,7 @@ function FaqItem({ faq, locale, defaultOpen = false }: { faq: Faq; locale: strin
       defaultOpen={defaultOpen}
       title={pickLocale(locale, faq.questionEs, faq.questionEn)}
     >
-      <FaqRichText text={pickLocale(locale, faq.answerEs, faq.answerEn)} />
+      <FaqRichText text={pickLocale(locale, faq.answerEs, faq.answerEn)} locale={locale} />
     </DisclosureItem>
   );
 }

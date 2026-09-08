@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, "Política de privacidad", "Privacy policy"),
     description: pickLocale(
       locale,
-      `Política de privacidad de ${site.name}. Cómo tratamos reservas, cuenta de alumno, fotos y comunicaciones.`,
-      `Privacy policy for ${site.name}. How we handle bookings, student accounts, photos and emails.`,
+      `Política de privacidad de ${site.name}: cómo tratamos reservas, cuenta de alumno, fotos y comunicaciones en Sierra Nevada.`,
+      `Privacy policy for ${site.name}: how we handle bookings, student accounts, photos and emails in Sierra Nevada.`,
     ),
   });
 }

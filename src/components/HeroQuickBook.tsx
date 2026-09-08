@@ -8,6 +8,7 @@ import { pickLocale } from "@/lib/locale";
 import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
 import { GlassSelect } from "@/components/GlassSelect";
 import { setPendingHash } from "@/lib/scroll-to-anchor";
+import { disciplinePath } from "@/lib/seo-urls";
 
 type HeroQuickBookProps = {
   locale: string;
@@ -30,7 +31,10 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
     e.preventDefault();
     const count = parseQuickBookPeople(people) ?? 2;
     setPendingHash("#clases-disponibles");
-    router.push(`/clases/${discipline}?people=${count}`, { scroll: false });
+    router.push({
+      pathname: disciplinePath(discipline),
+      query: { people: String(count) },
+    });
   }
 
   return (
