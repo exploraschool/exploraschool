@@ -1,18 +1,34 @@
-# Migrar a cuenta explora.sclub@gmail.com
+# Producción = cuenta Explora, no AM
 
-El primer deploy se hizo con la sesión local de **amsnowboardcoach** (incorrecta).
-Todo debe vivir en la cuenta de **explora.sclub@gmail.com**.
+Hay dos nombres que se parecen. Solo uno sirve el sitio público.
 
-## Estado actual (configurado)
+| Qué | Producción (usar) | No es producción |
+|---|---|---|
+| GitHub | org **exploraschool**, repo `exploraschool` | `gh` en este PC está logueado como **amsnowboardcoach** (solo el usuario local) |
+| Vercel | equipo **exploraschool** (`explora.sclub@gmail.com`) | equipo **am-snowboard-coach-s-projects** (deploy duplicado) |
+| Dominio | **https://www.explora-school.es** | el `.vercel.app` de AM |
+| Firebase | `exploraschool-9ea82` | — |
+
+Un `git push` a `main` dispara **los dos** proyectos de Vercel. El que ve la gente es el de **exploraschool**. El de AM es un resto del primer deploy.
+
+### Quitar el duplicado de AM
+
+En el navegador, con la sesión de AM:
+
+1. Abre [Settings → Git del proyecto AM](https://vercel.com/am-snowboard-coach-s-projects/exploraschool/settings/git)
+2. **Disconnect** el repositorio GitHub
+3. No borres el proyecto si no quieres; con desconectar Git deja de desplegar
+
+El proyecto bueno (no tocar el Git): [exploraschool en Vercel](https://vercel.com/exploraschool/exploraschool).
+
+## Estado actual
 
 | Servicio | Proyecto | URL |
 |----------|----------|-----|
-| **Vercel** | `exploraschool` | https://explora-school.es |
+| **Vercel** | equipo `exploraschool` | https://www.explora-school.es |
 | **Firebase** | `exploraschool-9ea82` | [Console](https://console.firebase.google.com/project/exploraschool-9ea82) |
-| **Dominio** | `explora-school.es` + `www` | En Vercel (eliminado `sierranevadaclases.es`) |
+| **Dominios** | `explora-school.es` + `www` + `sierranevadaclases.es` (308 al canónico) | En el proyecto Vercel **exploraschool** |
 | **Emails** | Resend vía Vercel | Notificaciones a `explora.sclub@gmail.com` |
-
-Variables de entorno, Firebase Admin y deploy de producción: **listos**.
 
 ---
 
@@ -146,7 +162,7 @@ En el registrador DNS de `sierranevadaclases.es` configura:
 
 (Alternativa simple: un solo A `@` → `76.76.21.21` y CNAME `www` → `cname.vercel-dns.com`.)
 
-Hoy el dominio existe pero **no tiene registros DNS** (solo nameservers de nic.es). Hasta que los configures, la redirección no puede activarse.
+DNS y Vercel ya están activos: `sierranevadaclases.es` responde 308 hacia `https://www.explora-school.es`.
 ---
 
 ## Firebase / GCP

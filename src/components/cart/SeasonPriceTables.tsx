@@ -54,27 +54,25 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           {pickLocale(locale, "¿Cuántas personas sois?", "How many people are you?")}
         </p>
         <div
-          className="x-scroller mt-3 snap-x snap-mandatory sm:overflow-visible sm:snap-none"
+          className="mt-3 grid grid-cols-8 gap-1 sm:inline-flex sm:gap-2"
           role="group"
           aria-label={pickLocale(locale, "Número de participantes", "Number of participants")}
         >
-          <div className="flex w-max gap-2">
-            {PARTICIPANT_OPTIONS.map((n) => (
-              <button
-                key={n}
-                type="button"
-                onClick={() => setParticipants(n)}
-                aria-pressed={participants === n}
-                className={`flex h-11 w-11 shrink-0 snap-start items-center justify-center rounded-full text-sm font-semibold transition sm:h-10 sm:w-10 ${
-                  participants === n
-                    ? "bg-gradient-to-r from-hielo to-hielo-light text-white shadow-md shadow-hielo/25"
-                    : "border border-hielo/15 bg-nieve text-pizarra hover:border-hielo/30"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
+          {PARTICIPANT_OPTIONS.map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setParticipants(n)}
+              aria-pressed={participants === n}
+              className={`flex h-11 w-full min-w-0 items-center justify-center rounded-xl text-sm font-semibold transition sm:h-10 sm:w-10 sm:shrink-0 sm:rounded-full ${
+                participants === n
+                  ? "bg-gradient-to-r from-hielo to-hielo-light text-white shadow-md shadow-hielo/25"
+                  : "border border-hielo/15 bg-nieve text-pizarra hover:border-hielo/30"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
         </div>
         <p className="mt-3 text-xs text-muted">
           {peopleHeaders[participants - 1]}
