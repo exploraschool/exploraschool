@@ -31,7 +31,6 @@ const NAV = [
   { href: "/admin/instructores", id: "instructores" as const, label: "Monitores" },
   { href: "/admin/galeria", id: "galeria" as const, label: "Galería" },
   { href: "/admin/leads", id: "leads" as const, label: "Contactos" },
-  { href: "/admin/blog", id: "blog" as const, label: "Blog" },
 ];
 
 export async function AdminShell({
