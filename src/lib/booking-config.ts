@@ -215,7 +215,7 @@ export function getProductBookingConfig(productId: ProductId): ProductBookingCon
 }
 
 export function usesPairBasePricing(productId: ProductId): boolean {
-  return PRODUCT_BOOKING_CONFIG[productId].profile === "session";
+  return productId === "curso-empresa";
 }
 
 export function getParticipantLimits(

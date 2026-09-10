@@ -65,7 +65,7 @@ export const currentPrices: CurrentProductPrice[] = [
       `Desde ${FULL_DAY_HOURLY_EUR} €/h (5 h de clase)`,
       "5 horas de clase efectivas",
       "1 hora de descanso",
-      "1 y 2 personas: mismo precio total",
+      "Precio total según número de personas (1–8)",
       "Horario ajustado a sus necesidades",
       "Punto de encuentro personalizado",
     ],
@@ -73,7 +73,7 @@ export const currentPrices: CurrentProductPrice[] = [
       `From €${FULL_DAY_HOURLY_EUR}/h (5 h of teaching)`,
       "5 hours of effective lesson time",
       "1 hour break",
-      "1 and 2 people: same total price",
+      "Total price by group size (1–8)",
       "Schedule tailored to your needs",
       "Personalised meeting point",
     ],
@@ -176,9 +176,9 @@ export const priceNotes = {
   vatEs: "Todos los precios tienen el IVA incluido.",
   vatEn: "All prices include VAT.",
   groupTotalEs:
-    "Importe total del grupo (no por persona). 1 y 2 personas pagan el mismo precio. Duración mínima: 2 horas.",
+    "Importe total del grupo (no por persona). Duración mínima: 2 horas.",
   groupTotalEn:
-    "Total price for the group (not per person). 1 and 2 people pay the same price. Minimum duration: 2 hours.",
+    "Total price for the group (not per person). Minimum duration: 2 hours.",
   tablesIntroEs: "Para clases particulares. Duración mínima 2 horas.",
   tablesIntroEn: "For private lessons. 2-hour minimum.",
 };

@@ -1,5 +1,5 @@
 import { site } from "@/data/site";
-import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
+import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_2H_AFTERNOON, SESSION_2H_STANDARD, SESSION_3H_AFTERNOON, SESSION_3H_MORNING, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
 import { whatsappHref } from "@/lib/whatsapp";
 
 export const FAQ_CHAT_WHATSAPP_TEXT =
@@ -63,11 +63,11 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
   },
   tarifas: {
     id: "tarifas",
-    botText: `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € para 1 o 2 personas).
+    botText: `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € 1 persona / ${SESSION_FULL_DAY[1]} € 2 personas).
 
-• 2 h mañana: 110 € (1 o 2 personas) · 2 h tarde: 89 €.
-• Desde 3 personas: 2 h mañana 130 € | 2 h tarde 110 € | 3 h mañana 180 € | 3 h tarde 165 €; luego +10 € (2 h) o +15 € (3 h) por persona.
-• No vendemos clases sueltas de 1 hora por la mañana.`,
+• 2 h mañana: ${SESSION_2H_STANDARD[0]} € (1 persona) · ${SESSION_2H_STANDARD[1]} € (2 personas) · 2 h tarde: ${SESSION_2H_AFTERNOON[0]} € (1 persona).
+• 3 h mañana: ${SESSION_3H_MORNING[0]} € (1 persona) · 3 h tarde: ${SESSION_3H_AFTERNOON[0]} € (1 persona).
+• No vendemos clases sueltas de 1 hora ni la franja 09:00–12:00.`,
     buttons: [
       {
         id: "reservar-wa",

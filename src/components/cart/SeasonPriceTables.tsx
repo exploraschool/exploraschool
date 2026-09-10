@@ -74,16 +74,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
             </button>
           ))}
         </div>
-        <p className="mt-3 text-xs text-muted">
-          {peopleHeaders[participants - 1]}
-          {participants <= 2
-            ? pickLocale(
-                locale,
-                " · 1 y 2 personas pagan el mismo precio",
-                " · 1 and 2 people pay the same price",
-              )
-            : null}
-        </p>
+        <p className="mt-3 text-xs text-muted">{peopleHeaders[participants - 1]}</p>
       </div>
 
       <div className="space-y-3">

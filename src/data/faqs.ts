@@ -2,6 +2,7 @@ import { site } from "./site";
 import {
   FULL_DAY_EFFECTIVE_HOURS,
   FULL_DAY_HOURLY_EUR,
+  SESSION_2H_STANDARD,
   SESSION_FULL_DAY,
 } from "@/lib/lesson-pricing";
 
@@ -138,18 +139,18 @@ We reply from 9:00 am to 8:00 pm.
     category: "reservas",
     sortOrder: 2,
     questionEs: "¿Cuánto cuestan las clases de esquí en Sierra Nevada?",
-    answerEs: `El mejor precio por hora es el **día completo: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € en total para 1 o 2 personas). Si sois dos, sale a ${Math.round(SESSION_FULL_DAY[0] / 2 / FULL_DAY_EFFECTIVE_HOURS)} €/h por persona.
+    answerEs: `El mejor precio por hora es el **día completo: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € para 1 persona; ${SESSION_FULL_DAY[1]} € si sois dos).
 
-Las clases más cortas salen más caras por hora (2 h mañana: 110 €). No hay clases sueltas de 1 hora.
+Las clases más cortas salen más caras por hora (2 h mañana: ${SESSION_2H_STANDARD[0]} € para 1 persona). No hay clases sueltas de 1 hora.
 
 Buscas clases de esquí baratas en Sierra Nevada: el día completo es la tarifa que más rinde.
 
 - [Ver tarifas](/clases)
 - [Reservar](/reserva)`,
     questionEn: "How much do ski lessons cost in Sierra Nevada?",
-    answerEn: `The best hourly rate is the **full day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} total for 1 or 2 people). If there are two of you, it works out at €${Math.round(SESSION_FULL_DAY[0] / 2 / FULL_DAY_EFFECTIVE_HOURS)}/h per person.
+    answerEn: `The best hourly rate is the **full day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} for 1 person; €${SESSION_FULL_DAY[1]} if there are two of you).
 
-Shorter lessons cost more per hour (2 h morning: €110). There are no standalone 1-hour lessons.
+Shorter lessons cost more per hour (2 h morning: €${SESSION_2H_STANDARD[0]} for 1 person). There are no standalone 1-hour lessons.
 
 Looking for affordable ski lessons in Sierra Nevada: the full day is the best-value rate.
 
@@ -492,8 +493,8 @@ Ages 5 to 18 can also join the Club:
     answerEs: `Máximo 8 personas. Duración mínima: 2 horas.
 
 En particulares:
-- 1 y 2 personas pagan el mismo precio total
-- A partir de la 3.ª persona hay un extra
+- El precio es el total del grupo y sube con cada persona (1–8)
+- Duración mínima: 2 horas
 
 - [Clases y tarifas](/clases)
 - [Reservar](/reserva)`,
@@ -501,8 +502,8 @@ En particulares:
     answerEn: `Maximum 8 people. Minimum duration: 2 hours.
 
 In private lessons:
-- 1 and 2 people pay the same total
-- From the 3rd person an extra applies
+- The price is the group total and rises with each person (1–8)
+- Minimum duration: 2 hours
 
 - [Lessons and prices](/clases)
 - [Book](/reserva)`,

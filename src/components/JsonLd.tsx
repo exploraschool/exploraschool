@@ -110,8 +110,8 @@ export function JsonLd({ locale }: JsonLdProps) {
             availability: "https://schema.org/InStock",
             description: pickLocale(
               locale,
-              `Precio por hora en jornada completa (${FULL_DAY_EFFECTIVE_HOURS} h de clase). Total desde ${SESSION_FULL_DAY[0]} € para 1 o 2 personas.`,
-              `Hourly rate on a full day (${FULL_DAY_EFFECTIVE_HOURS} h of teaching). Total from €${SESSION_FULL_DAY[0]} for 1 or 2 people.`,
+              `Precio por hora en jornada completa (${FULL_DAY_EFFECTIVE_HOURS} h de clase). Total desde ${SESSION_FULL_DAY[0]} € (1 persona).`,
+              `Hourly rate on a full day (${FULL_DAY_EFFECTIVE_HOURS} h of teaching). Total from €${SESSION_FULL_DAY[0]} (1 person).`,
             ),
             priceSpecification: {
               "@type": "UnitPriceSpecification",

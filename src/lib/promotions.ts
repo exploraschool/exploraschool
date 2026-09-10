@@ -1,4 +1,3 @@
-import { SESSION_2H_AFTERNOON, SESSION_2H_AFTERNOON_EARLY_BIRD_EUR } from "@/lib/lesson-pricing";
 import type { ProductId } from "@/data/products";
 
 export const EARLY_BIRD_DISCOUNT_PERCENT = 10;
@@ -34,7 +33,6 @@ export function applyEarlyBirdDiscount(
   productId?: ProductId | string,
 ): number {
   if (!isDiscountActiveForProduct(productId, now)) return listPrice;
-  if (listPrice === SESSION_2H_AFTERNOON[0]) return SESSION_2H_AFTERNOON_EARLY_BIRD_EUR;
   return Math.round(listPrice * (1 - EARLY_BIRD_DISCOUNT_PERCENT / 100));
 }
 

@@ -33,20 +33,20 @@ export function productCardHighlights(product: Product, locale: string): string[
     case "full-day":
       return pickLocale(
         locale,
-        ["Recogida y entrega en hotel", "1 h de comodín (comidas y retrasos)", "1 y 2 personas pagan lo mismo"],
-        ["Hotel pick-up and drop-off", "1 h buffer (meals and delays)", "1 and 2 people pay the same"],
+        ["Recogida y entrega en hotel", "1 h de comodín (comidas y retrasos)", "De 1 a 8 participantes"],
+        ["Hotel pick-up and drop-off", "1 h buffer (meals and delays)", "From 1 to 8 participants"],
       );
     case "particular":
       return pickLocale(
         locale,
-        ["Tú eliges hora y disciplina", "Todos los niveles, desde 3 años", "1 y 2 personas pagan lo mismo"],
-        ["You choose time and discipline", "All levels, from age 3", "1 and 2 people pay the same"],
+        ["Tú eliges hora y disciplina", "Todos los niveles, desde 3 años", "De 1 a 8 participantes"],
+        ["You choose time and discipline", "All levels, from age 3", "From 1 to 8 participants"],
       );
     case "medio-dia":
       return pickLocale(
         locale,
-        ["Punto de encuentro en la estación", "Esquí, snowboard o telemark", "1 y 2 personas pagan lo mismo"],
-        ["Meeting point at the resort", "Ski, snowboard or telemark", "1 and 2 people pay the same"],
+        ["Punto de encuentro en la estación", "Esquí, snowboard o telemark", "De 1 a 8 participantes"],
+        ["Meeting point at the resort", "Ski, snowboard or telemark", "From 1 to 8 participants"],
       );
     case "curso-snow":
       return pickLocale(
