@@ -81,6 +81,7 @@ export function AddToCartModal({
   const [instructorSlug, setInstructorSlug] = useState(defaultInstructorSlug ?? "");
   const [notes, setNotes] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [overlayReady, setOverlayReady] = useState(false);
   const [instructorPool, setInstructorPool] = useState<Instructor[] | null>(null);
 
   const implicitDiscipline = product
@@ -102,6 +103,15 @@ export function AddToCartModal({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!open) {
+      setOverlayReady(false);
+      return;
+    }
+    const timer = window.setTimeout(() => setOverlayReady(true), 400);
+    return () => window.clearTimeout(timer);
+  }, [open]);
 
   useEffect(() => {
     let cancelled = false;
@@ -353,7 +363,9 @@ export function AddToCartModal({
         type="button"
         className="absolute inset-0 bg-pizarra/60 backdrop-blur-sm modal-overlay"
         aria-label={t("close")}
-        onClick={onClose}
+        onClick={() => {
+          if (overlayReady) onClose();
+        }}
       />
       <div
         role="dialog"
