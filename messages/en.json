@@ -153,7 +153,7 @@
     "sendBooking": "Send booking request",
     "emailTo": "We'll confirm from",
     "bookingSent": "Thank you for your booking!",
-    "bookingSentDesc": "We've received your request. You'll get a confirmation email, and your instructor will get in touch soon to finalise it and arrange payment.",
+    "bookingSentDesc": "We've received your request and sent you an acknowledgement email. We'll get back to you as soon as possible to confirm availability. Payment is arranged when the booking is finalised.",
     "newBooking": "New booking",
     "viewCart": "View booking ({count} lessons)",
     "bookingCutoffHint": "Bookings cannot be made less than 1 hour before the class starts.",

@@ -5,6 +5,7 @@ import { onSchedule } from "firebase-functions/v2/scheduler";
 import { defineSecret, defineString } from "firebase-functions/params";
 import { logger } from "firebase-functions";
 import {
+  buildCustomerBookingReceivedEmail,
   buildCustomerConfirmationEmail,
   buildTeamNotificationEmail,
   createLeadCancelToken,
@@ -197,6 +198,28 @@ export const onLeadCreated = onDocumentCreated(
     } catch (error) {
       logger.error("Failed to send team notification", { leadId, error });
       throw error;
+    }
+
+    if (isBooking && !data.receivedEmailSentAt) {
+      const customerEmail = String(data.email ?? "").trim();
+      if (!customerEmail) {
+        logger.warn("Booking received without customer email", { leadId });
+        return;
+      }
+      try {
+        const received = buildCustomerBookingReceivedEmail({ data, siteUrl });
+        await sendResendEmail(apiKey, {
+          from,
+          to: [customerEmail],
+          subject: received.subject,
+          text: received.text,
+          html: received.html,
+        });
+        await snapshot.ref.update({ receivedEmailSentAt: new Date().toISOString() });
+        logger.info("Booking received email sent", { leadId, to: customerEmail });
+      } catch (error) {
+        logger.error("Failed to send booking received email", { leadId, error });
+      }
     }
   },
 );

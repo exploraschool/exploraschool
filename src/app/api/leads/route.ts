@@ -8,6 +8,7 @@ import type { MainDisciplineId } from "@/data/disciplines";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
+import { sendCustomerBookingReceived } from "@/lib/lead-emails";
 import { normalizeEmail } from "@/lib/link-bookings";
 import { getStudentSession } from "@/lib/student-auth";
 import { upsertStudentProfile } from "@/lib/student-user-store";
@@ -177,9 +178,19 @@ export async function POST(request: Request) {
       if (db) {
         const ref = db.collection("leads").doc();
         const actionTokens = isBooking ? createStoredLeadActionTokens(ref.id) : null;
+        let receivedEmailSentAt: string | undefined;
+        if (isBooking) {
+          try {
+            await sendCustomerBookingReceived(lead);
+            receivedEmailSentAt = new Date().toISOString();
+          } catch (receivedError) {
+            console.error("[leads] Booking received email failed:", receivedError);
+          }
+        }
         await ref.set({
           ...lead,
           ...(actionTokens ?? {}),
+          ...(receivedEmailSentAt ? { receivedEmailSentAt } : {}),
         });
         // Team email is sent by Firebase onLeadCreated — do not send it here too.
         try {

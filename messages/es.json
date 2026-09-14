@@ -153,7 +153,7 @@
     "sendBooking": "Enviar solicitud de reserva",
     "emailTo": "Te confirmaremos desde",
     "bookingSent": "¡Gracias por tu reserva!",
-    "bookingSentDesc": "Hemos recibido tu solicitud. Te enviaremos un email de confirmación y, en breve, tu monitor/a se pondrá en contacto para formalizarla y concretar el pago.",
+    "bookingSentDesc": "Hemos recibido tu solicitud y te hemos enviado un email de acuse de recibo. Te responderemos lo antes posible para confirmar disponibilidad. El pago se concreta al formalizar la reserva.",
     "newBooking": "Nueva reserva",
     "viewCart": "Ver reserva ({count} clases)",
     "bookingCutoffHint": "No se puede reservar a menos de 1 hora del inicio de la clase.",

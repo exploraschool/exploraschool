@@ -1,3 +1,4 @@
+import { buildCustomerBookingReceivedEmail } from "@/lib/customer-booking-received-email";
 import { buildCustomerCancellationEmail } from "@/lib/customer-cancellation-email";
 import { buildCustomerConfirmationEmail } from "@/lib/customer-confirmation-email";
 import { createLeadConfirmToken } from "@/lib/lead-confirm";
@@ -69,6 +70,12 @@ async function requireCustomerMailbox(data: Record<string, unknown>) {
     throw new Error("RESEND_FROM is not configured");
   }
   return { from, siteUrl, customerEmail };
+}
+
+export async function sendCustomerBookingReceived(data: Record<string, unknown>): Promise<void> {
+  const { from, siteUrl, customerEmail } = await requireCustomerMailbox(data);
+  const { subject, text, html } = buildCustomerBookingReceivedEmail({ data, siteUrl });
+  await sendResendEmail({ from, to: [customerEmail], subject, text, html });
 }
 
 export async function sendCustomerBookingConfirmation(data: Record<string, unknown>): Promise<void> {
