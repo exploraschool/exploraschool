@@ -93,6 +93,10 @@ export const TIME_SLOTS: Record<TimeSlotId, TimeSlot> = {
   },
 };
 
+export function isTimeSlotId(id: string): id is TimeSlotId {
+  return Object.prototype.hasOwnProperty.call(TIME_SLOTS, id);
+}
+
 const SESSION_PRICES_BY_SLOT: Partial<Record<TimeSlotId, readonly number[]>> = {
   "fd-10-16": SESSION_FULL_DAY,
   "2h-10-12": SESSION_2H_STANDARD,
@@ -244,11 +248,24 @@ export function clampParticipantCount(
   return Math.min(maxPeople, Math.max(minPeople, Math.round(participants)));
 }
 
-export function getSlotsForProduct(productId: ProductId): TimeSlot[] {
+/** Alpine ski is not offered in the 10:00–13:00 3h window; snowboard and telemark are. */
+export function isSlotAllowedForDiscipline(
+  slotId: TimeSlotId,
+  discipline?: MainDisciplineId,
+): boolean {
+  if (discipline === "esqui" && slotId === "3h-10-13") return false;
+  return true;
+}
+
+export function getSlotsForProduct(
+  productId: ProductId,
+  discipline?: MainDisciplineId,
+): TimeSlot[] {
   const config = PRODUCT_BOOKING_CONFIG[productId];
   return config.slotIds
     .map((id) => TIME_SLOTS[id])
-    .filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS);
+    .filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS)
+    .filter((slot) => isSlotAllowedForDiscipline(slot.id, discipline));
 }
 
 export function calculateSessionPrice(

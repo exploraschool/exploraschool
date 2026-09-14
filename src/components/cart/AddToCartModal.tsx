@@ -32,6 +32,8 @@ import {
   getProductBookingConfig,
   getSlotLabel,
   getSlotsForProduct,
+  isSlotAllowedForDiscipline,
+  TIME_SLOTS,
   usesPairBasePricing,
   type TimeSlotId,
 } from "@/lib/booking-config";
@@ -70,7 +72,6 @@ export function AddToCartModal({
   const { addItems } = useCart();
   const product = getProductBySlug(productId);
   const bookingConfig = getProductBookingConfig(productId);
-  const slots = getSlotsForProduct(productId);
 
   const [dates, setDates] = useState<string[]>([]);
   const [timeSlotId, setTimeSlotId] = useState<TimeSlotId>(bookingConfig.defaultSlotId);
@@ -81,6 +82,20 @@ export function AddToCartModal({
   const [notes, setNotes] = useState("");
   const [mounted, setMounted] = useState(false);
   const [instructorPool, setInstructorPool] = useState<Instructor[] | null>(null);
+
+  const implicitDiscipline = product
+    ? getSingleProductDiscipline(product.disciplines)
+    : undefined;
+  const slotsDiscipline: MainDisciplineId | undefined =
+    instructorSlug &&
+    isSnowboardOnlyInstructor(instructorSlug) &&
+    product?.disciplines.includes("snowboard")
+      ? "snowboard"
+      : discipline || implicitDiscipline || undefined;
+  const slots = useMemo(
+    () => getSlotsForProduct(productId, slotsDiscipline),
+    [productId, slotsDiscipline],
+  );
 
   useBodyScrollLock(open && !!product);
 
@@ -107,10 +122,6 @@ export function AddToCartModal({
 
   useEffect(() => {
     if (open) {
-      const slotId =
-        defaultTimeSlotId && bookingConfig.slotIds.includes(defaultTimeSlotId)
-          ? defaultTimeSlotId
-          : bookingConfig.defaultSlotId;
       const preferredInstructor = defaultInstructorSlug ?? "";
       const singleDiscipline = product
         ? getSingleProductDiscipline(product.disciplines)
@@ -121,6 +132,13 @@ export function AddToCartModal({
         product?.disciplines.includes("snowboard")
           ? "snowboard"
           : (defaultDiscipline ?? singleDiscipline ?? "");
+      const availableSlots = getSlotsForProduct(productId, initialDiscipline || undefined);
+      const slotId =
+        defaultTimeSlotId && availableSlots.some((slot) => slot.id === defaultTimeSlotId)
+          ? defaultTimeSlotId
+          : (availableSlots.find((slot) => slot.id === bookingConfig.defaultSlotId)?.id ??
+            availableSlots[0]?.id ??
+            bookingConfig.defaultSlotId);
       const { minPeople: limitsMin, maxPeople: limitsMax } = getParticipantLimits(
         productId,
         initialDiscipline || undefined,
@@ -186,8 +204,14 @@ export function AddToCartModal({
 
   useEffect(() => {
     if (!open || slots.length === 0) return;
-    if (disabledSlotIds.includes(timeSlotId)) {
-      const next = slots.find((slot) => !disabledSlotIds.includes(slot.id));
+    const currentAllowed =
+      slots.some((slot) => slot.id === timeSlotId) && !disabledSlotIds.includes(timeSlotId);
+    if (!currentAllowed) {
+      const currentHours = TIME_SLOTS[timeSlotId]?.hours;
+      const next =
+        slots.find((slot) => slot.hours === currentHours && !disabledSlotIds.includes(slot.id)) ??
+        slots.find((slot) => !disabledSlotIds.includes(slot.id)) ??
+        slots[0];
       if (next) setTimeSlotId(next.id);
     }
   }, [open, disabledSlotIds, timeSlotId, slots]);
@@ -195,7 +219,6 @@ export function AddToCartModal({
   if (!mounted || !open || !product) return null;
 
   const resolvedProduct = product;
-  const implicitDiscipline = getSingleProductDiscipline(resolvedProduct.disciplines);
   const effectiveDiscipline = discipline || implicitDiscipline || undefined;
 
   const availableDisciplines = getMainDisciplines().filter((d) =>
@@ -269,9 +292,15 @@ export function AddToCartModal({
       : effectiveDiscipline;
 
   const disciplineValid = Boolean(resolvedDisciplineForSubmit);
+  const selectedSlotAllowed = isSlotAllowedForDiscipline(timeSlotId, resolvedDisciplineForSubmit);
   const selectedSlotOpen =
     dates.length > 0 && dates.every((date) => isBookingStillOpen(date, timeSlotId));
-  const canAddToCart = datesValid && disciplineValid && sessionPrice !== null && selectedSlotOpen;
+  const canAddToCart =
+    datesValid &&
+    disciplineValid &&
+    sessionPrice !== null &&
+    selectedSlotOpen &&
+    selectedSlotAllowed;
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -283,6 +312,7 @@ export function AddToCartModal({
     const instructor = instructors.find((i) => i.slug === instructorSlug);
     const resolvedDiscipline = resolvedDisciplineForSubmit;
     if (!resolvedDiscipline) return;
+    if (!isSlotAllowedForDiscipline(timeSlotId, resolvedDiscipline)) return;
 
     const bookableDates = dates.filter((date) => isBookingStillOpen(date, timeSlotId));
     if (bookableDates.length === 0) return;
@@ -379,15 +409,20 @@ export function AddToCartModal({
               />
 
               {slots.length > 0 && (
-                <TimeSlotPicker
-                  locale={locale}
-                  slots={slots}
-                  value={timeSlotId}
-                  onChange={(id) => setTimeSlotId(id as TimeSlotId)}
-                  title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
-                  disabledSlotIds={disabledSlotIds}
-                  disabledHint={t("bookingCutoffHint")}
-                />
+                <div>
+                  <TimeSlotPicker
+                    locale={locale}
+                    slots={slots}
+                    value={timeSlotId}
+                    onChange={(id) => setTimeSlotId(id as TimeSlotId)}
+                    title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+                    disabledSlotIds={disabledSlotIds}
+                    disabledHint={t("bookingCutoffHint")}
+                  />
+                  {effectiveDiscipline === "esqui" && bookingConfig.slotIds.includes("3h-10-13") ? (
+                    <p className="mt-2 text-xs text-muted">{t("skiMorningSlotHint")}</p>
+                  ) : null}
+                </div>
               )}
               {dates.length > 0 && !selectedSlotOpen ? (
                 <p className="rounded-xl border border-accent/20 bg-accent/5 px-3 py-2 text-xs text-accent">

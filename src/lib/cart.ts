@@ -1,7 +1,7 @@
 import type { MainDisciplineId, ModalityId } from "@/data/disciplines";
 import type { ProductId } from "@/data/products";
 import type { TimeSlotId } from "@/lib/booking-config";
-import { calculateSessionPrice } from "@/lib/booking-config";
+import { calculateSessionPrice, isSlotAllowedForDiscipline } from "@/lib/booking-config";
 import { getMadridDateKey } from "@/lib/booking-cutoff";
 import { applyEarlyBirdDiscount, isDiscountActiveForProduct } from "@/lib/promotions";
 
@@ -59,6 +59,7 @@ export function estimateCartTotal(items: CartItem[]): number {
 export function buildCartItem(
   input: Omit<CartItem, "id" | "unitPrice" | "lineTotal"> & { locale: string },
 ): CartItem | null {
+  if (!isSlotAllowedForDiscipline(input.timeSlotId, input.discipline)) return null;
   const listUnitPrice = calculateSessionPrice(input.productId, input.participants, input.timeSlotId);
   if (listUnitPrice === null) return null;
 

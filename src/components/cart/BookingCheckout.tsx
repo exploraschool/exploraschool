@@ -6,6 +6,7 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCart } from "@/context/CartContext";
 import { estimateCartTotal } from "@/lib/cart";
+import { isSlotAllowedForDiscipline } from "@/lib/booking-config";
 import { partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import { pickLocale } from "@/lib/locale";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
@@ -41,7 +42,7 @@ export function BookingCheckout() {
   const [privacy, setPrivacy] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState<"generic" | "cutoff" | null>(null);
+  const [error, setError] = useState<"generic" | "cutoff" | "invalid_slot" | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [student, setStudent] = useState<BookingStudentUser | null>(null);
   const [identitySeeded, setIdentitySeeded] = useState(false);
@@ -130,6 +131,15 @@ export function BookingCheckout() {
       setSending(false);
       return;
     }
+    const invalidSlot = bookable.filter(
+      (item) => !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline),
+    );
+    if (invalidSlot.length > 0) {
+      for (const item of invalidSlot) removeItem(item.id);
+      setError("invalid_slot");
+      setSending(false);
+      return;
+    }
     if (bookable.length === 0) {
       setError("cutoff");
       setSending(false);
@@ -173,6 +183,8 @@ export function BookingCheckout() {
         }
         if (code === "booking_cutoff") {
           setError("cutoff");
+        } else if (code === "invalid_slot") {
+          setError("invalid_slot");
         } else {
           setError("generic");
         }
@@ -489,6 +501,7 @@ export function BookingCheckout() {
               </div>
 
               {error === "cutoff" && <p className="text-sm text-accent">{t("bookingCutoffError")}</p>}
+              {error === "invalid_slot" && <p className="text-sm text-accent">{t("invalidSlotError")}</p>}
               {error === "generic" && <p className="text-sm text-accent">{tc("error")}</p>}
             </div>
           </form>

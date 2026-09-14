@@ -116,6 +116,11 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                           {pickLocale(locale, "Horario más solicitado", "Most requested slot")}
                         </span>
                       )}
+                      {row.schedule === "10:00–13:00" && (
+                        <span className="mt-0.5 block text-xs text-muted">
+                          {pickLocale(locale, "Snowboard y telemark", "Snowboard and telemark")}
+                        </span>
+                      )}
                       {isFullDay && (
                         <span className="mt-0.5 block text-xs text-muted">
                           {pickLocale(

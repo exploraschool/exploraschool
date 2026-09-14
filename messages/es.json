@@ -158,6 +158,8 @@
     "viewCart": "Ver reserva ({count} clases)",
     "bookingCutoffHint": "No se puede reservar a menos de 1 hora del inicio de la clase.",
     "bookingCutoffError": "Las reservas no se pueden enviar a menos de 1 hora del inicio de la clase. Elige otro horario o fecha.",
+    "invalidSlotError": "El horario 10:00–13:00 no está disponible para esquí. Elige snowboard, telemark u otro horario.",
+    "skiMorningSlotHint": "El horario 10:00–13:00 no se ofrece en esquí. Está disponible en snowboard y telemark.",
     "formalizeTitle": "Formaliza con Google",
     "formalizeDesc": "Accede con tu cuenta de Google para rellenar nombre y email, vincular la reserva a tu área de alumno y dejar listo el teléfono de contacto.",
     "googleFormalize": "Registrarme / entrar con Google",

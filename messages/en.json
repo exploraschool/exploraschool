@@ -158,6 +158,8 @@
     "viewCart": "View booking ({count} lessons)",
     "bookingCutoffHint": "Bookings cannot be made less than 1 hour before the class starts.",
     "bookingCutoffError": "Bookings cannot be submitted less than 1 hour before the class starts. Choose another time or date.",
+    "invalidSlotError": "The 10:00 am–1:00 pm slot is not available for skiing. Choose snowboard, telemark, or another time.",
+    "skiMorningSlotHint": "The 10:00 am–1:00 pm slot is not offered for skiing. It is available for snowboard and telemark.",
     "formalizeTitle": "Confirm with Google",
     "formalizeDesc": "Sign in with Google to autofill your name and email, link the booking to your student area, and set your contact phone.",
     "googleFormalize": "Sign up / sign in with Google",

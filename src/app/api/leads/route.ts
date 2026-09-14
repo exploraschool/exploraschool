@@ -3,6 +3,8 @@ import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import { isBookingTooLate, partitionByBookingCutoff } from "@/lib/booking-cutoff";
+import { isSlotAllowedForDiscipline, isTimeSlotId } from "@/lib/booking-config";
+import type { MainDisciplineId } from "@/data/disciplines";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
@@ -59,6 +61,16 @@ const leadSchema = z
             path: ["bookingItems", index],
           });
         }
+        if (
+          isTimeSlotId(item.timeSlotId) &&
+          !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline as MainDisciplineId)
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Invalid slot for discipline",
+            path: ["bookingItems", index],
+          });
+        }
       });
       return;
     }
@@ -83,10 +95,14 @@ export async function POST(request: Request) {
       const tooLate = parsed.error.issues.some((issue) =>
         String(issue.message).includes("Booking cutoff"),
       );
+      const invalidSlot = parsed.error.issues.some((issue) =>
+        String(issue.message).includes("Invalid slot for discipline"),
+      );
+      const code = tooLate ? "booking_cutoff" : invalidSlot ? "invalid_slot" : undefined;
       return NextResponse.json(
         {
-          error: tooLate ? "booking_cutoff" : "Invalid data",
-          ...(tooLate ? { code: "booking_cutoff" as const } : {}),
+          error: code ?? "Invalid data",
+          ...(code ? { code } : {}),
         },
         { status: 400 },
       );
@@ -106,6 +122,14 @@ export async function POST(request: Request) {
       const { bookable, tooLate } = partitionByBookingCutoff(bookingItems);
       if (tooLate.length > 0) {
         return NextResponse.json({ error: "booking_cutoff", code: "booking_cutoff" }, { status: 400 });
+      }
+      const invalidSlot = bookable.filter(
+        (item) =>
+          isTimeSlotId(item.timeSlotId) &&
+          !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline as MainDisciplineId),
+      );
+      if (invalidSlot.length > 0) {
+        return NextResponse.json({ error: "invalid_slot", code: "invalid_slot" }, { status: 400 });
       }
       bookingItems = bookable;
     }
