@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { BlogImage } from "@/components/blog/BlogImage";
 import { AffiliateProductGallery } from "@/components/AffiliateProductGallery";
 import { BlogAlternatives, type BlogAlternativeItem } from "@/components/blog/BlogAlternatives";
 import { BlogAmazonCta } from "@/components/blog/BlogAmazonCta";
@@ -188,7 +188,7 @@ function Cover({ post, locale }: { post: AffiliateBlogPost; locale: string }) {
   if (!post.coverImage) return null;
   return (
     <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
-      <Image
+      <BlogImage
         src={post.coverImage}
         alt={pickLocale(locale, post.coverAltEs, post.coverAltEn)}
         fill

@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { AmazonAssociateButton } from "@/components/blog/AmazonAssociateButton";
+import { BlogImage } from "@/components/blog/BlogImage";
 import { primaryProductImage, type AffiliateProduct } from "@/lib/affiliate-blog-shared";
 import { pickLocale } from "@/lib/locale";
 
@@ -42,7 +42,7 @@ export function BlogRankingWinner({
       <div className="grid sm:grid-cols-[220px_1fr]">
         <div className="relative min-h-44 bg-nieve sm:min-h-full">
           {image ? (
-            <Image src={image} alt={name} fill className="object-contain p-6" sizes="220px" />
+            <BlogImage src={image} alt={name} fill className="object-contain p-6" sizes="220px" />
           ) : null}
         </div>
         <div className="p-5 sm:p-6">
@@ -96,7 +96,7 @@ export function BlogRankingNav({
           >
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-nieve">
               {image ? (
-                <Image src={image} alt="" fill className="object-contain p-1.5" sizes="64px" />
+                <BlogImage src={image} alt="" fill className="object-contain p-1.5" sizes="64px" />
               ) : null}
             </div>
             <div className="min-w-0">

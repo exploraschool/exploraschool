@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { Link } from "@/i18n/routing";
+import { BlogImage } from "@/components/blog/BlogImage";
 import { blogHref } from "@/i18n/href";
 import { pickLocale } from "@/lib/locale";
 import type { PublicBlogCard } from "@/lib/blog-catalog";
@@ -23,14 +23,16 @@ export function BlogCardGrid({
         const badge = productBadge(post, locale);
         return (
           <article key={post.slug} className="card overflow-hidden p-0 hover:border-hielo/25">
-            <Link href={blogHref(post.slug)} className="relative block aspect-[16/9]">
-              <Image
-                src={post.coverImage}
-                alt={pickLocale(locale, post.coverAltEs, post.coverAltEn)}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+            <Link href={blogHref(post.slug)} className="relative block aspect-[16/9] bg-nieve">
+              {post.coverImage ? (
+                <BlogImage
+                  src={post.coverImage}
+                  alt={pickLocale(locale, post.coverAltEs, post.coverAltEn)}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : null}
             </Link>
             <div className="p-5 sm:p-6">
               <div className="flex flex-wrap items-center gap-2">

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import type { AffiliateProductImage } from "@/lib/affiliate-blog-shared";
+import { BlogImage } from "@/components/blog/BlogImage";
 import { pickLocale } from "@/lib/locale";
 
 export function AffiliateProductGallery({
@@ -21,7 +21,7 @@ export function AffiliateProductGallery({
   return (
     <div className="space-y-2">
       <div className="relative aspect-square overflow-hidden rounded-xl bg-nieve">
-        <Image
+        <BlogImage
           src={current.src}
           alt={pickLocale(locale, current.altEs, current.altEn)}
           fill
@@ -51,7 +51,7 @@ export function AffiliateProductGallery({
               }`}
               aria-label={pickLocale(locale, `Foto ${index + 1}`, `Photo ${index + 1}`)}
             >
-              <Image
+              <BlogImage
                 src={image.src}
                 alt=""
                 fill

@@ -71,7 +71,7 @@ function uniqueImages(urls: string[]): string[] {
     const upgraded = toHiResAmazonImage(raw);
     const key = upgraded.replace(/\._AC_[^.]+\./, ".");
     if (seen.has(key)) continue;
-    if (!isAmazonCdnImageUrl(upgraded) && !upgraded.startsWith("https://")) continue;
+    if (!isAmazonCdnImageUrl(upgraded)) continue;
     seen.add(key);
     out.push(upgraded);
     if (out.length >= MAX_IMAGES) break;
