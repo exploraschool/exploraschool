@@ -47,7 +47,7 @@ export const SESSION_2H_MIDDAY: SessionPriceRow = SESSION_2H_STANDARD;
 export const SESSION_2H_AFTERNOON: SessionPriceRow = [90, 100, 110, 120, 130, 140, 150, 160];
 
 /** 3 h mañana 10:00–13:00 (y split / 12:00–15:00). No se ofrece 09:00–12:00. */
-export const SESSION_3H_MORNING: SessionPriceRow = [150, 165, 180, 195, 210, 225, 240, 255];
+export const SESSION_3H_MORNING: SessionPriceRow = [165, 180, 195, 210, 225, 240, 255, 270];
 
 /** 3 h split 10:00–12:00 y 14:00–15:00 — misma tarifa que mañana. */
 export const SESSION_3H_SPLIT: SessionPriceRow = SESSION_3H_MORNING;
@@ -56,7 +56,7 @@ export const SESSION_3H_SPLIT: SessionPriceRow = SESSION_3H_MORNING;
 export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_MORNING;
 
 /** 3 h medio día 14:00–17:00. */
-export const SESSION_3H_AFTERNOON: SessionPriceRow = [135, 150, 165, 180, 195, 210, 225, 240];
+export const SESSION_3H_AFTERNOON: SessionPriceRow = [150, 165, 180, 195, 210, 225, 240, 255];
 
 /** Full Day 10:00–16:00. */
 export const SESSION_FULL_DAY: SessionPriceRow = [240, 270, 300, 330, 360, 390, 420, 450];
