@@ -1118,7 +1118,7 @@ Cena de equipo en Pradollano, tarde libre para quien quiera seguir esquiando por
 
 ## Presupuesto y reserva
 
-Los cursos corporativos parten de 195 €/día para 1 o 2 personas, más 25 €/día por persona extra. Para grupos y varios días consecutivos, escríbenos a explora.sclub@gmail.com o llámanos al +34 660 262 790. Te enviamos una propuesta personalizada sin compromiso.
+Los cursos corporativos parten de 195 €/día para 1 persona, más 25 €/día por cada persona extra. Para grupos y varios días consecutivos, escríbenos a explora.sclub@gmail.com o llámanos al +34 660 262 790. Te enviamos una propuesta personalizada sin compromiso.
 
 ### Organiza tu salida corporativa con Explora
 
@@ -1151,7 +1151,7 @@ Team dinner in Pradollano, a free afternoon for those who want to keep skiing on
 
 ## Budget and booking
 
-Corporate courses start from €195/day for 1 or 2 people, plus €25/day per extra person. For groups and several consecutive days, email explora.sclub@gmail.com or call +34 660 262 790. We will send a personalised proposal with no obligation.
+Corporate courses start from €195/day for 1 person, plus €25/day for each extra person. For groups and several consecutive days, email explora.sclub@gmail.com or call +34 660 262 790. We will send a personalised proposal with no obligation.
 
 ### Organise your corporate trip with Explora
 

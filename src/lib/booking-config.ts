@@ -218,10 +218,6 @@ export function getProductBookingConfig(productId: ProductId): ProductBookingCon
   return PRODUCT_BOOKING_CONFIG[productId];
 }
 
-export function usesPairBasePricing(productId: ProductId): boolean {
-  return productId === "curso-empresa";
-}
-
 const PRIVATE_LESSON_PRODUCTS = new Set<ProductId>(["particular", "grupal"]);
 
 /** Private snowboard 10:00–13:00 is 1–3 people; 4+ is the group course. */
@@ -275,12 +271,11 @@ export function clampParticipantCount(
   return Math.min(maxPeople, Math.max(minPeople, Math.round(participants)));
 }
 
-/** 10:00–13:00 3h is snowboard only (private 1–3 or group course 4+). */
+/** 10:00–13:00 is available for ski, snowboard and telemark. */
 export function isSlotAllowedForDiscipline(
-  slotId: TimeSlotId,
-  discipline?: MainDisciplineId,
+  _slotId: TimeSlotId,
+  _discipline?: MainDisciplineId,
 ): boolean {
-  if (slotId === "3h-10-13" && discipline && discipline !== "snowboard") return false;
   return true;
 }
 
@@ -329,7 +324,7 @@ export function calculateSessionPrice(
 
   if (config.profile === "flat") {
     const unit = config.flatPricePerPerson ?? 0;
-    return unit * participants;
+    return Math.round(unit * participants);
   }
 
   const table = config.sessionPrices ?? SESSION_PRICES_BY_SLOT[slotId];
@@ -372,14 +367,9 @@ const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
 export function getBookingFromSeasonRow(
   tableId: PriceTable["id"],
   schedule: string,
-  participants?: number,
 ): { productId: ProductId; timeSlotId: TimeSlotId } | null {
   const timeSlotId = SCHEDULE_TO_SLOT[schedule];
   if (!timeSlotId) return null;
-
-  if (tableId === "clases-3h" && timeSlotId === "3h-10-13" && (participants ?? 0) >= 4) {
-    return { productId: "curso-snow", timeSlotId };
-  }
 
   const productId = SEASON_TABLE_PRODUCT[tableId];
   if (!productId) return null;

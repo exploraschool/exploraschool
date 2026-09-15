@@ -2,11 +2,14 @@ import type { DisciplineId } from "./disciplines";
 import { CURRENT_SEASON } from "./season";
 import { site } from "./site";
 import {
-  CURSO_COLECTIVO_PER_PERSON_EUR,
+  CURSO_COLECTIVO_FROM_EUR,
+  CURSO_COLECTIVO_PER_PERSON_EN,
+  CURSO_COLECTIVO_PER_PERSON_ES,
   FULL_DAY_HOURLY_EUR,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
   SESSION_CLUB_EMPRESA,
+  CLUB_EMPRESA_EXTRA_EUR,
   SESSION_FULL_DAY,
 } from "@/lib/lesson-pricing";
 
@@ -249,11 +252,11 @@ export const products: Product[] = [
     shortDescriptionEs: "Curso colectivo de mañana. Se confirma a partir de 4 personas.",
     shortDescriptionEn: "Morning group course. Confirmed from 4 people.",
     descriptionEs:
-      `Curso de snowboard de 3 horas (10:00–13:00). ${CURSO_COLECTIVO_PER_PERSON_EUR} € por persona. Mínimo 4 personas para realizar el curso; máximo 8.`,
+      `Curso de snowboard de 3 horas (10:00–13:00). Desde ${CURSO_COLECTIVO_FROM_EUR} € para 4 personas (${CURSO_COLECTIVO_PER_PERSON_ES} € / persona). Mínimo 4 personas para realizar el curso; máximo 8.`,
     descriptionEn:
-      `3-hour snowboard course (10:00–13:00). €${CURSO_COLECTIVO_PER_PERSON_EUR} per person. Minimum 4 people required to run the course; maximum 8.`,
+      `3-hour snowboard course (10:00–13:00). From €${CURSO_COLECTIVO_FROM_EUR} for 4 people (€${CURSO_COLECTIVO_PER_PERSON_EN} / person). Minimum 4 people required to run the course; maximum 8.`,
     disciplines: ["snowboard"],
-    fromPrice: CURSO_COLECTIVO_PER_PERSON_EUR,
+    fromPrice: CURSO_COLECTIVO_FROM_EUR,
     hours: 3,
     minPeople: 4,
     maxPeople: 8,
@@ -261,6 +264,8 @@ export const products: Product[] = [
     scheduleEn: "10:00 am–1:00 pm",
     featuresEs: [
       "Rendimiento Asegurado",
+      `Desde ${CURSO_COLECTIVO_FROM_EUR} € (4 personas)`,
+      `${CURSO_COLECTIVO_PER_PERSON_ES} € / persona`,
       "Mínimo 4 personas para realizar el curso",
       "Máximo 8 personas",
       "3 horas de clase efectivas",
@@ -268,6 +273,8 @@ export const products: Product[] = [
     ],
     featuresEn: [
       "Guaranteed Progress",
+      `From €${CURSO_COLECTIVO_FROM_EUR} (4 people)`,
+      `€${CURSO_COLECTIVO_PER_PERSON_EN} / person`,
       "Minimum 4 people required to run the course",
       "Maximum 8 people",
       "3 hours of effective lesson time",
@@ -324,9 +331,9 @@ export const products: Product[] = [
     shortDescriptionEs: "Para empresas, clubes y grupos. De 2 a 5 días consecutivos.",
     shortDescriptionEn: "For companies, clubs and groups. 2 to 5 consecutive days.",
     descriptionEs:
-      `Cursos de 2 a 5 días en jornada completa (10:00–16:00) para viajes de empresa, clubes deportivos y grupos. ${SESSION_CLUB_EMPRESA[0]} €/día para 1 o 2 personas; +25 €/día por persona extra. Grupo máximo 8.`,
+      `Cursos de 2 a 5 días en jornada completa (10:00–16:00) para viajes de empresa, clubes deportivos y grupos. ${SESSION_CLUB_EMPRESA[0]} €/día para 1 persona; +${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra. Grupo máximo 8.`,
     descriptionEn:
-      `2 to 5-day full-day courses (10:00 am–4:00 pm) for corporate trips, sports clubs and groups. €${SESSION_CLUB_EMPRESA[0]}/day for 1 or 2 people; +€25/day per extra person. Maximum group size 8.`,
+      `2 to 5-day full-day courses (10:00 am–4:00 pm) for corporate trips, sports clubs and groups. €${SESSION_CLUB_EMPRESA[0]}/day for 1 person; +€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person. Maximum group size 8.`,
     disciplines: ["esqui", "snowboard", "telemark"],
     fromPrice: SESSION_CLUB_EMPRESA[0],
     hours: 6,
@@ -336,15 +343,15 @@ export const products: Product[] = [
     scheduleEn: "10:00 am – 4:00 pm (full day)",
     featuresEs: [
       "Jornada completa cada día (10:00–16:00)",
-      `${SESSION_CLUB_EMPRESA[0]} €/día (1–2 personas)`,
-      "+25 €/día por persona extra",
+      `${SESSION_CLUB_EMPRESA[0]} €/día (1 persona)`,
+      `+${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra`,
       "De 2 a 5 días consecutivos",
       site.instructorQualificationsEs,
     ],
     featuresEn: [
       "Full day each day (10:00 am–4:00 pm)",
-      `€${SESSION_CLUB_EMPRESA[0]}/day (1–2 people)`,
-      "+€25/day per extra person",
+      `€${SESSION_CLUB_EMPRESA[0]}/day (1 person)`,
+      `+€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person`,
       "2 to 5 consecutive days",
       site.instructorQualificationsEn,
     ],

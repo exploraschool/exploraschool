@@ -35,7 +35,6 @@ import {
   isPrivateLessonProduct,
   isSlotAllowedForBooking,
   TIME_SLOTS,
-  usesPairBasePricing,
   type TimeSlotId,
 } from "@/lib/booking-config";
 import { usePathname, useRouter } from "@/i18n/routing";
@@ -442,11 +441,6 @@ export function AddToCartModal({
                     disabledSlotIds={disabledSlotIds}
                     disabledHint={t("bookingCutoffHint")}
                   />
-                  {effectiveDiscipline &&
-                  effectiveDiscipline !== "snowboard" &&
-                  bookingConfig.slotIds.includes("3h-10-13") ? (
-                    <p className="mt-2 text-xs text-muted">{t("skiMorningSlotHint")}</p>
-                  ) : null}
                   {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(productId) ? (
                     <p className="mt-2 text-xs text-muted">{t("snowboardMorningCourseHint")}</p>
                   ) : null}
@@ -507,12 +501,6 @@ export function AddToCartModal({
                             : (
                               <>
                                 {minPeople}–{maxPeople} {t("peopleRange")}
-                                {usesPairBasePricing(productId) &&
-                                  pickLocale(
-                                    locale,
-                                    " · 1 y 2 personas: mismo precio",
-                                    " · 1 and 2 people: same price",
-                                  )}
                               </>
                             )}
                         </>

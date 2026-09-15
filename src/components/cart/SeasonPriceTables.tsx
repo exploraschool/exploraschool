@@ -11,7 +11,6 @@ import {
   type TimeSlotId,
 } from "@/lib/booking-config";
 import {
-  CURSO_COLECTIVO_PER_PERSON_EUR,
   FULL_DAY_HOURLY_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
@@ -43,7 +42,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
   const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
 
   function handlePriceClick(tableId: string, schedule: string) {
-    const booking = getBookingFromSeasonRow(tableId, schedule, participants);
+    const booking = getBookingFromSeasonRow(tableId, schedule);
     if (!booking) return;
 
     setBookingSelection({
@@ -104,16 +103,8 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           >
             <div className="divide-y divide-hielo/8">
               {table.rows.map((row) => {
-                const isMorning3h = table.id === "clases-3h" && row.schedule === "10:00–13:00";
-                const isSnowboardCourseRow = isMorning3h && participants >= 4;
-                const listPrice = isSnowboardCourseRow
-                  ? CURSO_COLECTIVO_PER_PERSON_EUR * participants
-                  : row.prices[participants - 1];
-                const display = resolvePriceDisplay(
-                  listPrice,
-                  undefined,
-                  isSnowboardCourseRow ? "curso-snow" : undefined,
-                );
+                const listPrice = row.prices[participants - 1];
+                const display = resolvePriceDisplay(listPrice);
                 const isRecommended = table.id === "clases-2h" && row.schedule === "10:00–12:00";
                 const isFullDay = table.id === "full-day";
 
@@ -129,17 +120,6 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                       {isRecommended && (
                         <span className="mt-0.5 inline-block text-[0.65rem] font-bold uppercase tracking-wider text-accent">
                           {pickLocale(locale, "Horario más solicitado", "Most requested slot")}
-                        </span>
-                      )}
-                      {isMorning3h && (
-                        <span className="mt-0.5 block text-xs text-muted">
-                          {isSnowboardCourseRow
-                            ? pickLocale(
-                                locale,
-                                "Curso snowboard · precio por persona",
-                                "Snowboard course · price per person",
-                              )
-                            : pickLocale(locale, "Particular snowboard (1–3 personas)", "Private snowboard (1–3 people)")}
                         </span>
                       )}
                       {isFullDay && (
@@ -175,9 +155,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                         </span>
                       )}
                       <span className="mt-0.5 block text-[0.65rem] text-muted">
-                        {isSnowboardCourseRow
-                          ? pickLocale(locale, "total · reservar curso", "total · book course")
-                          : pickLocale(locale, "total grupo · reservar", "group total · book")}
+                        {pickLocale(locale, "total grupo · reservar", "group total · book")}
                       </span>
                     </button>
                   </div>
@@ -197,9 +175,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           defaultTimeSlotId={bookingSelection.timeSlotId}
           defaultParticipants={bookingSelection.participants}
           defaultDiscipline={
-            bookingSelection.productId === "curso-snow" || bookingSelection.timeSlotId === "3h-10-13"
-              ? "snowboard"
-              : undefined
+            bookingSelection.productId === "curso-snow" ? "snowboard" : undefined
           }
         />
       )}

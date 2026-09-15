@@ -1,6 +1,9 @@
 import { CURRENT_SEASON } from "./season";
 import {
-  CURSO_COLECTIVO_PER_PERSON_EUR,
+  CURSO_COLECTIVO_FROM_EUR,
+  CURSO_COLECTIVO_PER_PERSON_EN,
+  CURSO_COLECTIVO_PER_PERSON_ES,
+  cursoColectivoTotal,
   FULL_DAY_HOURLY_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
@@ -10,6 +13,7 @@ import {
   SESSION_3H_MIDDAY,
   SESSION_3H_MORNING,
   SESSION_3H_SPLIT,
+  SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   UNIFIED_SIZE_LABEL_ES,
 } from "@/lib/lesson-pricing";
@@ -19,6 +23,23 @@ export type PriceSeason = typeof CURRENT_SEASON.key | "legacy-2022";
 export type PriceRow = {
   schedule: string;
   prices: number[];
+};
+
+export type CompleteRateRow = {
+  scheduleEs: string;
+  scheduleEn: string;
+  prices: Array<number | null>;
+};
+
+export type CompleteRateTable = {
+  id: string;
+  titleEs: string;
+  titleEn: string;
+  subtitleEs: string;
+  subtitleEn: string;
+  noteEs?: string;
+  noteEn?: string;
+  rows: CompleteRateRow[];
 };
 
 export type PriceTable = {
@@ -84,12 +105,13 @@ export const currentPrices: CurrentProductPrice[] = [
     titleEs: "Curso de snowboard",
     titleEn: "Snowboard course",
     season: CURRENT_SEASON.key,
-    fromPrice: CURSO_COLECTIVO_PER_PERSON_EUR,
-    unit: "person",
+    fromPrice: CURSO_COLECTIVO_FROM_EUR,
+    unit: "group",
     hours: 3,
     featuresEs: [
       "Rendimiento Asegurado",
-      `${CURSO_COLECTIVO_PER_PERSON_EUR} € / persona`,
+      `Desde ${CURSO_COLECTIVO_FROM_EUR} € (4 personas)`,
+      `${CURSO_COLECTIVO_PER_PERSON_ES} € / persona`,
       "Mínimo 4 personas para realizar el curso",
       "Máximo 8 personas",
       "3 horas de clase efectivas",
@@ -97,7 +119,8 @@ export const currentPrices: CurrentProductPrice[] = [
     ],
     featuresEn: [
       "Guaranteed Progress",
-      `€${CURSO_COLECTIVO_PER_PERSON_EUR} / person`,
+      `From €${CURSO_COLECTIVO_FROM_EUR} (4 people)`,
+      `€${CURSO_COLECTIVO_PER_PERSON_EN} / person`,
       "Minimum 4 people required to run the course",
       "Maximum 8 people",
       "3 hours of effective lesson time",
@@ -146,6 +169,115 @@ export const seasonPriceTables: PriceTable[] = [
     groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
     headers: unifiedHeadersEs,
     rows: [{ schedule: "10:00 – 16:00", prices: [...SESSION_FULL_DAY] }],
+  },
+];
+
+function groupPrices(row: readonly number[]): Array<number | null> {
+  return [...row];
+}
+
+const cursoSnowTotals: Array<number | null> = [1, 2, 3, 4, 5, 6, 7, 8].map((n) =>
+  cursoColectivoTotal(n),
+);
+
+/** Cuadro oficial de tarifas (sin promociones). Precio total de grupo salvo nota. */
+export const completeRateTables: CompleteRateTable[] = [
+  {
+    id: "clases-2h",
+    titleEs: "Clases de 2 horas",
+    titleEn: "2-hour lessons",
+    subtitleEs: "Total del grupo",
+    subtitleEn: "Group total",
+    rows: [
+      {
+        scheduleEs: "10:00–12:00",
+        scheduleEn: "10:00 am–12:00 pm",
+        prices: groupPrices(SESSION_2H_STANDARD),
+      },
+      {
+        scheduleEs: "12:00–14:00",
+        scheduleEn: "12:00–2:00 pm",
+        prices: groupPrices(SESSION_2H_STANDARD),
+      },
+      {
+        scheduleEs: "14:00–16:00",
+        scheduleEn: "2:00–4:00 pm",
+        prices: groupPrices(SESSION_2H_AFTERNOON),
+      },
+    ],
+  },
+  {
+    id: "clases-3h",
+    titleEs: "Clases de 3 horas",
+    titleEn: "3-hour lessons",
+    subtitleEs: "Total del grupo",
+    subtitleEn: "Group total",
+    rows: [
+      {
+        scheduleEs: "10:00–13:00",
+        scheduleEn: "10:00 am–1:00 pm",
+        prices: groupPrices(SESSION_3H_MORNING),
+      },
+      {
+        scheduleEs: "10:00–12:00 y 14:00–15:00",
+        scheduleEn: "10:00 am–12:00 pm & 2:00–3:00 pm",
+        prices: groupPrices(SESSION_3H_SPLIT),
+      },
+      {
+        scheduleEs: "12:00–15:00",
+        scheduleEn: "12:00–3:00 pm",
+        prices: groupPrices(SESSION_3H_MIDDAY),
+      },
+      {
+        scheduleEs: "14:00–17:00",
+        scheduleEn: "2:00–5:00 pm",
+        prices: groupPrices(SESSION_3H_AFTERNOON),
+      },
+    ],
+  },
+  {
+    id: "full-day",
+    titleEs: "Día completo",
+    titleEn: "Full day",
+    subtitleEs: `5 h de clase · ${FULL_DAY_HOURLY_EUR} €/h`,
+    subtitleEn: `5 h lesson · €${FULL_DAY_HOURLY_EUR}/h`,
+    rows: [
+      {
+        scheduleEs: "10:00–16:00",
+        scheduleEn: "10:00 am–4:00 pm",
+        prices: groupPrices(SESSION_FULL_DAY),
+      },
+    ],
+  },
+  {
+    id: "curso-snow",
+    titleEs: "Curso de snowboard",
+    titleEn: "Snowboard course",
+    subtitleEs: `Desde ${CURSO_COLECTIVO_FROM_EUR} € · ${CURSO_COLECTIVO_PER_PERSON_ES} € / persona`,
+    subtitleEn: `From €${CURSO_COLECTIVO_FROM_EUR} · €${CURSO_COLECTIVO_PER_PERSON_EN} / person`,
+    noteEs: "Mínimo 4 personas para confirmar el curso. Máximo 8. Horario 10:00–13:00.",
+    noteEn: "Minimum 4 people to confirm the course. Maximum 8. Schedule 10:00 am–1:00 pm.",
+    rows: [
+      {
+        scheduleEs: "10:00–13:00",
+        scheduleEn: "10:00 am–1:00 pm",
+        prices: cursoSnowTotals,
+      },
+    ],
+  },
+  {
+    id: "curso-empresa",
+    titleEs: "Cursos de 2 a 5 días",
+    titleEn: "2 to 5-day courses",
+    subtitleEs: "Precio por día",
+    subtitleEn: "Price per day",
+    rows: [
+      {
+        scheduleEs: "10:00–16:00",
+        scheduleEn: "10:00 am–4:00 pm",
+        prices: groupPrices(SESSION_CLUB_EMPRESA),
+      },
+    ],
   },
 ];
 

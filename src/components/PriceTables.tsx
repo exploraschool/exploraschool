@@ -19,7 +19,7 @@ export function PriceTables({ locale }: PriceTablesProps) {
         </div>
       </section>
 
-      <section id="tarifas" className="scroll-target border-t border-hielo/10 pt-10 sm:pt-12 md:pt-14">
+      <section id="horarios" className="scroll-target border-t border-hielo/10 pt-10 sm:pt-12 md:pt-14">
         <SectionHeader
           eyebrow={pickLocale(locale, "Consulta detallada", "Detailed lookup")}
           title={pickLocale(locale, "Tarifas por horario", "Prices by time slot")}

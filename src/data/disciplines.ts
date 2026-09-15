@@ -1,4 +1,4 @@
-import { FULL_DAY_HOURLY_EUR, CURSO_COLECTIVO_PER_PERSON_EUR } from "@/lib/lesson-pricing";
+import { FULL_DAY_HOURLY_EUR, CURSO_COLECTIVO_FROM_EUR } from "@/lib/lesson-pricing";
 
 export type MainDisciplineId =
   | "esqui"
@@ -69,9 +69,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Snowboard",
     nameEn: "Snowboard",
     descriptionEs:
-      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Curso colectivo ${CURSO_COLECTIVO_PER_PERSON_EUR} €/persona (3 h). Instructores especializados.`,
+      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Curso colectivo desde ${CURSO_COLECTIVO_FROM_EUR} € (3 h, mínimo 4 personas). Instructores especializados.`,
     descriptionEn:
-      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Group course €${CURSO_COLECTIVO_PER_PERSON_EUR}/person (3 h). Specialist instructors.`,
+      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Group course from €${CURSO_COLECTIVO_FROM_EUR} (3 h, minimum 4 people). Specialist instructors.`,
     image: "/images/stock/discipline-snowboard.jpg",
     sortOrder: 2,
   },

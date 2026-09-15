@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/PageHeader";
+import { CompleteRateTables } from "@/components/CompleteRateTables";
 import { PriceTables } from "@/components/PriceTables";
 import { CTASection } from "@/components/CTASection";
 import { media } from "@/lib/media";
@@ -54,6 +55,12 @@ export default async function ClasesPage({ params }: Props) {
       <section className="pb-8 pt-3 sm:pb-10 sm:pt-5 md:pb-12 md:pt-7 lg:pb-16">
         <div className="container-page">
           <PriceTables locale={locale} />
+        </div>
+      </section>
+
+      <section id="tarifas" className="section-padding scroll-target bg-nieve">
+        <div className="container-page">
+          <CompleteRateTables locale={locale} />
         </div>
       </section>
 

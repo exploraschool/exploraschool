@@ -1,6 +1,6 @@
 import type { Product } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
+import { CLUB_EMPRESA_EXTRA_EUR, FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 
 export function productFacts(product: Product, locale: string): string[] {
   const people = peopleBit(product, locale);
@@ -51,14 +51,14 @@ export function productCardHighlights(product: Product, locale: string): string[
     case "curso-snow":
       return pickLocale(
         locale,
-        ["Precio por persona", "Grupo reducido, máximo 8", "Snowboard, todas las edades"],
-        ["Price per person", "Small group, max. 8", "Snowboard, all ages"],
+        ["Desde 4 personas", "Grupo reducido, máximo 8", "Snowboard, todas las edades"],
+        ["From 4 people", "Small group, max. 8", "Snowboard, all ages"],
       );
     case "curso-empresa":
       return pickLocale(
         locale,
-        ["+25 €/día a partir de la 3.ª persona", "Esquí, snowboard o telemark", "Máximo 8 personas"],
-        ["+€25/day from the 3rd person", "Ski, snowboard or telemark", "Maximum 8 people"],
+        [`+${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra`, "Esquí, snowboard o telemark", "Máximo 8 personas"],
+        [`+€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person`, "Ski, snowboard or telemark", "Maximum 8 people"],
       );
     default:
       return [];
@@ -66,14 +66,10 @@ export function productCardHighlights(product: Product, locale: string): string[
 }
 
 export function productPricePrefix(product: Product, locale: string): string | undefined {
-  if (product.id === "curso-snow") return undefined;
   return pickLocale(locale, "desde ", "from ");
 }
 
 export function productPriceSuffix(product: Product, locale: string): string | undefined {
-  if (product.id === "curso-snow") {
-    return pickLocale(locale, " / persona", " / person");
-  }
   if (product.category === "full-day" || product.id === "curso-empresa") {
     return pickLocale(locale, " / día", " / day");
   }

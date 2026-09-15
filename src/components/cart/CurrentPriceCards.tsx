@@ -28,7 +28,9 @@ export function CurrentPriceCards({ locale }: CurrentPriceCardsProps) {
                 suffix={
                   price.unit === "person"
                     ? pickLocale(locale, " / persona", " / person")
-                    : pickLocale(locale, " / día", " / day")
+                    : price.unit === "day"
+                      ? pickLocale(locale, " / día", " / day")
+                      : undefined
                 }
                 size="lg"
               />

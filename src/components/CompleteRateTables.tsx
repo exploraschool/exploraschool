@@ -1,0 +1,150 @@
+import { SectionHeader } from "@/components/SectionHeader";
+import { CURRENT_SEASON } from "@/data/season";
+import { completeRateTables, priceNotes } from "@/data/prices";
+import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
+import { pickLocale } from "@/lib/locale";
+
+type CompleteRateTablesProps = {
+  locale: string;
+};
+
+export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
+  const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
+  const scheduleLabel = pickLocale(locale, "Horario", "Schedule");
+
+  return (
+    <>
+      <SectionHeader
+        eyebrow={pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `${CURRENT_SEASON.label} season`)}
+        title={pickLocale(locale, "Cuadro de tarifas", "Rate chart")}
+        description={pickLocale(
+          locale,
+          "Precios oficiales de lista para todas las clases particulares, el curso de snowboard y los cursos de varios días. Sin promociones ni descuentos.",
+          "Official list prices for all private lessons, the snowboard course and multi-day courses. Promotions and discounts are not included.",
+        )}
+      />
+      <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">
+        {pickLocale(locale, priceNotes.groupTotalEs, priceNotes.groupTotalEn)}{" "}
+        {pickLocale(locale, priceNotes.vatEs, priceNotes.vatEn)}
+      </p>
+
+      <div className="section-body-sm">
+        <div className="overflow-hidden rounded-2xl border border-hielo/12 bg-white shadow-[0_2px_16px_rgba(14,14,15,0.04)]">
+          <table className="w-full table-fixed border-collapse text-[0.625rem] leading-tight sm:text-sm sm:leading-normal">
+            <caption className="sr-only">
+              {pickLocale(
+                locale,
+                "Cuadro de tarifas oficiales por horario y número de personas, sin promociones",
+                "Official rate chart by time slot and group size, promotions not included",
+              )}
+            </caption>
+            <colgroup>
+              <col className="w-[22%] sm:w-[18%]" />
+              {peopleHeaders.map((label) => (
+                <col key={label} className="w-[9.75%] sm:w-[10.25%]" />
+              ))}
+            </colgroup>
+            <thead>
+              <tr className="bg-hielo text-nieve">
+                <th
+                  scope="col"
+                  rowSpan={2}
+                  className="border-b border-white/10 px-1 py-2 text-left text-[0.6rem] font-bold uppercase tracking-wide sm:px-4 sm:py-3 sm:text-[0.7rem] sm:tracking-wider"
+                >
+                  {scheduleLabel}
+                </th>
+                <th
+                  scope="colgroup"
+                  colSpan={8}
+                  className="border-b border-white/10 px-1 py-1.5 text-center text-[0.6rem] font-bold uppercase tracking-wide sm:px-2 sm:py-2 sm:text-[0.7rem] sm:tracking-wider"
+                >
+                  {pickLocale(locale, "Personas · €", "People · €")}
+                </th>
+              </tr>
+              <tr className="border-b border-hielo/10 bg-hielo text-nieve">
+                {peopleHeaders.map((label, index) => (
+                  <th
+                    key={label}
+                    scope="col"
+                    className="px-0 py-1.5 text-center text-[0.6rem] font-bold uppercase tracking-wide sm:px-3 sm:py-2 sm:text-[0.7rem] sm:tracking-wider"
+                  >
+                    <span aria-hidden>{index + 1}</span>
+                    <span className="sr-only">{label}</span>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {completeRateTables.map((table) => (
+                <TableBlock key={table.id} locale={locale} table={table} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <ul className="mt-4 space-y-1.5 text-xs leading-relaxed text-muted sm:mt-5 sm:text-sm">
+          {completeRateTables
+            .filter((table) => table.noteEs)
+            .map((table) => (
+              <li key={table.id}>
+                <span className="font-semibold text-pizarra">
+                  {pickLocale(locale, table.titleEs, table.titleEn)}.
+                </span>{" "}
+                {pickLocale(locale, table.noteEs ?? "", table.noteEn ?? "")}
+              </li>
+            ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
+function TableBlock({
+  locale,
+  table,
+}: {
+  locale: string;
+  table: (typeof completeRateTables)[number];
+}) {
+  return (
+    <>
+      <tr className="border-t border-hielo/10 bg-nieve">
+        <td colSpan={9} className="px-1.5 py-2 sm:px-4 sm:py-2.5">
+          <span className="font-display text-[0.7rem] font-semibold text-hielo sm:text-base">
+            {pickLocale(locale, table.titleEs, table.titleEn)}
+          </span>
+          <span className="ml-1 text-[0.6rem] font-medium text-muted sm:ml-2 sm:text-xs">
+            {pickLocale(locale, table.subtitleEs, table.subtitleEn)}
+          </span>
+        </td>
+      </tr>
+      {table.rows.map((row, rowIndex) => {
+        const schedule = pickLocale(locale, row.scheduleEs, row.scheduleEn);
+        const zebra = rowIndex % 2 === 0 ? "bg-white" : "bg-nieve";
+
+        return (
+          <tr key={schedule} className={`border-t border-hielo/8 ${zebra}`}>
+            <th
+              scope="row"
+              className={`px-1 py-1.5 text-left font-medium text-pizarra sm:px-4 sm:py-2.5 ${zebra}`}
+            >
+              {schedule}
+            </th>
+            {row.prices.map((price, index) => (
+              <td
+                key={`${schedule}-${index}`}
+                className="px-0 py-1.5 text-center tabular-nums text-pizarra sm:px-3 sm:py-2.5"
+              >
+                {price == null ? (
+                  <span className="text-muted">—</span>
+                ) : (
+                  <span className="font-semibold text-hielo">{price}</span>
+                )}
+              </td>
+            ))}
+          </tr>
+        );
+      })}
+    </>
+  );
+}

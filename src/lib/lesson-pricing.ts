@@ -4,7 +4,7 @@
  * Clases particulares: precio total de grupo por columna 1PAX–8PAX.
  * Duración mínima: 2 horas. No hay clases de 1 h ni franja 09:00–12:00.
  *
- * Club/empresa sigue con 1–2 al mismo precio.
+ * Cursos de 2–5 días: 195 € (1 persona) + 25 € por cada persona extra.
  */
 
 export const MIN_LESSON_HOURS = 2;
@@ -24,9 +24,8 @@ export type SessionPriceRow = readonly [
   number,
 ];
 
-function pairBaseRow(base: number, extraPerPerson: number): SessionPriceRow {
+function incrementFromBase(base: number, extraPerPerson: number): SessionPriceRow {
   return [
-    base,
     base,
     base + extraPerPerson,
     base + extraPerPerson * 2,
@@ -34,6 +33,7 @@ function pairBaseRow(base: number, extraPerPerson: number): SessionPriceRow {
     base + extraPerPerson * 4,
     base + extraPerPerson * 5,
     base + extraPerPerson * 6,
+    base + extraPerPerson * 7,
   ];
 }
 
@@ -46,14 +46,14 @@ export const SESSION_2H_MIDDAY: SessionPriceRow = SESSION_2H_STANDARD;
 /** 2 h tarde 14:00–16:00. */
 export const SESSION_2H_AFTERNOON: SessionPriceRow = [90, 100, 110, 120, 130, 140, 150, 160];
 
-/** 3 h mañana 10:00–13:00 (y split / 12:00–15:00). No se ofrece 09:00–12:00. */
-export const SESSION_3H_MORNING: SessionPriceRow = [165, 180, 195, 210, 225, 240, 255, 270];
+/** 3 h mañana 10:00–13:00 (esquí, snowboard y telemark). */
+export const SESSION_3H_MORNING: SessionPriceRow = [195, 210, 225, 240, 255, 270, 285, 300];
 
-/** 3 h split 10:00–12:00 y 14:00–15:00 — misma tarifa que mañana. */
-export const SESSION_3H_SPLIT: SessionPriceRow = SESSION_3H_MORNING;
+/** 3 h split 10:00–12:00 y 14:00–15:00. */
+export const SESSION_3H_SPLIT: SessionPriceRow = [165, 180, 195, 210, 225, 240, 255, 270];
 
-/** 3 h 12:00–15:00 — misma tarifa que mañana. */
-export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_MORNING;
+/** 3 h 12:00–15:00 — misma tarifa que el split. */
+export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_SPLIT;
 
 /** 3 h medio día 14:00–17:00. */
 export const SESSION_3H_AFTERNOON: SessionPriceRow = [150, 165, 180, 195, 210, 225, 240, 255];
@@ -67,17 +67,29 @@ export const FULL_DAY_EFFECTIVE_HOURS = 5;
 /** Gancho de captación: 240 € / 5 h = 48 €/h (1 persona). */
 export const FULL_DAY_HOURLY_EUR = Math.round(SESSION_FULL_DAY[0] / FULL_DAY_EFFECTIVE_HOURS);
 
-/** Cursos club/empresa (2–5 días): 195 €/día (1–2) + 25 €/día desde la 3.ª. */
-export const SESSION_CLUB_EMPRESA: SessionPriceRow = pairBaseRow(195, 25);
+/** Cursos club/empresa (2–5 días): 195 €/día (1 persona) + 25 €/día por cada persona extra. */
+export const CLUB_EMPRESA_EXTRA_EUR = 25;
+export const SESSION_CLUB_EMPRESA: SessionPriceRow = incrementFromBase(195, CLUB_EMPRESA_EXTRA_EUR);
 
-/** Curso de snowboard 3 h (10:00–13:00): 59 €/persona. Mínimo 4, máximo 8. */
-export const CURSO_COLECTIVO_PER_PERSON_EUR = 59;
+/** Curso de snowboard 3 h (10:00–13:00). Mínimo 4, máximo 8. Total de grupo desde 210 €. */
+export const CURSO_COLECTIVO_MIN_PEOPLE = 4;
+export const CURSO_COLECTIVO_FROM_EUR = 210;
+export const CURSO_COLECTIVO_PER_PERSON_EUR = CURSO_COLECTIVO_FROM_EUR / CURSO_COLECTIVO_MIN_PEOPLE;
+export const CURSO_COLECTIVO_PER_PERSON_ES = CURSO_COLECTIVO_PER_PERSON_EUR.toFixed(2).replace(".", ",");
+export const CURSO_COLECTIVO_PER_PERSON_EN = CURSO_COLECTIVO_PER_PERSON_EUR.toFixed(2);
+
+export function cursoColectivoTotal(participants: number): number | null {
+  if (participants < CURSO_COLECTIVO_MIN_PEOPLE || participants > 8) return null;
+  return Math.round(CURSO_COLECTIVO_PER_PERSON_EUR * participants);
+}
 
 /** Horas de clase del curso colectivo. */
 export const CURSO_COLECTIVO_HOURS = 3;
 
-/** Gancho sutil: 59 € / 3 h ≈ 20 €/h por persona. */
-export const CURSO_COLECTIVO_HOURLY_EUR = Math.round(CURSO_COLECTIVO_PER_PERSON_EUR / CURSO_COLECTIVO_HOURS);
+/** Gancho: 52,50 € / 3 h ≈ 18 €/h por persona. */
+export const CURSO_COLECTIVO_HOURLY_EUR = Math.round(
+  CURSO_COLECTIVO_PER_PERSON_EUR / CURSO_COLECTIVO_HOURS,
+);
 
 /** @deprecated Use CURSO_COLECTIVO_PER_PERSON_EUR */
 export const CURSO_SNOW_PER_PERSON_EUR = CURSO_COLECTIVO_PER_PERSON_EUR;
