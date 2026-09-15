@@ -6,7 +6,7 @@ import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCart } from "@/context/CartContext";
 import { cartTotal } from "@/lib/cart";
-import { isSlotAllowedForDiscipline } from "@/lib/booking-config";
+import { isSlotAllowedForBooking } from "@/lib/booking-config";
 import { partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import { pickLocale } from "@/lib/locale";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
@@ -132,7 +132,8 @@ export function BookingCheckout() {
       return;
     }
     const invalidSlot = bookable.filter(
-      (item) => !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline),
+      (item) =>
+        !isSlotAllowedForBooking(item.productId, item.timeSlotId, item.discipline, item.participants),
     );
     if (invalidSlot.length > 0) {
       for (const item of invalidSlot) removeItem(item.id);

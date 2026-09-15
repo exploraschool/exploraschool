@@ -222,14 +222,40 @@ export function usesPairBasePricing(productId: ProductId): boolean {
   return productId === "curso-empresa";
 }
 
+const PRIVATE_LESSON_PRODUCTS = new Set<ProductId>(["particular", "grupal"]);
+
+/** Private snowboard 10:00–13:00 is 1–3 people; 4+ is the group course. */
+export const PRIVATE_SNOWBOARD_MORNING_MAX = 3;
+
+export function isPrivateLessonProduct(productId: ProductId): boolean {
+  return PRIVATE_LESSON_PRODUCTS.has(productId);
+}
+
+export function isPrivateSnowboardMorningSlot(
+  productId: ProductId,
+  slotId: TimeSlotId,
+  discipline?: MainDisciplineId,
+): boolean {
+  return (
+    isPrivateLessonProduct(productId) &&
+    slotId === "3h-10-13" &&
+    discipline === "snowboard"
+  );
+}
+
 export function getParticipantLimits(
   productId: ProductId,
   discipline?: MainDisciplineId,
+  slotId?: TimeSlotId,
 ): { minPeople: number; maxPeople: number } {
   const config = PRODUCT_BOOKING_CONFIG[productId];
 
   if (discipline && isIndividualizedDiscipline(discipline)) {
     return { minPeople: 1, maxPeople: 1 };
+  }
+
+  if (slotId && isPrivateSnowboardMorningSlot(productId, slotId, discipline)) {
+    return { minPeople: config.minPeople ?? 1, maxPeople: PRIVATE_SNOWBOARD_MORNING_MAX };
   }
 
   return {
@@ -242,8 +268,9 @@ export function clampParticipantCount(
   participants: number,
   productId: ProductId,
   discipline?: MainDisciplineId,
+  slotId?: TimeSlotId,
 ): number {
-  const { minPeople, maxPeople } = getParticipantLimits(productId, discipline);
+  const { minPeople, maxPeople } = getParticipantLimits(productId, discipline, slotId);
   if (!Number.isFinite(participants)) return minPeople;
   return Math.min(maxPeople, Math.max(minPeople, Math.round(participants)));
 }
@@ -257,26 +284,48 @@ export function isSlotAllowedForDiscipline(
   return true;
 }
 
+/** Discipline + group-size rules for a product/slot (e.g. snowboard 10:00–13:00 max 3 as private). */
+export function isSlotAllowedForBooking(
+  productId: ProductId,
+  slotId: TimeSlotId,
+  discipline?: MainDisciplineId,
+  participants?: number,
+): boolean {
+  if (!isSlotAllowedForDiscipline(slotId, discipline)) return false;
+  if (
+    isPrivateSnowboardMorningSlot(productId, slotId, discipline) &&
+    participants !== undefined &&
+    participants > PRIVATE_SNOWBOARD_MORNING_MAX
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export function getSlotsForProduct(
   productId: ProductId,
   discipline?: MainDisciplineId,
+  participants?: number,
 ): TimeSlot[] {
   const config = PRODUCT_BOOKING_CONFIG[productId];
   return config.slotIds
     .map((id) => TIME_SLOTS[id])
     .filter((slot) => slot.hours === 0 || slot.hours >= MIN_LESSON_HOURS)
-    .filter((slot) => isSlotAllowedForDiscipline(slot.id, discipline));
+    .filter((slot) => isSlotAllowedForBooking(productId, slot.id, discipline, participants));
 }
 
 export function calculateSessionPrice(
   productId: ProductId,
   participants: number,
   slotId: TimeSlotId,
+  discipline?: MainDisciplineId,
 ): number | null {
-  const config = PRODUCT_BOOKING_CONFIG[productId];
-  const minPeople = config.minPeople ?? 1;
-  const maxPeople = config.maxPeople ?? 8;
+  if (!isSlotAllowedForBooking(productId, slotId, discipline, participants)) return null;
+
+  const { minPeople, maxPeople } = getParticipantLimits(productId, discipline, slotId);
   if (participants < minPeople || participants > maxPeople) return null;
+
+  const config = PRODUCT_BOOKING_CONFIG[productId];
 
   if (config.profile === "flat") {
     const unit = config.flatPricePerPerson ?? 0;
@@ -323,10 +372,17 @@ const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
 export function getBookingFromSeasonRow(
   tableId: PriceTable["id"],
   schedule: string,
+  participants?: number,
 ): { productId: ProductId; timeSlotId: TimeSlotId } | null {
-  const productId = SEASON_TABLE_PRODUCT[tableId];
   const timeSlotId = SCHEDULE_TO_SLOT[schedule];
-  if (!productId || !timeSlotId) return null;
+  if (!timeSlotId) return null;
+
+  if (tableId === "clases-3h" && timeSlotId === "3h-10-13" && (participants ?? 0) >= 4) {
+    return { productId: "curso-snow", timeSlotId };
+  }
+
+  const productId = SEASON_TABLE_PRODUCT[tableId];
+  if (!productId) return null;
   return { productId, timeSlotId };
 }
 

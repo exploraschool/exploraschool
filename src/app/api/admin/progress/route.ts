@@ -25,7 +25,7 @@ import { getProductBySlug, type ProductId } from "@/data/products";
 import { FieldValue } from "firebase-admin/firestore";
 import { findStudentUidByEmail } from "@/lib/student-user-store";
 import { createStudentTip } from "@/lib/student-tips";
-import { sendStudentProgressUpdateEmail } from "@/lib/lead-emails";
+import { sendStudentProgressUpdateEmail, STUDENT_AREA_EMAILS_ENABLED } from "@/lib/lead-emails";
 import { ensureDirectUploadCors } from "@/lib/storage-cors";
 
 export const runtime = "nodejs";
@@ -217,7 +217,9 @@ export async function POST(request: Request) {
     }
 
     // Email is best-effort and must not block / fail the save.
-    if (report.studentEmail?.trim()) {
+    const studentEmailQueued =
+      STUDENT_AREA_EMAILS_ENABLED && Boolean(report.studentEmail?.trim());
+    if (studentEmailQueued) {
       void sendStudentProgressUpdateEmail(report, { isNew: !previous }).catch((emailError) => {
         console.error("[admin/progress] Student progress email failed:", emailError);
       });
@@ -226,7 +228,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       report,
-      studentEmailQueued: Boolean(report.studentEmail?.trim()),
+      studentEmailQueued,
     });
   } catch (error) {
     console.error("[admin/progress] save failed:", error);

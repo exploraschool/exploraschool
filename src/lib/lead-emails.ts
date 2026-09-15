@@ -37,6 +37,12 @@ export async function sendResendEmail(email: ResendPayload): Promise<void> {
 
 export { createLeadConfirmToken };
 
+/**
+ * Emails that push students to the account area (progress ficha, complete-profile reminder).
+ * Flip to true when the team is ready to run that flow.
+ */
+export const STUDENT_AREA_EMAILS_ENABLED = false;
+
 function getEmailConfig() {
   return {
     from: process.env.RESEND_FROM ?? "Explora School <onboarding@resend.dev>",
@@ -94,6 +100,9 @@ export async function sendStudentProgressUpdateEmail(
   report: ProgressReport,
   options?: { isNew?: boolean },
 ): Promise<void> {
+  if (!STUDENT_AREA_EMAILS_ENABLED) {
+    return;
+  }
   const { from, siteUrl, customerEmail } = await requireCustomerMailbox({
     email: report.studentEmail,
   });

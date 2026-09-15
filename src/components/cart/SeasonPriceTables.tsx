@@ -10,7 +10,14 @@ import {
   readPeopleFromLocationSearch,
   type TimeSlotId,
 } from "@/lib/booking-config";
-import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES, UNIFIED_SIZE_LABEL_EN, UNIFIED_SIZE_LABEL_ES } from "@/lib/lesson-pricing";
+import {
+  CURSO_COLECTIVO_PER_PERSON_EUR,
+  FULL_DAY_HOURLY_EUR,
+  PEOPLE_COUNT_HEADERS_EN,
+  PEOPLE_COUNT_HEADERS_ES,
+  UNIFIED_SIZE_LABEL_EN,
+  UNIFIED_SIZE_LABEL_ES,
+} from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 import { resolvePriceDisplay } from "@/lib/promotions";
 
@@ -36,7 +43,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
   const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
 
   function handlePriceClick(tableId: string, schedule: string) {
-    const booking = getBookingFromSeasonRow(tableId, schedule);
+    const booking = getBookingFromSeasonRow(tableId, schedule, participants);
     if (!booking) return;
 
     setBookingSelection({
@@ -97,8 +104,16 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           >
             <div className="divide-y divide-hielo/8">
               {table.rows.map((row) => {
-                const listPrice = row.prices[participants - 1];
-                const display = resolvePriceDisplay(listPrice);
+                const isMorning3h = table.id === "clases-3h" && row.schedule === "10:00–13:00";
+                const isSnowboardCourseRow = isMorning3h && participants >= 4;
+                const listPrice = isSnowboardCourseRow
+                  ? CURSO_COLECTIVO_PER_PERSON_EUR * participants
+                  : row.prices[participants - 1];
+                const display = resolvePriceDisplay(
+                  listPrice,
+                  undefined,
+                  isSnowboardCourseRow ? "curso-snow" : undefined,
+                );
                 const isRecommended = table.id === "clases-2h" && row.schedule === "10:00–12:00";
                 const isFullDay = table.id === "full-day";
 
@@ -116,9 +131,19 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                           {pickLocale(locale, "Horario más solicitado", "Most requested slot")}
                         </span>
                       )}
-                      {row.schedule === "10:00–13:00" && (
+                      {isMorning3h && (
                         <span className="mt-0.5 block text-xs text-muted">
-                          {pickLocale(locale, "Snowboard y telemark", "Snowboard and telemark")}
+                          {isSnowboardCourseRow
+                            ? pickLocale(
+                                locale,
+                                "Curso snowboard · precio por persona",
+                                "Snowboard course · price per person",
+                              )
+                            : pickLocale(
+                                locale,
+                                "Particular snowboard (1–3) y telemark",
+                                "Private snowboard (1–3) and telemark",
+                              )}
                         </span>
                       )}
                       {isFullDay && (
@@ -154,7 +179,9 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                         </span>
                       )}
                       <span className="mt-0.5 block text-[0.65rem] text-muted">
-                        {pickLocale(locale, "total grupo · reservar", "group total · book")}
+                        {isSnowboardCourseRow
+                          ? pickLocale(locale, "total · reservar curso", "total · book course")
+                          : pickLocale(locale, "total grupo · reservar", "group total · book")}
                       </span>
                     </button>
                   </div>
@@ -173,6 +200,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           productId={bookingSelection.productId}
           defaultTimeSlotId={bookingSelection.timeSlotId}
           defaultParticipants={bookingSelection.participants}
+          defaultDiscipline={bookingSelection.productId === "curso-snow" ? "snowboard" : undefined}
         />
       )}
     </>

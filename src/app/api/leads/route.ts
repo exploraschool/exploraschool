@@ -3,8 +3,9 @@ import { z } from "zod";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { upsertMarketingContact } from "@/lib/marketing-contacts";
 import { isBookingTooLate, partitionByBookingCutoff } from "@/lib/booking-cutoff";
-import { isSlotAllowedForDiscipline, isTimeSlotId } from "@/lib/booking-config";
+import { isSlotAllowedForBooking, isTimeSlotId } from "@/lib/booking-config";
 import type { MainDisciplineId } from "@/data/disciplines";
+import type { ProductId } from "@/data/products";
 import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
@@ -64,7 +65,12 @@ const leadSchema = z
         }
         if (
           isTimeSlotId(item.timeSlotId) &&
-          !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline as MainDisciplineId)
+          !isSlotAllowedForBooking(
+            item.productId as ProductId,
+            item.timeSlotId,
+            item.discipline as MainDisciplineId,
+            item.participants,
+          )
         ) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -127,7 +133,12 @@ export async function POST(request: Request) {
       const invalidSlot = bookable.filter(
         (item) =>
           isTimeSlotId(item.timeSlotId) &&
-          !isSlotAllowedForDiscipline(item.timeSlotId, item.discipline as MainDisciplineId),
+          !isSlotAllowedForBooking(
+            item.productId as ProductId,
+            item.timeSlotId,
+            item.discipline as MainDisciplineId,
+            item.participants,
+          ),
       );
       if (invalidSlot.length > 0) {
         return NextResponse.json({ error: "invalid_slot", code: "invalid_slot" }, { status: 400 });

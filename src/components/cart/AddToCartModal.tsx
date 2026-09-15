@@ -32,7 +32,8 @@ import {
   getProductBookingConfig,
   getSlotLabel,
   getSlotsForProduct,
-  isSlotAllowedForDiscipline,
+  isPrivateLessonProduct,
+  isSlotAllowedForBooking,
   TIME_SLOTS,
   usesPairBasePricing,
   type TimeSlotId,
@@ -94,8 +95,8 @@ export function AddToCartModal({
       ? "snowboard"
       : discipline || implicitDiscipline || undefined;
   const slots = useMemo(
-    () => getSlotsForProduct(productId, slotsDiscipline),
-    [productId, slotsDiscipline],
+    () => getSlotsForProduct(productId, slotsDiscipline, participants),
+    [productId, slotsDiscipline, participants],
   );
 
   useBodyScrollLock(open && !!product);
@@ -142,7 +143,11 @@ export function AddToCartModal({
         product?.disciplines.includes("snowboard")
           ? "snowboard"
           : (defaultDiscipline ?? singleDiscipline ?? "");
-      const availableSlots = getSlotsForProduct(productId, initialDiscipline || undefined);
+      const availableSlots = getSlotsForProduct(
+        productId,
+        initialDiscipline || undefined,
+        defaultParticipants,
+      );
       const slotId =
         defaultTimeSlotId && availableSlots.some((slot) => slot.id === defaultTimeSlotId)
           ? defaultTimeSlotId
@@ -152,6 +157,7 @@ export function AddToCartModal({
       const { minPeople: limitsMin, maxPeople: limitsMax } = getParticipantLimits(
         productId,
         initialDiscipline || undefined,
+        slotId,
       );
       const people =
         initialDiscipline && isIndividualizedDiscipline(initialDiscipline)
@@ -193,8 +199,8 @@ export function AddToCartModal({
   }, [open, onClose]);
 
   const sessionPrice = useMemo(
-    () => calculateSessionPrice(productId, participants, timeSlotId),
-    [productId, participants, timeSlotId],
+    () => calculateSessionPrice(productId, participants, timeSlotId, slotsDiscipline),
+    [productId, participants, timeSlotId, slotsDiscipline],
   );
 
   const disabledSlotIds = useMemo(() => {
@@ -280,7 +286,7 @@ export function AddToCartModal({
     }
   }
 
-  const { minPeople, maxPeople } = getParticipantLimits(productId, effectiveDiscipline);
+  const { minPeople, maxPeople } = getParticipantLimits(productId, effectiveDiscipline, timeSlotId);
   const isIndividualized = effectiveDiscipline
     ? isIndividualizedDiscipline(effectiveDiscipline)
     : false;
@@ -302,7 +308,12 @@ export function AddToCartModal({
       : effectiveDiscipline;
 
   const disciplineValid = Boolean(resolvedDisciplineForSubmit);
-  const selectedSlotAllowed = isSlotAllowedForDiscipline(timeSlotId, resolvedDisciplineForSubmit);
+  const selectedSlotAllowed = isSlotAllowedForBooking(
+    productId,
+    timeSlotId,
+    resolvedDisciplineForSubmit,
+    participants,
+  );
   const selectedSlotOpen =
     dates.length > 0 && dates.every((date) => isBookingStillOpen(date, timeSlotId));
   const canAddToCart =
@@ -314,7 +325,7 @@ export function AddToCartModal({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const people = clampParticipantCount(participants, productId, effectiveDiscipline);
+    const people = clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId);
     setParticipants(people);
     if (!datesValid || !disciplineValid || sessionPrice === null) return;
     if (people < minPeople || people > maxPeople) return;
@@ -322,7 +333,7 @@ export function AddToCartModal({
     const instructor = instructors.find((i) => i.slug === instructorSlug);
     const resolvedDiscipline = resolvedDisciplineForSubmit;
     if (!resolvedDiscipline) return;
-    if (!isSlotAllowedForDiscipline(timeSlotId, resolvedDiscipline)) return;
+    if (!isSlotAllowedForBooking(productId, timeSlotId, resolvedDiscipline, people)) return;
 
     const bookableDates = dates.filter((date) => isBookingStillOpen(date, timeSlotId));
     if (bookableDates.length === 0) return;
@@ -434,6 +445,9 @@ export function AddToCartModal({
                   {effectiveDiscipline === "esqui" && bookingConfig.slotIds.includes("3h-10-13") ? (
                     <p className="mt-2 text-xs text-muted">{t("skiMorningSlotHint")}</p>
                   ) : null}
+                  {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(productId) ? (
+                    <p className="mt-2 text-xs text-muted">{t("snowboardMorningCourseHint")}</p>
+                  ) : null}
                 </div>
               )}
               {dates.length > 0 && !selectedSlotOpen ? (
@@ -468,7 +482,7 @@ export function AddToCartModal({
                     }}
                     onBlur={() => {
                       setParticipants(
-                        clampParticipantCount(participants, productId, effectiveDiscipline),
+                        clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId),
                       );
                     }}
                     className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"

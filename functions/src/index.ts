@@ -44,6 +44,12 @@ const STUDENT_REMINDER_AFTER_MS = 48 * HOUR_MS;
 /** Hourly window half-width so each lead is eligible in one cron tick. */
 const WINDOW_HALF_MS = 45 * 60 * 1000;
 
+/**
+ * Emails that ask students to open their account (ficha / profile reminder).
+ * Flip to true when the team is ready to run that flow.
+ */
+const STUDENT_AREA_EMAILS_ENABLED = false;
+
 function isBookingLead(data: Record<string, unknown>): boolean {
   return data.type === "booking" || data.source === "booking-cart";
 }
@@ -372,6 +378,13 @@ export const sendProfileReminders = onSchedule(
       } catch (error) {
         logger.error("Team profile reminder failed", { leadId: doc.id, error });
       }
+    }
+
+    if (!STUDENT_AREA_EMAILS_ENABLED) {
+      logger.info("Student profile reminders disabled; not emailing students", {
+        studentCandidates: studentDocs.length,
+      });
+      return;
     }
 
     for (const doc of studentDocs) {
