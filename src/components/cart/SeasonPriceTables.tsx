@@ -83,10 +83,11 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
         <p className="mt-3 text-xs text-muted">{peopleHeaders[participants - 1]}</p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-3 [overflow-anchor:none]">
         {seasonPriceTables.map((table) => (
           <DisclosureItem
             key={table.id}
+            name="tarifas-horario"
             variant="card"
             defaultOpen={table.id === "clases-2h"}
             bodyClassName="!p-0"

@@ -12,10 +12,6 @@ type CTASectionProps = {
 
 const reassurances = [
   {
-    textEs: "Sin pago online",
-    textEn: "No online payment",
-  },
-  {
     textEs: "Confirmación por email",
     textEn: "Email confirmation",
   },
@@ -46,13 +42,20 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                     "Choose products, dates and group size. Your booking arrives in our inbox ready to confirm.",
                   )}
                 />
-                <ul className="mt-4 flex flex-wrap gap-2 sm:mt-5">
+                <ul className="mt-4 flex flex-nowrap gap-1.5 sm:mt-5 sm:gap-2">
                   {reassurances.map((r) => (
                     <li
                       key={r.textEs}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium text-on-dark"
+                      className="inline-flex items-center gap-1 whitespace-nowrap rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[0.7rem] font-medium text-on-dark sm:gap-1.5 sm:px-3 sm:text-xs"
                     >
-                      <svg className="h-3.5 w-3.5 text-oro" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
+                      <svg
+                        className="h-3 w-3 text-oro sm:h-3.5 sm:w-3.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        aria-hidden
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                       </svg>
                       {pickLocale(locale, r.textEs, r.textEn)}

@@ -567,6 +567,7 @@
     border-bottom-style: solid;
     border-bottom-width: 1px;
     box-shadow: 0 2px 16px rgb(10 18 25 / 0.04);
+    overflow-anchor: none;
   }
 
   .disclose--card + .disclose--card {
