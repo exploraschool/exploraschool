@@ -139,11 +139,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
                                 "Curso snowboard · precio por persona",
                                 "Snowboard course · price per person",
                               )
-                            : pickLocale(
-                                locale,
-                                "Particular snowboard (1–3) y telemark",
-                                "Private snowboard (1–3) and telemark",
-                              )}
+                            : pickLocale(locale, "Particular snowboard (1–3 personas)", "Private snowboard (1–3 people)")}
                         </span>
                       )}
                       {isFullDay && (
@@ -200,7 +196,11 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           productId={bookingSelection.productId}
           defaultTimeSlotId={bookingSelection.timeSlotId}
           defaultParticipants={bookingSelection.participants}
-          defaultDiscipline={bookingSelection.productId === "curso-snow" ? "snowboard" : undefined}
+          defaultDiscipline={
+            bookingSelection.productId === "curso-snow" || bookingSelection.timeSlotId === "3h-10-13"
+              ? "snowboard"
+              : undefined
+          }
         />
       )}
     </>

@@ -159,7 +159,7 @@
     "bookingCutoffHint": "No se puede reservar a menos de 1 hora del inicio de la clase.",
     "bookingCutoffError": "Las reservas no se pueden enviar a menos de 1 hora del inicio de la clase. Elige otro horario o fecha.",
     "invalidSlotError": "Ese horario no está disponible para esa disciplina o número de personas. El 10:00–13:00 no se ofrece en esquí; en snowboard, a partir de 4 personas es el curso colectivo.",
-    "skiMorningSlotHint": "El horario 10:00–13:00 no se ofrece en esquí. Está disponible en snowboard (particular 1–3 o curso a partir de 4) y telemark.",
+    "skiMorningSlotHint": "El horario 10:00–13:00 es solo de snowboard (particular 1–3 o curso a partir de 4).",
     "snowboardMorningCourseHint": "A partir de 4 personas, el 10:00–13:00 es el curso colectivo de snowboard (59 €/persona), no una particular.",
     "formalizeTitle": "Formaliza con Google",
     "formalizeDesc": "Accede con tu cuenta de Google para rellenar nombre y email, vincular la reserva a tu área de alumno y dejar listo el teléfono de contacto.",

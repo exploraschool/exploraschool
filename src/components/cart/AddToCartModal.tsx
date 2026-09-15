@@ -442,7 +442,9 @@ export function AddToCartModal({
                     disabledSlotIds={disabledSlotIds}
                     disabledHint={t("bookingCutoffHint")}
                   />
-                  {effectiveDiscipline === "esqui" && bookingConfig.slotIds.includes("3h-10-13") ? (
+                  {effectiveDiscipline &&
+                  effectiveDiscipline !== "snowboard" &&
+                  bookingConfig.slotIds.includes("3h-10-13") ? (
                     <p className="mt-2 text-xs text-muted">{t("skiMorningSlotHint")}</p>
                   ) : null}
                   {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(productId) ? (

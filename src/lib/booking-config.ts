@@ -275,12 +275,12 @@ export function clampParticipantCount(
   return Math.min(maxPeople, Math.max(minPeople, Math.round(participants)));
 }
 
-/** Alpine ski is not offered in the 10:00–13:00 3h window; snowboard and telemark are. */
+/** 10:00–13:00 3h is snowboard only (private 1–3 or group course 4+). */
 export function isSlotAllowedForDiscipline(
   slotId: TimeSlotId,
   discipline?: MainDisciplineId,
 ): boolean {
-  if (discipline === "esqui" && slotId === "3h-10-13") return false;
+  if (slotId === "3h-10-13" && discipline && discipline !== "snowboard") return false;
   return true;
 }
 
