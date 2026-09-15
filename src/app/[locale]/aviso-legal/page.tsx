@@ -96,8 +96,8 @@ export default async function AvisoLegalPage({ params }: Props) {
         <p>
           {pickLocale(
             locale,
-            "Enviar una solicitud en la web no cobra nada ni cierra un contrato de pago online. Te confirmamos por email la disponibilidad y el total estimado. El pago se acuerda con el instructor o el equipo. El precio definitivo se cierra al confirmar grupo, horario y extras.",
-            "Submitting a request on the website does not charge you and is not an online payment contract. We confirm availability and an estimated total by email. Payment is arranged with the instructor or the team. The final price is settled when the group, schedule and extras are confirmed.",
+            "Enviar una solicitud en la web no cobra nada ni cierra un contrato de pago online. Te confirmamos por email la disponibilidad y el precio de la reserva. El pago se acuerda con el instructor o el equipo.",
+            "Submitting a request on the website does not charge you and is not an online payment contract. We confirm availability and the booking price by email. Payment is arranged with the instructor or the team.",
           )}
         </p>
         <p>

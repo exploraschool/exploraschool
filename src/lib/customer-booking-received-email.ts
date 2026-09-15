@@ -129,8 +129,8 @@ export function buildCustomerBookingReceivedEmail({
 
   const totalNote = pick(
     isEn,
-    "Importe orientativo. El total definitivo se confirma al formalizar la reserva.",
-    "Indicative amount. The final total is confirmed when the booking is finalised.",
+    "Total (IVA incl.). Precio de la reserva.",
+    "Total (VAT incl.). Booking price.",
   );
 
   const summaryLines = items.map((item, index) => {
@@ -167,7 +167,7 @@ export function buildCustomerBookingReceivedEmail({
     ...summaryLines,
     "",
     estimatedTotal !== undefined
-      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${estimatedTotal} €`
+      ? `${pick(isEn, "Total", "Total")}: ${estimatedTotal} €`
       : "",
     estimatedTotal !== undefined ? totalNote : "",
     "",
@@ -271,7 +271,7 @@ export function buildCustomerBookingReceivedEmail({
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
                         <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">
-                          ${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}
+                          ${escapeHtml(pick(isEn, "Total", "Total"))}
                         </td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">
                           ${escapeHtml(`${estimatedTotal} €`)}

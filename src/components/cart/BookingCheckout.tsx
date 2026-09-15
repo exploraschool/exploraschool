@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { useCart } from "@/context/CartContext";
-import { estimateCartTotal } from "@/lib/cart";
+import { cartTotal } from "@/lib/cart";
 import { isSlotAllowedForDiscipline } from "@/lib/booking-config";
 import { partitionByBookingCutoff } from "@/lib/booking-cutoff";
 import { pickLocale } from "@/lib/locale";
@@ -101,7 +101,7 @@ export function BookingCheckout() {
     [items],
   );
 
-  const total = estimateCartTotal(items);
+  const total = cartTotal(items);
   const highlighted = getHighlightedProducts().slice(0, 3);
   const itemsMissingDiscipline = items.some((item) => !item.discipline);
   const showDiscountLabel =
@@ -169,7 +169,7 @@ export function BookingCheckout() {
             .slice()
             .sort((a, b) => a.date.localeCompare(b.date) || a.timeSlotLabel.localeCompare(b.timeSlotLabel))
             .map(({ id: _id, ...item }) => item),
-          estimatedTotal: estimateCartTotal(bookable),
+          estimatedTotal: cartTotal(bookable),
         }),
       });
 

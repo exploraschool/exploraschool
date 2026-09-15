@@ -302,9 +302,7 @@ For equipment we recommend **José Luis Sáez** (next to the Al-Andalus and Borr
 2. Te confirmamos disponibilidad
 3. Abonas la clase con tu instructor/a
 
-En la confirmación verás un total estimado.
-
-> El precio definitivo se cierra al confirmar grupo, horario y extras.`,
+En la confirmación verás el precio de la reserva (IVA incluido).`,
     questionEn: "Do I pay when I book?",
     answerEn: `No. The request goes by email and we do not charge online.
 
@@ -312,9 +310,7 @@ En la confirmación verás un total estimado.
 2. We confirm availability
 3. You pay for the lesson with your instructor
 
-You will see an estimated total in the confirmation.
-
-> The final price is settled when the group, schedule and extras are confirmed.`,
+You will see the booking price in the confirmation (VAT included).`,
   },
   {
     id: "cuanto-tiempo",

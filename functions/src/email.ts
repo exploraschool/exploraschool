@@ -220,7 +220,7 @@ export function buildTeamNotificationEmail(params: {
         item.timeSlotLabel ? `   Horario: ${item.timeSlotLabel}` : "",
         item.participants ? `   Personas: ${item.participants}` : "",
         item.instructorName ? `   Monitor/a preferido/a: ${item.instructorName}` : "",
-        item.lineTotal !== undefined ? `   Precio estimado: ${item.lineTotal} €` : "",
+        item.lineTotal !== undefined ? `   Precio: ${item.lineTotal} €` : "",
         item.notes ? `   Notas: ${item.notes}` : "",
       ]
         .filter(Boolean)
@@ -240,7 +240,7 @@ export function buildTeamNotificationEmail(params: {
     items.length > 0 ? "Detalle de la reserva:" : "",
     sessionText,
     "",
-    estimatedTotal !== undefined ? `Total estimado: ${estimatedTotal} €` : "",
+    estimatedTotal !== undefined ? `Total: ${estimatedTotal} €` : "",
     "",
     message ? "Mensaje del cliente:" : "",
     message || "",
@@ -267,7 +267,7 @@ export function buildTeamNotificationEmail(params: {
       if (item.timeSlotLabel) rows.push(["Horario", item.timeSlotLabel]);
       if (item.participants) rows.push(["Personas", String(item.participants)]);
       if (item.instructorName) rows.push(["Monitor/a preferido/a", item.instructorName]);
-      if (item.lineTotal !== undefined) rows.push(["Precio estimado", `${item.lineTotal} €`]);
+      if (item.lineTotal !== undefined) rows.push(["Precio", `${item.lineTotal} €`]);
       if (item.notes) rows.push(["Notas", item.notes]);
 
       const detailRows = rows
@@ -351,7 +351,7 @@ export function buildTeamNotificationEmail(params: {
                 estimatedTotal !== undefined
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
-                        <td style="padding:16px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">Total estimado</td>
+                        <td style="padding:16px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">Total</td>
                         <td align="right" style="padding:16px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">${escapeHtml(`${estimatedTotal} €`)}</td>
                       </tr>
                     </table>`
@@ -468,8 +468,8 @@ export function buildCustomerConfirmationEmail(params: {
 
   const totalNote = pick(
     isEn,
-    "Total estimado (IVA incl.). El importe final se confirma con tu monitor/a al concretar el abono.",
-    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
+    "Total (IVA incl.). El pago se concreta con tu monitor/a.",
+    "Total (VAT incl.). Payment is arranged with your instructor.",
   );
 
   const sessionText = items
@@ -487,7 +487,7 @@ export function buildCustomerConfirmationEmail(params: {
           ? `   ${pick(isEn, "Monitor/a preferido/a", "Preferred instructor")}: ${item.instructorName}`
           : "",
         item.lineTotal !== undefined
-          ? `   ${pick(isEn, "Precio estimado", "Estimated price")}: ${item.lineTotal} €`
+          ? `   ${pick(isEn, "Precio", "Price")}: ${item.lineTotal} €`
           : "",
       ]
         .filter(Boolean)
@@ -507,7 +507,7 @@ export function buildCustomerConfirmationEmail(params: {
     sessionText,
     "",
     data.estimatedTotal !== undefined
-      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${data.estimatedTotal} €`
+      ? `${pick(isEn, "Total", "Total")}: ${data.estimatedTotal} €`
       : "",
     data.estimatedTotal !== undefined ? totalNote : "",
     "",
@@ -547,7 +547,7 @@ export function buildCustomerConfirmationEmail(params: {
         ]);
       }
       if (item.lineTotal !== undefined) {
-        rows.push([pick(isEn, "Precio estimado", "Estimated price"), `${item.lineTotal} €`]);
+        rows.push([pick(isEn, "Precio", "Price"), `${item.lineTotal} €`]);
       }
 
       const detailRows = rows
@@ -620,7 +620,7 @@ export function buildCustomerConfirmationEmail(params: {
                 data.estimatedTotal !== undefined
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
-                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}</td>
+                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Total", "Total"))}</td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">${escapeHtml(`${data.estimatedTotal} €`)}</td>
                       </tr>
                       <tr><td colspan="2" style="padding:0 0 4px;font-size:13px;line-height:1.5;color:${BRAND.muted};">${escapeHtml(totalNote)}</td></tr>
@@ -702,8 +702,8 @@ export function buildCustomerBookingReceivedEmail(params: {
   );
   const totalNote = pick(
     isEn,
-    "Importe orientativo. El total definitivo se confirma al formalizar la reserva.",
-    "Indicative amount. The final total is confirmed when the booking is finalised.",
+    "Total (IVA incl.). Precio de la reserva.",
+    "Total (VAT incl.). Booking price.",
   );
 
   const sessionText = items
@@ -738,7 +738,7 @@ export function buildCustomerBookingReceivedEmail(params: {
     sessionText,
     "",
     estimatedTotal !== undefined
-      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${estimatedTotal} €`
+      ? `${pick(isEn, "Total", "Total")}: ${estimatedTotal} €`
       : "",
     estimatedTotal !== undefined ? totalNote : "",
     "",
@@ -824,7 +824,7 @@ export function buildCustomerBookingReceivedEmail(params: {
                 estimatedTotal !== undefined
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
-                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}</td>
+                        <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">${escapeHtml(pick(isEn, "Total", "Total"))}</td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">${escapeHtml(`${estimatedTotal} €`)}</td>
                       </tr>
                       <tr>

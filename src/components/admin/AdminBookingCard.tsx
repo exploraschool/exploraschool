@@ -141,7 +141,7 @@ export function AdminBookingCard({
             <p className="font-display text-xl font-semibold text-hielo sm:text-2xl">{lead.estimatedTotal} €</p>
           ) : null}
           <p className="text-xs text-muted">
-            {items.length} {items.length === 1 ? "clase" : "clases"} · total estimado
+            {items.length} {items.length === 1 ? "clase" : "clases"} · total
           </p>
         </div>
       </div>

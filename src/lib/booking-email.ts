@@ -2,7 +2,7 @@ import { site } from "@/data/site";
 import { getDisciplineDisplayName } from "@/data/disciplines";
 import { getProductBySlug } from "@/data/products";
 import type { CartItem, CustomerDetails } from "@/lib/cart";
-import { estimateCartTotal } from "@/lib/cart";
+import { cartTotal } from "@/lib/cart";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 
 type BuildEmailParams = {
@@ -83,14 +83,13 @@ export function buildBookingEmail({ locale, items, customer }: BuildEmailParams)
     }
   });
 
-  const total = estimateCartTotal(items);
+  const total = cartTotal(items);
   lines.push("");
   lines.push("─────────────────────────────");
-  lines.push(`${pick(locale, "TOTAL ESTIMADO (IVA incl.)", "ESTIMATED TOTAL (VAT incl.)")}: ${total} €`);
+  lines.push(`${pick(locale, "TOTAL (IVA incl.)", "TOTAL (VAT incl.)")}: ${total} €`);
   if (isEarlyBirdActive() || items.some((item) => isDiscountActiveForProduct(item.productId))) {
     lines.push(earlyBirdDiscountLabel(locale));
   }
-  lines.push(pick(locale, "Precio final sujeto a confirmación.", "Final price subject to confirmation."));
 
   if (customer.message?.trim()) {
     lines.push("");

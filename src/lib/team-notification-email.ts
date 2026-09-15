@@ -151,7 +151,7 @@ function buildTextSummary(sessions: ResolvedSession[]): string {
         `   Horario: ${session.schedule}`,
         `   Personas: ${session.people}`,
         session.instructor ? `   Monitor/a preferido/a: ${session.instructor}` : "",
-        `   Precio estimado: ${session.priceLabel}`,
+        `   Precio: ${session.priceLabel}`,
         session.notes ? `   Notas: ${session.notes}` : "",
       ];
       return lines.filter(Boolean).join("\n");
@@ -172,7 +172,7 @@ function sessionRowsHtml(sessions: ResolvedSession[]): string {
         ["Personas", session.people],
       );
       if (session.instructor) rows.push(["Monitor/a preferido/a", session.instructor]);
-      rows.push(["Precio estimado", session.priceLabel]);
+      rows.push(["Precio", session.priceLabel]);
       if (session.notes) rows.push(["Notas", session.notes]);
 
       const detailRows = rows
@@ -261,7 +261,7 @@ export function buildTeamNotificationEmail({
     sessions.length > 0 ? "Detalle de la reserva:" : "",
     buildTextSummary(sessions),
     "",
-    estimatedTotal !== undefined ? `Total estimado: ${formatEuro(estimatedTotal)}` : "",
+    estimatedTotal !== undefined ? `Total: ${formatEuro(estimatedTotal)}` : "",
     "",
     message ? "Mensaje del cliente:" : "",
     message || "",
@@ -346,7 +346,7 @@ export function buildTeamNotificationEmail({
                 estimatedTotal !== undefined
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:18px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
-                        <td style="padding:16px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">Total estimado</td>
+                        <td style="padding:16px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">Total</td>
                         <td align="right" style="padding:16px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">${escapeHtml(formatEuro(estimatedTotal))}</td>
                       </tr>
                     </table>`

@@ -48,11 +48,11 @@ export function getMaxBookingDate(): string {
   return `${year}-05-31`;
 }
 
-export function estimateItemPrice(item: CartItem): number {
+export function itemPrice(item: CartItem): number {
   return item.lineTotal;
 }
 
-export function estimateCartTotal(items: CartItem[]): number {
+export function cartTotal(items: CartItem[]): number {
   return items.reduce((sum, item) => sum + item.lineTotal, 0);
 }
 

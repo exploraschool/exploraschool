@@ -153,7 +153,7 @@ function buildTextSummary(sessions: ResolvedSession[], isEn: boolean): string {
         session.instructor
           ? `   ${pick(isEn, "Monitor/a preferido/a", "Preferred instructor")}: ${session.instructor}`
           : "",
-        `   ${pick(isEn, "Precio estimado", "Estimated price")}: ${session.priceLabel}`,
+        `   ${pick(isEn, "Precio", "Price")}: ${session.priceLabel}`,
         session.notes ? `   ${pick(isEn, "Notas", "Notes")}: ${session.notes}` : "",
       ];
       return lines.filter(Boolean).join("\n");
@@ -180,7 +180,7 @@ function sessionRowsHtml(sessions: ResolvedSession[], isEn: boolean): string {
       if (session.instructor) {
         rows.push([pick(isEn, "Monitor/a preferido/a", "Preferred instructor"), session.instructor]);
       }
-      rows.push([pick(isEn, "Precio estimado", "Estimated price"), session.priceLabel]);
+      rows.push([pick(isEn, "Precio", "Price"), session.priceLabel]);
       if (session.notes) {
         rows.push([pick(isEn, "Notas", "Notes"), session.notes]);
       }
@@ -273,8 +273,8 @@ export function buildCustomerConfirmationEmail({
 
   const totalNote = pick(
     isEn,
-    "Total estimado (IVA incl.). El importe final se confirma con tu monitor/a al concretar el abono.",
-    "Estimated total (VAT incl.). Final amount will be confirmed with your instructor when arranging payment.",
+    "Total (IVA incl.). El pago se concreta con tu monitor/a.",
+    "Total (VAT incl.). Payment is arranged with your instructor.",
   );
 
   const text = [
@@ -289,7 +289,7 @@ export function buildCustomerConfirmationEmail({
     buildTextSummary(sessions, isEn),
     "",
     estimatedTotal !== undefined
-      ? `${pick(isEn, "Total estimado", "Estimated total")}: ${formatEuro(estimatedTotal)}`
+      ? `${pick(isEn, "Total", "Total")}: ${formatEuro(estimatedTotal)}`
       : "",
     estimatedTotal !== undefined ? totalNote : "",
     "",
@@ -369,7 +369,7 @@ export function buildCustomerConfirmationEmail({
                   ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0 0;border-top:1px solid ${BRAND.border};">
                       <tr>
                         <td style="padding:18px 0 4px;font-size:15px;color:${BRAND.pizarra};font-weight:700;">
-                          ${escapeHtml(pick(isEn, "Total estimado", "Estimated total"))}
+                          ${escapeHtml(pick(isEn, "Total", "Total"))}
                         </td>
                         <td align="right" style="padding:18px 0 4px;font-size:20px;color:${BRAND.hielo};font-weight:700;">
                           ${escapeHtml(formatEuro(estimatedTotal))}
