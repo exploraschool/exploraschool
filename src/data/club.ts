@@ -1,3 +1,6 @@
+/** When false, /club shows a “new season in preparation” notice instead of programme details. */
+export const CLUB_PAGE_LIVE = false;
+
 export type ClubOffering = {
   id: string;
   titleEs: string;

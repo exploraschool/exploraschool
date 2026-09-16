@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import {
+  CLUB_PAGE_LIVE,
   club,
   clubConditions,
   clubFaqs,
@@ -13,6 +14,8 @@ import {
   clubSchedule,
   membershipBenefits,
 } from "@/data/club";
+import { CURRENT_SEASON } from "@/data/season";
+import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
@@ -33,6 +36,26 @@ const navLinks = [
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+
+  if (!CLUB_PAGE_LIVE) {
+    return buildPageMetadata({
+      locale,
+      path: "/club",
+      title: pickLocale(
+        locale,
+        `Club Creando Aventuras — temporada ${CURRENT_SEASON.label} en preparación`,
+        `Creando Aventuras Club — ${CURRENT_SEASON.label} season in preparation`,
+      ),
+      description: pickLocale(
+        locale,
+        `Estamos preparando el Club Creando Aventuras para la temporada ${CURRENT_SEASON.label}. Calendario, precios e inscripciones se publicarán aquí pronto.`,
+        `We are preparing Club Creando Aventuras for the ${CURRENT_SEASON.label} season. Calendar, prices and enrolment will be published here soon.`,
+      ),
+      ogImage: media.clubAbout.src,
+      ogImageAlt: pickLocale(locale, media.clubAbout.altEs, media.clubAbout.altEn),
+    });
+  }
+
   return buildPageMetadata({
     locale,
     path: "/club",
@@ -55,6 +78,84 @@ export default async function ClubPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
+  if (!CLUB_PAGE_LIVE) {
+    return <ClubComingSoon locale={locale} />;
+  }
+
+  return <ClubProgramme locale={locale} />;
+}
+
+function ClubComingSoon({ locale }: { locale: string }) {
+  return (
+    <>
+      <BreadcrumbJsonLd
+        locale={locale}
+        items={[{ name: "Club", path: "/club" }]}
+      />
+      <PageHeader
+        eyebrow={pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `${CURRENT_SEASON.label} season`)}
+        title={club.name}
+        description={pickLocale(
+          locale,
+          "Estamos preparando el club para la nueva temporada. Calendario, precios e inscripciones se publicarán aquí cuando estén listos.",
+          "We are getting the club ready for the new season. Calendar, prices and enrolment will be published here when they are ready.",
+        )}
+      />
+
+      <section className="section-padding bg-nieve">
+        <div className="container-page grid items-center grid-gap-lg lg:grid-cols-2">
+          <Reveal>
+            <p className="eyebrow">
+              {pickLocale(locale, "En preparación", "In preparation")}
+            </p>
+            <h2 className="mt-2 font-display text-2xl font-semibold text-hielo sm:text-3xl">
+              {pickLocale(
+                locale,
+                "El programa del club todavía no está publicado",
+                "The club programme is not live yet",
+              )}
+            </h2>
+            <p className="mt-5 text-sm leading-relaxed text-muted sm:mt-6 sm:text-base">
+              {pickLocale(
+                locale,
+                "Estamos trabajando en la nueva temporada para que horarios, precios y actividades coincidan con lo que realmente vamos a ofrecer. Hasta entonces, esta página no admite reservas ni inscripciones.",
+                "We are working on the new season so schedules, prices and activities match what we will actually offer. Until then, this page does not take bookings or enrolments.",
+              )}
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+              {pickLocale(
+                locale,
+                "Mientras tanto, las clases particulares de Explora ya están abiertas.",
+                "In the meantime, Explora private lessons are already open.",
+              )}
+            </p>
+            <div className="btn-stack mt-8">
+              <Link href="/clases" className="btn-primary !w-auto">
+                {pickLocale(locale, "Ver clases", "See lessons")}
+              </Link>
+              <Link href="/contacto" className="btn-secondary !w-auto">
+                {pickLocale(locale, "Contactar", "Contact us")}
+              </Link>
+            </div>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
+              <Image
+                src={media.clubAbout.src}
+                alt={pickLocale(locale, media.clubAbout.altEs, media.clubAbout.altEn)}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function ClubProgramme({ locale }: { locale: string }) {
   return (
     <>
       <BreadcrumbJsonLd
@@ -88,7 +189,6 @@ export default async function ClubPage({ params }: Props) {
         </nav>
       </PageHeader>
 
-      {/* Sobre el club */}
       <section className="section-padding bg-nieve">
         <div className="container-page grid items-center grid-gap-lg lg:grid-cols-2">
           <Reveal>
@@ -118,7 +218,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Ofertas */}
       <section id="ofertas" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
@@ -157,7 +256,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Membresía */}
       <section id="membresia" className="section-padding scroll-target bg-nieve">
         <div className="container-page">
           <div className="grid grid-gap-lg lg:grid-cols-[1fr_1.1fr] lg:items-start">
@@ -198,7 +296,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Jornada tipo */}
       <section id="jornada" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
@@ -234,7 +331,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Objetivos */}
       <section className="section-padding bg-nieve">
         <div className="container-page">
           <Reveal>
@@ -268,7 +364,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* Información importante */}
       <section id="info" className="section-padding scroll-target">
         <div className="container-page">
           <Reveal>
@@ -312,7 +407,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* FAQ */}
       <section id="faq" className="section-padding scroll-target bg-nieve">
         <div className="container-page">
           <Reveal>
@@ -342,7 +436,6 @@ export default async function ClubPage({ params }: Props) {
         </div>
       </section>
 
-      {/* CTA unirse */}
       <section className="section-padding">
         <div className="container-page">
           <Reveal>
