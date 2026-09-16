@@ -26,6 +26,7 @@ import type { StudentProfile } from "@/lib/student-users";
 import type { StudentTip } from "@/lib/student-tips";
 import { buildSkillTimeline } from "@/lib/skill-bridge";
 import { StudentLogoutButton } from "@/components/cuenta/StudentLogoutButton";
+import { StudentMediaUploader } from "@/components/cuenta/StudentMediaUploader";
 import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 type Lesson = {
