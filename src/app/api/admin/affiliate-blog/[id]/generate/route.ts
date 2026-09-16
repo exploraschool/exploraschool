@@ -4,7 +4,7 @@ import { getAffiliatePost, isAffiliatePostReadyToGenerate, syncAffiliateGallerie
 import { generateAffiliateArticle } from "@/lib/affiliate-blog-gemini";
 
 export const runtime = "nodejs";
-export const maxDuration = 180;
+export const maxDuration = 300;
 
 type Ctx = { params: Promise<{ id: string }> };
 

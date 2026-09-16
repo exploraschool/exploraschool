@@ -1,4 +1,4 @@
-import { GoogleGenAI, type Part } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel, type Part } from "@google/genai";
 import { blogPosts } from "@/data/blog";
 import { getCredentialParts } from "@/lib/firebase/admin";
 import {
@@ -18,8 +18,21 @@ import {
 } from "@/lib/affiliate-blog-shared";
 import { formatAmazonBrief, type AmazonProductMeta } from "@/lib/amazon-product-meta";
 
-const MODELS = ["gemini-2.5-flash"];
-const LOCATIONS = ["europe-west1", "us-central1"];
+const MODELS = ["gemini-3.5-flash-lite"];
+const LOCATIONS = ["eu", "global", "us"];
+const REQUEST_TIMEOUT_MS = 110_000;
+
+type GeminiResponse = {
+  text?: string;
+  candidates?: Array<{
+    finishReason?: string;
+    content?: { parts?: Array<{ text?: string; thought?: boolean }> };
+  }>;
+  usageMetadata?: {
+    thoughtsTokenCount?: number;
+    candidatesTokenCount?: number;
+  };
+};
 
 function editorialGuide(): string {
   return blogPosts
@@ -136,33 +149,45 @@ function visionUrlsFor(post: AffiliateBlogPost): string[] {
     .slice(0, maxVision);
 }
 
+function jsonTextFromResponse(response: GeminiResponse): string {
+  const fromParts =
+    response.candidates?.[0]?.content?.parts
+      ?.filter((part) => !part.thought && part.text)
+      .map((part) => part.text || "")
+      .join("") ?? "";
+  return (response.text || fromParts).trim();
+}
+
 async function requestArticleJson(parts: Part[]): Promise<string> {
   let lastError: unknown;
   for (const location of LOCATIONS) {
     for (const model of MODELS) {
       try {
         const ai = getVertexClient(location);
-        const response = await ai.models.generateContent({
+        const response = (await ai.models.generateContent({
           model,
           contents: [{ role: "user", parts }],
           config: {
-            temperature: 0.55,
             responseMimeType: "application/json",
             maxOutputTokens: 65536,
+            abortSignal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+            thinkingConfig: {
+              thinkingLevel: ThinkingLevel.MEDIUM,
+              includeThoughts: false,
+            },
           },
-        });
-        const candidate = response.candidates?.[0] as
-          | { finishReason?: string; content?: { parts?: Array<{ text?: string }> } }
-          | undefined;
-        const finishReason = candidate?.finishReason;
+        })) as GeminiResponse;
+        const finishReason = response.candidates?.[0]?.finishReason;
+        const text = jsonTextFromResponse(response);
+        console.info(
+          `[affiliate-gemini] ${location}/${model} finish=${finishReason || "unknown"} thoughts=${response.usageMetadata?.thoughtsTokenCount ?? 0} out=${response.usageMetadata?.candidatesTokenCount ?? 0}`,
+        );
         if (finishReason && finishReason !== "STOP") {
           console.warn(`[affiliate-gemini] ${location}/${model} finishReason=${finishReason}`);
         }
-        const text =
-          response.text ??
-          candidate?.content?.parts?.map((part) => part.text || "").join("") ??
-          "";
-        if (text) return text;
+        if (!text) continue;
+        if (parseGeneratedJson(text)) return text;
+        console.warn(`[affiliate-gemini] ${location}/${model} invalid json`);
       } catch (error) {
         lastError = error;
         console.warn(`[affiliate-gemini] ${location}/${model} failed:`, error);
