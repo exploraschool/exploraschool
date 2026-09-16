@@ -3,6 +3,7 @@ import { z } from "zod";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { parseProgressReport, PROGRESS_REPORTS_COLLECTION } from "@/lib/progress-reports";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export const runtime = "nodejs";
 
@@ -12,6 +13,9 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: Request) {
+  if (!STUDENT_PROGRESS_ENABLED) {
+    return NextResponse.json({ error: "progress_disabled" }, { status: 404 });
+  }
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

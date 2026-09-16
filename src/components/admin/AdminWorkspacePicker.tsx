@@ -71,7 +71,7 @@ export function AdminWorkspacePicker({ instructors, currentSlug = null }: AdminW
         <p className="text-[0.65rem] font-bold uppercase tracking-[0.18em] text-oro">Monitores</p>
         <h2 className="mt-2 font-display text-xl font-semibold text-pizarra sm:text-2xl">Tu perfil de instructor</h2>
         <p className="mt-1 max-w-xl text-sm text-muted">
-          Solo tus clases asignadas y las fichas de progreso de tus alumnos.
+          Solo tus clases asignadas y las fichas de tus alumnos.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {activeInstructors.map((instructor) => {
@@ -81,7 +81,7 @@ export function AdminWorkspacePicker({ instructors, currentSlug = null }: AdminW
                 key={instructor.slug}
                 type="button"
                 disabled={Boolean(busy)}
-                onClick={() => void choose(instructor.slug, "/admin/evaluacion")}
+                onClick={() => void choose(instructor.slug, "/admin/alumnos")}
                 className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition disabled:opacity-60 ${
                   selected
                     ? "border-oro bg-oro/5 shadow-sm"

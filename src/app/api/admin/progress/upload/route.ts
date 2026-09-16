@@ -9,6 +9,7 @@ import {
   progressReportId,
   type ProgressMedia,
 } from "@/lib/progress-reports";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -24,6 +25,9 @@ const ALLOWED = new Set([
 ]);
 
 export async function POST(request: Request) {
+  if (!STUDENT_PROGRESS_ENABLED) {
+    return NextResponse.json({ error: "progress_disabled" }, { status: 404 });
+  }
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

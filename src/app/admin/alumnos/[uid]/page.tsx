@@ -115,7 +115,7 @@ export default async function AdminAlumnoDetailPage({ params }: Props) {
     <AdminShell
       active="alumnos"
       title={profile.displayName || profile.email}
-      description="Perfil, tips, correcciones y fichas de progreso."
+      description="Perfil, tips y correcciones."
       actions={
         <div className="flex items-center gap-2">
           <AdminStudentDeleteButton uid={profile.uid} label={profile.displayName || profile.email} />

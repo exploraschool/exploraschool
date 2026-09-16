@@ -26,6 +26,7 @@ import type { StudentProfile } from "@/lib/student-users";
 import type { StudentTip } from "@/lib/student-tips";
 import { buildSkillTimeline } from "@/lib/skill-bridge";
 import { ProgressForm } from "@/components/instructor/ProgressForm";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 type InstructorOption = { slug: string; name: string };
 
@@ -340,7 +341,7 @@ export function AdminStudentDetail({
             </p>
           </div>
           <label className="block text-sm font-semibold">
-            Monitor (para fichas / correcciones)
+            Monitor (para correcciones)
             <select
               className="mt-1 block min-w-[12rem] rounded-xl border border-hielo/15 bg-white px-3 py-2"
               value={monitorSlug}
@@ -510,7 +511,7 @@ export function AdminStudentDetail({
         ) : null}
       </section>
 
-      {skillTimeline.length > 0 ? (
+      {STUDENT_PROGRESS_ENABLED && skillTimeline.length > 0 ? (
         <section className="space-y-3 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="font-display text-xl font-semibold">Evolución técnica</h2>
@@ -640,8 +641,10 @@ export function AdminStudentDetail({
       </section>
 
       <section className="space-y-4 rounded-xl border border-hielo/10 bg-white p-3.5 sm:rounded-2xl sm:p-5">
-        <h2 className="font-display text-xl font-semibold">Clases y fichas</h2>
-        {lastFocus ? (
+        <h2 className="font-display text-xl font-semibold">
+          {STUDENT_PROGRESS_ENABLED ? "Clases y fichas" : "Clases"}
+        </h2>
+        {STUDENT_PROGRESS_ENABLED && lastFocus ? (
           <div className="rounded-xl border border-hielo/15 bg-hielo/5 px-3 py-2 text-sm">
             <p className="text-xs font-semibold uppercase tracking-wider text-hielo">Último foco</p>
             <p className="mt-1 text-pizarra">{lastFocus}</p>
@@ -649,7 +652,7 @@ export function AdminStudentDetail({
         ) : null}
         {bookings.length === 0 ? (
           <p className="text-sm text-muted">Sin reservas vinculadas todavía.</p>
-        ) : (
+        ) : STUDENT_PROGRESS_ENABLED ? (
           <>
             <div className="flex flex-wrap gap-2">
               {bookings.map((booking) => {
@@ -693,9 +696,21 @@ export function AdminStudentDetail({
               />
             ) : null}
           </>
+        ) : (
+          <ul className="space-y-2 text-sm">
+            {bookings.map((booking) => (
+              <li
+                key={`${booking.leadId}-${booking.itemIndex}`}
+                className="rounded-xl bg-nieve px-3 py-2 text-pizarra"
+              >
+                {booking.date} · {booking.productTitle}
+                {booking.instructorName ? ` · ${booking.instructorName}` : ""}
+              </li>
+            ))}
+          </ul>
         )}
 
-        {reports.length > 0 ? (
+        {STUDENT_PROGRESS_ENABLED && reports.length > 0 ? (
           <div className="border-t border-hielo/10 pt-4">
             <p className="text-sm font-semibold">Historial de fichas</p>
             <ul className="mt-2 space-y-2 text-sm">

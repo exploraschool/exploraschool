@@ -26,7 +26,7 @@ import type { StudentProfile } from "@/lib/student-users";
 import type { StudentTip } from "@/lib/student-tips";
 import { buildSkillTimeline } from "@/lib/skill-bridge";
 import { StudentLogoutButton } from "@/components/cuenta/StudentLogoutButton";
-import { StudentMediaUploader } from "@/components/cuenta/StudentMediaUploader";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 type Lesson = {
   leadId: string;
@@ -63,7 +63,10 @@ type AccountDashboardProps = {
   lastInstructorName: string;
 };
 
-const TABS: TabId[] = ["resumen", "reservas", "progreso", "medias"];
+const ALL_TABS: TabId[] = ["resumen", "reservas", "progreso", "medias"];
+const TABS: TabId[] = STUDENT_PROGRESS_ENABLED
+  ? ALL_TABS
+  : ALL_TABS.filter((id) => id !== "progreso");
 
 function isTabId(value: string): value is TabId {
   return TABS.includes(value as TabId);
@@ -174,6 +177,7 @@ export function AccountDashboard({
   }
 
   useEffect(() => {
+    if (!STUDENT_PROGRESS_ENABLED) return;
     if (unreadIds.size === 0) {
       if (!profile?.progressSeenAt) markProgressSeen();
       return;
@@ -239,7 +243,7 @@ export function AccountDashboard({
         />
       </div>
 
-      {unreadReports.length > 0 ? (
+      {STUDENT_PROGRESS_ENABLED && unreadReports.length > 0 ? (
         <button
           type="button"
           onClick={() => {
@@ -319,7 +323,7 @@ export function AccountDashboard({
         </aside>
       ) : null}
 
-      {latestReport?.nextFocus ? (
+      {STUDENT_PROGRESS_ENABLED && latestReport?.nextFocus ? (
         <aside
           className={`mt-3 overflow-hidden rounded-2xl px-3.5 py-3.5 shadow-sm sm:px-5 sm:py-4 ${
             unreadIds.has(latestReport.id)
@@ -349,12 +353,14 @@ export function AccountDashboard({
       <div className="sticky top-[var(--header-offset)] z-20 -mx-4 mt-4 bg-nieve/90 px-4 py-1.5 backdrop-blur-md sm:-mx-0 sm:mt-6 sm:px-0 sm:py-2">
         <div className="panel-scroller pb-0.5">
           {(
-            [
-              ["resumen", t("tabOverview")],
-              ["reservas", t("tabReservas")],
-              ["progreso", t("tabProgreso")],
-              ["medias", t("tabMedias")],
-            ] as const
+            (
+              [
+                ["resumen", t("tabOverview")],
+                ["reservas", t("tabReservas")],
+                ["progreso", t("tabProgreso")],
+                ["medias", t("tabMedias")],
+              ] as const
+            ).filter(([id]) => STUDENT_PROGRESS_ENABLED || id !== "progreso")
           ).map(([id, label]) => {
             const count =
               id === "reservas"
@@ -395,7 +401,7 @@ export function AccountDashboard({
               t={t}
               onSeeAll={() => goTab("reservas")}
             />
-            {latestReport ? (
+            {STUDENT_PROGRESS_ENABLED && latestReport ? (
               <ReportCard
                 report={latestReport}
                 locale={locale}
@@ -405,9 +411,9 @@ export function AccountDashboard({
                 hideNextFocus={Boolean(latestReport.nextFocus)}
                 onOpenProgress={() => goTab("progreso")}
               />
-            ) : (
+            ) : STUDENT_PROGRESS_ENABLED ? (
               <EmptyHint title={t("latestReport")} body={t("noReportsYet")} />
-            )}
+            ) : null}
           </section>
           <aside className="space-y-4">
             <ProfileSnapshot profile={profile} locale={locale} t={t} />
@@ -442,7 +448,7 @@ export function AccountDashboard({
                 meetingCopy={meetingCopy}
                 t={t}
                 tone="confirmed"
-                onViewReport={() => goTab("progreso")}
+                onViewReport={STUDENT_PROGRESS_ENABLED ? () => goTab("progreso") : undefined}
               />
             ))}
           </LessonGroup>
@@ -467,14 +473,14 @@ export function AccountDashboard({
                 meetingCopy={meetingCopy}
                 t={t}
                 tone="history"
-                onViewReport={() => goTab("progreso")}
+                onViewReport={STUDENT_PROGRESS_ENABLED ? () => goTab("progreso") : undefined}
               />
             ))}
           </LessonGroup>
         </div>
       ) : null}
 
-      {tab === "progreso" ? (
+      {STUDENT_PROGRESS_ENABLED && tab === "progreso" ? (
         <ProgressPanel
           reports={reportsSorted}
           tipHistory={tipHistory.filter(
@@ -820,6 +826,33 @@ function ProfileSnapshot({
               );
             })}
           </ul>
+        </div>
+      ) : null}
+      {profile.selfSkills && Object.keys(profile.selfSkills).length ? (
+        <div className="mt-3 space-y-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-muted">{t("selfSkillsTitle")}</p>
+          {profile.disciplines.map((discipline) => {
+            const selected = new Set(profile.selfSkills?.[discipline] ?? []);
+            const skills = skillsForDiscipline(discipline).filter((skill) => selected.has(skill.id));
+            if (!skills.length) return null;
+            return (
+              <div key={discipline}>
+                <p className="text-sm font-semibold text-pizarra">
+                  {progressDisciplineName(discipline, locale)}
+                </p>
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {skills.map((skill) => (
+                    <span
+                      key={skill.id}
+                      className="rounded-full bg-hielo/10 px-2.5 py-1 text-[0.7rem] font-semibold text-hielo"
+                    >
+                      {selfSkillLabel(skill, locale)}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       ) : null}
     </section>

@@ -27,6 +27,7 @@ import { findStudentUidByEmail } from "@/lib/student-user-store";
 import { createStudentTip } from "@/lib/student-tips";
 import { sendStudentProgressUpdateEmail, STUDENT_AREA_EMAILS_ENABLED } from "@/lib/lead-emails";
 import { ensureDirectUploadCors } from "@/lib/storage-cors";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export const runtime = "nodejs";
 
@@ -56,6 +57,9 @@ async function requireAdmin() {
 }
 
 export async function GET(request: Request) {
+  if (!STUDENT_PROGRESS_ENABLED) {
+    return NextResponse.json({ error: "progress_disabled" }, { status: 404 });
+  }
   const db = await requireAdmin();
   if (db === null) return unauthorized();
   if (db === "unavailable") return NextResponse.json({ error: "unavailable" }, { status: 503 });
@@ -112,6 +116,9 @@ const saveSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  if (!STUDENT_PROGRESS_ENABLED) {
+    return NextResponse.json({ error: "progress_disabled" }, { status: 404 });
+  }
   const db = await requireAdmin();
   if (db === null) return unauthorized();
   if (db === "unavailable") return NextResponse.json({ error: "unavailable" }, { status: 503 });

@@ -12,10 +12,14 @@ import {
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
 import { getProductBySlug, type ProductId } from "@/data/products";
 import { progressReportId } from "@/lib/progress-reports";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export const runtime = "nodejs";
 
 export async function GET() {
+  if (!STUDENT_PROGRESS_ENABLED) {
+    return NextResponse.json({ error: "progress_disabled" }, { status: 404 });
+  }
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

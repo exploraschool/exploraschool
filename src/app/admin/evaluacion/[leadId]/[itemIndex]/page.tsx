@@ -9,11 +9,13 @@ import { parseProgressReport, PROGRESS_REPORTS_COLLECTION, progressReportId } fr
 import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
 import { getProductBySlug, type ProductId } from "@/data/products";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 type Props = { params: Promise<{ leadId: string; itemIndex: string }> };
 
 export default async function EvaluacionFichaPage({ params }: Props) {
   await requireAdminPanel();
+  if (!STUDENT_PROGRESS_ENABLED) redirect("/admin/alumnos");
   if (!isAdminConfigured()) notFound();
   const db = getAdminDb();
   if (!db) notFound();

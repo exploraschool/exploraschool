@@ -22,6 +22,7 @@ import { getStudentProfile } from "@/lib/student-user-store";
 import type { StudentProfile } from "@/lib/student-users";
 import { bookingStatusWhatsappText, newLessonWhatsappText, whatsappHref } from "@/lib/whatsapp";
 import { ensureTipsMigratedFromStaffTips, listStudentTips, type StudentTip } from "@/lib/student-tips";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export type DashboardLesson = {
   leadId: string;
@@ -91,6 +92,27 @@ function lessonFromItem(
   };
 }
 
+async function loadStudentProgressReports(
+  db: NonNullable<ReturnType<typeof getAdminDb>>,
+  uid: string,
+  email: string,
+): Promise<ProgressReport[]> {
+  const reportsSnap = await db
+    .collection(PROGRESS_REPORTS_COLLECTION)
+    .where("studentUid", "==", uid)
+    .get()
+    .catch(async () => {
+      const all = await db.collection(PROGRESS_REPORTS_COLLECTION).get();
+      return {
+        docs: all.docs.filter(
+          (doc) => doc.data().studentUid === uid || doc.data().studentEmail === email,
+        ),
+      };
+    });
+
+  return reportsSnap.docs.map((doc) => parseProgressReport(doc.id, doc.data() as Record<string, unknown>));
+}
+
 export async function loadStudentDashboard(session: StudentSession): Promise<StudentDashboard> {
   const profile = await getStudentProfile(session.uid);
   const locale = profile?.locale === "en" ? "en" : "es";
@@ -117,20 +139,9 @@ export async function loadStudentDashboard(session: StudentSession): Promise<Stu
   if (!db) return empty;
 
   const leads = await listStudentBookingLeads(db, { uid: session.uid, email: session.email });
-  const reportsSnap = await db
-    .collection(PROGRESS_REPORTS_COLLECTION)
-    .where("studentUid", "==", session.uid)
-    .get()
-    .catch(async () => {
-      const all = await db.collection(PROGRESS_REPORTS_COLLECTION).get();
-      return {
-        docs: all.docs.filter(
-          (doc) => doc.data().studentUid === session.uid || doc.data().studentEmail === session.email,
-        ),
-      };
-    });
-
-  const reports = reportsSnap.docs.map((doc) => parseProgressReport(doc.id, doc.data() as Record<string, unknown>));
+  const reports = STUDENT_PROGRESS_ENABLED
+    ? await loadStudentProgressReports(db, session.uid, session.email)
+    : [];
   const reportIds = new Set<string>();
   for (const report of reports) {
     reportIds.add(report.id);
@@ -171,8 +182,10 @@ export async function loadStudentDashboard(session: StudentSession): Promise<Stu
     history,
     reports,
     tips,
-    hours: totalProgressHours(reports) || confirmed.concat(history).reduce((sum, item) => sum + item.hours, 0),
-    badges: earnedBadges(reports, locale),
+    hours: STUDENT_PROGRESS_ENABLED
+      ? totalProgressHours(reports) || confirmed.concat(history).reduce((sum, item) => sum + item.hours, 0)
+      : confirmed.concat(history).reduce((sum, item) => sum + item.hours, 0),
+    badges: STUDENT_PROGRESS_ENABLED ? earnedBadges(reports, locale) : [],
     meetingPoint,
     profile,
     name,

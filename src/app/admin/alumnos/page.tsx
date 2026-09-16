@@ -58,8 +58,8 @@ export default async function AdminAlumnosPage() {
       title="Alumnos"
       description={
         instructorFilter
-          ? `Vista filtrada por monitor (${instructorFilter}): tips, medias pendientes y fichas.`
-          : "Busca un alumno, abre su ficha, elige el monitor y deja tips o progreso."
+          ? `Vista filtrada por monitor (${instructorFilter}): tips y medias pendientes.`
+          : "Busca un alumno, abre su ficha, elige el monitor y deja tips o correcciones."
       }
     >
       <AdminStudentsDirectory initialStudents={students} />

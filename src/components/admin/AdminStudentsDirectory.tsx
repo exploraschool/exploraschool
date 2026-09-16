@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
 export type AdminStudentListItem = {
   uid: string;
@@ -55,7 +56,7 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
     return students.filter((student) => {
       if (filter === "tip" && !student.hasPinnedTip && !student.staffTips?.trim()) return false;
       if (filter === "pending" && !(student.pendingMediaCount && student.pendingMediaCount > 0)) return false;
-      if (filter === "no-report" && student.reportCount > 0) return false;
+      if (STUDENT_PROGRESS_ENABLED && filter === "no-report" && student.reportCount > 0) return false;
       if (!needle) return true;
       const hay = `${student.displayName} ${student.email}`.toLowerCase();
       return hay.includes(needle);
@@ -85,7 +86,7 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
     { id: "all", label: "Todos" },
     { id: "tip", label: "Con tip" },
     { id: "pending", label: "Medias pendientes" },
-    { id: "no-report", label: "Sin ficha" },
+    ...(STUDENT_PROGRESS_ENABLED ? [{ id: "no-report" as const, label: "Sin ficha" }] : []),
   ];
 
   return (
@@ -151,9 +152,13 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                     <p className="truncate text-sm text-muted">{student.email}</p>
                     <p className="mt-1 text-xs text-muted">
                       {student.selfLevel ? LEVEL_LABEL[student.selfLevel] || student.selfLevel : "Sin nivel"}
-                      {" · "}
-                      {student.reportCount} ficha{student.reportCount === 1 ? "" : "s"}
-                      {student.lastReportAt ? ` · Última ${student.lastReportAt.slice(0, 10)}` : ""}
+                      {STUDENT_PROGRESS_ENABLED ? (
+                        <>
+                          {" · "}
+                          {student.reportCount} ficha{student.reportCount === 1 ? "" : "s"}
+                          {student.lastReportAt ? ` · Última ${student.lastReportAt.slice(0, 10)}` : ""}
+                        </>
+                      ) : null}
                       {!student.profileReady ? " · Perfil incompleto" : ""}
                     </p>
                     <div className="mt-1.5 flex flex-wrap gap-1.5">
@@ -169,7 +174,7 @@ export function AdminStudentsDirectory({ initialStudents }: { initialStudents: A
                           {student.pendingMediaCount === 1 ? "" : "s"}
                         </span>
                       ) : null}
-                      {student.reportCount === 0 ? (
+                      {STUDENT_PROGRESS_ENABLED && student.reportCount === 0 ? (
                         <span className="rounded-full bg-nieve px-2 py-0.5 text-[0.65rem] font-semibold text-muted">
                           Sin ficha
                         </span>

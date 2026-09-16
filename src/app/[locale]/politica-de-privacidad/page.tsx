@@ -83,8 +83,8 @@ export default async function PrivacidadPage({ params }: Props) {
           <li>
             {pickLocale(
               locale,
-              "Área de alumnos: inicio de sesión con Google (nombre, email y foto de perfil que Google nos envía), reservas asociadas, fichas de progreso y fotos o vídeos que subas o que el equipo suba para corrección. Base: ejecución del servicio y, para imágenes, tu consentimiento o el del padre/madre/tutor.",
-              "Student area: Google sign-in (name, email and profile photo Google sends us), linked bookings, progress notes, and photos or videos you upload or the team uploads for technique feedback. Basis: performing the service and, for images, your consent or that of a parent/guardian.",
+              "Área de alumnos: inicio de sesión con Google (nombre, email y foto de perfil que Google nos envía), reservas asociadas, ficha de alumno y fotos o vídeos que subas o que el equipo suba para corrección. Base: ejecución del servicio y, para imágenes, tu consentimiento o el del padre/madre/tutor.",
+              "Student area: Google sign-in (name, email and profile photo Google sends us), linked bookings, student profile, and photos or videos you upload or the team uploads for technique feedback. Basis: performing the service and, for images, your consent or that of a parent/guardian.",
             )}
           </li>
           <li>
