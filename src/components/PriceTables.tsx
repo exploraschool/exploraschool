@@ -1,3 +1,4 @@
+import { Link } from "@/i18n/routing";
 import { LessonProductCatalog } from "@/components/cart/LessonProductCatalog";
 import { SeasonPriceTables } from "@/components/cart/SeasonPriceTables";
 import { EarlyBirdBanner } from "@/components/EarlyBirdBanner";
@@ -25,8 +26,8 @@ export function PriceTables({ locale }: PriceTablesProps) {
           title={pickLocale(locale, "Tarifas por horario", "Prices by time slot")}
           description={pickLocale(
             locale,
-            "¿Necesitas comparar horarios o ver el precio según el tamaño del grupo? Usa esta tabla antes de reservar clases particulares.",
-            "Need to compare time slots or see the price for your group size? Use this table before booking private lessons.",
+            "Elige cuántas personas sois y verás el precio de cada horario. Pulsa un importe para reservar.",
+            "Choose your group size to see the price for each time slot. Tap an amount to book.",
           )}
         />
         <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">
@@ -35,6 +36,13 @@ export function PriceTables({ locale }: PriceTablesProps) {
         <div className="section-body-sm">
           <SeasonPriceTables locale={locale} />
         </div>
+        <p className="mt-6 text-sm text-muted">
+          {pickLocale(locale, "El cuadro oficial completo está en ", "The full official chart is on ")}
+          <Link href="/tarifas" className="font-semibold text-hielo hover:text-accent">
+            {pickLocale(locale, "Tarifas", "Rates")}
+          </Link>
+          .
+        </p>
       </section>
     </>
   );

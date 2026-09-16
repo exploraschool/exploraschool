@@ -52,8 +52,8 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           role="img"
           aria-label={pickLocale(
             locale,
-            `Desde ${FULL_DAY_HOURLY_EUR} euros la hora en jornada completa`,
-            `From €${FULL_DAY_HOURLY_EUR} per hour on a full day`,
+            `Desde ${FULL_DAY_HOURLY_EUR} euros la hora en Full Day`,
+            `From €${FULL_DAY_HOURLY_EUR} per hour on a Full Day`,
           )}
         >
           <span className="hero-offer-sticker__face" aria-hidden="true">

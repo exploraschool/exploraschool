@@ -1,6 +1,7 @@
 {
   "nav": {
     "clases": "Lessons",
+    "tarifas": "Rates",
     "equipo": "Team",
     "blog": "Blog",
     "faqs": "FAQs",
@@ -101,7 +102,7 @@
     "addDate": "Add day",
     "datesEmpty": "Select one or more days on the calendar",
     "timeSlot": "Time slot",
-    "fullDaySchedule": "Full day",
+    "fullDaySchedule": "Full Day",
     "addedDays": "{count, plural, one {# day added to your booking} other {# days added to your booking}}",
     "addDaysToCart": "Add {count} days to booking",
     "participants": "Participants",

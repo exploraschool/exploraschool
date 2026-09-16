@@ -63,13 +63,18 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
   },
   tarifas: {
     id: "tarifas",
-    botText: `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € 1 persona / ${SESSION_FULL_DAY[1]} € 2 personas).
+    botText: `El mejor precio por hora es el Full Day: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € 1 persona / ${SESSION_FULL_DAY[1]} € 2 personas).
 
 • 2 h: ${SESSION_2H_STANDARD[0]} € (1 persona) · ${SESSION_2H_STANDARD[1]} € (2 personas).
 • 3 h (12:00–15:00 o 10:00–12:00 y 15:00–16:00): ${SESSION_3H_STANDARD[0]} € (1 persona).
 • 3 h 10:00–13:00: ${SESSION_3H_MORNING[0]} € (1 persona).
 • No vendemos clases sueltas de 1 hora.`,
     buttons: [
+      {
+        id: "ver-tarifas",
+        label: "Ver cuadro de tarifas",
+        action: { type: "link", href: "/tarifas" },
+      },
       {
         id: "reservar-wa",
         label: "Solicitar reserva por WhatsApp",

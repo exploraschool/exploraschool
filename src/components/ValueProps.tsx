@@ -37,8 +37,8 @@ const props = [
     ),
     titleEs: `Desde ${FULL_DAY_HOURLY_EUR} €/h`,
     titleEn: `From €${FULL_DAY_HOURLY_EUR}/h`,
-    descEs: "Mejor precio en jornada completa",
-    descEn: "Best rate on a full day",
+    descEs: "Mejor precio en Full Day",
+    descEn: "Best rate on a Full Day",
   },
   {
     icon: (

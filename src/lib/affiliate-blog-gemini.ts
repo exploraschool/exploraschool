@@ -303,6 +303,7 @@ Longitud mínima (imprescindible):
 - relatedSlugs: 1–3 slugs reales de la lista editorial.
 - internalLinks: mínimo 3 href reales de esta lista (pathnames internos, nunca /es/...):
   /clases
+  /tarifas
   /clases/esqui
   /clases/snowboard
   /clases/telemark
@@ -468,6 +469,7 @@ ${productBrief}`;
 
   const allowedHrefs = new Set([
     "/clases",
+    "/tarifas",
     "/clases/esqui",
     "/clases/snowboard",
     "/clases/telemark",

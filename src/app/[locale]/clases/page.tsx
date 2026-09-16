@@ -1,11 +1,9 @@
 import { setRequestLocale } from "next-intl/server";
 import { PageHeader } from "@/components/PageHeader";
-import { CompleteRateTables } from "@/components/CompleteRateTables";
 import { PriceTables } from "@/components/PriceTables";
 import { CTASection } from "@/components/CTASection";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
-import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import type { Metadata } from "next";
@@ -19,13 +17,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/clases",
     title: pickLocale(
       locale,
-      "Precios de clases en Sierra Nevada",
-      "Lesson prices in Sierra Nevada",
+      "Clases particulares en Sierra Nevada",
+      "Private lessons in Sierra Nevada",
     ),
     description: pickLocale(
       locale,
-      `Precios de clases particulares en Sierra Nevada: desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Esquí, snowboard y telemark. IVA incluido. Reserva online.`,
-      `Private lesson prices in Sierra Nevada: from €${FULL_DAY_HOURLY_EUR}/h on a full day. Ski, snowboard and telemark. VAT included. Book online.`,
+      "Clases particulares de esquí, snowboard y telemark en Sierra Nevada. De 1 a 8 personas, de 2 horas al Full Day. Instructores titulados. Reserva online.",
+      "Private ski, snowboard and telemark lessons in Sierra Nevada. Groups of 1 to 8, from 2 hours to a Full Day. Qualified instructors. Book online.",
     ),
     ogImage: media.clasesHero.src,
     ogImageAlt: pickLocale(locale, media.clasesHero.altEs, media.clasesHero.altEn),
@@ -47,20 +45,14 @@ export default async function ClasesPage({ params }: Props) {
         title={pickLocale(locale, "Elige tu clase", "Choose your lesson")}
         description={pickLocale(
           locale,
-          "Particulares de 1 a 8 personas. Esquí, snowboard o telemark, de 2 horas al día completo. Instructores titulados. IVA incluido.",
-          "Private groups of 1 to 8. Ski, snowboard or telemark, from 2 hours to a full day. Qualified instructors. VAT included.",
+          "Particulares de 1 a 8 personas. Esquí, snowboard o telemark, de 2 horas al Full Day. Instructores titulados. IVA incluido.",
+          "Private groups of 1 to 8. Ski, snowboard or telemark, from 2 hours to a Full Day. Qualified instructors. VAT included.",
         )}
       />
 
       <section className="pb-8 pt-3 sm:pb-10 sm:pt-5 md:pb-12 md:pt-7 lg:pb-16">
         <div className="container-page">
           <PriceTables locale={locale} />
-        </div>
-      </section>
-
-      <section id="tarifas" className="section-padding scroll-target bg-nieve">
-        <div className="container-page">
-          <CompleteRateTables locale={locale} />
         </div>
       </section>
 

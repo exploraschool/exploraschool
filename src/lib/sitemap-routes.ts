@@ -26,6 +26,7 @@ export type SitemapRoute = {
 const STATIC_ROUTES: SitemapRoute[] = [
   { path: "/", changeFrequency: "weekly", priority: 1 },
   { path: "/clases", changeFrequency: "weekly", priority: 0.9 },
+  { path: "/tarifas", changeFrequency: "weekly", priority: 0.9 },
   { path: "/reserva", changeFrequency: "weekly", priority: 0.9 },
   { path: "/club", changeFrequency: "monthly", priority: 0.8 },
   { path: "/como-llegar", changeFrequency: "monthly", priority: 0.8 },

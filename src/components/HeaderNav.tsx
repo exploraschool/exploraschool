@@ -11,8 +11,9 @@ import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 import { site } from "@/data/site";
 import { AccountNavLink } from "@/components/cuenta/AccountNavLink";
 
-const navItems: { href: "/clases" | "/club" | "/blog" | "/preguntas-frecuentes" | "/contacto"; labelKey: "clases" | "club" | "blog" | "faqs" | "contacto" }[] = [
+const navItems: { href: "/clases" | "/tarifas" | "/club" | "/blog" | "/preguntas-frecuentes" | "/contacto"; labelKey: "clases" | "tarifas" | "club" | "blog" | "faqs" | "contacto" }[] = [
   { href: "/clases", labelKey: "clases" },
+  { href: "/tarifas", labelKey: "tarifas" },
   { href: "/club", labelKey: "club" },
   { href: "/blog", labelKey: "blog" },
   { href: "/preguntas-frecuentes", labelKey: "faqs" },

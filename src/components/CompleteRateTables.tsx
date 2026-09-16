@@ -1,6 +1,10 @@
-import { SectionHeader } from "@/components/SectionHeader";
-import { CURRENT_SEASON } from "@/data/season";
+"use client";
+
+import { useState } from "react";
 import { completeRateTables, priceNotes } from "@/data/prices";
+import type { ProductId } from "@/data/products";
+import { AddToCartModal } from "@/components/cart/AddToCartModal";
+import { getBookingFromSeasonRow, type TimeSlotId } from "@/lib/booking-config";
 import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 
@@ -8,24 +12,39 @@ type CompleteRateTablesProps = {
   locale: string;
 };
 
+type BookingSelection = {
+  productId: ProductId;
+  timeSlotId: TimeSlotId;
+  participants: number;
+};
+
 export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
   const peopleHeaders = locale === "es" ? PEOPLE_COUNT_HEADERS_ES : PEOPLE_COUNT_HEADERS_EN;
   const scheduleLabel = pickLocale(locale, "Horario", "Schedule");
+  const [bookingSelection, setBookingSelection] = useState<BookingSelection | null>(null);
+
+  function bookCell(tableId: string, scheduleEs: string, participants: number) {
+    const booking = getBookingFromSeasonRow(tableId, scheduleEs);
+    if (!booking) return;
+    setBookingSelection({
+      productId: booking.productId,
+      timeSlotId: booking.timeSlotId,
+      participants,
+    });
+  }
 
   return (
     <>
-      <SectionHeader
-        eyebrow={pickLocale(locale, `Temporada ${CURRENT_SEASON.label}`, `${CURRENT_SEASON.label} season`)}
-        title={pickLocale(locale, "Cuadro de tarifas", "Rate chart")}
-        description={pickLocale(
-          locale,
-          "Precios oficiales de lista para todas las clases particulares, el curso de snowboard y los cursos de varios días. Sin promociones ni descuentos.",
-          "Official list prices for all private lessons, the snowboard course and multi-day courses. Promotions and discounts are not included.",
-        )}
-      />
-      <p className="mt-4 text-sm font-medium text-hielo sm:mt-5">
+      <p className="text-sm font-medium text-hielo">
         {pickLocale(locale, priceNotes.groupTotalEs, priceNotes.groupTotalEn)}{" "}
         {pickLocale(locale, priceNotes.vatEs, priceNotes.vatEn)}
+      </p>
+      <p className="mt-1.5 text-xs text-muted sm:text-sm">
+        {pickLocale(
+          locale,
+          "Pulsa un precio para reservar ese horario y ese número de personas. Luego eliges día y disciplina.",
+          "Tap a price to book that time slot and group size. Then you choose the day and discipline.",
+        )}
       </p>
 
       <div className="section-body-sm">
@@ -34,8 +53,8 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
             <caption className="sr-only">
               {pickLocale(
                 locale,
-                "Cuadro de tarifas oficiales por horario y número de personas, sin promociones",
-                "Official rate chart by time slot and group size, promotions not included",
+                "Cuadro de tarifas oficiales por horario y número de personas, sin promociones. Cada precio abre la reserva.",
+                "Official rate chart by time slot and group size, promotions not included. Each price opens the booking.",
               )}
             </caption>
             <colgroup>
@@ -76,7 +95,7 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
             </thead>
             <tbody>
               {completeRateTables.map((table) => (
-                <TableBlock key={table.id} locale={locale} table={table} />
+                <TableBlock key={table.id} locale={locale} table={table} onBook={bookCell} />
               ))}
             </tbody>
           </table>
@@ -95,6 +114,17 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
             ))}
         </ul>
       </div>
+
+      {bookingSelection ? (
+        <AddToCartModal
+          open
+          onClose={() => setBookingSelection(null)}
+          productId={bookingSelection.productId}
+          defaultTimeSlotId={bookingSelection.timeSlotId}
+          defaultParticipants={bookingSelection.participants}
+          defaultDiscipline={bookingSelection.productId === "curso-snow" ? "snowboard" : undefined}
+        />
+      ) : null}
     </>
   );
 }
@@ -102,9 +132,11 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
 function TableBlock({
   locale,
   table,
+  onBook,
 }: {
   locale: string;
   table: (typeof completeRateTables)[number];
+  onBook: (tableId: string, scheduleEs: string, participants: number) => void;
 }) {
   return (
     <>
@@ -123,25 +155,43 @@ function TableBlock({
         const zebra = rowIndex % 2 === 0 ? "bg-white" : "bg-nieve";
 
         return (
-          <tr key={schedule} className={`border-t border-hielo/8 ${zebra}`}>
+          <tr key={row.scheduleEs} className={`border-t border-hielo/8 ${zebra}`}>
             <th
               scope="row"
               className={`px-1 py-1.5 text-left font-medium text-pizarra sm:px-4 sm:py-2.5 ${zebra}`}
             >
               {schedule}
             </th>
-            {row.prices.map((price, index) => (
-              <td
-                key={`${schedule}-${index}`}
-                className="px-0 py-1.5 text-center tabular-nums text-pizarra sm:px-3 sm:py-2.5"
-              >
-                {price == null ? (
-                  <span className="text-muted">—</span>
-                ) : (
-                  <span className="font-semibold text-hielo">{price}</span>
-                )}
-              </td>
-            ))}
+            {row.prices.map((price, index) => {
+              const people = index + 1;
+              const canBook = price != null && Boolean(getBookingFromSeasonRow(table.id, row.scheduleEs));
+
+              return (
+                <td
+                  key={`${row.scheduleEs}-${people}`}
+                  className="px-0 py-0 text-center tabular-nums text-pizarra sm:px-1"
+                >
+                  {price == null ? (
+                    <span className="block px-0 py-1.5 text-muted sm:py-2.5">—</span>
+                  ) : canBook ? (
+                    <button
+                      type="button"
+                      onClick={() => onBook(table.id, row.scheduleEs, people)}
+                      className="block w-full rounded-md px-0 py-1.5 font-semibold text-hielo transition hover:bg-accent/10 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent sm:py-2.5"
+                      aria-label={pickLocale(
+                        locale,
+                        `Reservar ${schedule}, ${people} ${people === 1 ? "persona" : "personas"}, ${price} €`,
+                        `Book ${schedule}, ${people} ${people === 1 ? "person" : "people"}, €${price}`,
+                      )}
+                    >
+                      {price}
+                    </button>
+                  ) : (
+                    <span className="block px-0 py-1.5 font-semibold text-hielo sm:py-2.5">{price}</span>
+                  )}
+                </td>
+              );
+            })}
           </tr>
         );
       })}

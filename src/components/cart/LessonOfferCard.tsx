@@ -9,7 +9,6 @@ import { pickLocale } from "@/lib/locale";
 import {
   productCardHighlights,
   productFacts,
-  productHourlyHook,
   productImageAlt,
   productPricePrefix,
   productPriceSuffix,
@@ -34,7 +33,6 @@ export function LessonOfferCard({
   const fromPrice = product.fromPrice ?? getProductFromPrice(product.id);
   const facts = productFacts(product, locale);
   const highlights = productCardHighlights(product, locale);
-  const hourly = productHourlyHook(product, locale);
   const summary = pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn);
 
   return (
@@ -111,9 +109,6 @@ export function LessonOfferCard({
                 suffix={productPriceSuffix(product, locale)}
                 size="md"
               />
-              {hourly ? (
-                <span className="mt-0.5 block text-xs font-semibold text-hielo">{hourly}</span>
-              ) : null}
             </p>
           ) : null}
           <AddToCartButton

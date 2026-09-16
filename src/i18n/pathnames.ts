@@ -4,6 +4,10 @@ export const pathnames = {
     es: "/clases",
     en: "/lessons",
   },
+  "/tarifas": {
+    es: "/tarifas",
+    en: "/rates",
+  },
   "/clases/esqui": {
     es: "/clases-de-esqui",
     en: "/ski-lessons",

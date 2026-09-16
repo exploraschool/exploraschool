@@ -103,15 +103,15 @@ export function JsonLd({ locale }: JsonLdProps) {
         itemListElement: [
           {
             "@type": "Offer",
-            name: pickLocale(locale, "Día completo", "Full Day"),
-            url: publicUrl(locale, "/clases"),
+            name: "Full Day",
+            url: publicUrl(locale, "/tarifas"),
             price: FULL_DAY_HOURLY_EUR,
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
             description: pickLocale(
               locale,
-              `Precio por hora en jornada completa (${FULL_DAY_EFFECTIVE_HOURS} h de clase). Total desde ${SESSION_FULL_DAY[0]} € (1 persona).`,
-              `Hourly rate on a full day (${FULL_DAY_EFFECTIVE_HOURS} h of teaching). Total from €${SESSION_FULL_DAY[0]} (1 person).`,
+              `Precio por hora en Full Day (${FULL_DAY_EFFECTIVE_HOURS} h de clase). Total desde ${SESSION_FULL_DAY[0]} € (1 persona).`,
+              `Hourly rate on a Full Day (${FULL_DAY_EFFECTIVE_HOURS} h of teaching). Total from €${SESSION_FULL_DAY[0]} (1 person).`,
             ),
             priceSpecification: {
               "@type": "UnitPriceSpecification",
@@ -128,8 +128,8 @@ export function JsonLd({ locale }: JsonLdProps) {
               "@type": "Service",
               name: pickLocale(
                 locale,
-                "Clases de esquí y snowboard — jornada completa",
-                "Ski and snowboard lessons — full day",
+                "Clases de esquí y snowboard — Full Day",
+                "Ski and snowboard lessons — Full Day",
               ),
               areaServed: "Sierra Nevada, Granada",
             },

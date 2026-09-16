@@ -16,6 +16,17 @@ export type EditorialSeo = {
 
 /** Key = current `blogPosts[].slug` identity in data/blog.ts */
 export const EDITORIAL_SEO: Record<string, EditorialSeo> = {
+  "como-reservar-clases-sierra-nevada": {
+    slug: "como-reservar-clases-sierra-nevada",
+    slugEn: "how-to-book-ski-lessons-sierra-nevada",
+    legacySlugs: [],
+    seoTitleEs: "Cómo reservar clases en Sierra Nevada",
+    seoTitleEn: "How to book ski lessons in Sierra Nevada",
+    seoDescriptionEs:
+      "Reservar con Explora: te asesoramos en la clase, el alojamiento, el alquiler de material y el forfait. Sin pago online. Confirmación por email.",
+    seoDescriptionEn:
+      "Book with Explora: we advise on the lesson, stay, rental gear and lift pass. No online payment. Email confirmation.",
+  },
   "consejos-primera-vez-sierra-nevada": {
     slug: "primera-vez-esqui-sierra-nevada",
     slugEn: "first-time-skiing-sierra-nevada",

@@ -75,7 +75,11 @@ export default async function ContactoPage({ params }: Props) {
             </Link>
             {pickLocale(locale, " o las ", " or ")}
             <Link href="/clases" className="font-semibold text-hielo hover:text-accent">
-              {pickLocale(locale, "clases y tarifas", "lessons & prices")}
+              {pickLocale(locale, "clases", "lessons")}
+            </Link>
+            {pickLocale(locale, " o las ", " or the ")}
+            <Link href="/tarifas" className="font-semibold text-hielo hover:text-accent">
+              {pickLocale(locale, "tarifas", "rates")}
             </Link>
             .
           </div>

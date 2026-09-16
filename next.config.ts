@@ -106,6 +106,9 @@ const seoRedirects: Redirect[] = [
   ]),
   { source: "/en/clases", destination: "/en/lessons", permanent: true },
   { source: "/es/clases", destination: "/clases", permanent: true },
+  { source: "/en/tarifas", destination: "/en/rates", permanent: true },
+  { source: "/es/tarifas", destination: "/tarifas", permanent: true },
+  { source: "/es/rates", destination: "/tarifas", permanent: true },
   { source: "/como-llegar", destination: "/como-llegar-a-sierra-nevada", permanent: true },
   { source: "/es/como-llegar", destination: "/como-llegar-a-sierra-nevada", permanent: true },
   { source: "/en/como-llegar", destination: "/en/getting-to-sierra-nevada", permanent: true },
@@ -175,7 +178,6 @@ const seoRedirects: Redirect[] = [
 
 const legacyRedirects: LegacyRedirect[] = [
   { source: "/servicios", destination: "/clases", destinationEn: "/en/lessons" },
-  { source: "/tarifas", destination: "/clases", destinationEn: "/en/lessons" },
   { source: "/cursos", destination: "/clases", destinationEn: "/en/lessons" },
   { source: "/reserva-clases", destination: "/reserva", destinationEn: "/en/book" },
   { source: "/reservas", destination: "/reserva", destinationEn: "/en/book" },

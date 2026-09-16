@@ -61,8 +61,8 @@ export const FAQ_HIGHLIGHTS: {
     faqId: "precio-clases",
     titleEs: `Desde ${FULL_DAY_HOURLY_EUR} €/h`,
     titleEn: `From €${FULL_DAY_HOURLY_EUR}/h`,
-    bodyEs: "Mejor precio por hora en jornada completa (5 h de clase).",
-    bodyEn: "Best hourly rate on a full day (5 h of teaching).",
+    bodyEs: "Mejor precio por hora en Full Day (5 h de clase).",
+    bodyEn: "Best hourly rate on a Full Day (5 h of teaching).",
   },
   {
     id: "tiempo",
@@ -139,22 +139,22 @@ We reply from 9:00 am to 8:00 pm.
     category: "reservas",
     sortOrder: 2,
     questionEs: "¿Cuánto cuestan las clases de esquí en Sierra Nevada?",
-    answerEs: `El mejor precio por hora es el **día completo: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € para 1 persona; ${SESSION_FULL_DAY[1]} € si sois dos).
+    answerEs: `El mejor precio por hora es el **Full Day: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € para 1 persona; ${SESSION_FULL_DAY[1]} € si sois dos).
 
 Las clases más cortas salen más caras por hora (2 h: ${SESSION_2H_STANDARD[0]} € para 1 persona). No hay clases sueltas de 1 hora.
 
-Buscas clases de esquí baratas en Sierra Nevada: el día completo es la tarifa que más rinde.
+Buscas clases de esquí baratas en Sierra Nevada: el Full Day es la tarifa que más rinde.
 
-- [Ver tarifas](/clases)
+- [Ver tarifas](/tarifas)
 - [Reservar](/reserva)`,
     questionEn: "How much do ski lessons cost in Sierra Nevada?",
-    answerEn: `The best hourly rate is the **full day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} for 1 person; €${SESSION_FULL_DAY[1]} if there are two of you).
+    answerEn: `The best hourly rate is the **Full Day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} for 1 person; €${SESSION_FULL_DAY[1]} if there are two of you).
 
 Shorter lessons cost more per hour (2 h: €${SESSION_2H_STANDARD[0]} for 1 person). There are no standalone 1-hour lessons.
 
-Looking for affordable ski lessons in Sierra Nevada: the full day is the best-value rate.
+Looking for affordable ski lessons in Sierra Nevada: the Full Day is the best-value rate.
 
-- [See prices](/clases)
+- [See prices](/tarifas)
 - [Book](/reserva)`,
   },
   {
@@ -208,7 +208,7 @@ Automatic machines:
 - [Google Maps](${site.meetingPoint.googleMapsUrl})
 - [Cómo llegar](/como-llegar)
 
-> Si tu reserva es de día completo con recogida, te confirmamos otro punto. Puede no ser Borreguiles.`,
+> Si tu reserva es de Full Day con recogida, te confirmamos otro punto. Puede no ser Borreguiles.`,
     questionEn: "Where is the meeting point?",
     answerEn: `In Borreguiles (2,700 m), right at the snow exit of the Al-Andalus gondola.
 
@@ -273,7 +273,7 @@ El forfait se saca en [sierranevada.es](https://www.sierranevada.es), en los caj
 
 Para el material recomendamos **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles) con un **20% de descuento** por ser alumno de Explora. Indícalo al alquilar.
 
-- [Clases y tarifas](/clases)
+- [Clases y tarifas](/tarifas)
 - [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl})
 - [Reservar](/reserva)`,
     questionEn: "What is included in the lesson price?",
@@ -287,7 +287,7 @@ Get your pass at [sierranevada.es](https://www.sierranevada.es), at the machines
 
 For equipment we recommend **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas) with **20% off** as an Explora student. Mention it when you rent.
 
-- [Lessons and prices](/clases)
+- [Lessons and prices](/tarifas)
 - [Directions to the rental shop](${site.rentalPartner.googleMapsUrl})
 - [Book](/reserva)`,
   },
@@ -450,13 +450,13 @@ If you need another language, say so when you book and we will check availabilit
     questionEs: "¿Los precios incluyen IVA?",
     answerEs: `Sí. Todos los precios publicados llevan el IVA incluido.
 
-- [Clases y tarifas](/clases)
+- [Clases y tarifas](/tarifas)
 
 > Lo que ves es lo que pagas. Sin extras de impuesto al final.`,
     questionEn: "Do prices include VAT?",
     answerEn: `Yes. All published prices include VAT.
 
-- [Lessons and prices](/clases)
+- [Lessons and prices](/tarifas)
 
 > What you see is what you pay. No tax surprise at the end.`,
   },
@@ -492,7 +492,7 @@ En particulares:
 - El precio es el total del grupo y sube con cada persona (1–8)
 - Duración mínima: 2 horas
 
-- [Clases y tarifas](/clases)
+- [Clases y tarifas](/tarifas)
 - [Reservar](/reserva)`,
     questionEn: "What is the maximum number of participants per lesson?",
     answerEn: `Maximum 8 people. Minimum duration: 2 hours.
@@ -501,7 +501,7 @@ In private lessons:
 - The price is the group total and rises with each person (1–8)
 - Minimum duration: 2 hours
 
-- [Lessons and prices](/clases)
+- [Lessons and prices](/tarifas)
 - [Book](/reserva)`,
   },
   {

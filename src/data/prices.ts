@@ -74,14 +74,13 @@ export const currentPrices: CurrentProductPrice[] = [
   {
     id: "full-day-current",
     productId: "full-day",
-    titleEs: "Día completo",
+    titleEs: "Full Day",
     titleEn: "Full Day",
     season: CURRENT_SEASON.key,
     unit: "day",
     fromPrice: SESSION_FULL_DAY[0],
     hours: 5,
     featuresEs: [
-      `Desde ${FULL_DAY_HOURLY_EUR} €/h (5 h de clase)`,
       "5 horas de clase efectivas",
       "1 hora de descanso",
       "Precio total según número de personas (1–8)",
@@ -89,7 +88,6 @@ export const currentPrices: CurrentProductPrice[] = [
       "Punto de encuentro personalizado",
     ],
     featuresEn: [
-      `From €${FULL_DAY_HOURLY_EUR}/h (5 h of teaching)`,
       "5 hours of effective lesson time",
       "1 hour break",
       "Total price by group size (1–8)",
@@ -160,7 +158,7 @@ export const seasonPriceTables: PriceTable[] = [
   },
   {
     id: "full-day",
-    titleEs: "DÍA COMPLETO",
+    titleEs: "FULL DAY",
     titleEn: "FULL DAY",
     season: CURRENT_SEASON.key,
     groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
@@ -229,8 +227,8 @@ export const completeRateTables: CompleteRateTable[] = [
   },
   {
     id: "full-day",
-    titleEs: "Día completo",
-    titleEn: "Full day",
+    titleEs: "Full Day",
+    titleEn: "Full Day",
     subtitleEs: `5 h de clase · ${FULL_DAY_HOURLY_EUR} €/h`,
     subtitleEn: `5 h lesson · €${FULL_DAY_HOURLY_EUR}/h`,
     rows: [
@@ -245,8 +243,8 @@ export const completeRateTables: CompleteRateTable[] = [
     id: "curso-snow",
     titleEs: "Curso de snowboard",
     titleEn: "Snowboard course",
-    subtitleEs: `Desde ${CURSO_COLECTIVO_FROM_EUR} € · ${CURSO_COLECTIVO_PER_PERSON_ES} € / persona`,
-    subtitleEn: `From €${CURSO_COLECTIVO_FROM_EUR} · €${CURSO_COLECTIVO_PER_PERSON_EN} / person`,
+    subtitleEs: `Desde ${CURSO_COLECTIVO_FROM_EUR} €`,
+    subtitleEn: `From €${CURSO_COLECTIVO_FROM_EUR}`,
     noteEs: "Mínimo 4 personas para confirmar el curso. Máximo 8. Horario 10:00–13:00.",
     noteEn: "Minimum 4 people to confirm the course. Maximum 8. Schedule 10:00 am–1:00 pm.",
     rows: [
@@ -281,7 +279,7 @@ export const legacyFromPrices = [
   {
     productId: "full-day",
     fromPrice: SESSION_FULL_DAY[0],
-    labelEs: `Día completo — desde ${SESSION_FULL_DAY[0]} €`,
+    labelEs: `Full Day — desde ${SESSION_FULL_DAY[0]} €`,
     labelEn: `Full Day — from €${SESSION_FULL_DAY[0]}`,
     descriptionEs: "5 h + 1 h comodín. Experiencia personalizada. Recogida en hotel.",
     descriptionEn: "5 h lesson + 1 h buffer. Personalised experience. Hotel pick-up.",

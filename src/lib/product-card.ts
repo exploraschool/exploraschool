@@ -1,6 +1,6 @@
 import type { Product } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
-import { CLUB_EMPRESA_EXTRA_EUR, FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
+import { CLUB_EMPRESA_EXTRA_EUR } from "@/lib/lesson-pricing";
 
 export function productFacts(product: Product, locale: string): string[] {
   const people = peopleBit(product, locale);
@@ -33,8 +33,8 @@ export function productCardHighlights(product: Product, locale: string): string[
     case "full-day":
       return pickLocale(
         locale,
-        ["Recogida y entrega en hotel", "1 h de comodín (comidas y retrasos)", "De 1 a 8 participantes"],
-        ["Hotel pick-up and drop-off", "1 h buffer (meals and delays)", "From 1 to 8 participants"],
+        ["5 horas de clase efectivas", "1 hora de comodín", "De 1 a 8 participantes"],
+        ["5 hours of teaching", "1 hour buffer", "From 1 to 8 participants"],
       );
     case "particular":
       return pickLocale(
@@ -76,15 +76,6 @@ export function productPriceSuffix(product: Product, locale: string): string | u
   return undefined;
 }
 
-export function productHourlyHook(product: Product, locale: string): string | null {
-  if (product.category !== "full-day") return null;
-  return pickLocale(
-    locale,
-    `${FULL_DAY_HOURLY_EUR} €/h`,
-    `€${FULL_DAY_HOURLY_EUR}/h`,
-  );
-}
-
 function peopleBit(product: Product, locale: string): string {
   const min = product.minPeople ?? 1;
   const max = product.maxPeople ?? 8;
@@ -96,8 +87,8 @@ export function productImageAlt(product: Product, locale: string): string {
     case "full-day":
       return pickLocale(
         locale,
-        "Clase de día completo de esquí en Sierra Nevada",
-        "Full-day ski lesson in Sierra Nevada",
+        "Clase Full Day de esquí en Sierra Nevada",
+        "Full Day ski lesson in Sierra Nevada",
       );
     case "particular":
       return pickLocale(

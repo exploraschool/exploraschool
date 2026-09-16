@@ -120,7 +120,7 @@ function languageAlternatesFromPath(
 /** Metadatos por defecto (español) para el layout raíz y fallbacks. */
 export function buildRootSpanishMetadata(): Metadata {
   const siteUrl = getSiteUrl();
-  const title = "Clases de esquí y snowboard en Sierra Nevada | Explora School & Club";
+  const title = "Escuela de esquí en Sierra Nevada | Explora School & Club";
   const description = site.homeMetaDescriptionEs;
   const canonical = publicUrl("es", "/");
 

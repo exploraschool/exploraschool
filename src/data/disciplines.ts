@@ -57,9 +57,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Esquí alpino",
     nameEn: "Alpine skiing",
     descriptionEs:
-      `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. De 1 a 8 participantes, todas las edades y niveles. Instructores titulados.`,
+      `Clases de esquí en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. De 1 a 8 participantes, todas las edades y niveles. Instructores titulados.`,
     descriptionEn:
-      `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1 to 8, all ages and levels. Qualified instructors.`,
+      `Ski lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a Full Day. Groups of 1 to 8, all ages and levels. Qualified instructors.`,
     image: "/images/stock/discipline-esqui-pista.jpg",
     sortOrder: 1,
   },
@@ -69,9 +69,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Snowboard",
     nameEn: "Snowboard",
     descriptionEs:
-      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Curso colectivo desde ${CURSO_COLECTIVO_FROM_EUR} € (3 h, mínimo 4 personas). Instructores especializados.`,
+      `Clases de snowboard en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. Curso colectivo desde ${CURSO_COLECTIVO_FROM_EUR} € (3 h, mínimo 4 personas). Instructores especializados.`,
     descriptionEn:
-      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Group course from €${CURSO_COLECTIVO_FROM_EUR} (3 h, minimum 4 people). Specialist instructors.`,
+      `Snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a Full Day. Group course from €${CURSO_COLECTIVO_FROM_EUR} (3 h, minimum 4 people). Specialist instructors.`,
     image: "/images/stock/discipline-snowboard.jpg",
     sortOrder: 2,
   },
@@ -105,9 +105,9 @@ export const mainDisciplines: Discipline[] = [
     nameEs: "Clases para niños",
     nameEn: "Kids lessons",
     descriptionEs:
-      `Clases de esquí y snowboard para niños en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en jornada completa. Grupos de 1 a 8, desde 3 años.`,
+      `Clases de esquí y snowboard para niños en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. Grupos de 1 a 8, desde 3 años.`,
     descriptionEn:
-      `Kids ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a full day. Groups of 1 to 8, from age 3. Qualified instructors.`,
+      `Kids ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a Full Day. Groups of 1 to 8, from age 3. Qualified instructors.`,
     image: "/images/stock/discipline-ninos-explora.jpg",
     sortOrder: 5,
   },

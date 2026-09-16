@@ -1,7 +1,6 @@
 import type { ProductId } from "@/data/products";
 import type { MainDisciplineId } from "@/data/disciplines";
 import { isIndividualizedDiscipline } from "@/data/disciplines";
-import type { PriceTable } from "@/data/prices";
 import {
   CURSO_COLECTIVO_PER_PERSON_EUR,
   MIN_LESSON_HOURS,
@@ -344,10 +343,12 @@ export function getSlotLabel(slotId: TimeSlotId, locale: string): string {
   return locale === "es" ? slot.labelEs : slot.labelEn;
 }
 
-const SEASON_TABLE_PRODUCT: Partial<Record<PriceTable["id"], ProductId>> = {
+const RATE_TABLE_PRODUCT: Record<string, ProductId> = {
   "clases-2h": "particular",
   "clases-3h": "particular",
   "full-day": "full-day",
+  "curso-snow": "curso-snow",
+  "curso-empresa": "curso-empresa",
 };
 
 const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
@@ -359,16 +360,17 @@ const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
   "12:00–15:00": "3h-12-15",
   "14:00–17:00": "3h-14-17",
   "10:00 – 16:00": "fd-10-16",
+  "10:00–16:00": "fd-10-16",
 };
 
 export function getBookingFromSeasonRow(
-  tableId: PriceTable["id"],
+  tableId: string,
   schedule: string,
 ): { productId: ProductId; timeSlotId: TimeSlotId } | null {
   const timeSlotId = SCHEDULE_TO_SLOT[schedule];
   if (!timeSlotId) return null;
 
-  const productId = SEASON_TABLE_PRODUCT[tableId];
+  const productId = RATE_TABLE_PRODUCT[tableId];
   if (!productId) return null;
   return { productId, timeSlotId };
 }

@@ -187,7 +187,7 @@ function copy(isEn: boolean): GuideCopy {
     ),
     meetFullDay: pick(
       isEn,
-      "Si tu reserva es de día completo con recogida, tu instructor te confirmará el punto de encuentro (puede no ser Borreguiles).",
+      "Si tu reserva es de Full Day con recogida, tu instructor te confirmará el punto de encuentro (puede no ser Borreguiles).",
       "If your booking is a full day with pick-up, your instructor will confirm the meeting point (it may not be Borreguiles).",
     ),
     mapsCta: pick(isEn, "Abrir punto de encuentro en Google Maps", "Open meeting point in Google Maps"),

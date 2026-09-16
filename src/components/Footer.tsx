@@ -15,6 +15,7 @@ export async function Footer() {
       title: t("explora"),
       links: [
         { href: "/clases", label: nav("clases") },
+        { href: "/tarifas", label: nav("tarifas") },
         { href: "/reserva", label: nav("reservar") },
         { href: "/club", label: nav("club") },
         { href: "/blog", label: nav("blog") },

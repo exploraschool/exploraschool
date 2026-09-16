@@ -20,6 +20,172 @@ export type BlogPost = {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "como-reservar-clases-sierra-nevada",
+    titleEs: "Cómo reservar clases en Sierra Nevada: te asesoramos de verdad",
+    titleEn: "How to book lessons in Sierra Nevada: we actually advise you",
+    excerptEs:
+      "Reservar con Explora no es solo elegir un horario. Cuéntanos tu viaje y te aconsejamos la clase, el alojamiento, el alquiler de material y el forfait que mejor encajan.",
+    excerptEn:
+      "Booking with Explora is not just picking a time slot. Tell us about your trip and we will advise the lesson, stay, rental gear and lift pass that actually fit.",
+    date: "2026-09-16",
+    author: "Explora School & Club",
+    coverImage: "/images/blog/blog-tipo-clases.jpg",
+    coverAltEs: "Instructora de Explora hablando con un grupo antes de una clase en Sierra Nevada",
+    coverAltEn: "An Explora instructor talking with a group before a lesson in Sierra Nevada",
+    relatedSlugs: [
+      "que-tipo-clases-elegir-sierra-nevada",
+      "forfait-sierra-nevada-guia-compra",
+      "consejos-primera-vez-sierra-nevada",
+    ],
+    migrated: false,
+    contentEs: `Reservar una clase en Sierra Nevada no debería ser un formulario que envías y listo. Cada viaje es distinto: una familia con niños de 4 y 11 años no necesita lo mismo que dos amigos que ya bajan rojas, ni que alguien que llega un solo día desde Granada. En Explora School & Club la reserva es el inicio de una conversación. Cuanto más nos cuentes, mejor te podemos aconsejar.
+
+La solicitud entra [online](/reserva). Te confirmamos por email, no cobramos por adelantado y, si hace falta, seguimos por [WhatsApp](${site.whatsappUrl}) o [teléfono](/contacto). El objetivo no es venderte el formato más largo: es que el día te funcione.
+
+## Por qué importa que nos escribas
+
+Un horario en una tabla no sabe si es tu primera vez, si el grupo mezcla niveles, si dormís en Pradollano o en la ciudad, ni si tenéis que recoger el material a las 8:30. Esa información cambia la recomendación.
+
+Cuéntanos, aunque sea en dos líneas:
+
+- Fechas, número de personas y edades (sobre todo si hay niños)
+- Nivel real: primera vez, verdes, azules, rojas… sin maquillar
+- Esquí, snowboard o telemark; si aún no lo tenéis claro, también
+- Dónde os alojáis (Pradollano, alrededores o Granada)
+- Si necesitáis alquiler de material y a qué hora podéis estar en la estación
+
+Con eso te decimos si te conviene una particular de 2 horas, 3 horas o un [Full Day](/tarifas), si el grupo va junto o mejor separado, y cómo encajar forfait y alquiler para no perder la clase en colas.
+
+Si quieres comparar formatos por tu cuenta, está la [guía de tipos de clase](/blog/que-tipo-clases-elegir-sierra-nevada) y el [cuadro de tarifas](/tarifas). El asesoramiento sirve precisamente cuando la tabla no responde: “venimos un sábado con dos adultos y un niño debutante” o “solo tenemos la mañana”.
+
+## Cómo es la reserva con Explora
+
+1. Eliges producto, fechas y personas en [Reservar](/reserva), o nos escribes directo.
+2. Nos llega el email. Si falta un dato, te preguntamos. Si el formato no encaja, te proponemos otro.
+3. Confirmamos instructor, horario y punto de encuentro.
+4. El día de la clase, el instructor va de uniforme Explora. En Full Day podemos recoger y dejaros donde se solicite, en la estación.
+
+No hay pago online. La clase se cierra cuando ambos tenemos claro el plan. Si reservas antes del 1 de noviembre de 2026, hay un 10% de descuento de pretemporada.
+
+## Alojamiento: no vendemos hoteles, sí orientamos
+
+No gestionamos reservas de hotel. Sí te decimos qué encaja con tu clase y con el reloj de Sierra Nevada.
+
+**Pradollano** (la urbanización de la estación) acorta la mañana: aparcas, alquilas, compras o recoges el forfait y subes. Es la opción más cómoda con niños o si tu clase empieza a las 10:00.
+
+**Granada y pueblos del valle** suelen salir mejor de precio. El trayecto son unos 30 km / 40 minutos por la A-395 si no hay retenciones. Hay que madrugar: en temporada alta, entre aparcar, colas de telecabina y material, puedes necesitar **90 minutos en Pradollano** antes de la hora de clase. Lo explicamos en [cómo llegar](/como-llegar).
+
+Si os alojáis en un hotel de la estación y reserváis Full Day, podemos coordinar **recogida y entrega** bajo petición. Dinos el nombre del hotel al reservar; no lo improvisamos el mismo día en la cola del telecabina.
+
+No te recomendamos un hotel concreto a ciegas. Te preguntamos presupuesto, fechas y si priorizáis estar arriba o bajar a Granada por la noche, y te damos criterio honesto.
+
+## Alquiler de material: José Luis Sáez y 20% con Explora
+
+La clase no incluye esquís, tabla, botas ni bastones. Traes el tuyo o alquilas.
+
+Recomendamos **José Luis Sáez**, junto a los telecabinas Al-Andalus y Borreguiles, en Pradollano. Por ser alumno de Explora tienes un **20% de descuento**: dilo al recoger. Lleva DNI. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}).
+
+En fechas punta (puentes, Navidad, Semana Santa) el alquiler se llena. Mejor recoger con margen, no 15 minutos antes de la clase. Un material mal ajustado al peso y al nivel frena el aprendizaje más que un instructor impaciente: si es tu primera vez, dínoslo y te orientamos en talla y dureza.
+
+Casco: muy recomendable; con niños, imprescindible.
+
+## Forfait: va aparte, y el tipo tiene que coincidir con tu clase
+
+Cetursa vende los remontes. Explora vende la enseñanza. Cada persona que suba —también los niños— necesita su [forfait](/blog/forfait-sierra-nevada-guia-compra).
+
+La forma más cómoda es comprarlo online en sierranevada.es. El mismo día puedes sacarlo en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía. Suma el **seguro de accidentes** de la estación: es un coste pequeño y lo recomendamos.
+
+El tipo de forfait tiene que cuadrar con el horario:
+
+- Clase de 2 h o 3 h por la tarde: a veces basta un forfait de medio día o de pocas horas, según lo que ofrezca la estación esa temporada
+- [Full Day](/tarifas) o esquiar también por tu cuenta: forfait de día completo
+
+Un error clásico es comprar medio día y tener clase hasta las 16:00. Otro, llegar a taquilla a las 9:40 el sábado. Si nos dices hora de clase y si vais a seguir esquiando después, te decimos qué pase encaja.
+
+## Lo que queremos evitarte
+
+Llegar tarde al punto de encuentro porque el forfait o el alquiler se han comido la mañana. Reservar 2 horas cuando el grupo necesita un Full Day, o al revés. Mezclar un debutante con alguien que ya baja negras en la misma particular. Dormir en Granada sin margen de carretera. No decirnos que hay un niño de 3 años.
+
+Todo eso se resuelve **antes**, hablando. Por eso insistimos en el email y el WhatsApp: no es burocracia, es el trabajo de verdad.
+
+### Cuéntanos tu viaje y te armamos el plan
+
+[Reserva online](/reserva), escríbenos por [WhatsApp](${site.whatsappUrl}) o usa [contacto](/contacto). Con fechas, grupo y un poco de contexto te proponemos clase, logística de material, forfait y, si hace falta, criterio de alojamiento. Luego solo tienes que llegar con tiempo y disfrutar de la nieve.`,
+    contentEn: `Booking a lesson in Sierra Nevada should not be a form you send and forget. Every trip is different: a family with children aged 4 and 11 does not need the same thing as two friends who already ski reds, or someone coming up from Granada for a single day. At Explora School & Club the booking is the start of a conversation. The more you tell us, the better we can advise.
+
+The request comes in [online](/reserva). We confirm by email, we do not charge upfront and, if needed, we continue on [WhatsApp](${site.whatsappUrl}) or [phone](/contacto). The aim is not to sell you the longest format. It is to make the day work.
+
+## Why it matters that you write to us
+
+A time slot on a chart does not know if it is your first time, if the group mixes levels, whether you sleep in Pradollano or in the city, or if you have to collect rental gear at 8:30 am. That information changes the recommendation.
+
+Tell us, even in two lines:
+
+- Dates, number of people and ages (especially if there are children)
+- Real level: first time, greens, blues, reds… no need to dress it up
+- Ski, snowboard or telemark; if you have not decided yet, say so
+- Where you are staying (Pradollano, nearby or Granada)
+- Whether you need rental equipment and what time you can be at the resort
+
+With that we can say whether a 2-hour private, 3 hours or a [Full Day](/tarifas) fits, whether the group should stay together or split, and how to time the lift pass and rental so you do not lose the lesson in queues.
+
+If you want to compare formats yourself, there is the [lesson-type guide](/blog/que-tipo-clases-elegir-sierra-nevada) and the [rate chart](/tarifas). Advice is for when the table cannot answer: “we are coming on a Saturday with two adults and a beginner child” or “we only have the morning”.
+
+## How booking with Explora works
+
+1. You choose a product, dates and group size at [Book](/reserva), or you write to us directly.
+2. We get the email. If a detail is missing, we ask. If the format is a poor fit, we suggest another.
+3. We confirm instructor, time and meeting point.
+4. On the day, the instructor wears the Explora uniform. On a Full Day we can pick you up and drop you off on request, at the resort.
+
+There is no online payment. The lesson is confirmed when both of us have a clear plan. Book before 1 November 2026 for 10% pre-season off.
+
+## Accommodation: we do not sell hotels, we do give direction
+
+We do not take hotel bookings. We do tell you what fits your lesson and Sierra Nevada’s clock.
+
+**Pradollano** (the resort village) shortens the morning: you park, rent, collect your pass and go up. It is the most comfortable option with children or if your lesson starts at 10:00 am.
+
+**Granada and the valley villages** are often better value. The drive is about 30 km / 40 minutes on the A-395 if traffic is clear. You need an early start: in peak season, between parking, gondola queues and gear, you may need **90 minutes in Pradollano** before lesson time. We explain it in [getting there](/como-llegar).
+
+If you stay in a resort hotel and book a Full Day, we can arrange **pick-up and drop-off** on request. Tell us the hotel name when you book; we do not improvise it on the day in the gondola queue.
+
+We will not recommend a specific hotel blindly. We ask about budget, dates and whether you would rather stay up the mountain or go down to Granada at night, and we give honest criteria.
+
+## Equipment rental: José Luis Sáez and 20% with Explora
+
+The lesson does not include skis, board, boots or poles. You bring your own or you rent.
+
+We recommend **José Luis Sáez**, next to the Al-Andalus and Borreguiles gondolas, in Pradollano. As an Explora student you get **20% off**: mention it when you pick up. Bring ID. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}).
+
+At peak dates (long weekends, Christmas, Easter) rental books out. Collect with time to spare, not 15 minutes before the lesson. Gear that is the wrong stiffness for your weight and level slows learning more than an impatient instructor. If it is your first time, tell us and we will help with size and flex.
+
+Helmet: strongly recommended; essential for children.
+
+## Lift pass: it is separate, and the type must match your lesson
+
+Cetursa sells the lifts. Explora sells the teaching. Everyone who goes up — children included — needs their own [lift pass](/blog/forfait-sierra-nevada-guia-compra).
+
+The easiest way is to buy online at sierranevada.es. On the day you can collect it at the machines in the car parks and at the Village chairlift (Silla del Pueblo), or at Plaza de Andalucía. Add the resort **accident insurance**: it is a small cost and we recommend it.
+
+The pass type has to match the timetable:
+
+- A 2-hour or afternoon 3-hour lesson: a half-day or short-hours pass can be enough, depending on what the resort offers that season
+- A [Full Day](/tarifas), or skiing on your own as well: a full-day pass
+
+A classic mistake is buying a half-day pass when the lesson runs until 4:00 pm. Another is arriving at the ticket office at 9:40 am on a Saturday. If you tell us the lesson time and whether you will keep skiing afterwards, we will say which pass fits.
+
+## What we want to spare you
+
+Arriving late because the pass or the rental ate the morning. Booking 2 hours when the group needs a Full Day, or the other way round. Putting a beginner in the same private with someone already on blacks. Sleeping in Granada with no road margin. Not mentioning a 3-year-old.
+
+All of that is solved **beforehand**, by talking. That is why we push email and WhatsApp: it is not paperwork. It is the actual job.
+
+### Tell us about your trip and we will build the plan
+
+[Book online](/reserva), write on [WhatsApp](${site.whatsappUrl}) or use [contact](/contacto). With dates, group size and a little context we will propose a lesson, gear logistics, lift pass and, if you need it, accommodation criteria. Then you only have to arrive in time and enjoy the snow.`,
+  },
+  {
     slug: "consejos-primera-vez-sierra-nevada",
     titleEs: "Primera vez en Sierra Nevada: 8 consejos para disfrutar al máximo",
     titleEn: "First time in Sierra Nevada: 8 tips to make the most of your trip",
@@ -196,7 +362,7 @@ At Explora School & Club we have been in Sierra Nevada since 2010 with qualified
     coverImage: "/images/blog/blog-tipo-clases.jpg",
     coverAltEs: "Grupo en clase de esquí eligiendo formato en Sierra Nevada",
     coverAltEn: "Ski lesson group choosing a format in Sierra Nevada",
-    relatedSlugs: ["por-que-contratar-clases-esqui-snowboard","clases-esqui-ninos-sierra-nevada","cursos-esqui-empresas-sierra-nevada"],
+    relatedSlugs: ["como-reservar-clases-sierra-nevada","por-que-contratar-clases-esqui-snowboard","clases-esqui-ninos-sierra-nevada"],
     migrated: false,
     contentEs: `Una de las dudas más habituales al [reservar](/reserva) en Explora School & Club es elegir el tipo de clase adecuado. No existe una respuesta única: depende de tu experiencia, con quién viajas y cuántos días tienes en la estación. Si aún dudas si merecen la pena, lee [por qué contratar clases](/blog/por-que-contratar-clases-esqui-snowboard).
 
@@ -1260,7 +1426,7 @@ At Explora we have been welcoming clients from across Spain and abroad for years
     coverImage: "/images/blog/blog-forfait.jpg",
     coverAltEs: "Forfait y acceso a remontes en Sierra Nevada",
     coverAltEn: "Lift pass and lift access in Sierra Nevada",
-    relatedSlugs: ["como-llegar-sierra-nevada-guia","que-tipo-clases-elegir-sierra-nevada","que-llevar-primer-dia-nieve"],
+    relatedSlugs: ["como-reservar-clases-sierra-nevada","que-tipo-clases-elegir-sierra-nevada","que-llevar-primer-dia-nieve"],
     migrated: false,
     contentEs: `Una de las preguntas más frecuentes que recibimos es si el forfait está incluido en el precio de la clase. La respuesta es no: en Explora pagas la [enseñanza](/clases) con instructor titulado, y el forfait lo compras aparte. Combina esta guía con [cómo llegar a Sierra Nevada](/como-llegar).
 
