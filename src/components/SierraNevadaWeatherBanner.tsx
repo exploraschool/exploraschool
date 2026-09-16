@@ -17,6 +17,15 @@ type SierraNevadaWeatherBannerProps = {
 
 const REFRESH_MS = 10 * 60 * 1000;
 
+const glyphSvgProps = {
+  fill: "none" as const,
+  viewBox: "-3 -3 30 30",
+  stroke: "currentColor",
+  strokeWidth: 1.5,
+  overflow: "visible" as const,
+  "aria-hidden": true as const,
+};
+
 function WeatherGlyph({
   kind,
   className = "h-7 w-7 sm:h-8 sm:w-8",
@@ -24,45 +33,47 @@ function WeatherGlyph({
   kind: ReturnType<typeof weatherIconKind>;
   className?: string;
 }) {
+  const svgClassName = `${className} block overflow-visible`;
+
   switch (kind) {
     case "sun":
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+        <svg className={svgClassName} {...glyphSvgProps}>
           <circle cx="12" cy="12" r="4" />
           <path strokeLinecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
         </svg>
       );
     case "snow":
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+        <svg className={svgClassName} {...glyphSvgProps}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v18M5.6 6.5l12.8 11M5.6 17.5l12.8-11M4 12h16" />
         </svg>
       );
     case "rain":
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7 15v3M12 14v4M17 15v3M6 10a4 4 0 0 1 0-8 5.5 5.5 0 0 1 10.4 1.5A3.5 3.5 0 0 1 18 10H6Z" />
+        <svg className={svgClassName} {...glyphSvgProps}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 16v2.5M12 15.5v3M17 16v2.5M7 11.5a3.5 3.5 0 0 1 0-7 5 5 0 0 1 9.5 1.4A3.2 3.2 0 0 1 17.5 11.5H7Z" />
         </svg>
       );
     case "storm":
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" />
+        <svg className={svgClassName} {...glyphSvgProps}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 3 5 14h6.5L10.5 21 19 10h-6.5L13 3Z" />
         </svg>
       );
     case "fog":
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+        <svg className={svgClassName} {...glyphSvgProps}>
           <path strokeLinecap="round" d="M4 9h16M4 13h16M6 17h12" />
         </svg>
       );
     default:
       return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+        <svg className={svgClassName} {...glyphSvgProps}>
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M6.5 17a4 4 0 0 1 0-8 5.5 5.5 0 0 1 10.4 1.5A3.5 3.5 0 0 1 18.5 17H6.5Z"
+            d="M7 16.5a3.5 3.5 0 0 1 0-7 5 5 0 0 1 9.5 1.4A3.2 3.2 0 0 1 17.5 16.5H7Z"
           />
         </svg>
       );
@@ -154,13 +165,13 @@ export function SierraNevadaWeatherBanner({ locale, weather: initialWeather = nu
               return (
                 <div
                   key={day.date}
-                  className="rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-3 text-center sm:px-3 sm:py-3.5"
+                  className="overflow-visible rounded-xl border border-white/10 bg-white/[0.04] px-2.5 py-3 text-center sm:px-3 sm:py-3.5"
                 >
                   <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-oro-light/85">
                     {label}
                   </p>
-                  <div className="mx-auto mt-2 flex h-9 w-9 items-center justify-center text-nieve/85">
-                    <WeatherGlyph kind={kind} className="h-7 w-7" />
+                  <div className="mx-auto mt-2.5 flex h-10 w-10 items-center justify-center overflow-visible text-nieve/85">
+                    <WeatherGlyph kind={kind} className="h-8 w-8" />
                   </div>
                   <p className="mt-1.5 text-[0.7rem] leading-tight text-nieve/60 sm:text-xs">
                     {weatherLabel(day.weatherCode, locale)}
