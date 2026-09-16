@@ -1,15 +1,15 @@
 /**
- * Temporada 2026/27 — Tarifa Perfecta (hoja Excel).
+ * Temporada 2026/27 — tarifas finales (totales de grupo 1PAX–8PAX).
  *
- * Clases particulares: precio total de grupo por columna 1PAX–8PAX.
- * Duración mínima: 2 horas. No hay clases de 1 h ni franja 09:00–12:00.
+ * Clases particulares: duración mínima 2 horas. No hay clases de 1 h.
+ * 3 h 10:00–13:00 lleva un suplemento de 40 € sobre el resto de franjas de 3 h.
  *
  * Cursos de 2–5 días: 195 € (1 persona) + 25 € por cada persona extra.
  */
 
 export const MIN_LESSON_HOURS = 2;
 
-/** Precio 2 h mañana (1 pax). Equivale a 55 €/h de grupo. */
+/** Precio 2 h (1 pax). Equivale a 55 €/h de grupo. */
 export const HOURLY_ANCHOR_EUR = 55;
 
 /** Precio total de sesión por número de participantes (índice 0 = 1 persona). */
@@ -37,34 +37,43 @@ function incrementFromBase(base: number, extraPerPerson: number): SessionPriceRo
   ];
 }
 
-/** 2 h mañana 10:00–12:00 / 12:00–14:00. */
-export const SESSION_2H_STANDARD: SessionPriceRow = [110, 120, 130, 140, 150, 160, 170, 180];
+/** 2 h — mismo total en todas las franjas (10:00–12:00, 12:00–14:00, 14:00–16:00). */
+export const SESSION_2H_STANDARD: SessionPriceRow = incrementFromBase(110, 20);
 
-/** 2 h mediodía — mismo precio que 10:00–12:00. */
+/** @deprecated Same as SESSION_2H_STANDARD */
 export const SESSION_2H_MIDDAY: SessionPriceRow = SESSION_2H_STANDARD;
 
-/** 2 h tarde 14:00–16:00. */
-export const SESSION_2H_AFTERNOON: SessionPriceRow = [90, 100, 110, 120, 130, 140, 150, 160];
+/** @deprecated Same as SESSION_2H_STANDARD */
+export const SESSION_2H_AFTERNOON: SessionPriceRow = SESSION_2H_STANDARD;
+
+/** 3 h 12:00–15:00 y split 10:00–12:00 / 15:00–16:00. */
+export const SESSION_3H_STANDARD: SessionPriceRow = incrementFromBase(165, 30);
+
+/** Suplemento de la franja 10:00–13:00 sobre el resto de 3 h. */
+export const SESSION_3H_MORNING_SURCHARGE_EUR = 40;
 
 /** 3 h mañana 10:00–13:00 (esquí, snowboard y telemark). */
-export const SESSION_3H_MORNING: SessionPriceRow = [195, 210, 225, 240, 255, 270, 285, 300];
+export const SESSION_3H_MORNING: SessionPriceRow = incrementFromBase(
+  SESSION_3H_STANDARD[0] + SESSION_3H_MORNING_SURCHARGE_EUR,
+  30,
+);
 
-/** 3 h split 10:00–12:00 y 14:00–15:00. */
-export const SESSION_3H_SPLIT: SessionPriceRow = [165, 180, 195, 210, 225, 240, 255, 270];
+/** 3 h split 10:00–12:00 y 15:00–16:00. */
+export const SESSION_3H_SPLIT: SessionPriceRow = SESSION_3H_STANDARD;
 
-/** 3 h 12:00–15:00 — misma tarifa que el split. */
-export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_SPLIT;
+/** 3 h 12:00–15:00. */
+export const SESSION_3H_MIDDAY: SessionPriceRow = SESSION_3H_STANDARD;
 
-/** 3 h medio día 14:00–17:00. */
-export const SESSION_3H_AFTERNOON: SessionPriceRow = [150, 165, 180, 195, 210, 225, 240, 255];
+/** 3 h medio día 14:00–17:00 (producto forfait medio día). */
+export const SESSION_3H_AFTERNOON: SessionPriceRow = SESSION_3H_STANDARD;
 
 /** Full Day 10:00–16:00. */
-export const SESSION_FULL_DAY: SessionPriceRow = [240, 270, 300, 330, 360, 390, 420, 450];
+export const SESSION_FULL_DAY: SessionPriceRow = incrementFromBase(250, 25);
 
 /** Horas de clase efectivas del Full Day (el comodín no entra en el €/h). */
 export const FULL_DAY_EFFECTIVE_HOURS = 5;
 
-/** Gancho de captación: 240 € / 5 h = 48 €/h (1 persona). */
+/** Gancho de captación: 250 € / 5 h = 50 €/h (1 persona). */
 export const FULL_DAY_HOURLY_EUR = Math.round(SESSION_FULL_DAY[0] / FULL_DAY_EFFECTIVE_HOURS);
 
 /** Cursos club/empresa (2–5 días): 195 €/día (1 persona) + 25 €/día por cada persona extra. */

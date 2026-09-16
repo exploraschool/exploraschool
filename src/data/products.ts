@@ -305,14 +305,14 @@ export const products: Product[] = [
     hours: 2,
     featuresEs: [
       "Precio total según número de personas (1–8)",
-      `Desde ${SESSION_2H_STANDARD[0]} € (2 h mañana)`,
+      `Desde ${SESSION_2H_STANDARD[0]} € (2 h)`,
       "Mínimo 2 horas",
       "Todos los niveles",
       "Niños desde 3 años",
     ],
     featuresEn: [
       "Total price by group size (1–8)",
-      `From €${SESSION_2H_STANDARD[0]} (2 h morning)`,
+      `From €${SESSION_2H_STANDARD[0]} (2 h)`,
       "2-hour minimum",
       "All levels",
       "Children from 3 years",

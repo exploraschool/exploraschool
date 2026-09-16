@@ -5,12 +5,10 @@ import type { PriceTable } from "@/data/prices";
 import {
   CURSO_COLECTIVO_PER_PERSON_EUR,
   MIN_LESSON_HOURS,
-  SESSION_2H_AFTERNOON,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
-  SESSION_3H_MIDDAY,
   SESSION_3H_MORNING,
-  SESSION_3H_SPLIT,
+  SESSION_3H_STANDARD,
   SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   sessionPriceForParticipants,
@@ -69,8 +67,8 @@ export const TIME_SLOTS: Record<TimeSlotId, TimeSlot> = {
   },
   "3h-10-12-14-15": {
     id: "3h-10-12-14-15",
-    labelEs: "10:00–12:00 y 14:00–15:00",
-    labelEn: "10:00 am–12:00 pm & 2:00–3:00 pm",
+    labelEs: "10:00–12:00 y 15:00–16:00",
+    labelEn: "10:00 am–12:00 pm & 3:00–4:00 pm",
     hours: 3,
   },
   "3h-12-15": {
@@ -101,10 +99,10 @@ const SESSION_PRICES_BY_SLOT: Partial<Record<TimeSlotId, readonly number[]>> = {
   "fd-10-16": SESSION_FULL_DAY,
   "2h-10-12": SESSION_2H_STANDARD,
   "2h-12-14": SESSION_2H_STANDARD,
-  "2h-14-16": SESSION_2H_AFTERNOON,
+  "2h-14-16": SESSION_2H_STANDARD,
   "3h-10-13": SESSION_3H_MORNING,
-  "3h-10-12-14-15": SESSION_3H_SPLIT,
-  "3h-12-15": SESSION_3H_MIDDAY,
+  "3h-10-12-14-15": SESSION_3H_STANDARD,
+  "3h-12-15": SESSION_3H_STANDARD,
   "3h-14-17": SESSION_3H_AFTERNOON,
 };
 
@@ -112,10 +110,9 @@ const LESSON_SLOTS: TimeSlotId[] = [
   "2h-10-12",
   "2h-12-14",
   "2h-14-16",
-  "3h-10-13",
-  "3h-10-12-14-15",
   "3h-12-15",
-  "3h-14-17",
+  "3h-10-12-14-15",
+  "3h-10-13",
 ];
 
 export type ProductBookingConfig = {
@@ -358,7 +355,7 @@ const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
   "12:00–14:00": "2h-12-14",
   "14:00–16:00": "2h-14-16",
   "10:00–13:00": "3h-10-13",
-  "10:00–12:00 y 14:00–15:00": "3h-10-12-14-15",
+  "10:00–12:00 y 15:00–16:00": "3h-10-12-14-15",
   "12:00–15:00": "3h-12-15",
   "14:00–17:00": "3h-14-17",
   "10:00 – 16:00": "fd-10-16",

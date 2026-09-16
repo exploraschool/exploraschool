@@ -141,7 +141,7 @@ We reply from 9:00 am to 8:00 pm.
     questionEs: "¿Cuánto cuestan las clases de esquí en Sierra Nevada?",
     answerEs: `El mejor precio por hora es el **día completo: ${FULL_DAY_HOURLY_EUR} €/h**. Son ${FULL_DAY_EFFECTIVE_HOURS} horas de clase (${SESSION_FULL_DAY[0]} € para 1 persona; ${SESSION_FULL_DAY[1]} € si sois dos).
 
-Las clases más cortas salen más caras por hora (2 h mañana: ${SESSION_2H_STANDARD[0]} € para 1 persona). No hay clases sueltas de 1 hora.
+Las clases más cortas salen más caras por hora (2 h: ${SESSION_2H_STANDARD[0]} € para 1 persona). No hay clases sueltas de 1 hora.
 
 Buscas clases de esquí baratas en Sierra Nevada: el día completo es la tarifa que más rinde.
 
@@ -150,7 +150,7 @@ Buscas clases de esquí baratas en Sierra Nevada: el día completo es la tarifa 
     questionEn: "How much do ski lessons cost in Sierra Nevada?",
     answerEn: `The best hourly rate is the **full day: €${FULL_DAY_HOURLY_EUR}/h**. That is ${FULL_DAY_EFFECTIVE_HOURS} hours of teaching (€${SESSION_FULL_DAY[0]} for 1 person; €${SESSION_FULL_DAY[1]} if there are two of you).
 
-Shorter lessons cost more per hour (2 h morning: €${SESSION_2H_STANDARD[0]} for 1 person). There are no standalone 1-hour lessons.
+Shorter lessons cost more per hour (2 h: €${SESSION_2H_STANDARD[0]} for 1 person). There are no standalone 1-hour lessons.
 
 Looking for affordable ski lessons in Sierra Nevada: the full day is the best-value rate.
 

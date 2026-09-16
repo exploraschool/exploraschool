@@ -7,12 +7,10 @@ import {
   FULL_DAY_HOURLY_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
-  SESSION_2H_AFTERNOON,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
-  SESSION_3H_MIDDAY,
   SESSION_3H_MORNING,
-  SESSION_3H_SPLIT,
+  SESSION_3H_STANDARD,
   SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   UNIFIED_SIZE_LABEL_ES,
@@ -144,7 +142,7 @@ export const seasonPriceTables: PriceTable[] = [
         prices: [...SESSION_2H_STANDARD],
       },
       { schedule: "12:00–14:00", prices: [...SESSION_2H_STANDARD] },
-      { schedule: "14:00–16:00", prices: [...SESSION_2H_AFTERNOON] },
+      { schedule: "14:00–16:00", prices: [...SESSION_2H_STANDARD] },
     ],
   },
   {
@@ -155,10 +153,9 @@ export const seasonPriceTables: PriceTable[] = [
     groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
     headers: unifiedHeadersEs,
     rows: [
+      { schedule: "12:00–15:00", prices: [...SESSION_3H_STANDARD] },
+      { schedule: "10:00–12:00 y 15:00–16:00", prices: [...SESSION_3H_STANDARD] },
       { schedule: "10:00–13:00", prices: [...SESSION_3H_MORNING] },
-      { schedule: "10:00–12:00 y 14:00–15:00", prices: [...SESSION_3H_SPLIT] },
-      { schedule: "12:00–15:00", prices: [...SESSION_3H_MIDDAY] },
-      { schedule: "14:00–17:00", prices: [...SESSION_3H_AFTERNOON] },
     ],
   },
   {
@@ -202,7 +199,7 @@ export const completeRateTables: CompleteRateTable[] = [
       {
         scheduleEs: "14:00–16:00",
         scheduleEn: "2:00–4:00 pm",
-        prices: groupPrices(SESSION_2H_AFTERNOON),
+        prices: groupPrices(SESSION_2H_STANDARD),
       },
     ],
   },
@@ -214,24 +211,19 @@ export const completeRateTables: CompleteRateTable[] = [
     subtitleEn: "Group total",
     rows: [
       {
+        scheduleEs: "12:00–15:00",
+        scheduleEn: "12:00–3:00 pm",
+        prices: groupPrices(SESSION_3H_STANDARD),
+      },
+      {
+        scheduleEs: "10:00–12:00 y 15:00–16:00",
+        scheduleEn: "10:00 am–12:00 pm & 3:00–4:00 pm",
+        prices: groupPrices(SESSION_3H_STANDARD),
+      },
+      {
         scheduleEs: "10:00–13:00",
         scheduleEn: "10:00 am–1:00 pm",
         prices: groupPrices(SESSION_3H_MORNING),
-      },
-      {
-        scheduleEs: "10:00–12:00 y 14:00–15:00",
-        scheduleEn: "10:00 am–12:00 pm & 2:00–3:00 pm",
-        prices: groupPrices(SESSION_3H_SPLIT),
-      },
-      {
-        scheduleEs: "12:00–15:00",
-        scheduleEn: "12:00–3:00 pm",
-        prices: groupPrices(SESSION_3H_MIDDAY),
-      },
-      {
-        scheduleEs: "14:00–17:00",
-        scheduleEn: "2:00–5:00 pm",
-        prices: groupPrices(SESSION_3H_AFTERNOON),
       },
     ],
   },

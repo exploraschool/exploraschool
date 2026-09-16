@@ -1,5 +1,5 @@
 import { site } from "@/data/site";
-import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_2H_AFTERNOON, SESSION_2H_STANDARD, SESSION_3H_AFTERNOON, SESSION_3H_MORNING, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
+import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_2H_STANDARD, SESSION_3H_MORNING, SESSION_3H_STANDARD, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
 import { whatsappHref } from "@/lib/whatsapp";
 
 export const FAQ_CHAT_WHATSAPP_TEXT =
@@ -65,9 +65,10 @@ export const FAQ_CHAT_NODES: Record<string, FaqChatNode> = {
     id: "tarifas",
     botText: `El mejor precio por hora es el día completo: ${FULL_DAY_HOURLY_EUR} €/h (${FULL_DAY_EFFECTIVE_HOURS} h de clase, ${SESSION_FULL_DAY[0]} € 1 persona / ${SESSION_FULL_DAY[1]} € 2 personas).
 
-• 2 h mañana: ${SESSION_2H_STANDARD[0]} € (1 persona) · ${SESSION_2H_STANDARD[1]} € (2 personas) · 2 h tarde: ${SESSION_2H_AFTERNOON[0]} € (1 persona).
-• 3 h mañana: ${SESSION_3H_MORNING[0]} € (1 persona) · 3 h tarde: ${SESSION_3H_AFTERNOON[0]} € (1 persona).
-• No vendemos clases sueltas de 1 hora ni la franja 09:00–12:00.`,
+• 2 h: ${SESSION_2H_STANDARD[0]} € (1 persona) · ${SESSION_2H_STANDARD[1]} € (2 personas).
+• 3 h (12:00–15:00 o 10:00–12:00 y 15:00–16:00): ${SESSION_3H_STANDARD[0]} € (1 persona).
+• 3 h 10:00–13:00: ${SESSION_3H_MORNING[0]} € (1 persona).
+• No vendemos clases sueltas de 1 hora.`,
     buttons: [
       {
         id: "reservar-wa",
