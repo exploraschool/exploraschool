@@ -346,6 +346,7 @@ export function getSlotLabel(slotId: TimeSlotId, locale: string): string {
 const RATE_TABLE_PRODUCT: Record<string, ProductId> = {
   "clases-2h": "particular",
   "clases-3h": "particular",
+  "medio-dia": "medio-dia",
   "full-day": "full-day",
   "curso-snow": "curso-snow",
   "curso-empresa": "curso-empresa",

@@ -69,6 +69,8 @@ type GoogleAuthCardProps = {
   consumeRedirectOnMount?: boolean;
   /** Full branded card (default) or a single Google button for checkout embeds. */
   variant?: "card" | "compact";
+  /** Maps API `error` codes to a user-facing message. */
+  errorMessages?: Record<string, string>;
 };
 
 export function GoogleAuthCard({
@@ -93,6 +95,7 @@ export function GoogleAuthCard({
   footer,
   consumeRedirectOnMount = true,
   variant = "card",
+  errorMessages,
 }: GoogleAuthCardProps) {
   const [error, setError] = useState("");
   const [phase, setPhase] = useState<Phase>(consumeRedirectOnMount ? "checking" : "ready");
@@ -113,25 +116,27 @@ export function GoogleAuthCard({
       | (GoogleAuthSuccess & { error?: string; message?: string })
       | null;
     if (!res.ok) {
-      throw new Error(payload?.message || unauthorizedMessage);
+      const code = typeof payload?.error === "string" ? payload.error : "";
+      throw new Error(errorMessages?.[code] || payload?.message || unauthorizedMessage);
     }
     return payload ?? {};
   }
 
   async function finishWithUser(getIdToken: () => Promise<string>, email?: string | null) {
-    if (!allowAnyAccount && email && !isAllowedStaffEmail(email)) {
-      const auth = getFirebaseAuth();
-      if (auth) await signOut(auth);
-      throw new Error(unauthorizedMessage);
-    }
-
-    setPhase("verifying");
-    const idToken = await getIdToken();
-    const payload = await establishSession(idToken);
     const auth = getFirebaseAuth();
-    if (auth) await signOut(auth);
-    setPhase("success");
-    onSuccess?.(payload);
+    try {
+      if (!allowAnyAccount && email && !isAllowedStaffEmail(email)) {
+        throw new Error(unauthorizedMessage);
+      }
+
+      setPhase("verifying");
+      const idToken = await getIdToken();
+      const payload = await establishSession(idToken);
+      setPhase("success");
+      onSuccess?.(payload);
+    } finally {
+      if (auth) await signOut(auth);
+    }
   }
 
   useEffect(() => {

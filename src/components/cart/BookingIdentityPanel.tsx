@@ -86,6 +86,7 @@ export function BookingIdentityPanel({
           locale={locale}
           allowAnyAccount
           unauthorizedMessage={ta("errors.generic")}
+          errorMessages={{ no_confirmed_booking: t("noConfirmedBookingGoogle") }}
           firebaseMissing={ta("errors.firebaseMissing")}
           popupBlocked={ta("errors.popupBlocked")}
           genericError={ta("errors.generic")}

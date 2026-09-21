@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { isAllowedStaffEmail } from "@/lib/admin-auth";
 import { getAdminAuth } from "@/lib/firebase/admin";
+import { emailHasConfirmedBooking } from "@/lib/link-bookings";
 import {
   STUDENT_SESSION_COOKIE,
   STUDENT_SESSION_MAX_AGE_MS,
@@ -28,12 +29,14 @@ export async function getStudentSession(): Promise<StudentSession | null> {
     if (!decoded.email_verified || !decoded.email || !decoded.uid) return null;
     // Staff Google account must never resolve as a student session.
     if (isAllowedStaffEmail(decoded.email)) return null;
-    return {
+    const student = {
       uid: decoded.uid,
       email: String(decoded.email),
       name: typeof decoded.name === "string" ? decoded.name : "",
       picture: typeof decoded.picture === "string" ? decoded.picture : "",
     };
+    if (!(await emailHasConfirmedBooking(student.email))) return null;
+    return student;
   } catch {
     return null;
   }

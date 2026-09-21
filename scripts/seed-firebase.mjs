@@ -5,6 +5,7 @@
  * Usage:
  *   cp .env.example .env   # fill FIREBASE_* credentials
  *   npm run seed
+ *   npm run seed -- --instructors-only
  */
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
@@ -15,11 +16,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 const DATA_DIR = path.join(ROOT, "src", "data");
 
-/** Load KEY=VALUE pairs from .env (no external deps). */
-async function loadEnv() {
+async function loadEnvFile(fileName) {
   try {
-    const envPath = path.join(ROOT, ".env");
-    const content = await fs.readFile(envPath, "utf8");
+    const content = await fs.readFile(path.join(ROOT, fileName), "utf8");
     for (const line of content.split("\n")) {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith("#")) continue;
@@ -38,8 +37,14 @@ async function loadEnv() {
       }
     }
   } catch {
-    // .env is optional when vars are exported in the shell
+    // optional when vars are exported in the shell
   }
+}
+
+/** Load KEY=VALUE pairs from .env.local then .env (no external deps). */
+async function loadEnv() {
+  await loadEnvFile(".env.local");
+  await loadEnvFile(".env");
 }
 
 /** Extract a `export const name = …` array/object literal from a TS module. */
@@ -104,20 +109,31 @@ async function loadTsExport(fileName, exportName) {
   let literal = source.slice(startMatch.index + startMatch[0].length, index)
     .replace(/\/\/.*$/gm, "")
     .replace(/\/\*[\s\S]*?\*\//g, "")
-    .replace(/\s+as const/g, "");
+    .replace(/\s+as const/g, "")
+    .replace(/DEFAULT_INSTRUCTOR_PHOTO/g, '"/images/instructors/default.svg"');
 
   // eslint-disable-next-line no-eval
   return eval(`(${literal})`);
 }
 
-function initAdmin() {
+async function loadServiceAccount() {
+  try {
+    const raw = await fs.readFile(path.join(ROOT, "serviceAccount.json"), "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+async function initAdmin() {
   if (admin.apps.length > 0) {
     return admin.app();
   }
 
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+  const fileSa = await loadServiceAccount();
+  const projectId = process.env.FIREBASE_PROJECT_ID || fileSa?.project_id;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || fileSa?.client_email;
+  const privateKey = (process.env.FIREBASE_PRIVATE_KEY || fileSa?.private_key)?.replace(/\\n/g, "\n");
 
   if (projectId && clientEmail && privateKey) {
     return admin.initializeApp({
@@ -152,12 +168,53 @@ async function seedCollection(db, collectionName, docs, idField) {
   return count;
 }
 
+function isUploadedPhoto(photo) {
+  return typeof photo === "string" && /^https?:\/\//i.test(photo.trim());
+}
+
+/** Restore catalog instructors. Existing uploaded photos are kept. */
+async function seedInstructors(db, instructors) {
+  const snap = await db.collection("instructors").get();
+  const existing = new Map(snap.docs.map((doc) => [doc.id, doc.data()]));
+  const batch = db.batch();
+  let created = 0;
+  let updated = 0;
+
+  for (const instructor of instructors) {
+    const id = instructor.slug;
+    if (!id) {
+      throw new Error(`instructors: missing slug on ${JSON.stringify(instructor)}`);
+    }
+    const current = existing.get(id);
+    const photo = isUploadedPhoto(current?.photo) ? current.photo : instructor.photo;
+    batch.set(db.collection("instructors").doc(String(id)), { ...instructor, photo }, { merge: true });
+    if (current) updated += 1;
+    else created += 1;
+  }
+
+  await batch.commit();
+  return { created, updated, total: instructors.length };
+}
+
 async function main() {
   await loadEnv();
-  initAdmin();
+  await initAdmin();
   const db = admin.firestore();
+  const instructorsOnly = process.argv.includes("--instructors-only");
 
   console.log("Loading seed data from src/data/*.ts …");
+
+  if (instructorsOnly) {
+    const instructors = await loadTsExport("instructors.ts", "instructors");
+    const before = await db.collection("instructors").get();
+    console.log(`Firestore currently has ${before.size} instructor(s): ${before.docs.map((doc) => doc.id).join(", ") || "(none)"}`);
+    const result = await seedInstructors(db, instructors);
+    const after = await db.collection("instructors").get();
+    console.log(`Restored instructors: created ${result.created}, updated ${result.updated}, catalog ${result.total}`);
+    console.log(`Firestore now has ${after.size} instructor(s): ${after.docs.map((doc) => doc.id).join(", ")}`);
+    console.log("Done.");
+    return;
+  }
 
   const [instructors, faqs, reviews, currentPrices, legacyPriceTables, legacyFromPrices, priceNotes] =
     await Promise.all([
@@ -170,7 +227,7 @@ async function main() {
       loadTsExport("prices.ts", "priceNotes"),
     ]);
 
-  const instructorCount = await seedCollection(db, "instructors", instructors, "slug");
+  const instructorResult = await seedInstructors(db, instructors);
   const faqCount = await seedCollection(db, "faqs", faqs, "id");
   const reviewCount = await seedCollection(db, "reviews", reviews, "id");
 
@@ -185,7 +242,7 @@ async function main() {
     { merge: true },
   );
 
-  console.log(`Seeded ${instructorCount} instructors`);
+  console.log(`Seeded ${instructorResult.total} instructors (created ${instructorResult.created}, updated ${instructorResult.updated})`);
   console.log(`Seeded ${faqCount} FAQs`);
   console.log(`Seeded ${reviewCount} reviews`);
   console.log("Seeded prices/main document");

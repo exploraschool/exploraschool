@@ -1,25 +1,26 @@
 import type { Firestore, QueryDocumentSnapshot } from "firebase-admin/firestore";
 import { FieldValue } from "firebase-admin/firestore";
+import { getAdminDb } from "@/lib/firebase/admin";
 import { isBookingLead, type StoredLead } from "@/lib/leads";
 
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-export async function linkBookingLeadsToStudent(
+async function collectBookingDocsByEmail(
   db: Firestore,
-  params: { uid: string; email: string },
-): Promise<{ linked: number; leadIds: string[] }> {
-  const emailLower = normalizeEmail(params.email);
-  if (!emailLower) return { linked: 0, leadIds: [] };
+  email: string,
+): Promise<Map<string, QueryDocumentSnapshot>> {
+  const emailLower = normalizeEmail(email);
+  const docs = new Map<string, QueryDocumentSnapshot>();
+  if (!emailLower) return docs;
 
   const bookings = db.collection("leads").where("type", "==", "booking");
   const [byLower, byExact] = await Promise.all([
     bookings.where("emailLower", "==", emailLower).get().catch(() => null),
-    bookings.where("email", "==", params.email.trim()).get().catch(() => null),
+    bookings.where("email", "==", email.trim()).get().catch(() => null),
   ]);
 
-  const docs = new Map<string, QueryDocumentSnapshot>();
   for (const snap of [byLower, byExact]) {
     if (!snap) continue;
     for (const doc of snap.docs) docs.set(doc.id, doc);
@@ -33,6 +34,35 @@ export async function linkBookingLeadsToStudent(
       if (normalizeEmail(data.email ?? "") === emailLower) docs.set(doc.id, doc);
     }
   }
+
+  return docs;
+}
+
+/** Student area: same email as the booking, and Explora has accepted it. */
+export async function emailHasConfirmedBooking(email: string): Promise<boolean> {
+  try {
+    const db = getAdminDb();
+    if (!db) return false;
+    const docs = await collectBookingDocsByEmail(db, email);
+    for (const doc of docs.values()) {
+      const data = doc.data() as Partial<StoredLead>;
+      if (isBookingLead(data) && data.status === "confirmed") return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("[link-bookings] confirmed lookup failed:", error);
+    return false;
+  }
+}
+
+export async function linkBookingLeadsToStudent(
+  db: Firestore,
+  params: { uid: string; email: string },
+): Promise<{ linked: number; leadIds: string[] }> {
+  const emailLower = normalizeEmail(params.email);
+  if (!emailLower) return { linked: 0, leadIds: [] };
+
+  const docs = await collectBookingDocsByEmail(db, params.email);
 
   const leadIds: string[] = [];
   const batch = db.batch();

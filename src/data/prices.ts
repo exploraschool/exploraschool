@@ -4,7 +4,6 @@ import {
   CURSO_COLECTIVO_PER_PERSON_EN,
   CURSO_COLECTIVO_PER_PERSON_ES,
   cursoColectivoTotal,
-  FULL_DAY_HOURLY_EUR,
   PEOPLE_COUNT_HEADERS_EN,
   PEOPLE_COUNT_HEADERS_ES,
   SESSION_2H_STANDARD,
@@ -157,6 +156,15 @@ export const seasonPriceTables: PriceTable[] = [
     ],
   },
   {
+    id: "medio-dia",
+    titleEs: "FORFAIT MEDIO DÍA",
+    titleEn: "HALF-DAY LIFT PASS",
+    season: CURRENT_SEASON.key,
+    groupSizeLabel: UNIFIED_SIZE_LABEL_ES,
+    headers: unifiedHeadersEs,
+    rows: [{ schedule: "14:00–17:00", prices: [...SESSION_3H_AFTERNOON] }],
+  },
+  {
     id: "full-day",
     titleEs: "FULL DAY",
     titleEn: "FULL DAY",
@@ -226,11 +234,25 @@ export const completeRateTables: CompleteRateTable[] = [
     ],
   },
   {
+    id: "medio-dia",
+    titleEs: "Forfait medio día",
+    titleEn: "Half-day lift pass",
+    subtitleEs: "Solo 14:00–17:00",
+    subtitleEn: "2:00–5:00 pm only",
+    rows: [
+      {
+        scheduleEs: "14:00–17:00",
+        scheduleEn: "2:00–5:00 pm",
+        prices: groupPrices(SESSION_3H_AFTERNOON),
+      },
+    ],
+  },
+  {
     id: "full-day",
     titleEs: "Full Day",
     titleEn: "Full Day",
-    subtitleEs: `5 h de clase · ${FULL_DAY_HOURLY_EUR} €/h`,
-    subtitleEn: `5 h lesson · €${FULL_DAY_HOURLY_EUR}/h`,
+    subtitleEs: "5 h de clase y 1 hora comodín",
+    subtitleEn: "5 h lesson and 1 hour buffer",
     rows: [
       {
         scheduleEs: "10:00–16:00",

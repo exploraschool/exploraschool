@@ -22,6 +22,8 @@ export function StudentGoogleAuthCard({ locale }: StudentGoogleAuthCardProps) {
       locale={locale}
       allowAnyAccount
       unauthorizedMessage={t("errors.generic")}
+      errorMessages={{ no_confirmed_booking: t("errors.noConfirmedBooking") }}
+      footer={<p className="text-center text-xs leading-relaxed text-muted">{t("loginLead")}</p>}
       firebaseMissing={t("errors.firebaseMissing")}
       popupBlocked={t("errors.popupBlocked")}
       genericError={t("errors.generic")}

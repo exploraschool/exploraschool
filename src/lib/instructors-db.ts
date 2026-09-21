@@ -32,16 +32,73 @@ function asInstructor(id: string, data: Record<string, unknown>): StoredInstruct
   };
 }
 
+function catalogRecord(instructor: Instructor): Record<string, unknown> {
+  return {
+    slug: instructor.slug,
+    name: instructor.name,
+    disciplines: instructor.disciplines,
+    bioEs: instructor.bioEs,
+    bioEn: instructor.bioEn,
+    languages: instructor.languages,
+    active: instructor.active,
+    sortOrder: instructor.sortOrder,
+    photo: instructor.photo,
+  };
+}
+
+function mergeInstructorLists(fromDb: Map<string, StoredInstructor>): StoredInstructor[] {
+  const merged: StoredInstructor[] = [];
+  const seen = new Set<string>();
+
+  for (const catalog of staticInstructors) {
+    merged.push(fromDb.get(catalog.slug) ?? { ...catalog });
+    seen.add(catalog.slug);
+  }
+
+  for (const stored of fromDb.values()) {
+    if (!seen.has(stored.slug)) merged.push(stored);
+  }
+
+  return merged.sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+}
+
+/**
+ * Re-creates catalog instructors missing from Firestore without touching
+ * existing docs (so uploaded photos / admin edits stay in place).
+ */
+async function restoreMissingCatalogInstructors(
+  db: NonNullable<ReturnType<typeof getAdminDb>>,
+  fromDb: Map<string, StoredInstructor>,
+): Promise<void> {
+  const missing = staticInstructors.filter((item) => !fromDb.has(item.slug));
+  if (missing.length === 0) return;
+
+  const batch = db.batch();
+  for (const instructor of missing) {
+    batch.set(db.collection(INSTRUCTORS_COLLECTION).doc(instructor.slug), catalogRecord(instructor));
+    fromDb.set(instructor.slug, { ...instructor });
+  }
+  await batch.commit();
+}
+
 export async function listInstructorsFromDb(): Promise<StoredInstructor[]> {
   const db = getAdminDb();
   if (!db) return staticInstructors.map((item) => ({ ...item }));
 
   try {
     const snap = await db.collection(INSTRUCTORS_COLLECTION).get();
-    if (snap.empty) return staticInstructors.map((item) => ({ ...item }));
-    return snap.docs
-      .map((doc) => asInstructor(doc.id, doc.data() as Record<string, unknown>))
-      .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+    const fromDb = new Map<string, StoredInstructor>();
+    for (const doc of snap.docs) {
+      const instructor = asInstructor(doc.id, doc.data() as Record<string, unknown>);
+      fromDb.set(instructor.slug, instructor);
+    }
+
+    try {
+      await restoreMissingCatalogInstructors(db, fromDb);
+    } catch (error) {
+      console.error("[instructors-db] catalog restore failed:", error);
+    }
+    return mergeInstructorLists(fromDb);
   } catch (error) {
     console.error("[instructors-db] list failed:", error);
     return staticInstructors.map((item) => ({ ...item }));

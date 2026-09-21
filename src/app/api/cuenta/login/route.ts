@@ -10,6 +10,7 @@ import {
 import { ADMIN_SESSION_MAX_AGE_MS } from "@/lib/admin-auth-config";
 import { getAdminAuth, isAdminConfigured } from "@/lib/firebase/admin";
 import { setHttpOnlyCookie, clearHttpOnlyCookie } from "@/lib/http-cookies";
+import { emailHasConfirmedBooking } from "@/lib/link-bookings";
 import { isOnboardingComplete } from "@/lib/student-users";
 import { upsertStudentProfile } from "@/lib/student-user-store";
 import {
@@ -77,6 +78,17 @@ export async function POST(request: Request) {
         homePath: staffHomePath(staffRole),
         email: decoded.email,
       });
+    }
+
+    if (!(await emailHasConfirmedBooking(decoded.email))) {
+      return NextResponse.json(
+        {
+          error: "no_confirmed_booking",
+          message:
+            "Para entrar al área de alumno hace falta una reserva aceptada con este mismo email.",
+        },
+        { status: 403 },
+      );
     }
 
     const sessionCookie = await auth.createSessionCookie(parsed.data.idToken, {
