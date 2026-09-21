@@ -23,16 +23,6 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
   const scheduleLabel = pickLocale(locale, "Horario", "Schedule");
   const [bookingSelection, setBookingSelection] = useState<BookingSelection | null>(null);
 
-  function bookCell(tableId: string, scheduleEs: string, participants: number) {
-    const booking = getBookingFromSeasonRow(tableId, scheduleEs);
-    if (!booking) return;
-    setBookingSelection({
-      productId: booking.productId,
-      timeSlotId: booking.timeSlotId,
-      participants,
-    });
-  }
-
   return (
     <>
       <p className="text-sm font-medium text-hielo">
@@ -42,8 +32,8 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
       <p className="mt-1.5 text-xs text-muted sm:text-sm">
         {pickLocale(
           locale,
-          "Pulsa un precio para reservar ese horario y ese número de personas. Luego eliges día y disciplina.",
-          "Tap a price to book that time slot and group size. Then you choose the day and discipline.",
+          "Pulsa un precio para reservar exactamente esa tarifa: producto, horario y número de personas. Después eliges el día y, si el producto lo permite, la disciplina.",
+          "Tap a price to book exactly that rate: product, time slot and group size. Then you choose the day and, if the product allows it, the discipline.",
         )}
       </p>
 
@@ -94,9 +84,90 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
               </tr>
             </thead>
             <tbody>
-              {completeRateTables.map((table) => (
-                <TableBlock key={table.id} locale={locale} table={table} onBook={bookCell} />
-              ))}
+              {completeRateTables.flatMap((table) => {
+                const sectionTitle = pickLocale(locale, table.titleEs, table.titleEn);
+                const section = [
+                  <tr key={`${table.id}-section`} className="border-t border-hielo/10 bg-nieve">
+                    <td colSpan={9} className="px-1.5 py-2 sm:px-4 sm:py-2.5">
+                      <span className="font-display text-[0.7rem] font-semibold text-hielo sm:text-base">
+                        {sectionTitle}
+                      </span>
+                      <span className="ml-1 text-[0.6rem] font-medium text-muted sm:ml-2 sm:text-xs">
+                        {pickLocale(locale, table.subtitleEs, table.subtitleEn)}
+                      </span>
+                    </td>
+                  </tr>,
+                ];
+
+                const dataRows = table.rows.map((row, rowIndex) => {
+                  const schedule = pickLocale(locale, row.scheduleEs, row.scheduleEn);
+                  const zebra = rowIndex % 2 === 0 ? "bg-white" : "bg-nieve";
+                  const booking = getBookingFromSeasonRow(table.id, row.scheduleEs);
+                  const limits = booking
+                    ? getParticipantLimits(
+                        booking.productId,
+                        table.id === "curso-snow" ? "snowboard" : undefined,
+                        booking.timeSlotId,
+                      )
+                    : null;
+
+                  return (
+                    <tr key={`${table.id}-${row.scheduleEs}`} className={`border-t border-hielo/8 ${zebra}`}>
+                      <th
+                        scope="row"
+                        className={`px-1 py-1.5 text-left font-medium text-pizarra sm:px-4 sm:py-2.5 ${zebra}`}
+                      >
+                        {schedule}
+                      </th>
+                      {row.prices.map((price, index) => {
+                        const people = index + 1;
+                        const selection =
+                          booking &&
+                          limits &&
+                          price != null &&
+                          people >= limits.minPeople &&
+                          people <= limits.maxPeople
+                            ? {
+                                productId: booking.productId,
+                                timeSlotId: booking.timeSlotId,
+                                participants: people,
+                              }
+                            : null;
+
+                        return (
+                          <td
+                            key={`${table.id}-${row.scheduleEs}-${people}`}
+                            className="px-0 py-0 text-center tabular-nums text-pizarra sm:px-1"
+                          >
+                            {price == null ? (
+                              <span className="block px-0 py-1.5 text-muted sm:py-2.5">—</span>
+                            ) : selection ? (
+                              <button
+                                type="button"
+                                onClick={() => setBookingSelection(selection)}
+                                className="relative z-10 block w-full rounded-md px-0 py-1.5 font-semibold text-hielo transition hover:bg-accent/10 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent sm:py-2.5"
+                                aria-label={pickLocale(
+                                  locale,
+                                  `Reservar ${sectionTitle}, ${schedule}, ${people} ${people === 1 ? "persona" : "personas"}, ${price} €`,
+                                  `Book ${sectionTitle}, ${schedule}, ${people} ${people === 1 ? "person" : "people"}, €${price}`,
+                                )}
+                              >
+                                {price}
+                              </button>
+                            ) : (
+                              <span className="block px-0 py-1.5 font-semibold text-hielo sm:py-2.5">
+                                {price}
+                              </span>
+                            )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                });
+
+                return [...section, ...dataRows];
+              })}
             </tbody>
           </table>
         </div>
@@ -127,89 +198,6 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
           lockSelection
         />
       ) : null}
-    </>
-  );
-}
-
-function TableBlock({
-  locale,
-  table,
-  onBook,
-}: {
-  locale: string;
-  table: (typeof completeRateTables)[number];
-  onBook: (tableId: string, scheduleEs: string, participants: number) => void;
-}) {
-  return (
-    <>
-      <tr className="border-t border-hielo/10 bg-nieve">
-        <td colSpan={9} className="px-1.5 py-2 sm:px-4 sm:py-2.5">
-          <span className="font-display text-[0.7rem] font-semibold text-hielo sm:text-base">
-            {pickLocale(locale, table.titleEs, table.titleEn)}
-          </span>
-          <span className="ml-1 text-[0.6rem] font-medium text-muted sm:ml-2 sm:text-xs">
-            {pickLocale(locale, table.subtitleEs, table.subtitleEn)}
-          </span>
-        </td>
-      </tr>
-      {table.rows.map((row, rowIndex) => {
-        const schedule = pickLocale(locale, row.scheduleEs, row.scheduleEn);
-        const zebra = rowIndex % 2 === 0 ? "bg-white" : "bg-nieve";
-        const booking = getBookingFromSeasonRow(table.id, row.scheduleEs);
-        const limits = booking
-          ? getParticipantLimits(
-              booking.productId,
-              table.id === "curso-snow" ? "snowboard" : undefined,
-              booking.timeSlotId,
-            )
-          : null;
-
-        return (
-          <tr key={`${table.id}-${row.scheduleEs}`} className={`border-t border-hielo/8 ${zebra}`}>
-            <th
-              scope="row"
-              className={`px-1 py-1.5 text-left font-medium text-pizarra sm:px-4 sm:py-2.5 ${zebra}`}
-            >
-              {schedule}
-            </th>
-            {row.prices.map((price, index) => {
-              const people = index + 1;
-              const canBook =
-                price != null &&
-                booking != null &&
-                limits != null &&
-                people >= limits.minPeople &&
-                people <= limits.maxPeople;
-
-              return (
-                <td
-                  key={`${table.id}-${row.scheduleEs}-${people}`}
-                  className="px-0 py-0 text-center tabular-nums text-pizarra sm:px-1"
-                >
-                  {price == null ? (
-                    <span className="block px-0 py-1.5 text-muted sm:py-2.5">—</span>
-                  ) : canBook ? (
-                    <button
-                      type="button"
-                      onClick={() => onBook(table.id, row.scheduleEs, people)}
-                      className="block w-full rounded-md px-0 py-1.5 font-semibold text-hielo transition hover:bg-accent/10 hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-accent sm:py-2.5"
-                      aria-label={pickLocale(
-                        locale,
-                        `Reservar ${schedule}, ${people} ${people === 1 ? "persona" : "personas"}, ${price} €`,
-                        `Book ${schedule}, ${people} ${people === 1 ? "person" : "people"}, €${price}`,
-                      )}
-                    >
-                      {price}
-                    </button>
-                  ) : (
-                    <span className="block px-0 py-1.5 font-semibold text-hielo sm:py-2.5">{price}</span>
-                  )}
-                </td>
-              );
-            })}
-          </tr>
-        );
-      })}
     </>
   );
 }

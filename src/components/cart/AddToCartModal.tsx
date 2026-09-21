@@ -382,8 +382,10 @@ export function AddToCartModal({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const people = clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId);
-    setParticipants(people);
+    const people = lockSelection
+      ? participants
+      : clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId);
+    if (!lockSelection) setParticipants(people);
     if (!datesValid || !disciplineValid || sessionPrice === null) return;
     if (people < minPeople || people > maxPeople) return;
 
@@ -497,7 +499,11 @@ export function AddToCartModal({
                     onChange={(id) => {
                       if (!lockSelection) setTimeSlotId(id as TimeSlotId);
                     }}
-                    title={pickerSlots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+                    title={
+                      pickerSlots.length === 1 && productId.startsWith("full-day")
+                        ? t("fullDaySchedule")
+                        : t("timeSlot")
+                    }
                     disabledSlotIds={disabledSlotIds}
                     disabledHint={t("bookingCutoffHint")}
                   />
@@ -577,34 +583,59 @@ export function AddToCartModal({
                   </p>
                 </div>
 
-                {availableDisciplines.length > 1 ? (
+                {availableDisciplines.length > 0 ? (
                   <div>
                     <label htmlFor="cart-discipline" className="mb-1.5 block text-sm font-medium">
                       {t("discipline")} *
                     </label>
-                    <select
-                      id="cart-discipline"
-                      value={discipline}
-                      onChange={(e) => handleDisciplineChange(e.target.value)}
-                      required
-                      disabled={disciplineLocked}
-                      className="field-select"
-                    >
-                      <option value="">{t("selectDiscipline")}</option>
-                      {availableDisciplines.map((d) => (
-                        <option key={d.id} value={d.id}>
-                          {pickLocale(locale, d.nameEs, d.nameEn)}
-                        </option>
-                      ))}
-                    </select>
-                    {disciplineLocked && (
-                      <p className="mt-1 text-xs text-muted">
-                        {pickLocale(
-                          locale,
-                          "Este instructor solo imparte clases de snowboard.",
-                          "This instructor only teaches snowboard lessons.",
+                    {availableDisciplines.length === 1 ? (
+                      <>
+                        <input
+                          id="cart-discipline"
+                          type="text"
+                          readOnly
+                          value={pickLocale(
+                            locale,
+                            availableDisciplines[0].nameEs,
+                            availableDisciplines[0].nameEn,
+                          )}
+                          className="w-full cursor-default rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm text-pizarra"
+                        />
+                        <p className="mt-1 text-xs text-muted">
+                          {pickLocale(
+                            locale,
+                            `Esta reserva es de ${availableDisciplines[0].nameEs}.`,
+                            `This booking is ${availableDisciplines[0].nameEn}.`,
+                          )}
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <select
+                          id="cart-discipline"
+                          value={discipline}
+                          onChange={(e) => handleDisciplineChange(e.target.value)}
+                          required
+                          disabled={disciplineLocked}
+                          className="field-select"
+                        >
+                          <option value="">{t("selectDiscipline")}</option>
+                          {availableDisciplines.map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {pickLocale(locale, d.nameEs, d.nameEn)}
+                            </option>
+                          ))}
+                        </select>
+                        {disciplineLocked && (
+                          <p className="mt-1 text-xs text-muted">
+                            {pickLocale(
+                              locale,
+                              "Este instructor solo imparte clases de snowboard.",
+                              "This instructor only teaches snowboard lessons.",
+                            )}
+                          </p>
                         )}
-                      </p>
+                      </>
                     )}
                   </div>
                 ) : (
@@ -650,7 +681,7 @@ export function AddToCartModal({
                 </div>
               )}
 
-              {availableDisciplines.length > 1 && (
+              {availableDisciplines.length >= 1 && (
                 <div>
                   <label htmlFor="cart-instructor-2" className="mb-1.5 block text-sm font-medium">
                     {t("instructor")}
