@@ -1,7 +1,6 @@
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
 import { ACCOUNT_MEETING_POINT_EN, ACCOUNT_MEETING_POINT_ES } from "@/data/student-account";
-import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
+import { getBookingItemTitle, TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { listStudentBookingLeads } from "@/lib/link-bookings";
 import {
@@ -64,8 +63,7 @@ function lessonFromItem(
   locale: string,
   reportIds: Set<string>,
 ): DashboardLesson {
-  const product = getProductBySlug(item.productId as ProductId);
-  const productTitle = product ? (locale === "en" ? product.titleEn : product.titleEs) : item.productId;
+  const productTitle = getBookingItemTitle(item.productId, locale, item.timeSlotId);
   const disciplineLabel =
     getDisciplineDisplayName(
       locale,
@@ -87,7 +85,7 @@ function lessonFromItem(
     disciplineLabel,
     instructorSlug: effectiveInstructorSlug(item),
     instructorName: effectiveInstructorName(item),
-    hours: slot?.hours ?? product?.hours ?? 0,
+    hours: slot?.hours ?? 0,
     reportId: reportIds.has(reportId) ? reportId : null,
   };
 }

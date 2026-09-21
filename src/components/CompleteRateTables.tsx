@@ -4,7 +4,7 @@ import { useState } from "react";
 import { completeRateTables, priceNotes } from "@/data/prices";
 import type { ProductId } from "@/data/products";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
-import { getBookingFromSeasonRow, type TimeSlotId } from "@/lib/booking-config";
+import { getBookingFromSeasonRow, getParticipantLimits, type TimeSlotId } from "@/lib/booking-config";
 import { PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
 import { pickLocale } from "@/lib/locale";
 
@@ -117,12 +117,14 @@ export function CompleteRateTables({ locale }: CompleteRateTablesProps) {
 
       {bookingSelection ? (
         <AddToCartModal
+          key={`${bookingSelection.productId}-${bookingSelection.timeSlotId}-${bookingSelection.participants}`}
           open
           onClose={() => setBookingSelection(null)}
           productId={bookingSelection.productId}
           defaultTimeSlotId={bookingSelection.timeSlotId}
           defaultParticipants={bookingSelection.participants}
           defaultDiscipline={bookingSelection.productId === "curso-snow" ? "snowboard" : undefined}
+          lockSelection
         />
       ) : null}
     </>
@@ -153,9 +155,17 @@ function TableBlock({
       {table.rows.map((row, rowIndex) => {
         const schedule = pickLocale(locale, row.scheduleEs, row.scheduleEn);
         const zebra = rowIndex % 2 === 0 ? "bg-white" : "bg-nieve";
+        const booking = getBookingFromSeasonRow(table.id, row.scheduleEs);
+        const limits = booking
+          ? getParticipantLimits(
+              booking.productId,
+              table.id === "curso-snow" ? "snowboard" : undefined,
+              booking.timeSlotId,
+            )
+          : null;
 
         return (
-          <tr key={row.scheduleEs} className={`border-t border-hielo/8 ${zebra}`}>
+          <tr key={`${table.id}-${row.scheduleEs}`} className={`border-t border-hielo/8 ${zebra}`}>
             <th
               scope="row"
               className={`px-1 py-1.5 text-left font-medium text-pizarra sm:px-4 sm:py-2.5 ${zebra}`}
@@ -164,11 +174,16 @@ function TableBlock({
             </th>
             {row.prices.map((price, index) => {
               const people = index + 1;
-              const canBook = price != null && Boolean(getBookingFromSeasonRow(table.id, row.scheduleEs));
+              const canBook =
+                price != null &&
+                booking != null &&
+                limits != null &&
+                people >= limits.minPeople &&
+                people <= limits.maxPeople;
 
               return (
                 <td
-                  key={`${row.scheduleEs}-${people}`}
+                  key={`${table.id}-${row.scheduleEs}-${people}`}
                   className="px-0 py-0 text-center tabular-nums text-pizarra sm:px-1"
                 >
                   {price == null ? (

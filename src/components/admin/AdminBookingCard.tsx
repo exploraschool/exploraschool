@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle } from "@/lib/booking-config";
 import { AdminDeleteLeadButton } from "@/components/admin/AdminDeleteLeadButton";
 import { LeadActions } from "@/components/admin/LeadActions";
 import { customerNotesFromLeadMessage } from "@/lib/lead-message";
@@ -52,10 +52,8 @@ function statusLabel(status?: string) {
   }
 }
 
-function productTitle(productId: string, locale: string) {
-  const product = getProductBySlug(productId as ProductId);
-  if (!product) return productId;
-  return locale === "en" ? product.titleEn : product.titleEs;
+function productTitle(productId: string, locale: string, timeSlotId?: string) {
+  return getBookingItemTitle(productId, locale, timeSlotId);
 }
 
 function formatDate(date: string, locale: string) {
@@ -161,7 +159,9 @@ export function AdminBookingCard({
                   className="rounded-xl border border-hielo/8 bg-nieve/70 px-3.5 py-3"
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <p className="font-semibold text-pizarra">{productTitle(item.productId, locale)}</p>
+                    <p className="font-semibold text-pizarra">
+                      {productTitle(item.productId, locale, item.timeSlotId)}
+                    </p>
                     <p className="text-sm font-bold text-accent">{item.lineTotal} €</p>
                   </div>
                   <p className="mt-1 text-sm text-muted">

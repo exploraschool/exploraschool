@@ -30,6 +30,7 @@ import {
   clampParticipantCount,
   getParticipantLimits,
   getProductBookingConfig,
+  getBookingItemTitle,
   getSlotLabel,
   getSlotsForProduct,
   isPrivateLessonProduct,
@@ -53,7 +54,51 @@ type AddToCartModalProps = {
   defaultInstructorName?: string;
   defaultTimeSlotId?: TimeSlotId;
   defaultParticipants?: number;
+  /** Keep the rate-table cell (product slot + group size) instead of switching to defaults. */
+  lockSelection?: boolean;
 };
+
+function resolveInitialTimeSlotId(
+  productId: ProductId,
+  preferred: TimeSlotId | undefined,
+  discipline: MainDisciplineId | undefined,
+  participants: number | undefined,
+  keepPreferred: boolean,
+): TimeSlotId {
+  const config = getProductBookingConfig(productId);
+  if (preferred && config.slotIds.includes(preferred)) {
+    if (
+      keepPreferred ||
+      isSlotAllowedForBooking(productId, preferred, discipline, participants)
+    ) {
+      return preferred;
+    }
+  }
+  const available = getSlotsForProduct(productId, discipline, participants);
+  return (
+    available.find((slot) => slot.id === config.defaultSlotId)?.id ??
+    available[0]?.id ??
+    config.defaultSlotId
+  );
+}
+
+function resolveInitialParticipants(
+  productId: ProductId,
+  slotId: TimeSlotId,
+  discipline: MainDisciplineId | undefined,
+  defaultParticipants: number | undefined,
+): number {
+  if (discipline && isIndividualizedDiscipline(discipline)) return 1;
+  const { minPeople, maxPeople } = getParticipantLimits(productId, discipline, slotId);
+  if (
+    defaultParticipants !== undefined &&
+    defaultParticipants >= minPeople &&
+    defaultParticipants <= maxPeople
+  ) {
+    return defaultParticipants;
+  }
+  return minPeople;
+}
 
 export function AddToCartModal({
   open,
@@ -64,6 +109,7 @@ export function AddToCartModal({
   defaultInstructorName,
   defaultTimeSlotId,
   defaultParticipants,
+  lockSelection = false,
 }: AddToCartModalProps) {
   const t = useTranslations("cart");
   const locale = useLocale();
@@ -74,8 +120,29 @@ export function AddToCartModal({
   const bookingConfig = getProductBookingConfig(productId);
 
   const [dates, setDates] = useState<string[]>([]);
-  const [timeSlotId, setTimeSlotId] = useState<TimeSlotId>(bookingConfig.defaultSlotId);
-  const [participants, setParticipants] = useState(bookingConfig.minPeople ?? product?.minPeople ?? 1);
+  const [timeSlotId, setTimeSlotId] = useState<TimeSlotId>(() =>
+    resolveInitialTimeSlotId(
+      productId,
+      defaultTimeSlotId,
+      defaultDiscipline,
+      defaultParticipants,
+      lockSelection,
+    ),
+  );
+  const [participants, setParticipants] = useState(() =>
+    resolveInitialParticipants(
+      productId,
+      resolveInitialTimeSlotId(
+        productId,
+        defaultTimeSlotId,
+        defaultDiscipline,
+        defaultParticipants,
+        lockSelection,
+      ),
+      defaultDiscipline,
+      defaultParticipants,
+    ),
+  );
   const [discipline, setDiscipline] = useState<MainDisciplineId | "">(defaultDiscipline ?? "");
   const [modality, setModality] = useState<ModalityId | "">("");
   const [instructorSlug, setInstructorSlug] = useState(defaultInstructorSlug ?? "");
@@ -142,30 +209,19 @@ export function AddToCartModal({
         product?.disciplines.includes("snowboard")
           ? "snowboard"
           : (defaultDiscipline ?? singleDiscipline ?? "");
-      const availableSlots = getSlotsForProduct(
+      const slotId = resolveInitialTimeSlotId(
         productId,
+        defaultTimeSlotId,
+        initialDiscipline || undefined,
+        defaultParticipants,
+        lockSelection,
+      );
+      const people = resolveInitialParticipants(
+        productId,
+        slotId,
         initialDiscipline || undefined,
         defaultParticipants,
       );
-      const slotId =
-        defaultTimeSlotId && availableSlots.some((slot) => slot.id === defaultTimeSlotId)
-          ? defaultTimeSlotId
-          : (availableSlots.find((slot) => slot.id === bookingConfig.defaultSlotId)?.id ??
-            availableSlots[0]?.id ??
-            bookingConfig.defaultSlotId);
-      const { minPeople: limitsMin, maxPeople: limitsMax } = getParticipantLimits(
-        productId,
-        initialDiscipline || undefined,
-        slotId,
-      );
-      const people =
-        initialDiscipline && isIndividualizedDiscipline(initialDiscipline)
-          ? 1
-          : defaultParticipants !== undefined &&
-              defaultParticipants >= limitsMin &&
-              defaultParticipants <= limitsMax
-            ? defaultParticipants
-            : limitsMin;
 
       setDates([]);
       setTimeSlotId(slotId);
@@ -183,7 +239,7 @@ export function AddToCartModal({
     defaultInstructorSlug,
     defaultTimeSlotId,
     defaultParticipants,
-    bookingConfig,
+    lockSelection,
   ]);
 
   useEffect(() => {
@@ -218,7 +274,7 @@ export function AddToCartModal({
   }, [open, timeSlotId, dates]);
 
   useEffect(() => {
-    if (!open || slots.length === 0) return;
+    if (!open || lockSelection || slots.length === 0) return;
     const currentAllowed =
       slots.some((slot) => slot.id === timeSlotId) && !disabledSlotIds.includes(timeSlotId);
     if (!currentAllowed) {
@@ -229,12 +285,14 @@ export function AddToCartModal({
         slots[0];
       if (next) setTimeSlotId(next.id);
     }
-  }, [open, disabledSlotIds, timeSlotId, slots]);
+  }, [open, lockSelection, disabledSlotIds, timeSlotId, slots]);
 
   if (!mounted || !open || !product) return null;
 
   const resolvedProduct = product;
   const effectiveDiscipline = discipline || implicitDiscipline || undefined;
+  const lockedSlot = TIME_SLOTS[timeSlotId];
+  const pickerSlots = lockSelection && lockedSlot ? [lockedSlot] : slots;
 
   const availableDisciplines = getMainDisciplines().filter((d) =>
     resolvedProduct.disciplines.includes(d.id),
@@ -263,7 +321,7 @@ export function AddToCartModal({
     setModality("");
     if (next && isIndividualizedDiscipline(next)) {
       setParticipants(1);
-    } else if (next) {
+    } else if (next && !lockSelection) {
       setParticipants((current) => clampParticipantCount(current, productId, next));
     }
     if (instructorSlug) {
@@ -388,7 +446,7 @@ export function AddToCartModal({
             <div className="min-w-0">
               <p className="eyebrow text-[0.65rem]">{t("addToCart")}</p>
               <h2 id="add-to-cart-title" className="font-display text-lg font-semibold text-pizarra sm:text-xl">
-                {pickLocale(locale, product.titleEs, product.titleEn)}
+                {getBookingItemTitle(productId, locale, timeSlotId)}
               </h2>
             </div>
             <button
@@ -430,17 +488,28 @@ export function AddToCartModal({
                 }}
               />
 
-              {slots.length > 0 && (
+              {pickerSlots.length > 0 && (
                 <div>
                   <TimeSlotPicker
                     locale={locale}
-                    slots={slots}
+                    slots={pickerSlots}
                     value={timeSlotId}
-                    onChange={(id) => setTimeSlotId(id as TimeSlotId)}
-                    title={slots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
+                    onChange={(id) => {
+                      if (!lockSelection) setTimeSlotId(id as TimeSlotId);
+                    }}
+                    title={pickerSlots.length === 1 ? t("fullDaySchedule") : t("timeSlot")}
                     disabledSlotIds={disabledSlotIds}
                     disabledHint={t("bookingCutoffHint")}
                   />
+                  {lockSelection ? (
+                    <p className="mt-2 text-xs text-muted">
+                      {pickLocale(
+                        locale,
+                        "Horario y número de personas según la tarifa que has elegido.",
+                        "Schedule and group size match the rate you selected.",
+                      )}
+                    </p>
+                  ) : null}
                   {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(productId) ? (
                     <p className="mt-2 text-xs text-muted">{t("snowboardMorningCourseHint")}</p>
                   ) : null}
@@ -465,7 +534,7 @@ export function AddToCartModal({
                     step={1}
                     inputMode="numeric"
                     value={Number.isFinite(participants) ? participants : ""}
-                    disabled={isIndividualized}
+                    disabled={isIndividualized || lockSelection}
                     onChange={(e) => {
                       const raw = e.target.value;
                       if (raw === "") {

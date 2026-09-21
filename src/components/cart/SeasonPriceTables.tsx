@@ -170,6 +170,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
 
       {bookingSelection && (
         <AddToCartModal
+          key={`${bookingSelection.productId}-${bookingSelection.timeSlotId}-${bookingSelection.participants}`}
           open
           onClose={() => setBookingSelection(null)}
           productId={bookingSelection.productId}
@@ -178,6 +179,7 @@ export function SeasonPriceTables({ locale }: SeasonPriceTablesProps) {
           defaultDiscipline={
             bookingSelection.productId === "curso-snow" ? "snowboard" : undefined
           }
+          lockSelection
         />
       )}
     </>

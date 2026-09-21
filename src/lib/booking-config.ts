@@ -1,4 +1,4 @@
-import type { ProductId } from "@/data/products";
+import { getProductBySlug, type ProductId } from "@/data/products";
 import type { MainDisciplineId } from "@/data/disciplines";
 import { isIndividualizedDiscipline } from "@/data/disciplines";
 import {
@@ -352,28 +352,81 @@ const RATE_TABLE_PRODUCT: Record<string, ProductId> = {
   "curso-empresa": "curso-empresa",
 };
 
-const SCHEDULE_TO_SLOT: Record<string, TimeSlotId> = {
-  "10:00–12:00": "2h-10-12",
-  "12:00–14:00": "2h-12-14",
-  "14:00–16:00": "2h-14-16",
-  "10:00–13:00": "3h-10-13",
-  "10:00–12:00 y 15:00–16:00": "3h-10-12-14-15",
-  "12:00–15:00": "3h-12-15",
-  "14:00–17:00": "3h-14-17",
-  "10:00 – 16:00": "fd-10-16",
-  "10:00–16:00": "fd-10-16",
+/** Per-table slot map so identical clocks (10:00–13:00, 10:00–16:00) keep the product of that section. */
+const RATE_TABLE_SLOTS: Record<string, Record<string, TimeSlotId>> = {
+  "clases-2h": {
+    "10:00–12:00": "2h-10-12",
+    "12:00–14:00": "2h-12-14",
+    "14:00–16:00": "2h-14-16",
+  },
+  "clases-3h": {
+    "12:00–15:00": "3h-12-15",
+    "10:00–12:00 y 15:00–16:00": "3h-10-12-14-15",
+    "10:00–13:00": "3h-10-13",
+  },
+  "medio-dia": {
+    "14:00–17:00": "3h-14-17",
+  },
+  "full-day": {
+    "10:00–16:00": "fd-10-16",
+  },
+  "curso-snow": {
+    "10:00–13:00": "3h-10-13",
+  },
+  "curso-empresa": {
+    "10:00–16:00": "fd-10-16",
+  },
 };
+
+/** Hyphen / en-dash / em-dash and spacing variants used in rate tables. */
+export function normalizeScheduleKey(schedule: string): string {
+  return schedule
+    .trim()
+    .replace(/[\u2010-\u2015\u2212-]/g, "–")
+    .replace(/\s*–\s*/g, "–")
+    .replace(/\s+y\s+/gi, " y ")
+    .replace(/\s+/g, " ");
+}
 
 export function getBookingFromSeasonRow(
   tableId: string,
   schedule: string,
 ): { productId: ProductId; timeSlotId: TimeSlotId } | null {
-  const timeSlotId = SCHEDULE_TO_SLOT[schedule];
-  if (!timeSlotId) return null;
-
   const productId = RATE_TABLE_PRODUCT[tableId];
   if (!productId) return null;
+
+  const key = normalizeScheduleKey(schedule);
+  const timeSlotId = RATE_TABLE_SLOTS[tableId]?.[key];
+  if (!timeSlotId) return null;
+
+  const config = PRODUCT_BOOKING_CONFIG[productId];
+  if (!config.slotIds.includes(timeSlotId)) return null;
+
   return { productId, timeSlotId };
+}
+
+/** Title shown in cart, checkout and booking management, aligned with the rate-table section. */
+export function getBookingItemTitle(
+  productId: string | undefined,
+  locale: string,
+  timeSlotId?: string,
+): string {
+  const isEn = locale === "en" || locale.startsWith("en");
+  if (!productId) return isEn ? "Lesson" : "Clase";
+
+  if ((productId === "particular" || productId === "grupal") && timeSlotId && isTimeSlotId(timeSlotId)) {
+    const hours = TIME_SLOTS[timeSlotId].hours;
+    if (hours === 2) return isEn ? "2-hour lessons" : "Clases de 2 horas";
+    if (hours === 3) return isEn ? "3-hour lessons" : "Clases de 3 horas";
+  }
+
+  if (productId === "medio-dia") {
+    return isEn ? "Half-day lift pass" : "Forfait medio día";
+  }
+
+  const product = getProductBySlug(productId as ProductId);
+  if (!product) return productId;
+  return isEn ? product.titleEn : product.titleEs;
 }
 
 /** Maps HeroQuickBook group values (and plain 1–8) to a concrete participant count. */

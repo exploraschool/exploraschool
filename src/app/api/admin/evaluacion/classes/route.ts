@@ -10,7 +10,7 @@ import {
   type StoredLead,
 } from "@/lib/leads";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle } from "@/lib/booking-config";
 import { progressReportId } from "@/lib/progress-reports";
 import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
@@ -52,7 +52,7 @@ export async function GET() {
     const data = doc.data() as StoredLead;
     return (data.bookingItems ?? []).flatMap((item, itemIndex) => {
       if (effectiveInstructorSlug(item) !== slug) return [];
-      const product = getProductBySlug(item.productId as ProductId);
+      const productTitle = getBookingItemTitle(item.productId, "es", item.timeSlotId);
       return [
         {
           leadId: doc.id,
@@ -63,7 +63,7 @@ export async function GET() {
           studentEmail: data.email,
           date: item.date,
           timeSlotLabel: item.timeSlotLabel,
-          productTitle: product?.titleEs || item.productId,
+          productTitle,
           discipline: item.discipline,
           disciplineLabel:
             getDisciplineDisplayName(

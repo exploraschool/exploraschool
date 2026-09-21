@@ -6,8 +6,7 @@ import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
 import { listActiveInstructorsFromDb } from "@/lib/instructors-db";
 import { effectiveInstructorSlug, type StoredLead } from "@/lib/leads";
 import { parseProgressReport, PROGRESS_REPORTS_COLLECTION, progressReportId } from "@/lib/progress-reports";
-import { TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle, TIME_SLOTS, type TimeSlotId } from "@/lib/booking-config";
 import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from "@/data/disciplines";
 import { STUDENT_PROGRESS_ENABLED } from "@/lib/student-progress";
 
@@ -36,7 +35,7 @@ export default async function EvaluacionFichaPage({ params }: Props) {
     ? parseProgressReport(reportId, reportSnap.data() as Record<string, unknown>)
     : null;
 
-  const product = getProductBySlug(item.productId as ProductId);
+  const productTitle = getBookingItemTitle(item.productId, "es", item.timeSlotId);
   const slot = TIME_SLOTS[item.timeSlotId as TimeSlotId];
   const disciplineLabel =
     getDisciplineDisplayName(
@@ -61,9 +60,9 @@ export default async function EvaluacionFichaPage({ params }: Props) {
         itemIndex={itemIndex}
         studentName={lead.name}
         studentEmail={lead.email}
-        dateLabel={`${item.date} · ${item.timeSlotLabel} · ${product?.titleEs || item.productId}`}
+        dateLabel={`${item.date} · ${item.timeSlotLabel} · ${productTitle}`}
         defaultDiscipline={item.modality || item.discipline || "esqui"}
-        defaultHours={slot?.hours ?? product?.hours ?? 2}
+        defaultHours={slot?.hours ?? 2}
         initial={report}
         instructors={instructors}
         defaultInstructorSlug={report?.instructorSlug || effectiveInstructorSlug(item)}

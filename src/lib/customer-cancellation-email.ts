@@ -4,13 +4,14 @@ import {
   type MainDisciplineId,
   type ModalityId,
 } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle } from "@/lib/booking-config";
 import { media } from "@/lib/media";
 import { PRODUCTION_SITE_URL } from "@/lib/site-url";
 
 type CancellationBookingItem = {
   productId?: string;
   date?: string;
+  timeSlotId?: string;
   timeSlotLabel?: string;
   participants?: number;
   discipline?: string;
@@ -63,11 +64,8 @@ function formatDate(date: string, isEn: boolean): string {
   }
 }
 
-function productTitle(productId: string | undefined, isEn: boolean): string {
-  if (!productId) return isEn ? "Lesson" : "Clase";
-  const product = getProductBySlug(productId as ProductId);
-  if (!product) return productId;
-  return isEn ? product.titleEn : product.titleEs;
+function productTitle(productId: string | undefined, isEn: boolean, timeSlotId?: string): string {
+  return getBookingItemTitle(productId, isEn ? "en" : "es", timeSlotId);
 }
 
 function resolveLogoUrl(siteUrl: string): string {
@@ -128,7 +126,7 @@ export function buildCustomerCancellationEmail({
     );
     const dateLabel = item.date ? formatDate(item.date, isEn) : "—";
     return [
-      `${index + 1}. ${productTitle(item.productId, isEn)}`,
+      `${index + 1}. ${productTitle(item.productId, isEn, item.timeSlotId)}`,
       discipline ? `   ${pick(isEn, "Disciplina", "Discipline")}: ${discipline}` : "",
       `   ${pick(isEn, "Fecha", "Date")}: ${dateLabel}`,
       `   ${pick(isEn, "Horario", "Schedule")}: ${item.timeSlotLabel ?? "—"}`,
@@ -170,7 +168,7 @@ export function buildCustomerCancellationEmail({
       return `
         <tr>
           <td style="padding:12px 14px;border-top:${index === 0 ? "0" : `1px solid ${BRAND.border}`};">
-            <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:${BRAND.pizarra};">${escapeHtml(productTitle(item.productId, isEn))}</p>
+            <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:${BRAND.pizarra};">${escapeHtml(productTitle(item.productId, isEn, item.timeSlotId))}</p>
             <p style="margin:0;font-size:13px;line-height:1.45;color:${BRAND.muted};">
               ${escapeHtml([discipline, dateLabel, item.timeSlotLabel].filter(Boolean).join(" · "))}
             </p>

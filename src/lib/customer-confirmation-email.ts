@@ -4,7 +4,7 @@ import {
   type MainDisciplineId,
   type ModalityId,
 } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle } from "@/lib/booking-config";
 import { buildArrivalGuideHtml, buildArrivalGuideText } from "@/lib/arrival-guide-email";
 import { media } from "@/lib/media";
 import { earlyBirdDiscountLabel } from "@/lib/promotions";
@@ -13,6 +13,7 @@ import { PRODUCTION_SITE_URL } from "@/lib/site-url";
 export type ConfirmationBookingItem = {
   productId?: string;
   date?: string;
+  timeSlotId?: string;
   timeSlotLabel?: string;
   participants?: number;
   discipline?: string;
@@ -74,11 +75,8 @@ function formatEuro(amount: number): string {
   return `${amount} €`;
 }
 
-function productTitle(productId: string | undefined, isEn: boolean): string {
-  if (!productId) return isEn ? "Lesson" : "Clase";
-  const product = getProductBySlug(productId as ProductId);
-  if (!product) return productId;
-  return isEn ? product.titleEn : product.titleEs;
+function productTitle(productId: string | undefined, isEn: boolean, timeSlotId?: string): string {
+  return getBookingItemTitle(productId, isEn ? "en" : "es", timeSlotId);
 }
 
 function resolveLogoUrl(siteUrl: string): string {
@@ -119,7 +117,7 @@ function resolveSessions(items: ConfirmationBookingItem[], isEn: boolean): Resol
     }
 
     return {
-      title: productTitle(item.productId, isEn),
+      title: productTitle(item.productId, isEn, item.timeSlotId),
       discipline,
       dateLabel: item.date ? formatDate(item.date, isEn) : "—",
       schedule: item.timeSlotLabel?.trim() || "—",

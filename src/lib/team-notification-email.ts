@@ -8,11 +8,12 @@ import {
   type MainDisciplineId,
   type ModalityId,
 } from "@/data/disciplines";
-import { getProductBySlug, type ProductId } from "@/data/products";
+import { getBookingItemTitle } from "@/lib/booking-config";
 
 type TeamBookingItem = {
   productId?: string;
   date?: string;
+  timeSlotId?: string;
   timeSlotLabel?: string;
   participants?: number;
   discipline?: string;
@@ -66,10 +67,9 @@ function formatEuro(amount: number): string {
   return `${amount} €`;
 }
 
-function productTitle(productId: string | undefined): string {
+function productTitle(productId: string | undefined, timeSlotId?: string): string {
   if (!productId) return "Clase";
-  const product = getProductBySlug(productId as ProductId);
-  return product?.titleEs ?? productId;
+  return getBookingItemTitle(productId, "es", timeSlotId);
 }
 
 function resolveLogoUrl(siteUrl: string): string {
@@ -125,7 +125,7 @@ function resolveSessions(items: TeamBookingItem[]): ResolvedSession[] {
     }
 
     return {
-      title: productTitle(item.productId),
+      title: productTitle(item.productId, item.timeSlotId),
       discipline,
       dateLabel: item.date ? formatDate(item.date) : "—",
       schedule: item.timeSlotLabel?.trim() || "—",

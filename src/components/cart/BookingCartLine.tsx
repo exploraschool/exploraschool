@@ -2,10 +2,9 @@
 
 import type { ReactNode } from "react";
 import { getDisciplineDisplayName } from "@/data/disciplines";
-import { getProductBySlug } from "@/data/products";
 import type { CartItem } from "@/lib/cart";
 import { formatCartDate } from "@/lib/cart";
-import { pickLocale } from "@/lib/locale";
+import { getBookingItemTitle } from "@/lib/booking-config";
 
 type BookingCartLineProps = {
   item: CartItem;
@@ -39,7 +38,7 @@ export function BookingCartLine({
   missingDisciplineLabel,
   onRemove,
 }: BookingCartLineProps) {
-  const product = getProductBySlug(item.productId);
+  const productTitle = getBookingItemTitle(item.productId, locale, item.timeSlotId);
   const discLabel = getDisciplineDisplayName(locale, item.discipline, item.modality);
 
   return (
@@ -50,7 +49,7 @@ export function BookingCartLine({
             {itemLabel} {index + 1}
           </p>
           <h3 className="mt-0.5 font-display text-lg font-semibold text-pizarra">
-            {product ? pickLocale(locale, product.titleEs, product.titleEn) : item.productId}
+            {productTitle}
           </h3>
         </div>
         <div className="shrink-0 text-right">

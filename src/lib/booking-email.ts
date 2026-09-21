@@ -1,8 +1,8 @@
 import { site } from "@/data/site";
 import { getDisciplineDisplayName } from "@/data/disciplines";
-import { getProductBySlug } from "@/data/products";
 import type { CartItem, CustomerDetails } from "@/lib/cart";
 import { cartTotal } from "@/lib/cart";
+import { getBookingItemTitle } from "@/lib/booking-config";
 import { earlyBirdDiscountLabel, isDiscountActiveForProduct, isEarlyBirdActive } from "@/lib/promotions";
 
 type BuildEmailParams = {
@@ -50,10 +50,7 @@ export function buildBookingEmail({ locale, items, customer }: BuildEmailParams)
   lines.push("─────────────────────────────");
 
   items.forEach((item, index) => {
-    const product = getProductBySlug(item.productId);
-    const title = product
-      ? pick(locale, product.titleEs, product.titleEn)
-      : item.productId;
+    const title = getBookingItemTitle(item.productId, locale, item.timeSlotId);
 
     lines.push("");
     lines.push(`${index + 1}. ${title}`);
