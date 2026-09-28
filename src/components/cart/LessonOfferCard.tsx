@@ -5,6 +5,7 @@ import type { MainDisciplineId } from "@/data/disciplines";
 import type { Product, ProductId } from "@/data/products";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { PriceTag } from "@/components/PriceTag";
+import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
 import {
   productCardHighlights,
@@ -14,6 +15,7 @@ import {
   productPriceSuffix,
 } from "@/lib/product-card";
 import { getProductFromPrice } from "@/lib/product-pricing";
+import { productPath } from "@/lib/seo-urls";
 
 type LessonOfferCardProps = {
   product: Product;
@@ -34,6 +36,8 @@ export function LessonOfferCard({
   const facts = productFacts(product, locale);
   const highlights = productCardHighlights(product, locale);
   const summary = pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn);
+  const href = productPath(product.id);
+  const title = pickLocale(locale, product.titleEs, product.titleEn);
 
   return (
     <article className="group flex h-full w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-hielo/10 bg-white shadow-[0_2px_16px_rgba(14,14,15,0.04)] transition hover:border-accent/25 hover:shadow-[0_16px_40px_rgba(10,18,25,0.10)]">
@@ -45,10 +49,10 @@ export function LessonOfferCard({
           className="object-cover object-center transition duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 639px) 85vw, (max-width: 1024px) 50vw, 33vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 via-pizarra/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pizarra/50 via-pizarra/10 to-transparent" />
         {badge ? (
           <span
-            className={`absolute left-3 top-3 rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide ${
+            className={`pointer-events-none absolute left-3 top-3 z-[2] rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide ${
               badgeVariant === "popular"
                 ? "bg-oro font-bold tracking-wider text-pizarra"
                 : "bg-hielo text-white"
@@ -57,11 +61,22 @@ export function LessonOfferCard({
             {badge}
           </span>
         ) : null}
+        {href ? (
+          <Link href={href} className="absolute inset-0 z-[1]">
+            <span className="sr-only">{title}</span>
+          </Link>
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
         <h3 className="font-display text-lg font-semibold text-hielo">
-          {pickLocale(locale, product.titleEs, product.titleEn)}
+          {href ? (
+            <Link href={href} className="transition hover:text-accent-dark">
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
         </h3>
         <p className="mt-1.5 text-sm leading-relaxed text-pizarra/75">{summary}</p>
 

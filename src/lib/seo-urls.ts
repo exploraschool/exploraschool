@@ -1,6 +1,7 @@
 import { routing, getPathname } from "@/i18n/routing";
 import type { AppPathname } from "@/i18n/pathnames";
 import type { MainDisciplineId } from "@/data/disciplines";
+import type { ProductId } from "@/data/products";
 import { getSiteUrl } from "@/lib/site-url";
 
 export type Locale = (typeof routing.locales)[number];
@@ -15,6 +16,23 @@ const DISCIPLINE_PATH = {
 
 export function disciplinePath(id: MainDisciplineId): (typeof DISCIPLINE_PATH)[MainDisciplineId] {
   return DISCIPLINE_PATH[id];
+}
+
+const PRODUCT_PATH = {
+  "full-day": "/clases/full-day",
+  "curso-snow": "/clases/curso-snowboard",
+  particular: "/clases/particulares",
+} as const satisfies Partial<Record<ProductId, AppPathname>>;
+
+export type IndexableProductId = keyof typeof PRODUCT_PATH;
+
+export function productPath(id: ProductId): (typeof PRODUCT_PATH)[IndexableProductId] | undefined {
+  if (id in PRODUCT_PATH) return PRODUCT_PATH[id as IndexableProductId];
+  return undefined;
+}
+
+export function isIndexableProduct(id: ProductId): id is IndexableProductId {
+  return id in PRODUCT_PATH;
 }
 
 type PathnameHref =

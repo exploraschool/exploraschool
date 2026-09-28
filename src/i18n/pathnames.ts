@@ -28,6 +28,18 @@ export const pathnames = {
     es: "/clases-para-ninos",
     en: "/kids-ski-lessons",
   },
+  "/clases/full-day": {
+    es: "/full-day",
+    en: "/full-day",
+  },
+  "/clases/curso-snowboard": {
+    es: "/curso-de-snowboard",
+    en: "/snowboard-course",
+  },
+  "/clases/particulares": {
+    es: "/clases-particulares",
+    en: "/private-lessons",
+  },
   "/reserva": {
     es: "/reserva",
     en: "/book",

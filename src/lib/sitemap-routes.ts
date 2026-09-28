@@ -3,7 +3,8 @@ import { blogPosts } from "@/data/blog";
 import { isListedEditorial, publicEditorialSlug } from "@/data/blog-urls";
 import { getMainDisciplines } from "@/data/disciplines";
 import { listPublishedAffiliatePosts } from "@/lib/affiliate-blog";
-import { disciplinePath, publicUrl } from "@/lib/seo-urls";
+import { disciplinePath, isIndexableProduct, productPath, publicUrl } from "@/lib/seo-urls";
+import { products } from "@/data/products";
 
 export type SitemapChangeFrequency =
   | "always"
@@ -48,6 +49,14 @@ function disciplineRoutes(): SitemapRoute[] {
   }));
 }
 
+function productRoutes(): SitemapRoute[] {
+  return products.filter((product) => isIndexableProduct(product.id)).map((product) => ({
+    path: productPath(product.id)!,
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
+}
+
 async function blogPostRoutes(): Promise<SitemapRoute[]> {
   const editorial: SitemapRoute[] = blogPosts
     .filter((post) => isListedEditorial(post.slug))
@@ -81,7 +90,7 @@ async function blogPostRoutes(): Promise<SitemapRoute[]> {
 }
 
 export async function getSitemapRoutes(): Promise<SitemapRoute[]> {
-  return [...STATIC_ROUTES, ...disciplineRoutes(), ...(await blogPostRoutes())];
+  return [...STATIC_ROUTES, ...productRoutes(), ...disciplineRoutes(), ...(await blogPostRoutes())];
 }
 
 export function buildLocalizedUrl(locale: string, path: string): string {

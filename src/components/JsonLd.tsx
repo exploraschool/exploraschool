@@ -1,10 +1,18 @@
 import { getMainDisciplines } from "@/data/disciplines";
+import { getProductBySlug } from "@/data/products";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { media } from "@/lib/media";
-import { FULL_DAY_EFFECTIVE_HOURS, FULL_DAY_HOURLY_EUR, SESSION_FULL_DAY } from "@/lib/lesson-pricing";
+import { FULL_DAY_HOURLY_EUR } from "@/lib/lesson-pricing";
+import { getProductOfferRange } from "@/lib/product-offer";
 import { tripAdvisorSummary } from "@/data/reviews";
-import { disciplinePath, homeUrl, publicUrl } from "@/lib/seo-urls";
+import {
+  disciplinePath,
+  homeUrl,
+  productPath,
+  publicUrl,
+  type IndexableProductId,
+} from "@/lib/seo-urls";
 
 type JsonLdProps = {
   locale: string;
@@ -21,6 +29,34 @@ export function JsonLd({ locale }: JsonLdProps) {
     site.homeMetaDescriptionEn,
   );
   const inLanguage = isSpanish ? "es-ES" : "en-GB";
+  const lessonOffers = (["full-day", "curso-snow", "particular"] as const satisfies readonly IndexableProductId[]).flatMap(
+    (productId) => {
+      const product = getProductBySlug(productId);
+      const path = productPath(productId);
+      const range = getProductOfferRange(productId);
+      if (!product || !path || !range) return [];
+      const url = publicUrl(locale, path);
+      const name = pickLocale(locale, product.titleEs, product.titleEn);
+      return [
+        {
+          "@type": "Offer",
+          name,
+          url,
+          price: range.lowPrice,
+          priceCurrency: "EUR",
+          availability: "https://schema.org/InStock",
+          description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
+          itemOffered: {
+            "@type": "Service",
+            name,
+            description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
+            url,
+            areaServed: "Sierra Nevada, Granada",
+          },
+        },
+      ];
+    },
+  );
 
   const graph = [
     {
@@ -101,39 +137,7 @@ export function JsonLd({ locale }: JsonLdProps) {
         "@type": "OfferCatalog",
         name: pickLocale(locale, "Clases de nieve", "Snow lessons"),
         itemListElement: [
-          {
-            "@type": "Offer",
-            name: "Full Day",
-            url: publicUrl(locale, "/tarifas"),
-            price: FULL_DAY_HOURLY_EUR,
-            priceCurrency: "EUR",
-            availability: "https://schema.org/InStock",
-            description: pickLocale(
-              locale,
-              `Precio por hora en Full Day (${FULL_DAY_EFFECTIVE_HOURS} h de clase). Total desde ${SESSION_FULL_DAY[0]} € (1 persona).`,
-              `Hourly rate on a Full Day (${FULL_DAY_EFFECTIVE_HOURS} h of teaching). Total from €${SESSION_FULL_DAY[0]} (1 person).`,
-            ),
-            priceSpecification: {
-              "@type": "UnitPriceSpecification",
-              price: FULL_DAY_HOURLY_EUR,
-              priceCurrency: "EUR",
-              unitText: pickLocale(locale, "hora", "hour"),
-              referenceQuantity: {
-                "@type": "QuantitativeValue",
-                value: 1,
-                unitCode: "HUR",
-              },
-            },
-            itemOffered: {
-              "@type": "Service",
-              name: pickLocale(
-                locale,
-                "Clases de esquí y snowboard — Full Day",
-                "Ski and snowboard lessons — Full Day",
-              ),
-              areaServed: "Sierra Nevada, Granada",
-            },
-          },
+          ...lessonOffers,
           ...getMainDisciplines().map((d) => ({
             "@type": "Offer",
             itemOffered: {
