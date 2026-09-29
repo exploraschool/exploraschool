@@ -45,6 +45,7 @@ export type Modality = {
         highlightsEn: string[];
         levelEs: string;
         levelEn: string;
+        image?: string;
       }
     >
   >;
@@ -149,11 +150,11 @@ export const modalities: Modality[] = [
       snowboard: {
         sortOrder: 2,
         descriptionEs:
-          "Explora laderas y fresas fuera de pista con un instructor que te guíe en la elección de línea y la técnica en nieve variable.",
+          "Explora laderas fuera de pista con un instructor que te guíe en la elección de línea y la técnica en nieve variable.",
         descriptionEn:
           "Explore slopes and off-piste runs with an instructor guiding your line choice and technique in variable snow.",
         highlightsEs: [
-          "Técnica en fresa y nieve sin preparar",
+          "Técnica en nieve fuera de pista y sin preparar",
           "Lectura del terreno y elección de línea",
           "Progresión según tu nivel y condiciones del día",
         ],
@@ -217,6 +218,7 @@ export const modalities: Modality[] = [
         ],
         levelEs: "Desde nivel intermedio en pista",
         levelEn: "From intermediate piste level",
+        image: "/images/stock/discipline-snowboard-freestyle.jpg",
       },
     },
   },

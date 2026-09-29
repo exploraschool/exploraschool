@@ -22,6 +22,7 @@ Las fotografías en `public/images/stock/` proceden de [Wikimedia Commons](https
 | `discipline-telemark.jpg` | [Pexels — Vome](https://www.pexels.com/photo/15318901/) — Pexels License |
 | `product-snowboard-course.jpg` | [Pexels — Meyra](https://www.pexels.com/photo/35550676/) — Pexels License |
 | `discipline-freeride.jpg` | [Pexels — Ema Reynares](https://www.pexels.com/photo/18351583/) — Pexels License |
+| `discipline-snowboard-freestyle.jpg` | [Pexels — Fresh Studio Design](https://www.pexels.com/photo/29232720/) — Pexels License |
 
 - **CC BY-SA 4.0**: reutilización permitida con atribución y misma licencia en obras derivadas.
 - **CC BY 2.0**: reutilización permitida con atribución.

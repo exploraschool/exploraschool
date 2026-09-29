@@ -56,6 +56,8 @@ export function DisciplineModalities({ locale, parentId }: DisciplineModalitiesP
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6">
           {items.map((modality, i) => {
             const content = getModalityContent(modality, parentId, locale);
+            const image =
+              modality.parents[parentId as "esqui" | "snowboard"]?.image ?? modality.image;
 
             return (
               <Reveal key={modality.id} delay={i * 80}>
@@ -65,14 +67,20 @@ export function DisciplineModalities({ locale, parentId }: DisciplineModalitiesP
                 >
                   <div className="relative aspect-[16/9] bg-hielo/5">
                     <Image
-                      src={modality.image}
+                      src={image}
                       alt={pickLocale(
                         locale,
                         `${modality.nameEs} en Sierra Nevada`,
                         `${modality.nameEn} in Sierra Nevada`,
                       )}
                       fill
-                      className={modality.id === "freeride" ? "object-cover object-[center_45%]" : "object-cover"}
+                      className={
+                        modality.id === "freeride"
+                          ? "object-cover object-[center_45%]"
+                          : parentId === "snowboard" && modality.id === "freestyle"
+                            ? "object-cover object-[center_28%]"
+                            : "object-cover"
+                      }
                       sizes="(max-width: 640px) 100vw, 50vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 via-pizarra/10 to-transparent" />
