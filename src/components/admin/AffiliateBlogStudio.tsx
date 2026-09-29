@@ -83,7 +83,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       if (!res.ok || !payload?.post) {
         throw new Error(
           payload?.error === "invalid_amazon_url"
-            ? "No reconozco esa URL. Pega el enlace del producto (amazon.es/dp/…, amzn.to/… o el ASIN)."
+            ? "No reconozco esa URL. Pega el enlace del producto (amazon.es/dp/…, link.amazon/…, amzn.to/… o el ASIN)."
             : "No se pudo captar el producto.",
         );
       }
@@ -287,7 +287,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                     setUrlDrafts(next);
                     void captureUrl(index, pasted);
                   }}
-                  placeholder="https://www.amazon.es/dp/... o https://amzn.to/..."
+                  placeholder="https://www.amazon.es/dp/... , link.amazon/... o amzn.to/..."
                   className="w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"
                   inputMode="url"
                   autoCapitalize="off"

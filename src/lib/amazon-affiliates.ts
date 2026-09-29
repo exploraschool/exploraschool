@@ -8,7 +8,7 @@ const ASIN_IN_TEXT_RE =
   /(?:\/dp\/|\/gp\/product\/|\/gp\/aw\/d\/|\/exec\/obidos\/ASIN\/|\/o\/ASIN\/|\/product\/)([A-Z0-9]{10})(?![A-Z0-9])/i;
 const ASIN_PARAM_RE = /(?:^|[?&#])(?:asin|pd_rd_i|creativeASIN)=([A-Z0-9]{10})(?![A-Z0-9])/i;
 const BARE_ASIN_RE = /^(?:B[A-Z0-9]{9}|\d{9}[\dX])$/i;
-const SHORT_HOSTS = new Set(["amzn.to", "amzn.eu", "a.co"]);
+const SHORT_HOSTS = new Set(["amzn.to", "amzn.eu", "a.co", "link.amazon", "amzlinks.in"]);
 
 const RESOLVE_HEADERS = {
   "User-Agent":
@@ -48,10 +48,10 @@ export function normalizeAmazonInput(rawUrl: string): string {
   if (!cleaned) return cleaned;
   const embedded =
     cleaned.match(/https?:\/\/[^\s<>"']+/i)?.[0] ??
-    cleaned.match(/(?:amzn\.to|amzn\.eu|a\.co|(?:www\.)?amazon\.[a-z.]+)\/[^\s<>"']+/i)?.[0];
+    cleaned.match(/(?:amzn\.to|amzn\.eu|a\.co|link\.amazon|amzlinks\.in|(?:www\.)?amazon\.[a-z.]+)\/[^\s<>"']+/i)?.[0];
   let candidate = (embedded ?? cleaned).replace(/[),.;]+$/g, "").replace(/^<+|>+$/g, "");
   if (/^https?:\/\//i.test(candidate)) return candidate;
-  if (/^(amzn\.to|amzn\.eu|a\.co|www\.amazon\.|amazon\.)/i.test(candidate)) {
+  if (/^(amzn\.to|amzn\.eu|a\.co|link\.amazon|amzlinks\.in|www\.amazon\.|amazon\.)/i.test(candidate)) {
     return `https://${candidate}`;
   }
   return candidate;
@@ -109,10 +109,10 @@ function isFollowableAmazonUrl(rawUrl: string): boolean {
 
 async function followAmazonShortUrl(rawUrl: string): Promise<string | null> {
   let current = normalizeAmazonInput(rawUrl);
+  if (!isFollowableAmazonUrl(current)) return null;
   for (let hop = 0; hop < 8; hop += 1) {
-    if (!isFollowableAmazonUrl(current)) return null;
     const asin = extractAmazonAsin(current);
-    if (asin) return current;
+    if (asin && isAmazonProductUrl(current)) return current;
 
     let res: Response;
     try {
@@ -128,7 +128,9 @@ async function followAmazonShortUrl(rawUrl: string): Promise<string | null> {
 
     const location = res.headers.get("location");
     if (location && res.status >= 300 && res.status < 400) {
-      current = new URL(location, current).toString();
+      const next = new URL(location, current).toString();
+      if (!next.startsWith("https://")) return null;
+      current = next;
       continue;
     }
     if (res.url && res.url !== current && isFollowableAmazonUrl(res.url)) {
@@ -136,7 +138,7 @@ async function followAmazonShortUrl(rawUrl: string): Promise<string | null> {
       if (extractAmazonAsin(current)) return current;
       continue;
     }
-    if (!res.ok) return null;
+    if (!res.ok || !isAmazonProductUrl(res.url || current)) return null;
     const html = await res.text();
     const canonical =
       html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i)?.[1] ||
@@ -149,7 +151,7 @@ async function followAmazonShortUrl(rawUrl: string): Promise<string | null> {
     const fromHtml = extractAmazonAsin(html);
     return fromHtml ? affiliateUrlForAsin(fromHtml) : null;
   }
-  return extractAmazonAsin(current) ? current : null;
+  return extractAmazonAsin(current) && isAmazonProductUrl(current) ? current : null;
 }
 
 export async function resolveExploraAffiliateUrl(rawUrl: string): Promise<string | null> {
