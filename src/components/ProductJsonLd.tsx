@@ -38,6 +38,7 @@ export function ProductJsonLd({ locale, productId }: ProductJsonLdProps) {
     "@type": "AggregateOffer",
     lowPrice: range.lowPrice,
     highPrice: range.highPrice,
+    offerCount: range.offerCount,
     priceCurrency: "EUR",
     availability: "https://schema.org/InStock",
     url,

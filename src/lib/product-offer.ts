@@ -8,6 +8,8 @@ export type ProductOfferRange = {
   highPrice: number;
   listLowPrice: number;
   listHighPrice: number;
+  /** Bookable slot and group-size combinations inside the price range. */
+  offerCount: number;
   discountActive: boolean;
 };
 
@@ -21,11 +23,13 @@ export function getProductOfferRange(
   const maxPeople = config.maxPeople ?? 8;
   let listLow: number | null = null;
   let listHigh: number | null = null;
+  let offerCount = 0;
 
   for (const slotId of config.slotIds) {
     for (let people = minPeople; people <= maxPeople; people++) {
       const price = calculateSessionPrice(productId, people, slotId);
       if (price === null) continue;
+      offerCount += 1;
       if (listLow === null || price < listLow) listLow = price;
       if (listHigh === null || price > listHigh) listHigh = price;
     }
@@ -39,6 +43,7 @@ export function getProductOfferRange(
     listHighPrice: listHigh,
     lowPrice: applyEarlyBirdDiscount(listLow, now, productId),
     highPrice: applyEarlyBirdDiscount(listHigh, now, productId),
+    offerCount,
     discountActive,
   };
 }
