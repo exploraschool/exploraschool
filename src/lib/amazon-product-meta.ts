@@ -161,6 +161,72 @@ async function fetchAmazonHtml(asin: string): Promise<string> {
   return "";
 }
 
+function parseEuroAmount(text: string): number | null {
+  const compact = text.replace(/\s+/g, " ").trim();
+  const match = compact.match(/(\d{1,3}(?:\.\d{3})+,\d{2}|\d+,\d{2}|\d{1,3}(?:\.\d{3})+|\d+)/);
+  if (!match) return null;
+  const raw = match[1];
+  const normalized = raw.includes(",") ? raw.replace(/\./g, "").replace(",", ".") : raw.replace(/\./g, "");
+  const amount = Number(normalized);
+  if (!Number.isFinite(amount) || amount <= 0 || amount >= 100_000) return null;
+  return amount;
+}
+
+function formatEuro(amount: number): string {
+  return new Intl.NumberFormat("es-ES", { style: "currency", currency: "EUR" }).format(amount);
+}
+
+function priceFromOffscreen(text: string): string {
+  const amount = parseEuroAmount(text);
+  return amount == null ? "" : formatEuro(amount);
+}
+
+function priceFromParts(root: { find(selector: string): { first(): { text(): string } } }): string {
+  const whole = root.find(".a-price-whole").first().text().replace(/[^\d]/g, "");
+  const fraction = root.find(".a-price-fraction").first().text().replace(/[^\d]/g, "");
+  if (!whole) return "";
+  const amount = Number(`${whole}.${(fraction || "00").padStart(2, "0")}`);
+  if (!Number.isFinite(amount) || amount <= 0 || amount >= 100_000) return "";
+  return formatEuro(amount);
+}
+
+export function readAmazonPrice(html: string): string {
+  const $ = cheerio.load(html);
+  const selectors = [
+    "#corePrice_feature_div .a-price[data-a-color='base']",
+    "#corePrice_feature_div .a-price",
+    "#corePriceDisplay_desktop_feature_div .priceToPay",
+    "#corePriceDisplay_desktop_feature_div .a-price[data-a-color='base']",
+    "#tp_price_block_total_price_ww .a-price",
+    "#priceblock_ourprice",
+    "#priceblock_dealprice",
+    "#priceblock_saleprice",
+  ];
+  for (const selector of selectors) {
+    const node = $(selector).first();
+    if (!node.length) continue;
+    const offscreen = priceFromOffscreen(node.find(".a-offscreen").first().text());
+    if (offscreen) return offscreen;
+    const parts = priceFromParts(node);
+    if (parts) return parts;
+    if (selector.startsWith("#priceblock")) {
+      const legacy = priceFromOffscreen(node.text());
+      if (legacy) return legacy;
+    }
+  }
+  let fallback = "";
+  $(".a-price").each((_, el) => {
+    if (fallback) return;
+    const node = $(el);
+    if (node.closest("[id^='sp_'], #sims-feature, #purchase-sims-feature, #similarities_feature_div").length) {
+      return;
+    }
+    if (node.closest(".a-text-price, .basisPrice").length || node.is(".a-text-price, .basisPrice")) return;
+    fallback = priceFromOffscreen(node.find(".a-offscreen").first().text()) || priceFromParts(node);
+  });
+  return fallback;
+}
+
 function cleanText(value: string): string {
   return value.replace(/\s+/g, " ").replace("Leer más", "").trim();
 }
@@ -250,11 +316,7 @@ export async function fetchAmazonProductMeta(rawUrl: string): Promise<AmazonProd
         ...collectScriptImages(html),
       ]);
 
-      const price =
-        $(".a-price .a-offscreen").first().text().trim() ||
-        $("#priceblock_ourprice, #priceblock_dealprice, #priceblock_saleprice").first().text().trim() ||
-        pickMeta($, ["product:price:amount"]);
-      meta.priceText = price.slice(0, 48);
+      meta.priceText = readAmazonPrice(html).slice(0, 48);
 
       meta.rating =
         $("#acrPopover").attr("title") ||

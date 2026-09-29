@@ -685,7 +685,7 @@ export function applyAmazonMetaToProduct(
       brand: product.brand || meta.brand,
       nameEs: product.nameEs || meta.title,
       nameEn: product.nameEn || meta.title,
-      priceText: product.priceText || meta.priceText,
+      priceText: meta.priceText || product.priceText,
       rating: product.rating || meta.rating,
       reviewCount: product.reviewCount || meta.reviewCount,
       amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,

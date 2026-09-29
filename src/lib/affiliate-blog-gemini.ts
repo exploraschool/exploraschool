@@ -1147,7 +1147,7 @@ export async function generateAffiliateArticle(post: AffiliateBlogPost): Promise
       brand: asString(es.brand, asString(decided.brand, product.brand || meta.brand)),
       nameEs: asString(es.nameEs, asString(decided.nameEs, product.nameEs || meta.title)),
       nameEn: asString(en.nameEn, product.nameEn || meta.title),
-      priceText: asString(es.priceText, product.priceText || meta.priceText),
+      priceText: product.priceText || meta.priceText,
       rating: asString(es.rating, product.rating || meta.rating),
       reviewCount: asString(es.reviewCount, product.reviewCount || meta.reviewCount),
       amazonBullets: product.amazonBullets.length ? product.amazonBullets : meta.bullets,
