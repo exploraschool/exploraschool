@@ -4,8 +4,10 @@ export const AMAZON_ASSOCIATE_TAG =
 export const AMAZON_MARKETPLACE_HOST =
   process.env.AMAZON_MARKETPLACE?.trim() || "www.amazon.es";
 
-const ASIN_RE = /(?:\/dp\/|\/gp\/product\/|\/gp\/aw\/d\/|\/d\/)([A-Z0-9]{10})(?:[/?]|$)/i;
-const ASIN_QUERY_RE = /[?&](?:asin|ASIN)=([A-Z0-9]{10})/i;
+const ASIN_IN_TEXT_RE =
+  /(?:\/dp\/|\/gp\/product\/|\/gp\/aw\/d\/|\/exec\/obidos\/ASIN\/|\/o\/ASIN\/|\/product\/)([A-Z0-9]{10})(?![A-Z0-9])/i;
+const ASIN_PARAM_RE = /(?:^|[?&#])(?:asin|pd_rd_i|creativeASIN)=([A-Z0-9]{10})(?![A-Z0-9])/i;
+const BARE_ASIN_RE = /^(?:B[A-Z0-9]{9}|\d{9}[\dX])$/i;
 const SHORT_HOSTS = new Set(["amzn.to", "amzn.eu", "a.co"]);
 
 const RESOLVE_HEADERS = {
@@ -23,14 +25,36 @@ function hostnameOf(rawUrl: string): string {
   }
 }
 
-export function normalizeAmazonInput(rawUrl: string): string {
-  const trimmed = rawUrl.trim();
-  if (!trimmed) return trimmed;
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
-  if (/^(amzn\.to|amzn\.eu|a\.co|www\.amazon\.|amazon\.)/i.test(trimmed)) {
-    return `https://${trimmed}`;
+function stripInvisible(value: string): string {
+  return value.replace(/[\u200B-\u200D\uFEFF\u00A0]/g, " ").trim();
+}
+
+function decodeRepeated(value: string): string {
+  let current = value;
+  for (let hop = 0; hop < 2; hop += 1) {
+    try {
+      const next = decodeURIComponent(current.replace(/\+/g, " "));
+      if (next === current) break;
+      current = next;
+    } catch {
+      break;
+    }
   }
-  return trimmed;
+  return current;
+}
+
+export function normalizeAmazonInput(rawUrl: string): string {
+  const cleaned = stripInvisible(rawUrl);
+  if (!cleaned) return cleaned;
+  const embedded =
+    cleaned.match(/https?:\/\/[^\s<>"']+/i)?.[0] ??
+    cleaned.match(/(?:amzn\.to|amzn\.eu|a\.co|(?:www\.)?amazon\.[a-z.]+)\/[^\s<>"']+/i)?.[0];
+  let candidate = (embedded ?? cleaned).replace(/[),.;]+$/g, "").replace(/^<+|>+$/g, "");
+  if (/^https?:\/\//i.test(candidate)) return candidate;
+  if (/^(amzn\.to|amzn\.eu|a\.co|www\.amazon\.|amazon\.)/i.test(candidate)) {
+    return `https://${candidate}`;
+  }
+  return candidate;
 }
 
 export function isAmazonShortUrl(rawUrl: string): boolean {
@@ -38,18 +62,24 @@ export function isAmazonShortUrl(rawUrl: string): boolean {
   return SHORT_HOSTS.has(host);
 }
 
-export function extractAmazonAsin(rawUrl: string): string | null {
-  try {
-    const url = new URL(normalizeAmazonInput(rawUrl));
-    const fromPath = url.pathname.match(ASIN_RE);
-    if (fromPath?.[1]) return fromPath[1].toUpperCase();
-    const fromQuery = `${url.search}${url.hash}`.match(ASIN_QUERY_RE);
-    if (fromQuery?.[1]) return fromQuery[1].toUpperCase();
-    return null;
-  } catch {
-    const fallback = rawUrl.match(ASIN_RE);
-    return fallback?.[1]?.toUpperCase() ?? null;
+function asinIn(value: string, hostIsShort: boolean): string | null {
+  if (!hostIsShort) {
+    const fromPath = value.match(ASIN_IN_TEXT_RE)?.[1];
+    if (fromPath) return fromPath.toUpperCase();
   }
+  const fromParam = value.match(ASIN_PARAM_RE)?.[1];
+  return fromParam ? fromParam.toUpperCase() : null;
+}
+
+export function extractAmazonAsin(rawUrl: string): string | null {
+  const normalized = normalizeAmazonInput(rawUrl);
+  if (BARE_ASIN_RE.test(normalized)) return normalized.toUpperCase();
+  const host = hostnameOf(normalized).replace(/^www\./, "");
+  const short = SHORT_HOSTS.has(host);
+  const fromNormalized = asinIn(decodeRepeated(normalized), short);
+  if (fromNormalized) return fromNormalized;
+  if (!short && rawUrl !== normalized) return asinIn(rawUrl, false);
+  return null;
 }
 
 export function isAmazonProductUrl(rawUrl: string): boolean {
@@ -116,7 +146,7 @@ async function followAmazonShortUrl(rawUrl: string): Promise<string | null> {
       const resolved = new URL(canonical, current).toString();
       if (extractAmazonAsin(resolved)) return resolved;
     }
-    const fromHtml = html.match(ASIN_RE)?.[1];
+    const fromHtml = extractAmazonAsin(html);
     return fromHtml ? affiliateUrlForAsin(fromHtml) : null;
   }
   return extractAmazonAsin(current) ? current : null;

@@ -81,7 +81,11 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
       });
       const payload = (await res.json().catch(() => null)) as { post?: AffiliateBlogPost; error?: string };
       if (!res.ok || !payload?.post) {
-        throw new Error(payload?.error === "invalid_amazon_url" ? "Esa URL no parece de Amazon." : "No se pudo captar el producto.");
+        throw new Error(
+          payload?.error === "invalid_amazon_url"
+            ? "No reconozco esa URL. Pega el enlace del producto (amazon.es/dp/…, amzn.to/… o el ASIN)."
+            : "No se pudo captar el producto.",
+        );
       }
       setPost(payload.post);
       setUrlDrafts(payload.post.products.map((item) => item.affiliateUrl));
@@ -276,12 +280,12 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
                   }}
                   onPaste={(event) => {
                     const pasted = event.clipboardData.getData("text").trim();
-                    if (pasted) {
-                      const next = [...urlDrafts];
-                      next[index] = pasted;
-                      setUrlDrafts(next);
-                      window.setTimeout(() => void captureUrl(index, pasted), 0);
-                    }
+                    if (!pasted) return;
+                    event.preventDefault();
+                    const next = [...urlDrafts];
+                    next[index] = pasted;
+                    setUrlDrafts(next);
+                    void captureUrl(index, pasted);
                   }}
                   placeholder="https://www.amazon.es/dp/... o https://amzn.to/..."
                   className="w-full rounded-xl border border-hielo/15 bg-nieve px-3 py-2.5 text-sm outline-none focus:border-hielo"

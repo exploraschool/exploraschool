@@ -27,12 +27,12 @@ export async function GET(_request: Request, { params }: Ctx) {
 
 const patchSchema = z.object({
   productIndex: z.number().int().min(0).max(5).optional(),
-  affiliateUrl: z.string().url().max(2000).optional(),
+  affiliateUrl: z.string().trim().min(4).max(8000).optional(),
   products: z
     .array(
       z.object({
         index: z.number().int().min(0).max(5),
-        affiliateUrl: z.string().max(2000),
+        affiliateUrl: z.string().trim().min(4).max(8000),
       }),
     )
     .optional(),
