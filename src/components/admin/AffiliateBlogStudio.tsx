@@ -409,7 +409,7 @@ export function AffiliateBlogStudio({ initialPost }: { initialPost: AffiliateBlo
             onClick={() => void generate()}
             className="btn-primary !w-full sm:!w-auto"
           >
-            {generating ? "Escribiendo con Gemini…" : generated ? "Volver a generar" : "Generar borrador"}
+            {generating ? "Escribiendo el borrador…" : generated ? "Volver a generar" : "Generar borrador"}
           </button>
           {generated ? (
             <button
