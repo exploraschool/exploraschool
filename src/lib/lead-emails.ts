@@ -12,7 +12,11 @@ type ResendPayload = {
   subject: string;
   text: string;
   html: string;
+  reply_to?: string | string[];
 };
+
+/** Inbox that can actually receive mail. reservas@ is only the visible From. */
+const DEFAULT_REPLY_TO = "explora.sclub@gmail.com";
 
 export async function sendResendEmail(email: ResendPayload): Promise<void> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -26,7 +30,10 @@ export async function sendResendEmail(email: ResendPayload): Promise<void> {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(email),
+    body: JSON.stringify({
+      ...email,
+      reply_to: email.reply_to ?? process.env.LEAD_NOTIFICATION_EMAIL ?? DEFAULT_REPLY_TO,
+    }),
   });
 
   if (!response.ok) {

@@ -1,12 +1,16 @@
 import { createHmac } from "node:crypto";
 import { buildArrivalGuideHtml, buildArrivalGuideText } from "./arrival-guide.js";
 
+/** Inbox that can receive mail. reservas@ is only the visible From address. */
+const REPLY_TO_EMAIL = "explora.sclub@gmail.com";
+
 type ResendEmail = {
   from: string;
   to: string[];
   subject: string;
   text: string;
   html: string;
+  reply_to?: string | string[];
 };
 
 export async function sendResendEmail(apiKey: string, email: ResendEmail): Promise<void> {
@@ -16,7 +20,10 @@ export async function sendResendEmail(apiKey: string, email: ResendEmail): Promi
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(email),
+    body: JSON.stringify({
+      ...email,
+      reply_to: email.reply_to ?? REPLY_TO_EMAIL,
+    }),
   });
 
   if (!response.ok) {
@@ -56,7 +63,7 @@ type BookingItem = {
 
 const CONTACT = {
   phoneDisplay: "+34 660 262 790",
-  email: "explora.sclub@gmail.com",
+  email: REPLY_TO_EMAIL,
   whatsappUrl:
     "https://api.whatsapp.com/send?phone=34660262790&text=%C2%A1Hola!%20Quiero%20reservar%20clases%20en%20Explora%20School",
   mapsUrl:
