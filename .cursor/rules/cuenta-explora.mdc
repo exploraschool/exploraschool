@@ -1,0 +1,28 @@
+---
+description: Production deploys, pushes, and accounts use explora.sclub@gmail.com. alemv.mlg@gmail.com is blog studio only.
+alwaysApply: true
+---
+
+# Cuenta de producción
+
+Producción es `explora.sclub@gmail.com`. No uses `amsnowboardcoach@gmail.com` para desplegar, hacer push de producción ni operar Firebase o Vercel.
+
+| Acción | Destino |
+|---|---|
+| Git push | `github.com/exploraschool/exploraschool`, rama `main` |
+| Vercel | equipo `exploraschool`, proyecto `exploraschool`, dominio `https://www.explora-school.es` |
+| Firebase | proyecto `exploraschool-9ea82` |
+
+No despliegues en el equipo de Vercel `am-snowboard-coach-s-projects`.
+
+La CLI de este PC suele estar iniciada como `amsnowboardcoach@gmail.com` y no tiene permiso para desplegar funciones. Para `firebase deploy`, usa las credenciales ya guardadas de Explora:
+
+- Archivo: `%APPDATA%\gcloud\legacy_credentials\explora.sclub@gmail.com\adc.json`
+- `GOOGLE_APPLICATION_CREDENTIALS` apuntando a una copia con `quota_project_id` = `exploraschool-9ea82`
+- `GOOGLE_CLOUD_QUOTA_PROJECT=exploraschool-9ea82`
+- `FUNCTIONS_DISCOVERY_TIMEOUT=90`
+- Aparta `~\.config\configstore\firebase-tools.json` durante el deploy y restáuralo al terminar, para que la CLI no autentique como AM
+
+Correo de equipo, avisos y `Reply-To`: `explora.sclub@gmail.com`. `reservas@explora-school.es` solo es el remitente visible; no recibe correo.
+
+Excepción: `alemv.mlg@gmail.com` (`AFFILIATE_EDITOR_GOOGLE_EMAIL`) entra solo al estudio del blog (`/admin/blog`). No es admin, no recibe reservas y no se usa para deploys.
