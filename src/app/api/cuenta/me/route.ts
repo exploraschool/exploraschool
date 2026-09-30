@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStaffSession, staffHomePath } from "@/lib/admin-auth";
-import { getStudentSession } from "@/lib/student-auth";
+import { getStudentIdentity } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { isOnboardingComplete } from "@/lib/student-users";
 
@@ -17,7 +17,7 @@ export async function GET() {
     });
   }
 
-  const session = await getStudentSession();
+  const session = await getStudentIdentity();
   if (!session) {
     return NextResponse.json({ user: null });
   }

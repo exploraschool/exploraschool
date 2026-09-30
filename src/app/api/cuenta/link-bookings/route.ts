@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
-import { getStudentSession } from "@/lib/student-auth";
+import { getStudentIdentity } from "@/lib/student-auth";
 import { linkBookingLeadsToStudent } from "@/lib/link-bookings";
 import { upsertStudentProfile } from "@/lib/student-user-store";
 
 export const runtime = "nodejs";
 
 export async function POST() {
-  const session = await getStudentSession();
+  const session = await getStudentIdentity();
   if (!session) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }

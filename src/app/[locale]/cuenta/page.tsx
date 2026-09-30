@@ -7,7 +7,7 @@ import { StudentGoogleAuthCard } from "@/components/cuenta/StudentGoogleAuthCard
 import { AccountDashboard } from "@/components/cuenta/AccountDashboard";
 import { buildPageMetadata } from "@/lib/metadata";
 import { getStaffSession, staffHomePath } from "@/lib/admin-auth";
-import { getStudentSession } from "@/lib/student-auth";
+import { getStudentIdentity, getStudentSession } from "@/lib/student-auth";
 import { getStudentProfile } from "@/lib/student-user-store";
 import { canAccessStudentDashboard } from "@/lib/student-users";
 import { loadStudentDashboard } from "@/lib/student-dashboard";
@@ -38,10 +38,19 @@ export default async function CuentaPage({ params }: Props) {
   const session = await getStudentSession();
 
   if (!session) {
+    const identity = await getStudentIdentity();
+    const t = await getTranslations({ locale, namespace: "account" });
     return (
       <section className="section-padding">
         <div className="container-page mx-auto max-w-md">
-          <StudentGoogleAuthCard locale={locale} />
+          {identity ? (
+            <div className="rounded-3xl border border-hielo/10 bg-white px-5 py-6 text-sm leading-relaxed text-pizarra shadow-[0_24px_60px_rgba(14,14,15,0.08)]">
+              <p className="font-display text-lg font-semibold text-hielo">{identity.name || identity.email}</p>
+              <p className="mt-3">{t("errors.noConfirmedBooking")}</p>
+            </div>
+          ) : (
+            <StudentGoogleAuthCard locale={locale} />
+          )}
         </div>
       </section>
     );

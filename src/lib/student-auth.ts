@@ -16,7 +16,8 @@ export type StudentSession = {
   picture: string;
 };
 
-export async function getStudentSession(): Promise<StudentSession | null> {
+/** Signed-in Google student, including someone who is still requesting a booking. */
+export async function getStudentIdentity(): Promise<StudentSession | null> {
   const cookieStore = await cookies();
   const session = cookieStore.get(STUDENT_SESSION_COOKIE)?.value;
   if (!session) return null;
@@ -29,17 +30,23 @@ export async function getStudentSession(): Promise<StudentSession | null> {
     if (!decoded.email_verified || !decoded.email || !decoded.uid) return null;
     // Staff Google account must never resolve as a student session.
     if (isAllowedStaffEmail(decoded.email)) return null;
-    const student = {
+    return {
       uid: decoded.uid,
       email: String(decoded.email),
       name: typeof decoded.name === "string" ? decoded.name : "",
       picture: typeof decoded.picture === "string" ? decoded.picture : "",
     };
-    if (!(await emailHasConfirmedBooking(student.email))) return null;
-    return student;
   } catch {
     return null;
   }
+}
+
+/** Student area: the same Google session, after Explora has accepted a booking. */
+export async function getStudentSession(): Promise<StudentSession | null> {
+  const student = await getStudentIdentity();
+  if (!student) return null;
+  if (!(await emailHasConfirmedBooking(student.email))) return null;
+  return student;
 }
 
 export async function isStudentAuthenticated(): Promise<boolean> {

@@ -11,7 +11,7 @@ import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
 import { sendCustomerBookingReceived } from "@/lib/lead-emails";
 import { normalizeEmail } from "@/lib/link-bookings";
-import { getStudentSession } from "@/lib/student-auth";
+import { getStudentIdentity } from "@/lib/student-auth";
 import { upsertStudentProfile } from "@/lib/student-user-store";
 
 const bookingItemSchema = z.object({
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     const type: LeadType = isBooking ? "booking" : "contact";
     const status: LeadStatus = isBooking ? "pending" : "received";
 
-    const student = await getStudentSession();
+    const student = await getStudentIdentity();
     let bookingItems = isBooking ? (parsed.data.bookingItems as StoredBookingItem[]) : undefined;
     if (bookingItems) {
       const { bookable, tooLate } = partitionByBookingCutoff(bookingItems);
