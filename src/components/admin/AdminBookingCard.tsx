@@ -6,6 +6,7 @@ import { getDisciplineDisplayName, type MainDisciplineId, type ModalityId } from
 import { getBookingItemTitle } from "@/lib/booking-config";
 import { AdminDeleteLeadButton } from "@/components/admin/AdminDeleteLeadButton";
 import { LeadActions } from "@/components/admin/LeadActions";
+import { hasContactPhone } from "@/lib/contact-phone";
 import { customerNotesFromLeadMessage } from "@/lib/lead-message";
 import type { StoredBookingItem } from "@/lib/leads";
 
@@ -130,7 +131,9 @@ export function AdminBookingCard({
                   {lead.phone}
                 </a>
               </>
-            ) : null}
+            ) : (
+              <span className="text-accent"> · Falta el teléfono</span>
+            )}
           </p>
         </div>
 
@@ -210,6 +213,7 @@ export function AdminBookingCard({
             leadId={lead.id}
             status={status ?? "pending"}
             isBooking
+            hasPhone={hasContactPhone(lead.phone)}
             onStatusChange={setStatus}
           />
           <AdminDeleteLeadButton leadId={lead.id} />

@@ -8,12 +8,33 @@ import {
   signInWithPopup,
   signInWithRedirect,
   signOut,
+  type UserCredential,
 } from "firebase/auth";
 import { getFirebaseAuth } from "@/lib/firebase/client";
 import { isAllowedStaffEmail } from "@/lib/admin-auth-config";
 import { media } from "@/lib/media";
 
 type Phase = "ready" | "checking" | "connecting" | "verifying" | "success";
+
+async function phoneFromGoogleAccount(result: UserCredential): Promise<string> {
+  try {
+    const accessToken = GoogleAuthProvider.credentialFromResult(result)?.accessToken;
+    if (!accessToken) return "";
+    const response = await fetch(
+      "https://people.googleapis.com/v1/people/me?personFields=phoneNumbers",
+      { headers: { Authorization: `Bearer ${accessToken}` } },
+    );
+    if (!response.ok) return "";
+    const data = (await response.json()) as {
+      phoneNumbers?: Array<{ value?: string; metadata?: { primary?: boolean } }>;
+    };
+    const numbers = data.phoneNumbers ?? [];
+    const chosen = numbers.find((item) => item.metadata?.primary) ?? numbers[0];
+    return typeof chosen?.value === "string" ? chosen.value.trim().slice(0, 30) : "";
+  } catch {
+    return "";
+  }
+}
 
 function GoogleMark() {
   return (
@@ -44,6 +65,7 @@ export type GoogleAuthSuccess = {
   homePath?: string;
   onboardingComplete?: boolean;
   email?: string;
+  phone?: string;
 };
 
 type GoogleAuthCardProps = {
@@ -67,6 +89,8 @@ type GoogleAuthCardProps = {
   onSuccess?: (payload: GoogleAuthSuccess) => void;
   footer?: ReactNode;
   consumeRedirectOnMount?: boolean;
+  /** Best-effort: ask Google for a phone number. Sign-in still works if Google does not share one. */
+  requestPhone?: boolean;
   /** Full branded card (default) or a single Google button for checkout embeds. */
   variant?: "card" | "compact";
   /** Maps API `error` codes to a user-facing message. */
@@ -94,6 +118,7 @@ export function GoogleAuthCard({
   onSuccess,
   footer,
   consumeRedirectOnMount = true,
+  requestPhone = false,
   variant = "card",
   errorMessages,
 }: GoogleAuthCardProps) {
@@ -106,11 +131,11 @@ export function GoogleAuthCard({
     return genericError;
   }
 
-  async function establishSession(idToken: string): Promise<GoogleAuthSuccess> {
+  async function establishSession(idToken: string, phone?: string): Promise<GoogleAuthSuccess> {
     const res = await fetch(loginEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ idToken, locale }),
+      body: JSON.stringify({ idToken, locale, ...(phone ? { phone } : {}) }),
     });
     const payload = (await res.json().catch(() => null)) as
       | (GoogleAuthSuccess & { error?: string; message?: string })
@@ -122,7 +147,11 @@ export function GoogleAuthCard({
     return payload ?? {};
   }
 
-  async function finishWithUser(getIdToken: () => Promise<string>, email?: string | null) {
+  async function finishWithUser(
+    getIdToken: () => Promise<string>,
+    email?: string | null,
+    phone?: string,
+  ) {
     const auth = getFirebaseAuth();
     try {
       if (!allowAnyAccount && email && !isAllowedStaffEmail(email)) {
@@ -131,9 +160,9 @@ export function GoogleAuthCard({
 
       setPhase("verifying");
       const idToken = await getIdToken();
-      const payload = await establishSession(idToken);
+      const payload = await establishSession(idToken, phone);
       setPhase("success");
-      onSuccess?.(payload);
+      onSuccess?.({ ...payload, phone: payload.phone || phone || "" });
     } finally {
       if (auth) await signOut(auth);
     }
@@ -157,7 +186,8 @@ export function GoogleAuthCard({
         const result = await getRedirectResult(auth);
         if (result?.user) {
           if (!cancelled) setPhase("verifying");
-          await finishWithUser(() => result.user.getIdToken(), result.user.email);
+          const phone = requestPhone ? await phoneFromGoogleAccount(result) : "";
+          await finishWithUser(() => result.user.getIdToken(), result.user.email, phone);
           return;
         }
       } catch (redirectError) {
@@ -191,17 +221,40 @@ export function GoogleAuthCard({
       return;
     }
 
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({
-      prompt: "select_account",
-      ...(loginHint ? { login_hint: loginHint } : {}),
-    });
-    provider.addScope("email");
-    provider.addScope("profile");
+    function createProvider(includePhone: boolean) {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+        prompt: "select_account",
+        ...(loginHint ? { login_hint: loginHint } : {}),
+      });
+      provider.addScope("email");
+      provider.addScope("profile");
+      if (includePhone) {
+        provider.addScope("https://www.googleapis.com/auth/user.phonenumbers.read");
+      }
+      return provider;
+    }
+
+    const provider = createProvider(requestPhone);
 
     try {
-      const result = await signInWithPopup(auth, provider);
-      await finishWithUser(() => result.user.getIdToken(), result.user.email);
+      let result;
+      try {
+        result = await signInWithPopup(auth, provider);
+      } catch (firstError) {
+        const firstCode =
+          firstError && typeof firstError === "object" && "code" in firstError
+            ? String((firstError as { code: string }).code)
+            : "";
+        const userStopped =
+          firstCode === "auth/popup-closed-by-user" ||
+          firstCode === "auth/cancelled-popup-request" ||
+          firstCode === "auth/popup-blocked";
+        if (!requestPhone || userStopped) throw firstError;
+        result = await signInWithPopup(auth, createProvider(false));
+      }
+      const phone = requestPhone ? await phoneFromGoogleAccount(result) : "";
+      await finishWithUser(() => result.user.getIdToken(), result.user.email, phone);
     } catch (popupError) {
       const code =
         popupError && typeof popupError === "object" && "code" in popupError

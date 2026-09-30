@@ -85,6 +85,7 @@ export function BookingIdentityPanel({
           loginEndpoint="/api/cuenta/login"
           locale={locale}
           allowAnyAccount
+          requestPhone
           unauthorizedMessage={ta("errors.generic")}
           errorMessages={{ no_confirmed_booking: t("noConfirmedBookingGoogle") }}
           firebaseMissing={ta("errors.firebaseMissing")}
@@ -110,7 +111,10 @@ export function BookingIdentityPanel({
                 | { user?: BookingStudentUser | null }
                 | null;
               if (data?.user) {
-                onSignedIn(data.user);
+                onSignedIn({
+                  ...data.user,
+                  phone: data.user.phone || payload.phone || "",
+                });
                 return;
               }
             } catch {
@@ -123,7 +127,7 @@ export function BookingIdentityPanel({
                 email: payload.email,
                 displayName: "",
                 photoURL: "",
-                phone: "",
+                phone: payload.phone || "",
                 onboardingComplete: Boolean(payload.onboardingComplete),
               });
             }

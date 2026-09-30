@@ -7,10 +7,11 @@ type LeadActionsProps = {
   leadId: string;
   status: string;
   isBooking: boolean;
+  hasPhone?: boolean;
   onStatusChange?: (status: "confirmed" | "cancelled") => void;
 };
 
-export function LeadActions({ leadId, status, isBooking, onStatusChange }: LeadActionsProps) {
+export function LeadActions({ leadId, status, isBooking, hasPhone = true, onStatusChange }: LeadActionsProps) {
   const router = useRouter();
   const [currentStatus, setCurrentStatus] = useState(status);
   const [loading, setLoading] = useState<"confirmed" | "cancelled" | null>(null);
@@ -42,6 +43,10 @@ export function LeadActions({ leadId, status, isBooking, onStatusChange }: LeadA
   }
 
   async function updateStatus(next: "confirmed" | "cancelled") {
+    if (next === "confirmed" && !hasPhone) {
+      setError("Hace falta un teléfono de contacto para confirmar la reserva.");
+      return;
+    }
     setLoading(next);
     setError("");
     setEmailWarning("");

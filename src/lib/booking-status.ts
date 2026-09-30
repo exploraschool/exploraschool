@@ -1,4 +1,5 @@
 import { FieldValue, type Firestore } from "firebase-admin/firestore";
+import { hasContactPhone } from "@/lib/contact-phone";
 import { bookingOfferFingerprint, hasBookingOfferFingerprint } from "@/lib/booking-fingerprint";
 import {
   sendCustomerBookingCancellation,
@@ -113,6 +114,14 @@ export async function updateBookingLeadStatus(
       data: payload,
       emailSent,
       emailError,
+    };
+  }
+
+  if (!hasContactPhone(leadData.phone)) {
+    return {
+      ok: false,
+      error: "Hace falta un teléfono de contacto para confirmar la reserva.",
+      status: 400,
     };
   }
 

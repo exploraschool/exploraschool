@@ -10,6 +10,7 @@ import type { LeadStatus, LeadType, StoredBookingItem } from "@/lib/leads";
 import { collectInstructorSlugs, isBookingLead } from "@/lib/leads";
 import { createStoredLeadActionTokens } from "@/lib/lead-confirm";
 import { sendCustomerBookingReceived } from "@/lib/lead-emails";
+import { hasContactPhone } from "@/lib/contact-phone";
 import { normalizeEmail } from "@/lib/link-bookings";
 import { getStudentIdentity } from "@/lib/student-auth";
 import { upsertStudentProfile } from "@/lib/student-user-store";
@@ -53,6 +54,13 @@ const leadSchema = z
           path: ["bookingItems"],
         });
         return;
+      }
+      if (!hasContactPhone(data.phone)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Phone required",
+          path: ["phone"],
+        });
       }
       const now = new Date();
       data.bookingItems.forEach((item, index) => {
@@ -105,7 +113,16 @@ export async function POST(request: Request) {
       const invalidSlot = parsed.error.issues.some((issue) =>
         String(issue.message).includes("Invalid slot for discipline"),
       );
-      const code = tooLate ? "booking_cutoff" : invalidSlot ? "invalid_slot" : undefined;
+      const missingPhone = parsed.error.issues.some((issue) =>
+        String(issue.message).includes("Phone required"),
+      );
+      const code = tooLate
+        ? "booking_cutoff"
+        : invalidSlot
+          ? "invalid_slot"
+          : missingPhone
+            ? "phone_required"
+            : undefined;
       return NextResponse.json(
         {
           error: code ?? "Invalid data",

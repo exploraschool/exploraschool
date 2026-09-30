@@ -42,7 +42,7 @@ export function BookingCheckout() {
   const [privacy, setPrivacy] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState<"generic" | "cutoff" | "invalid_slot" | null>(null);
+  const [error, setError] = useState<"generic" | "cutoff" | "invalid_slot" | "phone" | null>(null);
   const [authReady, setAuthReady] = useState(false);
   const [student, setStudent] = useState<BookingStudentUser | null>(null);
   const [identitySeeded, setIdentitySeeded] = useState(false);
@@ -111,8 +111,8 @@ export function BookingCheckout() {
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !privacy || items.length === 0) return;
-    if (signedIn && !phone.trim()) {
-      setError("generic");
+    if (!phone.trim()) {
+      setError("phone");
       return;
     }
     if (itemsMissingDiscipline) {
@@ -186,6 +186,8 @@ export function BookingCheckout() {
           setError("cutoff");
         } else if (code === "invalid_slot") {
           setError("invalid_slot");
+        } else if (code === "phone_required") {
+          setError("phone");
         } else {
           setError("generic");
         }
@@ -436,21 +438,19 @@ export function BookingCheckout() {
                 </div>
                 <div>
                   <label htmlFor="bk-phone" className="mb-1.5 block text-sm font-medium">
-                    {t("yourPhone")} {signedIn ? "*" : ""}
+                    {t("yourPhone")} *
                   </label>
                   <input
                     id="bk-phone"
                     type="tel"
-                    required={signedIn}
+                    required
                     autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder={t("phonePlaceholder")}
                     className={inputClass}
                   />
-                  {signedIn ? (
-                    <p className="mt-1 text-xs text-muted">{t("phoneHint")}</p>
-                  ) : null}
+                  <p className="mt-1 text-xs text-muted">{t("phoneHint")}</p>
                 </div>
               </div>
 
@@ -503,6 +503,7 @@ export function BookingCheckout() {
 
               {error === "cutoff" && <p className="text-sm text-accent">{t("bookingCutoffError")}</p>}
               {error === "invalid_slot" && <p className="text-sm text-accent">{t("invalidSlotError")}</p>}
+              {error === "phone" && <p className="text-sm text-accent">{t("phoneRequired")}</p>}
               {error === "generic" && <p className="text-sm text-accent">{tc("error")}</p>}
             </div>
           </form>

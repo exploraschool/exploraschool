@@ -175,7 +175,8 @@
     "reassuranceAccount": "Vinculada a tu cuenta",
     "emailLockedHint": "Email de tu cuenta Google (no se puede cambiar aquí).",
     "phonePlaceholder": "Ej. +34 600 000 000",
-    "phoneHint": "Lo usará tu instructor/a para contactarte el día de la clase.",
+    "phoneHint": "Obligatorio. Lo usará tu instructor/a para contactarte el día de la clase.",
+    "phoneRequired": "El teléfono es obligatorio para enviar la reserva.",
     "sendBookingSignedIn": "Formalizar reserva",
     "bookingSentAccount": "La reserva queda vinculada a tu área de alumnos Explora."
   },

@@ -10,8 +10,9 @@ import {
 import { ADMIN_SESSION_MAX_AGE_MS } from "@/lib/admin-auth-config";
 import { getAdminAuth, isAdminConfigured } from "@/lib/firebase/admin";
 import { setHttpOnlyCookie, clearHttpOnlyCookie } from "@/lib/http-cookies";
+import { normalizeContactPhone } from "@/lib/contact-phone";
 import { isOnboardingComplete } from "@/lib/student-users";
-import { upsertStudentProfile } from "@/lib/student-user-store";
+import { getStudentProfile, upsertStudentProfile } from "@/lib/student-user-store";
 import {
   STUDENT_SESSION_COOKIE,
   STUDENT_SESSION_MAX_AGE_MS,
@@ -22,6 +23,7 @@ export const runtime = "nodejs";
 const bodySchema = z.object({
   idToken: z.string().min(20).max(4096),
   locale: z.enum(["es", "en"]).optional(),
+  phone: z.string().max(30).optional(),
 });
 
 export async function POST(request: Request) {
@@ -83,11 +85,15 @@ export async function POST(request: Request) {
       expiresIn: STUDENT_SESSION_MAX_AGE_MS,
     });
 
+    const existing = await getStudentProfile(decoded.uid);
+    const phone = existing?.phone?.trim() || normalizeContactPhone(parsed.data.phone);
+
     const profile = await upsertStudentProfile(decoded.uid, {
       email: decoded.email,
       displayName: typeof decoded.name === "string" ? decoded.name : "",
       photoURL: typeof decoded.picture === "string" ? decoded.picture : "",
       locale: parsed.data.locale ?? "es",
+      ...(phone ? { phone } : {}),
     });
 
     await setHttpOnlyCookie(STUDENT_SESSION_COOKIE, sessionCookie, STUDENT_SESSION_MAX_AGE_MS);
@@ -97,6 +103,7 @@ export async function POST(request: Request) {
       ok: true,
       role: "student",
       email: decoded.email,
+      phone: profile.phone,
       onboardingComplete: isOnboardingComplete(profile),
       hasTakenClassesBefore: profile.hasTakenClassesBefore,
     });
