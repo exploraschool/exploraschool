@@ -47,6 +47,16 @@ function absoluteImage(siteUrl: string, src: string): string {
   return `${siteUrl}${src}`;
 }
 
+function euroPrice(raw: string): number | null {
+  const match = raw.match(/(\d{1,5}(?:[.\s]\d{3})*(?:[.,]\d{2})|\d+(?:[.,]\d+)?)/);
+  if (!match) return null;
+  let num = match[1].replace(/\s/g, "");
+  if (num.includes(",") && num.includes(".")) num = num.replace(/\./g, "").replace(",", ".");
+  else if (num.includes(",")) num = num.replace(",", ".");
+  const value = Number(num);
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const resolved = await resolvePublicBlogPost(slug);
@@ -154,36 +164,63 @@ export default async function BlogPostPage({ params }: Props) {
       question: pickLocale(locale, item.qEs, item.qEn),
       answer: pickLocale(locale, item.aEs, item.aEn),
     }));
+    const reviewBody = pickLocale(
+      locale,
+      post.verdictEs || post.excerptEs,
+      post.verdictEn || post.excerptEn,
+    );
+    const price = winner ? euroPrice(winner.priceText) : null;
     const reviewLd =
       post.type === "review" && winner
         ? {
             "@context": "https://schema.org",
-            "@type": "Review",
-            name: postTitle,
-            reviewBody: pickLocale(
-              locale,
-              post.verdictEs || post.excerptEs,
-              post.verdictEn || post.excerptEn,
-            ),
-            itemReviewed: {
-              "@type": "Product",
-              name: pickLocale(locale, winner.nameEs, winner.nameEn),
-              image: primaryProductImage(winner) || post.coverImage,
-              brand: winner.brand
-                ? { "@type": "Brand", name: winner.brand }
-                : undefined,
-            },
-            reviewRating:
-              exploraScore > 0
-                ? {
-                    "@type": "Rating",
+            "@type": "Product",
+            name: pickLocale(locale, winner.nameEs, winner.nameEn),
+            image: absoluteImage(siteUrl, primaryProductImage(winner) || post.coverImage),
+            url: publicUrl(locale, `/blog/${canonicalSlug}`),
+            brand: winner.brand
+              ? { "@type": "Brand", name: winner.brand }
+              : undefined,
+            ...(price
+              ? {
+                  offers: {
+                    "@type": "AggregateOffer",
+                    lowPrice: price,
+                    highPrice: price,
+                    offerCount: 1,
+                    priceCurrency: "EUR",
+                    availability: "https://schema.org/InStock",
+                    url: winner.affiliateUrl,
+                  },
+                }
+              : {}),
+            ...(exploraScore > 0
+              ? {
+                  aggregateRating: {
+                    "@type": "AggregateRating",
                     ratingValue: Number(exploraScore.toFixed(1)),
+                    reviewCount: 1,
                     bestRating: 5,
                     worstRating: 1,
-                  }
-                : undefined,
-            author: { "@type": "Organization", name: "Explora School & Club" },
-            publisher: { "@type": "Organization", name: "Explora School & Club" },
+                  },
+                }
+              : {}),
+            review: {
+              "@type": "Review",
+              name: postTitle,
+              reviewBody,
+              datePublished: date,
+              author: { "@type": "Organization", name: "Explora School & Club" },
+              reviewRating:
+                exploraScore > 0
+                  ? {
+                      "@type": "Rating",
+                      ratingValue: Number(exploraScore.toFixed(1)),
+                      bestRating: 5,
+                      worstRating: 1,
+                    }
+                  : undefined,
+            },
           }
         : null;
 

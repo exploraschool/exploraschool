@@ -8,6 +8,7 @@ import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { CTASection } from "@/components/CTASection";
 import { PriceTag } from "@/components/PriceTag";
 import { ProductJsonLd } from "@/components/ProductJsonLd";
+import { Testimonials } from "@/components/Testimonials";
 import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
@@ -175,6 +176,24 @@ export async function ProductLanding({ locale, productId }: ProductLandingProps)
           </div>
         </div>
       </section>
+
+      <section className="border-b border-hielo/10 bg-white">
+        <div className="container-page py-8 sm:py-10">
+          <p className="text-sm font-semibold text-pizarra">
+            <a
+              href={site.tripAdvisor.url}
+              className="text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo"
+            >
+              {pickLocale(
+                locale,
+                `${site.tripAdvisor.rating.toFixed(1).replace(".", ",")} en TripAdvisor · ${site.tripAdvisor.reviewCount} opiniones`,
+                `${site.tripAdvisor.rating.toFixed(1)} on TripAdvisor · ${site.tripAdvisor.reviewCount} reviews`,
+              )}
+            </a>
+          </p>
+        </div>
+      </section>
+      <Testimonials locale={locale} limit={3} />
 
       <CTASection locale={locale} onClassesPage />
     </>

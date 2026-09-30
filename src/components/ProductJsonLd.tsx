@@ -1,4 +1,5 @@
 import { getProductBySlug } from "@/data/products";
+import { getFeaturedReviews } from "@/data/reviews";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { productOfferSummary } from "@/lib/product-landing-copy";
@@ -48,6 +49,7 @@ export function ProductJsonLd({ locale, productId }: ProductJsonLdProps) {
     offers.priceValidUntil = priceValidUntil(productId);
   }
 
+  const visibleReviews = getFeaturedReviews().slice(0, 3);
   const data = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -60,6 +62,25 @@ export function ProductJsonLd({ locale, productId }: ProductJsonLdProps) {
       "@type": "Brand",
       name: site.name,
     },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: site.tripAdvisor.rating,
+      reviewCount: site.tripAdvisor.reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: visibleReviews.map((review) => ({
+      "@type": "Review",
+      reviewBody: pickLocale(locale, review.textEs, review.textEn),
+      datePublished: review.date,
+      author: { "@type": "Person", name: review.author },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: 5,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    })),
     offers,
   };
 
