@@ -1,66 +1,149 @@
 import Image from "next/image";
-import Link from "next/link";
+import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
+import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
+import { pickLocale } from "@/lib/locale";
 import { site } from "@/data/site";
 
-type NotFoundViewProps = {
-  /** When true, show brand mark (root 404 without site header). */
-  showBrand?: boolean;
-  homeHref?: string;
-  clasesHref?: string;
+const copy = {
+  es: {
+    title: "Esta página no está disponible",
+    description:
+      "Esta página no existe. Vuelve al inicio o reserva una clase en Sierra Nevada.",
+    lead: "La dirección no existe o ha dejado de publicarse. Puedes volver al inicio o continuar con las clases, las tarifas y el contacto de la escuela.",
+    home: "Ir al inicio",
+    book: "Reservar",
+    continueLabel: "Continuar",
+    links: [
+      { href: "/clases" as const, label: "Clases", detail: "Esquí, snowboard y telemark" },
+      { href: "/tarifas" as const, label: "Tarifas", detail: "Precios de la temporada" },
+      {
+        href: "/preguntas-frecuentes" as const,
+        label: "Preguntas frecuentes",
+        detail: "Reservas, forfait y material",
+      },
+      { href: "/contacto" as const, label: "Contacto", detail: "Teléfono, WhatsApp y correo" },
+    ],
+  },
+  en: {
+    title: "This page is not available",
+    description: "This page does not exist. Return home or book a lesson in Sierra Nevada.",
+    lead: "This address does not exist or is no longer published. You can return home or continue with lessons, rates and the school contact.",
+    home: "Back to home",
+    book: "Book",
+    continueLabel: "Continue",
+    links: [
+      { href: "/clases" as const, label: "Lessons", detail: "Ski, snowboard and telemark" },
+      { href: "/tarifas" as const, label: "Rates", detail: "Season prices" },
+      {
+        href: "/preguntas-frecuentes" as const,
+        label: "FAQs",
+        detail: "Bookings, lift passes and gear",
+      },
+      { href: "/contacto" as const, label: "Contact", detail: "Phone, WhatsApp and email" },
+    ],
+  },
 };
 
-export function NotFoundView({
-  showBrand = true,
-  homeHref = "/",
-  clasesHref = "/clases",
-}: NotFoundViewProps) {
+export async function notFoundPageMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const text = pickLocale(locale, copy.es, copy.en);
+
+  return {
+    title: { absolute: `${text.title} | ${site.name}` },
+    description: text.description,
+    robots: { index: false, follow: true },
+    alternates: { canonical: null },
+  };
+}
+
+export async function NotFoundView() {
+  const locale = await getLocale();
+  const text = pickLocale(locale, copy.es, copy.en);
+
   return (
-    <section className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-4 py-16 text-center">
-      <div
-        className="pointer-events-none absolute inset-0"
-        aria-hidden
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 50% at 50% 0%, rgb(181 221 214 / 0.28), transparent 60%), radial-gradient(ellipse 45% 40% at 100% 30%, rgb(234 91 94 / 0.07), transparent 55%)",
-        }}
-      />
+    <>
+      <section className="relative overflow-hidden bg-pizarra text-nieve">
+        <Image
+          src={media.hero}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[center_28%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-pizarra/92 via-pizarra/70 to-hielo/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/20 to-pizarra/40" />
 
-      <div className="relative z-[1] flex max-w-lg flex-col items-center">
-        {showBrand ? (
-          <>
-            <Image
-              src={media.logo}
-              alt={site.name}
-              width={88}
-              height={88}
-              priority
-              className="h-[4.5rem] w-[4.5rem] object-contain drop-shadow-sm sm:h-24 sm:w-24"
-            />
-            <p className="mt-5 font-display text-lg font-semibold tracking-tight text-hielo sm:text-xl">
-              {site.name}
+        <div className="container-page relative grid py-12 sm:py-16 lg:min-h-[26rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-10 lg:py-20 xl:grid-cols-[minmax(0,36rem)_auto] xl:gap-16">
+          <p
+            className="pointer-events-none hidden select-none font-display font-semibold leading-none tracking-tight text-nieve lg:col-start-2 lg:row-start-1 lg:block lg:text-right lg:text-[5.5rem] xl:text-[8.25rem]"
+            aria-hidden
+          >
+            404
+            <span className="mt-4 hidden h-1 w-12 rounded-full bg-accent lg:ml-auto lg:block" />
+          </p>
+
+          <div className="relative z-[1] max-w-xl animate-fade-up lg:col-start-1 lg:row-start-1">
+            <p className="eyebrow-pill">
+              <span className="h-1.5 w-1.5 rounded-full bg-oro-light" aria-hidden />
+              Error 404 · Sierra Nevada
             </p>
-          </>
-        ) : null}
-
-        <p className={`eyebrow ${showBrand ? "mt-8" : ""}`}>404</p>
-        <h1 className="mt-3 font-display text-3xl font-semibold text-hielo sm:text-4xl">
-          Página no encontrada
-        </h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
-          Esta pista no existe en Sierra Nevada. Vuelve al inicio o reserva una clase con{" "}
-          {site.name}.
-        </p>
-
-        <div className="btn-stack mt-8 justify-center">
-          <Link href={homeHref} className="btn-primary">
-            Ir al inicio
-          </Link>
-          <Link href={clasesHref} className="btn-secondary">
-            Ver clases
-          </Link>
+            <h1 className="mt-5 font-display text-[1.85rem] font-semibold leading-[1.15] text-nieve sm:text-4xl lg:text-[2.6rem]">
+              {text.title}
+            </h1>
+            <p className="mt-4 max-w-prose text-sm leading-relaxed text-nieve/85 sm:text-base">
+              {text.lead}
+            </p>
+            <div className="btn-stack mt-7">
+              <Link href="/" className="btn-primary">
+                {text.home}
+              </Link>
+              <Link href="/reserva" className="btn-glass">
+                {text.book}
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="section-padding-sm bg-nieve">
+        <div className="container-page">
+          <h2 id="not-found-continue" className="eyebrow">
+            {text.continueLabel}
+          </h2>
+          <nav aria-labelledby="not-found-continue" className="mt-4 sm:mt-5">
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {text.links.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="card-interactive group flex items-center justify-between gap-4"
+                  >
+                    <span className="min-w-0">
+                      <span className="block font-display text-lg font-semibold text-pizarra">
+                        {link.label}
+                      </span>
+                      <span className="mt-1 block text-sm leading-relaxed text-muted">
+                        {link.detail}
+                      </span>
+                    </span>
+                    <span
+                      className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-hielo/15 text-hielo transition duration-300 group-hover:border-hielo group-hover:bg-hielo group-hover:text-white"
+                      aria-hidden
+                    >
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.75">
+                        <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </section>
+    </>
   );
 }
