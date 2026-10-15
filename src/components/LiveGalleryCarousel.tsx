@@ -62,6 +62,7 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
   useEffect(() => {
     const root = rootRef.current;
     if (!root || reduceMotion) return;
+    const carousel: HTMLDivElement = root;
 
     let inView = false;
     let scrolling = false;
@@ -69,8 +70,8 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
 
     function apply() {
       const play = inView && !scrolling;
-      root.classList.toggle("is-paused", !play);
-      for (const video of root.querySelectorAll("video")) {
+      carousel.classList.toggle("is-paused", !play);
+      for (const video of carousel.querySelectorAll("video")) {
         if (play) void video.play().catch(() => undefined);
         else video.pause();
       }
