@@ -43,7 +43,7 @@ export function Hero({ locale }: HeroProps) {
             <h1 className="mt-4 font-display text-[1.8rem] font-semibold leading-[1.15] text-nieve sm:mt-5 sm:text-3xl md:text-[2.5rem] lg:text-4xl">
               {pickLocale(locale, "Clases de ", "Ski, snowboard & ")}
               <span className="text-oro-light">
-                {pickLocale(locale, "esquí y snowboard", "lessons")}
+                {pickLocale(locale, "esquí, snowboard y telemark", "telemark lessons")}
               </span>
             </h1>
 

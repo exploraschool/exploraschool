@@ -429,6 +429,32 @@ export function getBookingItemTitle(
   return isEn ? product.titleEn : product.titleEs;
 }
 
+/**
+ * Reserva rápida: snowboard from 4 people is the morning group course (10:00–13:00).
+ * Smaller groups and other disciplines stay on private lessons.
+ */
+export function resolveQuickBookSelection(
+  discipline: MainDisciplineId,
+  people: string | null | undefined,
+): {
+  productId: ProductId;
+  participants: number;
+  timeSlotId?: TimeSlotId;
+} {
+  const count = parseQuickBookPeople(people) ?? 2;
+  if (discipline === "snowboard" && count > PRIVATE_SNOWBOARD_MORNING_MAX) {
+    return {
+      productId: "curso-snow",
+      participants: clampParticipantCount(count, "curso-snow", "snowboard", "3h-10-13"),
+      timeSlotId: "3h-10-13",
+    };
+  }
+  return {
+    productId: "particular",
+    participants: clampParticipantCount(count, "particular", discipline),
+  };
+}
+
 /** Maps HeroQuickBook group values (and plain 1–8) to a concrete participant count. */
 export function parseQuickBookPeople(value: string | null | undefined): number | undefined {
   if (!value) return undefined;

@@ -3,10 +3,7 @@
 import { useId, useState } from "react";
 import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
-import {
-  clampParticipantCount,
-  parseQuickBookPeople,
-} from "@/lib/booking-config";
+import { resolveQuickBookSelection } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
 import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
 import { GlassSelect } from "@/components/GlassSelect";
@@ -32,11 +29,8 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
   const [bookingOpen, setBookingOpen] = useState(false);
   const disciplines = getMainDisciplines();
   const resolvedDiscipline = bookingDiscipline(discipline);
-  const participants = clampParticipantCount(
-    parseQuickBookPeople(people) ?? 2,
-    "particular",
-    resolvedDiscipline,
-  );
+  const quickBook = resolveQuickBookSelection(resolvedDiscipline, people);
+  const isSnowboardCourse = quickBook.productId === "curso-snow";
 
   function handleBook() {
     setBookingOpen(true);
@@ -122,7 +116,16 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           </button>
         </div>
 
-        <p className="mt-2.5 text-center text-[0.7rem] leading-snug text-nieve/80 sm:mt-3 sm:text-left sm:text-xs">
+        {isSnowboardCourse ? (
+          <p className="mt-2.5 text-center text-[0.7rem] font-semibold leading-snug text-oro-light sm:mt-3 sm:text-left sm:text-xs">
+            {pickLocale(
+              locale,
+              "Curso de snowboard · 10:00–13:00 · desde 4 personas",
+              "Snowboard course · 10:00 am–1:00 pm · from 4 people",
+            )}
+          </p>
+        ) : null}
+        <p className={`text-center text-[0.7rem] leading-snug text-nieve/80 sm:text-left sm:text-xs ${isSnowboardCourse ? "mt-1" : "mt-2.5 sm:mt-3"}`}>
           {pickLocale(
             locale,
             "Sin compromiso · Confirmamos por email",
@@ -134,9 +137,10 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
       <AddToCartModal
         open={bookingOpen}
         onClose={() => setBookingOpen(false)}
-        productId="particular"
+        productId={quickBook.productId}
         defaultDiscipline={resolvedDiscipline}
-        defaultParticipants={participants}
+        defaultTimeSlotId={quickBook.timeSlotId}
+        defaultParticipants={quickBook.participants}
       />
     </>
   );

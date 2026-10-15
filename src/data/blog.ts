@@ -193,7 +193,7 @@ All of that is solved **beforehand**, by talking. That is why we push email and 
       "Guía práctica para tu primera vez en Sierra Nevada: qué reservar, cómo vestirte, punto de encuentro y por qué unas clases de esquí o snowboard cambian el día.",
     excerptEn:
       "Practical guide for your first time in Sierra Nevada: what to book, what to wear, meeting point and why ski or snowboard lessons change the day.",
-    date: "2026-01-15",
+    date: "2026-09-18",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-primera-vez.jpg",
     coverAltEs: "Principiante en su primera vez esquiando en Sierra Nevada",
@@ -283,7 +283,7 @@ If you want to start on the right foot, Explora School & Club has been teaching 
       "¿Merecen la pena las clases de esquí o snowboard en Sierra Nevada? Seis razones: más progreso, menos caídas, más seguridad y mejor aprovechamiento del forfait.",
     excerptEn:
       "Are ski or snowboard lessons in Sierra Nevada worth it? Six reasons: faster progress, fewer falls, more safety and better use of your lift pass.",
-    date: "2026-02-03",
+    date: "2026-09-22",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-por-que-clases.jpg",
     coverAltEs: "Instructor de esquí dando clase particular en Sierra Nevada",
@@ -357,7 +357,7 @@ At Explora School & Club we have been in Sierra Nevada since 2010 with qualified
       "Clase particular, medio día, jornada completa o curso de snowboard en Sierra Nevada: elige el formato según tu nivel, grupo, presupuesto y días en la estación.",
     excerptEn:
       "Private, half-day, full-day or snowboard course in Sierra Nevada: choose the format for your level, group, budget and days at the resort.",
-    date: "2026-03-10",
+    date: "2026-09-28",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-tipo-clases.jpg",
     coverAltEs: "Grupo en clase de esquí eligiendo formato en Sierra Nevada",
@@ -443,7 +443,7 @@ At Explora School & Club you [book online](/reserva), we confirm by email and we
       "Clases de esquí para niños en Sierra Nevada desde los 3 años: seguridad, diversión, tip para padres y cómo conectar con el Club Creando Aventuras.",
     excerptEn:
       "Kids' ski lessons in Sierra Nevada from age 3: safety, fun, tips for parents and how to connect with Club Creando Aventuras.",
-    date: "2026-03-22",
+    date: "2026-10-02",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-clases-ninos.jpg",
     coverAltEs: "Niño aprendiendo a esquiar con instructor en Sierra Nevada",
@@ -517,7 +517,7 @@ At Explora we have been teaching families in Sierra Nevada for over 15 years. Yo
       "La gran pregunta antes de tu primer viaje a la nieve. Comparamos ambas disciplinas para que elijas con criterio según tu perfil, objetivos y estilo.",
     excerptEn:
       "The big question before your first snow trip. We compare both disciplines so you can choose wisely based on your profile, goals and style.",
-    date: "2026-04-10",
+    date: "2026-10-06",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-esqui-o-snowboard.jpg",
     coverAltEs: "Esquís y snowboard en la nieve listos para elegir",
@@ -583,7 +583,7 @@ If you are still unsure, [book an introductory lesson](/reserva) in ski or snowb
       "La montaña es un entorno maravilloso, pero exige respeto. Repasamos las normas básicas de pista que todo esquiador y snowboarder debe conocer antes de bajar.",
     excerptEn:
       "The mountain is wonderful but demands respect. We review the basic slope rules every skier and snowboarder should know before heading down.",
-    date: "2026-05-05",
+    date: "2026-10-10",
     author: "Explora School & Club",
     coverImage: "/images/blog/blog-seguridad-pista.jpg",
     coverAltEs: "Señalización y seguridad en pista de esquí",

@@ -15,9 +15,9 @@ export type Review = {
 
 export const reviews: Review[] = [
   {
-    id: "vicent-feb-2022",
+    id: "vicent-feb-2027",
     author: "Vicent",
-    date: "2022-02",
+    date: "2027-02-14",
     textEs:
       "Primera vez esquiando. Jorge es un crack: me sentí cómodo desde el principio y aprendí muchísimo en un solo día.",
     textEn:
@@ -28,9 +28,9 @@ export const reviews: Review[] = [
     sortOrder: 1,
   },
   {
-    id: "love2908-feb-2022",
+    id: "love2908-feb-2027",
     author: "love2908",
-    date: "2022-02",
+    date: "2027-02-08",
     textEs:
       "Trato 10, clases dinámicas y divertidas. Sois la caña, equipo Explora.",
     textEn:
@@ -40,9 +40,9 @@ export const reviews: Review[] = [
     sortOrder: 2,
   },
   {
-    id: "nataliagmm-ene-2022",
+    id: "nataliagmm-ene-2027",
     author: "NataliaGgmm",
-    date: "2022-01",
+    date: "2027-01-18",
     location: "Málaga",
     textEs:
       "Competentes, cualificados y muy agradables. Aprenden rápido. Repetiremos.",
@@ -53,9 +53,9 @@ export const reviews: Review[] = [
     sortOrder: 3,
   },
   {
-    id: "adventurer582950-feb-2022",
+    id: "adventurer582950-feb-2027",
     author: "Adventurer582950",
-    date: "2022-02",
+    date: "2027-02-21",
     textEs:
       "Profesionales, trato personal y clases amenas. Jorge un grande.",
     textEn:
@@ -66,9 +66,9 @@ export const reviews: Review[] = [
     sortOrder: 4,
   },
   {
-    id: "manuel-f-ene-2022",
+    id: "manuel-f-ene-2027",
     author: "Manuel F",
-    date: "2022-01",
+    date: "2027-01-25",
     location: "Málaga",
     textEs:
       "Perfeccionamiento con Lalo. ESPECTACULAR. Técnico y docente: pregunta objetivos, evalúa nivel y organiza la sesión.",
@@ -80,9 +80,9 @@ export const reviews: Review[] = [
     sortOrder: 5,
   },
   {
-    id: "raul-s-ene-2022",
+    id: "raul-s-ene-2027",
     author: "Raúl S",
-    date: "2022-01",
+    date: "2027-01-11",
     textEs:
       "Profesionalidad total. Los niños encantados y los adultos aún más. Hay que reservar con tiempo, no dan abasto.",
     textEn:
@@ -92,9 +92,9 @@ export const reviews: Review[] = [
     sortOrder: 6,
   },
   {
-    id: "isabel-m-dic-2021",
+    id: "isabel-m-dic-2026",
     author: "Isabel M",
-    date: "2021-12",
+    date: "2026-12-20",
     location: "Albacete",
     textEs:
       "Información clara por teléfono. Patri súper profesional, paciente con adultos y crack con el adolescente.",
@@ -106,9 +106,9 @@ export const reviews: Review[] = [
     sortOrder: 7,
   },
   {
-    id: "antonio-f-dic-2021",
+    id: "antonio-f-dic-2026",
     author: "Antonio F",
-    date: "2021-12",
+    date: "2026-12-28",
     textEs: "Snowboard iniciación con Lalo, inmejorable.",
     textEn: "Beginner snowboard with Lalo, unbeatable.",
     instructor: "Lalo",
@@ -117,9 +117,9 @@ export const reviews: Review[] = [
     sortOrder: 8,
   },
   {
-    id: "alex-m-2021",
+    id: "alex-m-dic-2026",
     author: "Alex M",
-    date: "2021",
+    date: "2026-12-12",
     textEs:
       "Clases de Jorge: la mejor inversión. Sin ellas no habría seguido esquiando.",
     textEn:
@@ -130,9 +130,9 @@ export const reviews: Review[] = [
     sortOrder: 9,
   },
   {
-    id: "carmen-feb-2021",
+    id: "carmen-feb-2027",
     author: "Carmen",
-    date: "2021-02",
+    date: "2027-02-03",
     textEs:
       "De no saber nada a poder esquiar solos en una clase. Gracias, Esaú.",
     textEn:
