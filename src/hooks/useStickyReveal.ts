@@ -9,7 +9,8 @@ export function useStickyReveal() {
 
   useEffect(() => {
     function onScroll() {
-      setVisible(window.scrollY > STICKY_REVEAL_SCROLL_Y);
+      const next = window.scrollY > STICKY_REVEAL_SCROLL_Y;
+      setVisible((current) => (current === next ? current : next));
     }
 
     onScroll();

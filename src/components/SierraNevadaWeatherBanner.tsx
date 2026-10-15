@@ -128,7 +128,7 @@ export function SierraNevadaWeatherBanner({ locale, weather: initialWeather = nu
 
   return (
     <aside
-      className="mb-8 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 backdrop-blur-sm sm:mb-10 sm:px-5 sm:py-5"
+      className="mb-8 rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-4 sm:mb-10 sm:px-5 sm:py-5"
       aria-label={pickLocale(locale, "Tiempo en Sierra Nevada", "Weather in Sierra Nevada")}
     >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch lg:gap-5">

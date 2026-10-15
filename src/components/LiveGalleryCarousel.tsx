@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { pickLocale } from "@/lib/locale";
 import type { LiveGalleryDisplayPhoto } from "@/lib/live-gallery-shared";
 
@@ -28,7 +28,7 @@ function GallerySlide({
         muted
         playsInline
         loop
-        autoPlay
+        preload="none"
         aria-label={alt || undefined}
       />
     );
@@ -46,6 +46,7 @@ function GallerySlide({
 }
 
 export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const [reduceMotion, setReduceMotion] = useState(false);
 
   useEffect(() => {
@@ -57,6 +58,52 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || reduceMotion) return;
+
+    let inView = false;
+    let scrolling = false;
+    let settleTimer = 0;
+
+    function apply() {
+      const play = inView && !scrolling;
+      root.classList.toggle("is-paused", !play);
+      for (const video of root.querySelectorAll("video")) {
+        if (play) void video.play().catch(() => undefined);
+        else video.pause();
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        apply();
+      },
+      { rootMargin: "120px" },
+    );
+    observer.observe(root);
+
+    function onScroll() {
+      if (!scrolling) {
+        scrolling = true;
+        apply();
+      }
+      window.clearTimeout(settleTimer);
+      settleTimer = window.setTimeout(() => {
+        scrolling = false;
+        apply();
+      }, 160);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(settleTimer);
+    };
+  }, [reduceMotion, photos]);
 
   if (photos.length === 0) return null;
 
@@ -81,7 +128,8 @@ export function LiveGalleryCarousel({ locale, photos }: LiveGalleryCarouselProps
 
   return (
     <div
-      className="live-gallery-carousel mt-6 sm:mt-8"
+      ref={rootRef}
+      className="live-gallery-carousel is-paused mt-6 sm:mt-8"
       role="region"
       aria-label={pickLocale(locale, "Galería de Sierra Nevada", "Sierra Nevada gallery")}
     >

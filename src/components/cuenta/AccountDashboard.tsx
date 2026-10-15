@@ -351,7 +351,7 @@ export function AccountDashboard({
         </aside>
       ) : null}
 
-      <div className="sticky top-[var(--header-offset)] z-20 -mx-4 mt-4 bg-nieve/90 px-4 py-1.5 backdrop-blur-md sm:-mx-0 sm:mt-6 sm:px-0 sm:py-2">
+      <div className="sticky top-[var(--header-offset)] z-20 -mx-4 mt-4 bg-nieve px-4 py-1.5 sm:-mx-0 sm:mt-6 sm:px-0 sm:py-2">
         <div className="panel-scroller pb-0.5">
           {(
             (

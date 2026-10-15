@@ -83,7 +83,7 @@ export function CTASection({ locale, onClassesPage = false }: CTASectionProps) {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur-sm sm:p-6">
+              <div className="rounded-2xl border border-white/10 bg-white/10 p-5 sm:p-6">
                 <p className="eyebrow-dark">
                   {pickLocale(locale, "¿Prefieres hablar?", "Prefer to talk?")}
                 </p>

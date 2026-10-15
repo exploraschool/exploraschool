@@ -99,7 +99,7 @@ export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
                   "Abrir el perfil de Instagram @explora.school",
                   "Open the Instagram profile @explora.school",
                 )}
-                className="mt-5 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 py-1.5 pl-1.5 pr-4 text-nieve backdrop-blur-sm transition hover:border-white/30 hover:bg-white/16 sm:mt-6"
+                className="mt-5 inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/10 py-1.5 pl-1.5 pr-4 text-nieve transition hover:border-white/30 hover:bg-white/16 sm:mt-6"
               >
                 <InstagramGlyph id="explora-ig-follow" className="h-8 w-8 shrink-0" />
                 <span className="flex min-w-0 flex-col leading-tight">

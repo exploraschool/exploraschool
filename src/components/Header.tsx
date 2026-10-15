@@ -72,7 +72,8 @@ export function Header({ locale }: HeaderProps) {
       if (ticking) return;
       ticking = true;
       window.requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 12);
+        const next = window.scrollY > 12;
+        setScrolled((current) => (current === next ? current : next));
         ticking = false;
       });
     }

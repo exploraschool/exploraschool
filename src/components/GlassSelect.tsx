@@ -240,7 +240,7 @@ export function GlassSelect<T extends string>({
         aria-controls={listId}
         aria-labelledby={labelledBy}
         onClick={() => setOpen((current) => !current)}
-        className={`flex w-full items-center justify-between rounded-full border text-nieve shadow-[inset_0_1px_0_rgb(255_255_255_/_0.08)] backdrop-blur-md transition ${
+        className={`flex w-full items-center justify-between rounded-full border text-nieve shadow-[inset_0_1px_0_rgb(255_255_255_/_0.08)] transition ${
           compact
             ? "h-10 gap-1.5 px-3 text-[0.8rem] font-medium sm:h-11 sm:gap-2 sm:px-4 sm:text-sm"
             : "h-11 gap-2 px-4 text-sm font-medium"

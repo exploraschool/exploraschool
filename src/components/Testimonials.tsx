@@ -34,7 +34,7 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
         <div className={`section-body grid gap-5 sm:gap-6 ${limit <= 3 ? "md:grid-cols-3" : "md:grid-cols-2 lg:grid-cols-3"}`}>
           {reviews.map((review, i) => (
             <Reveal key={review.id} delay={i * 80}>
-              <blockquote className="flex h-full flex-col rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm sm:p-5">
+              <blockquote className="flex h-full flex-col rounded-xl border border-white/10 bg-white/10 p-4 sm:p-5">
                 <div className="mb-2 flex gap-0.5 text-nieve text-xs" aria-hidden>
                   {Array.from({ length: 5 }).map((_, j) => (
                     <span key={j}>★</span>
