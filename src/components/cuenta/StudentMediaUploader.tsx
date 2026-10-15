@@ -96,6 +96,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
   const [progress, setProgress] = useState<number | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [imageConsent, setImageConsent] = useState(false);
   const maxVideoMb = Math.round(STUDENT_MEDIA_VIDEO_MAX_BYTES / (1024 * 1024));
 
