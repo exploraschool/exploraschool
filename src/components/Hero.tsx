@@ -33,26 +33,26 @@ export function Hero({ locale }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-t from-pizarra/85 via-pizarra/15 to-pizarra/35 sm:from-pizarra/80 sm:via-transparent sm:to-transparent" />
 
       <div className="hero-block__inner container-page relative">
-        <div className="grid min-w-0 items-start gap-6 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+        <div className="grid min-w-0 items-start gap-10 sm:items-center sm:gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
           <div className="max-w-xl min-w-0 animate-fade-up">
             <p className="eyebrow-pill">
               <span className="h-1.5 w-1.5 rounded-full bg-oro-light" aria-hidden />
               Sierra Nevada · Granada
             </p>
 
-            <h1 className="mt-4 font-display text-[1.8rem] font-semibold leading-[1.15] text-nieve sm:mt-5 sm:text-3xl md:text-[2.5rem] lg:text-4xl">
+            <h1 className="mt-5 font-display text-[1.8rem] font-semibold leading-[1.22] text-nieve sm:mt-5 sm:text-3xl sm:leading-[1.15] md:text-[2.5rem] lg:text-4xl">
               {pickLocale(locale, "Clases de ", "Ski, snowboard & ")}
               <span className="text-oro-light">
                 {pickLocale(locale, "esquí, snowboard y telemark", "telemark lessons")}
               </span>
             </h1>
 
-            <p className="mt-3.5 text-[0.9375rem] leading-relaxed text-nieve/90 sm:mt-4 sm:text-base">
+            <p className="mt-4 text-[0.9375rem] leading-relaxed text-nieve/90 sm:mt-4 sm:text-base">
               {pickLocale(locale, site.heroLeadEs, site.heroLeadEn)}
             </p>
 
             {showEarlyBird && (
-              <p className="mt-5 inline-flex max-w-prose items-start gap-2 text-[0.8rem] leading-snug text-nieve/85 sm:text-sm">
+              <p className="mt-6 inline-flex max-w-prose items-start gap-2 text-[0.8rem] leading-snug text-nieve/85 sm:mt-5 sm:text-sm">
                 <span className="live-dot mt-1.5 shrink-0" aria-hidden />
                 {preseason}
               </p>
