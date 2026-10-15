@@ -367,7 +367,7 @@ function EmailsPanel({
               </table>
             </div>
             <p className="border-t border-hielo/8 px-4 py-3 text-xs text-muted">
-              Usa estos emails solo conforme a tu política de privacidad.
+              Estos emails solo sirven para gestionar reservas y consultas. No se usan para publicidad.
             </p>
           </div>
           <AdminPagination

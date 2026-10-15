@@ -15,7 +15,7 @@ export type MarketingContact = {
   lastSeenAt: string;
   lastLeadId?: string;
   lastStatus?: string;
-  /** Accepted privacy policy when submitting (eligible for CRM/ops emails). */
+  /** Accepted the privacy notice when submitting. Used only to manage the request. */
   privacyAccepted: boolean;
   updatedAt: string;
 };

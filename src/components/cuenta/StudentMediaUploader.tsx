@@ -96,7 +96,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
   const [progress, setProgress] = useState<number | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [imageConsent, setImageConsent] = useState(false);
   const maxVideoMb = Math.round(STUDENT_MEDIA_VIDEO_MAX_BYTES / (1024 * 1024));
 
   useEffect(() => {
@@ -121,12 +121,14 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
       return t("mediaVideoTooLong", { seconds: STUDENT_MEDIA_VIDEO_MAX_SECONDS });
     }
     if (code === "invalid_type") return t("mediaInvalidType");
+    if (code === "image_consent_required") return t("mediaConsentRequired");
     return t("mediaUploadFailed");
   }
 
   async function uploadViaApi(file: File, durationSeconds?: number): Promise<StudentMediaItem> {
     const form = new FormData();
     form.set("file", file);
+    form.set("imageConsent", "true");
     if (durationSeconds != null) form.set("durationSeconds", String(durationSeconds));
     const res = await fetch("/api/cuenta/media", { method: "POST", body: form });
     const payload = (await res.json().catch(() => null)) as ApiErrorPayload | null;
@@ -161,6 +163,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
         contentType,
         size: file.size,
         durationSeconds: durationSeconds ?? null,
+        imageConsent: true,
       }),
     });
     const prepared = (await preparedRes.json().catch(() => null)) as {
@@ -184,6 +187,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
             contentType: prepared.contentType || contentType,
             fileName,
             durationSeconds: durationSeconds ?? null,
+            imageConsent: true,
           }),
         });
         const complete = (await completeRes.json().catch(() => null)) as ApiErrorPayload | null;
@@ -207,6 +211,10 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
 
   async function onFiles(files: FileList | null, preferredKind: "image" | "video") {
     if (!files?.length) return;
+    if (!imageConsent) {
+      setError(t("mediaConsentRequired"));
+      return;
+    }
     setBusy(true);
     setProgress(null);
     setError("");
@@ -267,6 +275,16 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
         {t("mediaLead", { mb: maxVideoMb })}
       </p>
 
+      <label className="mt-4 flex items-start gap-3 text-sm text-muted">
+        <input
+          type="checkbox"
+          checked={imageConsent}
+          onChange={(event) => setImageConsent(event.target.checked)}
+          className="mt-1 rounded border-hielo/20"
+        />
+        <span>{t("mediaConsent")}</span>
+      </label>
+
       <div className="mt-4 flex flex-wrap gap-2">
         <label className={uploadLabelClass}>
           {busy ? t("mediaUploading") : t("mediaUploadPhoto")}
@@ -275,7 +293,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
             accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
             multiple
             className="hidden"
-            disabled={busy}
+            disabled={busy || !imageConsent}
             onChange={(event) => {
               void onFiles(event.target.files, "image");
               event.target.value = "";
@@ -288,7 +306,7 @@ export function StudentMediaUploader({ embedded = false }: { embedded?: boolean 
             type="file"
             accept="video/*,.mp4,.mov,.m4v,.webm,.3gp,.3gpp"
             className="hidden"
-            disabled={busy}
+            disabled={busy || !imageConsent}
             onChange={(event) => {
               void onFiles(event.target.files, "video");
               event.target.value = "";

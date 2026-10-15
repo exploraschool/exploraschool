@@ -25,9 +25,22 @@ export type MeetingPoint = {
   googleMapsUrl: string;
 };
 
+export type LegalOwner = {
+  name: string;
+  nif: string;
+  streetAddress: string;
+  postalCode: string;
+  locality: string;
+  region: string;
+  phone: string;
+  phoneDisplay: string;
+  email: string;
+};
+
 export type SiteConfig = {
   name: string;
   legalName: string;
+  legalOwner: LegalOwner;
   domain: string;
   foundedYear: number;
   /** Año aproximado en que el equipo empezó a ejercer como instructores (antes de fundar Explora). */
@@ -80,6 +93,17 @@ export type SiteConfig = {
 export const site: SiteConfig = {
   name: "Explora School & Club",
   legalName: "Explora School & Club",
+  legalOwner: {
+    name: "Alejandro Martín del Valle",
+    nif: "74941275F",
+    streetAddress: "Calle Los Peñones, n.º 20, 1.º B",
+    postalCode: "18196",
+    locality: "Sierra Nevada, Monachil",
+    region: "Granada",
+    phone: "+34617354031",
+    phoneDisplay: "+34 617 354 031",
+    email: "alemv.mlg@gmail.com",
+  },
   domain: getSiteUrl(),
   foundedYear: 2010,
   instructorExperienceSince: 2000,

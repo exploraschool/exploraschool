@@ -31,24 +31,38 @@ export default async function PrivacidadPage({ params }: Props) {
       <div className="container-page max-w-3xl prose-page">
         <h1>{pickLocale(locale, "Política de privacidad", "Privacy policy")}</h1>
         <p className="text-sm text-muted">
-          {pickLocale(locale, "Última actualización: 4 de septiembre de 2026.", "Last updated: 4 September 2026.")}
+          {pickLocale(locale, "Última actualización: 15 de octubre de 2026.", "Last updated: 15 October 2026.")}
         </p>
 
         <h2>{pickLocale(locale, "Responsable", "Controller")}</h2>
         <p>
           {pickLocale(
             locale,
-            "El responsable del tratamiento es Explora School & Club.",
-            "The data controller is Explora School & Club.",
+            `El responsable del tratamiento es ${site.legalOwner.name}, quien ejerce la actividad bajo el nombre comercial ${site.legalName}.`,
+            `The data controller is ${site.legalOwner.name}, trading as ${site.legalName}.`,
           )}
         </p>
         <ul>
           <li>
-            {pickLocale(locale, "Email: ", "Email: ")}
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            {pickLocale(locale, "NIF: ", "Tax ID (NIF): ")}
+            {site.legalOwner.nif}
           </li>
           <li>
-            {pickLocale(locale, "Teléfono / WhatsApp: ", "Phone / WhatsApp: ")}
+            {pickLocale(locale, "Domicilio: ", "Address: ")}
+            {`${site.legalOwner.streetAddress}, ${site.legalOwner.postalCode} ${site.legalOwner.locality} (${site.legalOwner.region})`}
+          </li>
+          <li>
+            {pickLocale(locale, "Email: ", "Email: ")}
+            <a href={`mailto:${site.legalOwner.email}`}>{site.legalOwner.email}</a>
+          </li>
+          <li>
+            {pickLocale(locale, "Teléfono: ", "Phone: ")}
+            <a href={`tel:${site.legalOwner.phone}`}>{site.legalOwner.phoneDisplay}</a>
+          </li>
+          <li>
+            {pickLocale(locale, "Reservas y ejercicio de derechos: ", "Bookings and data rights: ")}
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+            {" · "}
             <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a>
           </li>
           <li>
@@ -56,13 +70,6 @@ export default async function PrivacidadPage({ params }: Props) {
             <a href={PRODUCTION_SITE_URL}>{PRODUCTION_SITE_URL.replace("https://", "")}</a>
           </li>
         </ul>
-        <p>
-          {pickLocale(
-            locale,
-            "No publicamos NIF en esta política. Para ejercer derechos o identificarnos, usa el email o el teléfono anteriores.",
-            "We do not publish a tax ID (NIF) in this policy. To exercise your rights or identify us, use the email or phone above.",
-          )}
-        </p>
 
         <h2>{pickLocale(locale, "Qué datos tratamos y para qué", "What data we process and why")}</h2>
         <ul>
@@ -76,15 +83,22 @@ export default async function PrivacidadPage({ params }: Props) {
           <li>
             {pickLocale(
               locale,
-              "Reservas: datos de contacto, fechas, disciplina, número de personas, instructor preferido y notas. Base: ejecución del servicio de clases. No hay pago online en la web.",
-              "Bookings: contact details, dates, discipline, group size, preferred instructor and notes. Basis: performing the lesson service. There is no online payment on the website.",
+              "Reservas: datos de contacto, fechas, disciplina, número de personas, instructor preferido y notas. Base: ejecución del servicio de clases. No hay pago online en la web. Con esos mismos datos guardamos un registro interno para gestionar la solicitud. No se usa para publicidad ni boletines.",
+              "Bookings: contact details, dates, discipline, group size, preferred instructor and notes. Basis: performing the lesson service. There is no online payment on the website. We keep an internal record of the same details to manage the request. It is not used for advertising or newsletters.",
             )}
           </li>
           <li>
             {pickLocale(
               locale,
-              "Área de alumnos: inicio de sesión con Google (nombre, email y foto de perfil que Google nos envía), reservas asociadas, ficha de alumno y fotos o vídeos que subas o que el equipo suba para corrección. Base: ejecución del servicio y, para imágenes, tu consentimiento o el del padre/madre/tutor.",
-              "Student area: Google sign-in (name, email and profile photo Google sends us), linked bookings, student profile, and photos or videos you upload or the team uploads for technique feedback. Basis: performing the service and, for images, your consent or that of a parent/guardian.",
+              "Área de alumnos: inicio de sesión con Google (nombre, email y foto de perfil que Google nos envía), reservas asociadas y ficha de alumno. Base: ejecución del servicio.",
+              "Student area: Google sign-in (name, email and profile photo Google sends us), linked bookings and student profile. Basis: performing the service.",
+            )}
+          </li>
+          <li>
+            {pickLocale(
+              locale,
+              "Fotos y vídeos: al subir cada archivo queda registrada la autorización para usarlo en la corrección de la clase y, si se publica, en la galería. Base: consentimiento. Si sale un menor, la autorización la da el padre, la madre o el tutor.",
+              "Photos and videos: each upload records permission to use the file for lesson feedback and, if it is published, in the gallery. Basis: consent. If a child appears, a parent or guardian gives that permission.",
             )}
           </li>
           <li>
@@ -111,8 +125,8 @@ export default async function PrivacidadPage({ params }: Props) {
         <p>
           {pickLocale(
             locale,
-            "Damos clases desde los 3 años. La reserva y el consentimiento de imagen los hace un adulto responsable. No está pensada un área de alumnos para un menor sin ese adulto.",
-            "We teach from age 3. An adult is responsible for the booking and for image consent. The student area is not meant for a child to use without that adult.",
+            "Damos clases desde los 3 años. La reserva la hace un adulto responsable. La autorización de cada foto o vídeo se registra al subir el archivo.",
+            "We teach from age 3. An adult is responsible for the booking. Permission for each photo or video is recorded when the file is uploaded.",
           )}
         </p>
 
@@ -135,8 +149,15 @@ export default async function PrivacidadPage({ params }: Props) {
           <li>
             {pickLocale(
               locale,
-              "Resend, para enviar emails transaccionales (confirmación, cancelación, guía de llegada).",
-              "Resend, to send transactional emails (confirmation, cancellation, arrival guide).",
+              "Vercel, para alojar esta web. Puede ver datos técnicos de la visita, como la dirección IP, en los registros del servidor.",
+              "Vercel, to host this website. It may see technical visit data, such as the IP address, in server logs.",
+            )}
+          </li>
+          <li>
+            {pickLocale(
+              locale,
+              "Resend, para enviar emails de gestión de la reserva (confirmación, cancelación, guía de llegada). No enviamos publicidad.",
+              "Resend, to send booking emails (confirmation, cancellation, arrival guide). We do not send advertising.",
             )}
           </li>
           <li>
@@ -150,8 +171,8 @@ export default async function PrivacidadPage({ params }: Props) {
         <p>
           {pickLocale(
             locale,
-            "Algunos de estos servicios pueden tratar datos fuera del Espacio Económico Europeo. Google aplica cláusulas contractuales tipo y otras garantías previstas en el RGPD.",
-            "Some of these services may process data outside the European Economic Area. Google uses standard contractual clauses and other GDPR safeguards.",
+            "Google, Vercel y Resend pueden tratar datos fuera del Espacio Económico Europeo. Usan cláusulas contractuales tipo u otras garantías previstas en el RGPD.",
+            "Google, Vercel and Resend may process data outside the European Economic Area. They use standard contractual clauses or other GDPR safeguards.",
           )}
         </p>
 
@@ -159,8 +180,8 @@ export default async function PrivacidadPage({ params }: Props) {
         <p>
           {pickLocale(
             locale,
-            "Guardamos consultas y reservas mientras sirvan para el servicio y las obligaciones legales (por ejemplo, facturación si la hay). La cuenta de alumno y los archivos se mantienen mientras la cuenta esté activa o hasta que pidas su supresión, salvo que debamos conservarlos por un plazo legal.",
-            "We keep enquiries and bookings for as long as needed for the service and legal duties (for example invoicing, if any). The student account and files stay while the account is active or until you ask us to erase them, unless we must keep them for a legal period.",
+            "Consultas y reservas se conservan 5 años desde la última gestión de esa solicitud. La cuenta, la ficha y las fotos o vídeos se conservan mientras la cuenta siga en uso y, como máximo, 5 años desde la última clase, o antes si pides que se borren. Si una norma obliga a guardar algo más tiempo, se respeta ese plazo.",
+            "Enquiries and bookings are kept for 5 years from the last action on that request. The account, profile and photos or videos stay while the account is in use and for at most 5 years after the last lesson, or sooner if you ask us to erase them. If a law requires a longer period, that period applies.",
           )}
         </p>
 

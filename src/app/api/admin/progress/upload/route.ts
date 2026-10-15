@@ -49,6 +49,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_data" }, { status: 400 });
   }
 
+  if (form.get("imageConsent") !== "true") {
+    return NextResponse.json({ error: "image_consent_required" }, { status: 400 });
+  }
+
   const contentType = (file.type || "application/octet-stream").toLowerCase();
   if (!ALLOWED.has(contentType)) {
     return NextResponse.json({ error: "invalid_type" }, { status: 400 });
@@ -80,6 +84,7 @@ export async function POST(request: Request) {
     kind: mediaKindFromContentType(contentType),
     fileName: file.name,
     createdAt: new Date().toISOString(),
+    imageConsentAt: new Date().toISOString(),
   };
 
   return NextResponse.json({ media });

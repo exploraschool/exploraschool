@@ -476,7 +476,12 @@ export function BookingCheckout() {
                   onChange={(e) => setPrivacy(e.target.checked)}
                   className="mt-1 rounded border-hielo/20"
                 />
-                <span>{t("privacy")}</span>
+                <span>
+                  {t("privacy")}{" "}
+                  <Link href="/politica-de-privacidad" className="font-medium text-hielo underline">
+                    {t("privacyLink")}
+                  </Link>
+                </span>
               </label>
 
               <button

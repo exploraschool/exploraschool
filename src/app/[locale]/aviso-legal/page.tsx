@@ -2,7 +2,6 @@ import { setRequestLocale } from "next-intl/server";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
-import { PRODUCTION_SITE_URL } from "@/lib/site-url";
 import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 
@@ -32,49 +31,48 @@ export default async function AvisoLegalPage({ params }: Props) {
       <div className="container-page max-w-3xl prose-page">
         <h1>{pickLocale(locale, "Aviso legal", "Legal notice")}</h1>
         <p className="text-sm text-muted">
-          {pickLocale(locale, "Última actualización: 4 de septiembre de 2026.", "Last updated: 4 September 2026.")}
+          {pickLocale(locale, "Última actualización: 15 de octubre de 2026.", "Last updated: 15 October 2026.")}
         </p>
 
         <h2>{pickLocale(locale, "Titular", "Owner")}</h2>
         <p>
           {pickLocale(
             locale,
-            "El titular de este sitio web es Explora School & Club, escuela de esquí, snowboard y telemark en Sierra Nevada (Granada, España).",
-            "The owner of this website is Explora School & Club, a ski, snowboard and telemark school in Sierra Nevada (Granada, Spain).",
+            `${site.legalOwner.name} es el titular de este sitio y ejerce la actividad bajo el nombre comercial ${site.legalName}, escuela de esquí, snowboard y telemark en Sierra Nevada (Granada, España).`,
+            `${site.legalOwner.name} owns this website and trades as ${site.legalName}, a ski, snowboard and telemark school in Sierra Nevada (Granada, Spain).`,
           )}
         </p>
         <ul>
           <li>
-            {pickLocale(locale, "Nombre comercial: ", "Trading name: ")}
-            {site.legalName}
+            {pickLocale(locale, "NIF: ", "Tax ID (NIF): ")}
+            {site.legalOwner.nif}
           </li>
           <li>
-            {pickLocale(locale, "Sitio web: ", "Website: ")}
-            <a href={PRODUCTION_SITE_URL}>{PRODUCTION_SITE_URL.replace("https://", "")}</a>
+            {pickLocale(locale, "Domicilio: ", "Address: ")}
+            {`${site.legalOwner.streetAddress}, ${site.legalOwner.postalCode} ${site.legalOwner.locality} (${site.legalOwner.region})`}
           </li>
           <li>
             {pickLocale(locale, "Email: ", "Email: ")}
-            <a href={`mailto:${site.email}`}>{site.email}</a>
+            <a href={`mailto:${site.legalOwner.email}`}>{site.legalOwner.email}</a>
           </li>
           <li>
-            {pickLocale(locale, "Teléfono / WhatsApp: ", "Phone / WhatsApp: ")}
+            {pickLocale(locale, "Teléfono: ", "Phone: ")}
+            <a href={`tel:${site.legalOwner.phone}`}>{site.legalOwner.phoneDisplay}</a>
+          </li>
+          <li>
+            {pickLocale(locale, "Reservas: ", "Bookings: ")}
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+            {" · "}
             <a href={`tel:${site.phone}`}>{site.phoneDisplay}</a>
           </li>
           <li>
             {pickLocale(
               locale,
-              "Punto de encuentro: estación de esquí de Sierra Nevada, Borreguiles, Pradollano (18196).",
-              "Meeting point: Sierra Nevada ski resort, Borreguiles, Pradollano (18196).",
+              "Punto de encuentro de las clases: estación de esquí de Sierra Nevada, Borreguiles, Pradollano (18196).",
+              "Lesson meeting point: Sierra Nevada ski resort, Borreguiles, Pradollano (18196).",
             )}
           </li>
         </ul>
-        <p>
-          {pickLocale(
-            locale,
-            "Explora School & Club no publica NIF en este aviso. Para cualquier identificación o ejercicio de derechos, escríbenos a las vías de contacto anteriores.",
-            "Explora School & Club does not publish a tax ID (NIF) in this notice. For identification or to exercise your rights, contact us using the details above.",
-          )}
-        </p>
 
         <h2>{pickLocale(locale, "Objeto", "Purpose")}</h2>
         <p>

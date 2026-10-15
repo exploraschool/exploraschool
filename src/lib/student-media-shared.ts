@@ -42,6 +42,8 @@ export type StudentMediaItem = {
   reviewedByInstructorSlug: string;
   liveGalleryId: string | null;
   publishedToGallery: boolean;
+  /** ISO time when upload permission was recorded. Null on files stored before that step. */
+  imageConsentAt: string | null;
 };
 
 function fileExtension(fileName: string): string {

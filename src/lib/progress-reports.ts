@@ -12,6 +12,7 @@ export type ProgressMedia = {
   kind: ProgressMediaKind;
   fileName: string;
   createdAt: string;
+  imageConsentAt?: string;
 };
 
 export type ProgressReport = {

@@ -24,6 +24,7 @@ const CLIENT_ERRORS = new Set([
   "video_too_long",
   "upload_incomplete",
   "forbidden",
+  "image_consent_required",
 ]);
 
 function errorResponse(error: unknown) {
@@ -44,6 +45,7 @@ const prepareSchema = z.object({
   contentType: z.string().max(80).optional().default(""),
   size: z.number().int().positive().max(STUDENT_MEDIA_VIDEO_MAX_BYTES),
   durationSeconds: z.number().positive().max(600).nullable().optional(),
+  imageConsent: z.literal(true),
 });
 
 export async function PUT(request: Request) {
@@ -79,6 +81,7 @@ const completeSchema = z.object({
   contentType: z.string().min(3).max(80),
   fileName: z.string().min(1).max(180),
   durationSeconds: z.number().positive().max(600).nullable().optional(),
+  imageConsent: z.literal(true),
 });
 
 export async function POST(request: Request) {
@@ -104,6 +107,7 @@ export async function POST(request: Request) {
         contentType: parsed.data.contentType,
         fileName: parsed.data.fileName,
         durationSeconds: parsed.data.durationSeconds ?? null,
+        imageConsentAt: new Date().toISOString(),
       });
       return NextResponse.json(result);
     } catch (error) {
@@ -116,6 +120,9 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "invalid_file" }, { status: 400 });
   }
+  if (form.get("imageConsent") !== "true") {
+    return NextResponse.json({ error: "image_consent_required" }, { status: 400 });
+  }
   const durationRaw = form.get("durationSeconds");
   const durationSeconds =
     typeof durationRaw === "string" && durationRaw.trim() ? Number(durationRaw) : null;
@@ -126,6 +133,7 @@ export async function POST(request: Request) {
       displayName: profile?.displayName || session.name || "Alumno",
       file,
       durationSeconds,
+      imageConsentAt: new Date().toISOString(),
     });
     return NextResponse.json(result);
   } catch (error) {

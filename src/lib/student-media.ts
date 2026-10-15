@@ -57,6 +57,7 @@ export function parseStudentMedia(id: string, data: Record<string, unknown>): St
       typeof data.reviewedByInstructorSlug === "string" ? data.reviewedByInstructorSlug : "",
     liveGalleryId: typeof data.liveGalleryId === "string" ? data.liveGalleryId : null,
     publishedToGallery: data.publishedToGallery === true,
+    imageConsentAt: typeof data.imageConsentAt === "string" ? data.imageConsentAt : null,
   };
 }
 
@@ -136,6 +137,7 @@ function buildStudentMediaItem(params: {
   storagePath: string;
   contentType: string;
   fileName: string;
+  imageConsentAt: string;
 }): StudentMediaItem {
   return {
     id: params.mediaId,
@@ -152,6 +154,7 @@ function buildStudentMediaItem(params: {
     reviewedByInstructorSlug: "",
     liveGalleryId: null,
     publishedToGallery: false,
+    imageConsentAt: params.imageConsentAt,
   };
 }
 
@@ -197,6 +200,7 @@ export async function completeStudentMediaUpload(params: {
   contentType: string;
   fileName: string;
   durationSeconds?: number | null;
+  imageConsentAt: string;
 }): Promise<{ media: StudentMediaItem; publishedToGallery: boolean }> {
   const db = getAdminDb();
   const bucket = getAdminBucket();
@@ -243,6 +247,7 @@ export async function completeStudentMediaUpload(params: {
     storagePath: params.storagePath,
     contentType,
     fileName: params.fileName,
+    imageConsentAt: params.imageConsentAt,
   });
   await db.collection(STUDENT_MEDIA_COLLECTION).doc(params.mediaId).set(media);
   return { media, publishedToGallery: false };
@@ -254,6 +259,7 @@ export async function createStudentMediaFromUpload(params: {
   file: File;
   /** Client-reported duration for videos (seconds). Best-effort on mobile. */
   durationSeconds?: number | null;
+  imageConsentAt: string;
 }): Promise<{ media: StudentMediaItem; publishedToGallery: boolean }> {
   const db = getAdminDb();
   const bucket = getAdminBucket();
@@ -291,6 +297,7 @@ export async function createStudentMediaFromUpload(params: {
     storagePath,
     contentType,
     fileName: params.file.name,
+    imageConsentAt: params.imageConsentAt,
   });
   await db.collection(STUDENT_MEDIA_COLLECTION).doc(mediaId).set(media);
   return { media, publishedToGallery: false };

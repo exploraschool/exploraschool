@@ -109,6 +109,7 @@ const saveSchema = z.object({
         kind: z.enum(["image", "video"]),
         fileName: z.string(),
         createdAt: z.string(),
+        imageConsentAt: z.string().optional(),
       }),
     )
     .max(PROGRESS_MEDIA_MAX)
@@ -255,6 +256,7 @@ const uploadSchema = z.object({
   companionId: z.string().max(80).optional(),
   contentType: z.string().min(3).max(80),
   fileName: z.string().min(1).max(180),
+  imageConsent: z.literal(true),
 });
 
 export async function PUT(request: Request) {
@@ -306,6 +308,7 @@ export async function PUT(request: Request) {
     kind: mediaKindFromContentType(contentType),
     fileName: parsed.data.fileName,
     createdAt: new Date().toISOString(),
+    imageConsentAt: new Date().toISOString(),
   };
 
   return NextResponse.json({ uploadUrl, media });

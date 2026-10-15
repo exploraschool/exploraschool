@@ -114,6 +114,7 @@ export function ProgressForm({
   const [openSectors, setOpenSectors] = useState<Record<string, boolean>>({ borreguiles: true });
   const [hours, setHours] = useState(initial?.hours ?? defaultHours);
   const [media, setMedia] = useState<ProgressMedia[]>(initial?.media ?? []);
+  const [imageConsent, setImageConsent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -202,6 +203,10 @@ export function ProgressForm({
 
   async function onFiles(files: FileList | null) {
     if (!files?.length) return;
+    if (!imageConsent) {
+      setError("Marca la autorización de imagen antes de subir.");
+      return;
+    }
     const remaining = 3 - media.length;
     const picked = [...files].slice(0, remaining);
     setBusy(true);
@@ -219,6 +224,7 @@ export function ProgressForm({
             companionId: companionId || undefined,
             contentType: file.type || "application/octet-stream",
             fileName: file.name,
+            imageConsent: true,
           }),
         });
         const payload = (await signed.json()) as { uploadUrl?: string; media?: ProgressMedia; error?: string };
@@ -240,6 +246,7 @@ export function ProgressForm({
           form.set("itemIndex", String(itemIndex));
           if (companionId) form.set("companionId", companionId);
           form.set("file", file);
+          form.set("imageConsent", "true");
           const fallback = await fetch("/api/admin/progress/upload", { method: "POST", body: form });
           const fallbackPayload = (await fallback.json()) as { media?: ProgressMedia; error?: string };
           if (!fallback.ok || !fallbackPayload.media) {
@@ -575,6 +582,17 @@ export function ProgressForm({
       </Section>
 
       <Section step="5" title="Fotos y vídeos" hint="Hasta 3 archivos para la ficha del alumno">
+        <label className="mb-3 flex items-start gap-3 text-sm text-muted">
+          <input
+            type="checkbox"
+            checked={imageConsent}
+            onChange={(event) => setImageConsent(event.target.checked)}
+            className="mt-1 rounded border-hielo/20"
+          />
+          <span>
+            Confirmo que el adulto responsable autoriza cada foto o vídeo que suba, para la ficha y la corrección. Si sale un menor, esa autorización es del padre, la madre o el tutor.
+          </span>
+        </label>
         <ul className="mb-3 space-y-2">
           {media.map((item) => (
             <li
@@ -605,6 +623,7 @@ export function ProgressForm({
               accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"
               multiple
               className="sr-only"
+              disabled={!imageConsent}
               onChange={(event) => {
                 void onFiles(event.target.files);
                 event.currentTarget.value = "";
