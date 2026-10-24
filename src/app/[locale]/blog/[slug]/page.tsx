@@ -39,7 +39,7 @@ export function generateStaticParams() {
 }
 
 export const dynamicParams = true;
-export const revalidate = 60;
+export const revalidate = 3600;
 export const maxDuration = 60;
 
 function absoluteImage(siteUrl: string, src: string): string {

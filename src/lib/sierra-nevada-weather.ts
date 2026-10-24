@@ -97,10 +97,12 @@ export function formatWeatherUpdatedAt(iso: string): string {
   return match ? `${match[1]}:${match[2]}` : "";
 }
 
-export async function getSierraNevadaWeather(): Promise<SierraNevadaWeather | null> {
+export async function getSierraNevadaWeather(
+  revalidateSeconds = WEATHER_REVALIDATE_SECONDS,
+): Promise<SierraNevadaWeather | null> {
   try {
     const response = await fetch(WEATHER_URL, {
-      next: { revalidate: WEATHER_REVALIDATE_SECONDS },
+      next: { revalidate: revalidateSeconds },
       headers: { Accept: "application/json" },
     });
 

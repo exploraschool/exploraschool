@@ -1,26 +1,11 @@
-import { Plus_Jakarta_Sans, Fraunces } from "next/font/google";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { getLocale } from "next-intl/server";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { buildRootSpanishMetadata } from "@/lib/metadata";
 import { getSiteUrl } from "@/lib/site-url";
 import { media } from "@/lib/media";
 import "@/app/globals.css";
 
 const googleSiteVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION;
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-plus-jakarta",
-  display: "swap",
-});
-
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-fraunces",
-  display: "swap",
-});
 
 const spanishDefaults = buildRootSpanishMetadata();
 
@@ -51,20 +36,10 @@ type Props = {
   children: ReactNode;
 };
 
-export default async function RootLayout({ children }: Props) {
-  const locale = await getLocale();
-
-  return (
-    <html
-      lang={locale}
-      suppressHydrationWarning
-      data-scroll-behavior="smooth"
-      className={`${plusJakarta.variable} ${fraunces.variable}`}
-    >
-      <body className="min-h-dvh bg-nieve text-pizarra antialiased">
-        <GoogleAnalytics />
-        {children}
-      </body>
-    </html>
-  );
+/**
+ * The root layout does not read the request. `<html>` lives in each branch
+ * (`[locale]`, admin, and the root 404) so public pages can stay cached.
+ */
+export default function RootLayout({ children }: Props) {
+  return children;
 }

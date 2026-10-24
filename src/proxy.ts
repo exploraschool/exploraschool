@@ -23,6 +23,9 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl, 308);
   }
 
+  const legacyBlog = legacyBlogListRedirect(request);
+  if (legacyBlog) return legacyBlog;
+
   const response = intlMiddleware(request);
 
   // next-intl uses 307 for locale prefixing (`/es` → `/`). Canonical locale
@@ -35,6 +38,29 @@ export default function proxy(request: NextRequest) {
   }
 
   return response;
+}
+
+/** Old `?guias=2` / `?productos=2` links. Handled here so the blog page can stay cached. */
+function legacyBlogListRedirect(request: NextRequest): NextResponse | null {
+  const path = request.nextUrl.pathname.replace(/\/$/, "") || "/";
+  const isSpanish = path === "/blog" || path === "/es/blog";
+  const isEnglish = path === "/en/blog";
+  if (!isSpanish && !isEnglish) return null;
+
+  const guides = Number.parseInt(request.nextUrl.searchParams.get("guias") ?? "", 10);
+  const products = Number.parseInt(request.nextUrl.searchParams.get("productos") ?? "", 10);
+  let pathname: string | null = null;
+  if (Number.isFinite(guides) && guides > 1) {
+    pathname = isEnglish ? `/en/blog/guides/${guides}` : `/blog/guias/${guides}`;
+  } else if (Number.isFinite(products) && products > 1) {
+    pathname = isEnglish ? `/en/blog/gear/${products}` : `/blog/productos/${products}`;
+  }
+  if (!pathname) return null;
+
+  const url = request.nextUrl.clone();
+  url.pathname = pathname;
+  url.search = "";
+  return NextResponse.redirect(url, 308);
 }
 
 export const config = {

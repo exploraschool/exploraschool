@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { DocumentShell } from "@/components/DocumentShell";
 
 export const metadata: Metadata = {
   title: { absolute: "Admin | Explora School & Club" },
@@ -9,5 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  return <div className="min-h-screen bg-nieve text-pizarra">{children}</div>;
+  return (
+    <DocumentShell lang="es">
+      <div className="min-h-screen bg-nieve text-pizarra">{children}</div>
+    </DocumentShell>
+  );
 }

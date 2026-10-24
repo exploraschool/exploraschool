@@ -1,20 +1,17 @@
 import { setRequestLocale } from "next-intl/server";
-import { permanentRedirect } from "next/navigation";
 import { Link } from "@/i18n/routing";
 import { BlogCardGrid } from "@/components/blog/BlogCardGrid";
 import { SectionHeader } from "@/components/SectionHeader";
-import { listPublicBlogSections, paginateBlogCards, parseBlogListPages } from "@/lib/blog-catalog";
+import { listPublicBlogSections, paginateBlogCards } from "@/lib/blog-catalog";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
-import { localizedPath } from "@/lib/seo-urls";
 import type { Metadata } from "next";
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ guias?: string | string[]; productos?: string | string[] }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -41,28 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function BlogPage({ params, searchParams }: Props) {
+export default async function BlogPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-
-  const query = await searchParams;
-  const { guidesPage, productsPage } = parseBlogListPages(query);
-  if (guidesPage > 1) {
-    permanentRedirect(
-      localizedPath(locale, {
-        pathname: "/blog/guias/[page]",
-        params: { page: String(guidesPage) },
-      }),
-    );
-  }
-  if (productsPage > 1) {
-    permanentRedirect(
-      localizedPath(locale, {
-        pathname: "/blog/productos/[page]",
-        params: { page: String(productsPage) },
-      }),
-    );
-  }
 
   const { guides, products } = await listPublicBlogSections(locale);
   const guidesPageData = paginateBlogCards(guides, 1);

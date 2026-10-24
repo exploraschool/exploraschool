@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
 import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
@@ -46,8 +45,7 @@ const copy = {
   },
 };
 
-export async function notFoundPageMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
+export async function notFoundPageMetadata(locale: string): Promise<Metadata> {
   const text = pickLocale(locale, copy.es, copy.en);
 
   return {
@@ -58,8 +56,7 @@ export async function notFoundPageMetadata(): Promise<Metadata> {
   };
 }
 
-export async function NotFoundView() {
-  const locale = await getLocale();
+export async function NotFoundView({ locale }: { locale: string }) {
   const text = pickLocale(locale, copy.es, copy.en);
 
   return (

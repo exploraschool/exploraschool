@@ -8,6 +8,7 @@ import {
   LIVE_GALLERY_STORAGE_PREFIX,
   listLiveGalleryPhotos,
   publicStorageUrl,
+  revalidateLiveGalleryCache,
   type LiveGalleryPhoto,
 } from "@/lib/live-gallery";
 
@@ -43,6 +44,7 @@ function resolveImageType(file: File): string | null {
 function revalidateGalleryPages() {
   revalidatePath("/");
   revalidatePath("/en");
+  revalidateLiveGalleryCache();
 }
 
 function collectFiles(form: FormData): File[] {

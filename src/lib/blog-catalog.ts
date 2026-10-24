@@ -79,6 +79,20 @@ export async function listPublicBlogSections(locale = "es"): Promise<{
   };
 }
 
+/** Page numbers above 1, so `/blog/guias/2` can be cached instead of rendered on every visit. */
+export async function blogSectionPageParams(
+  section: "guides" | "products",
+): Promise<{ page: string }[]> {
+  const sections = await listPublicBlogSections("es");
+  const cards = section === "guides" ? sections.guides : sections.products;
+  const pageCount = Math.ceil(cards.length / BLOG_PAGE_SIZE);
+  const params: { page: string }[] = [];
+  for (let page = 2; page <= pageCount; page += 1) {
+    params.push({ page: String(page) });
+  }
+  return params;
+}
+
 export function paginateBlogCards(
   cards: PublicBlogCard[],
   page: number,
@@ -97,23 +111,6 @@ export function paginateBlogCards(
     page: safePage,
     totalPages: totalItems === 0 ? 0 : totalPages,
     totalItems,
-  };
-}
-
-function parsePage(raw: string | string[] | undefined): number {
-  const value = Array.isArray(raw) ? raw[0] : raw;
-  const n = Number.parseInt(value ?? "1", 10);
-  if (!Number.isFinite(n) || n < 1) return 1;
-  return n;
-}
-
-export function parseBlogListPages(searchParams: {
-  guias?: string | string[];
-  productos?: string | string[];
-}): { guidesPage: number; productsPage: number } {
-  return {
-    guidesPage: parsePage(searchParams.guias),
-    productsPage: parsePage(searchParams.productos),
   };
 }
 

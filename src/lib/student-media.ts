@@ -4,6 +4,7 @@ import {
   LIVE_GALLERY_COLLECTION,
   listLiveGalleryPhotos,
   publicStorageUrl,
+  revalidateLiveGalleryCache,
   type LiveGalleryPhoto,
 } from "@/lib/live-gallery";
 import { revalidatePath } from "next/cache";
@@ -81,6 +82,7 @@ export async function listStudentMediaForUid(uid: string): Promise<StudentMediaI
 function revalidateGalleryPages() {
   revalidatePath("/");
   revalidatePath("/en");
+  revalidateLiveGalleryCache();
 }
 
 async function publishToLiveGallery(params: {

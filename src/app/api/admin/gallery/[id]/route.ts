@@ -2,7 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { getAdminBucket, getAdminDb, isAdminConfigured } from "@/lib/firebase/admin";
-import { LIVE_GALLERY_COLLECTION } from "@/lib/live-gallery";
+import { LIVE_GALLERY_COLLECTION, revalidateLiveGalleryCache } from "@/lib/live-gallery";
 
 export const runtime = "nodejs";
 
@@ -50,6 +50,7 @@ export async function DELETE(_request: Request, { params }: Params) {
 
     revalidatePath("/");
     revalidatePath("/en");
+    revalidateLiveGalleryCache();
 
     return NextResponse.json({ ok: true });
   } catch (error) {

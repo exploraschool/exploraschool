@@ -32,7 +32,7 @@ type HomeSocialProofProps = {
 export async function HomeSocialProof({ locale }: HomeSocialProofProps) {
   const [gallery, weather] = await Promise.all([
     getLiveGalleryForHome(),
-    getSierraNevadaWeather(),
+    getSierraNevadaWeather(60 * 60),
   ]);
 
   return (
