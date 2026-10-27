@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getStaffSession, isAdminAuthenticated, staffHomePath } from "@/lib/admin-auth";
+import { getStaffSession, isAdminAuthenticated } from "@/lib/admin-auth";
 import { getInstructorFromDb } from "@/lib/instructors-db";
 import { getSelectedInstructorSlug } from "@/lib/instructor-session";
 import {
@@ -27,11 +27,10 @@ export async function getAdminWorkspace(): Promise<AdminWorkspace | null> {
   return { kind: "explora" };
 }
 
-/** Full Explora admin only. Affiliate editors are sent to the blog studio. */
+/** Full Explora admin only. */
 export async function requireAdminPanel(): Promise<AdminWorkspace> {
   const staff = await getStaffSession();
   if (!staff) redirect("/admin/login");
-  if (staff.role !== "admin") redirect(staffHomePath(staff.role));
   const workspace = await getAdminWorkspace();
   return workspace ?? { kind: "explora" };
 }

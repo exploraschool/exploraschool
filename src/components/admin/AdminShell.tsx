@@ -13,8 +13,7 @@ type AdminNavId =
   | "instructores"
   | "leads"
   | "galeria"
-  | "evaluacion"
-  | "blog";
+  | "evaluacion";
 
 type AdminShellProps = {
   title: string;

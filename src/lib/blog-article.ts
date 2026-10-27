@@ -110,18 +110,6 @@ export function faqFromMarkdown(content: string): BlogFaqItem[] {
   return items;
 }
 
-export function parseExploraScore(raw: string | number | undefined): number {
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return Math.min(5, Math.max(0, raw));
-  }
-  if (!raw) return 0;
-  const normalized = String(raw).replace(",", ".");
-  const match = normalized.match(/(\d+(?:\.\d+)?)\s*(?:\/|de|out of)?\s*5/i);
-  const value = Number(match?.[1] ?? normalized.match(/(\d+(?:\.\d+)?)/)?.[1] ?? 0);
-  if (!Number.isFinite(value)) return 0;
-  return Math.min(5, Math.max(0, value));
-}
-
 const DISCIPLINE_RULES: Array<{ test: RegExp; id: MainDisciplineId }> = [
   { test: /snowboard|tabla/i, id: "snowboard" },
   { test: /telemark/i, id: "telemark" },

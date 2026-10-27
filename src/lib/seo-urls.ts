@@ -46,10 +46,6 @@ type PathnameHref =
       params: { page: string };
     }
   | {
-      pathname: "/blog/productos/[page]";
-      params: { page: string };
-    }
-  | {
       pathname: "/equipo/[slug]";
       params: { slug: string };
     };
@@ -78,23 +74,21 @@ export function homeUrl(locale: string): string {
   return localizedUrl(locale, "/");
 }
 
-const BLOG_SECTION = new Set(["guias", "productos", "guides", "gear"]);
+const BLOG_SECTION = new Set(["guias", "guides"]);
 
 /** Internal pathname (`/clases/snowboard`, `/blog/foo`) → absolute public URL. */
 export function publicUrl(locale: string, path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   if (normalized === "/" || normalized === "") return homeUrl(locale);
 
-  const blogPage = normalized.match(/^\/blog\/(guias|productos)\/([^/]+)$/);
+  const blogPage = normalized.match(/^\/blog\/guias\/([^/]+)$/);
   if (blogPage) {
-    const section = blogPage[1] as "guias" | "productos";
     return localizedUrl(locale, {
-      pathname: section === "guias" ? "/blog/guias/[page]" : "/blog/productos/[page]",
-      params: { page: blogPage[2] },
+      pathname: "/blog/guias/[page]",
+      params: { page: blogPage[1] },
     });
   }
   if (normalized === "/blog/guias") return localizedUrl(locale, "/blog/guias");
-  if (normalized === "/blog/productos") return localizedUrl(locale, "/blog/productos");
 
   const blogPost = normalized.match(/^\/blog\/([^/]+)$/);
   if (blogPost && !BLOG_SECTION.has(blogPost[1])) {

@@ -1,5 +1,5 @@
 ---
-description: Production deploys, pushes, and accounts use explora.sclub@gmail.com. alemv.mlg@gmail.com is blog studio only.
+description: Production deploys, pushes, and accounts use explora.sclub@gmail.com.
 alwaysApply: true
 ---
 
@@ -25,4 +25,3 @@ La CLI de este PC suele estar iniciada como `amsnowboardcoach@gmail.com` y no ti
 
 Correo de equipo, avisos y `Reply-To`: `explora.sclub@gmail.com`. `reservas@explora-school.es` solo es el remitente visible; no recibe correo.
 
-Excepción: `alemv.mlg@gmail.com` (`AFFILIATE_EDITOR_GOOGLE_EMAIL`) entra solo al estudio del blog (`/admin/blog`). No es admin, no recibe reservas y no se usa para deploys.

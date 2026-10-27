@@ -42,9 +42,8 @@ export default async function BlogPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const { guides, products } = await listPublicBlogSections(locale);
+  const { guides } = await listPublicBlogSections(locale);
   const guidesPageData = paginateBlogCards(guides, 1);
-  const productsPageData = paginateBlogCards(products, 1);
 
   return (
     <>
@@ -53,23 +52,22 @@ export default async function BlogPage({ params }: Props) {
         <div className="container-page">
           <p className="eyebrow">Blog</p>
           <h1 className="page-title mt-2 sm:mt-2.5">
-            {pickLocale(locale, "Nieve y material", "Snow and gear")}
+            {pickLocale(locale, "Guías para la nieve", "Guides for the snow")}
           </h1>
           <p className="mt-3 max-w-2xl text-muted">
             {pickLocale(
               locale,
-              "Guías para tus días en Sierra Nevada y productos que merecen la pena: rankings y reviews de material.",
-              "Guides for your days in Sierra Nevada, plus gear worth buying: rankings and reviews.",
+              "Consejos para clases, forfait, familias y tu primer día en Sierra Nevada.",
+              "Advice for lessons, lift passes, families and your first day in Sierra Nevada.",
             )}
           </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link href="/blog/guias" className="btn-secondary !w-auto !px-4 !py-2 text-sm">
-              {pickLocale(locale, "Guías para la nieve", "Snow guides")}
-            </Link>
-            <Link href="/blog/productos" className="btn-secondary !w-auto !px-4 !py-2 text-sm">
-              {pickLocale(locale, "Productos", "Products")}
-            </Link>
-          </div>
+          {guidesPageData.totalPages > 1 ? (
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Link href="/blog/guias" className="btn-secondary !w-auto !px-4 !py-2 text-sm">
+                {pickLocale(locale, "Ver todas las guías", "See all guides")}
+              </Link>
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -94,45 +92,6 @@ export default async function BlogPage({ params }: Props) {
               </p>
             ) : null}
           </div>
-        </div>
-      </section>
-
-      <section className="section-padding bg-white">
-        <div className="container-page">
-          <SectionHeader
-            eyebrow={pickLocale(locale, "Material", "Gear")}
-            title={pickLocale(locale, "Productos", "Products")}
-            description={pickLocale(
-              locale,
-              "Rankings y reviews de material de esquí y snowboard, pensados para Sierra Nevada. Como afiliados de Amazon, podemos recibir comisión por compras que cumplan los requisitos.",
-              "Ski and snowboard rankings and reviews, written for Sierra Nevada. As an Amazon Associate, we may earn from qualifying purchases.",
-            )}
-          />
-          {products.length === 0 ? (
-            <div className="card mx-auto mt-8 max-w-xl text-center">
-              <p className="text-sm text-muted">
-                {pickLocale(
-                  locale,
-                  "Pronto publicaremos rankings y reviews de material de esquí y snowboard.",
-                  "Ski and snowboard rankings and reviews will appear here soon.",
-                )}
-              </p>
-              <Link href="/clases" className="btn-primary mt-6 inline-flex !w-auto">
-                {pickLocale(locale, "Ver clases", "View lessons")}
-              </Link>
-            </div>
-          ) : (
-            <div className="mt-8">
-              <BlogCardGrid posts={productsPageData.items} locale={locale} />
-              {productsPageData.totalPages > 1 ? (
-                <p className="mt-8 text-center">
-                  <Link href="/blog/productos" className="font-semibold text-hielo hover:text-accent">
-                    {pickLocale(locale, "Ver todos los productos →", "See all products →")}
-                  </Link>
-                </p>
-              ) : null}
-            </div>
-          )}
         </div>
       </section>
     </>

@@ -62,31 +62,31 @@ const legacyBlogRedirects: Record<string, string> = {
     "/como-llegar-a-sierra-nevada",
   "full-day-experiencia-explora": "/blog/que-tipo-clases-elegir-sierra-nevada",
   "guia-de-regalos": "/blog",
-  "guia-completa-de-material-de-alta-montana-crampones-mochilas-palas": "/blog/productos",
-  "arva-pack-safety-box-evo4-seguridad-y-prevencion-en-la-nieve": "/blog/productos",
-  "bastones-de-esqui-2025": "/blog/productos",
-  "equipamiento-de-aventura-para-ninos": "/blog/productos",
-  "los-10-mejores-guantes-para-esquiar": "/blog/productos",
-  "las-5-mejores-cremas-protectoras": "/blog/productos",
-  "mejores-cascos-para-esqui-y-snowboard": "/blog/productos",
-  "los-5-mejores-relojes-para-esqui-y-snowboard-en-2025": "/blog/productos",
+  "guia-completa-de-material-de-alta-montana-crampones-mochilas-palas": "/blog",
+  "arva-pack-safety-box-evo4-seguridad-y-prevencion-en-la-nieve": "/blog",
+  "bastones-de-esqui-2025": "/blog",
+  "equipamiento-de-aventura-para-ninos": "/blog",
+  "los-10-mejores-guantes-para-esquiar": "/blog",
+  "las-5-mejores-cremas-protectoras": "/blog",
+  "mejores-cascos-para-esqui-y-snowboard": "/blog",
+  "los-5-mejores-relojes-para-esqui-y-snowboard-en-2025": "/blog",
   "las-mejores-chaquetas-de-esqui-y-snowboard-para-hombre-en-2025-guia-de-compra-completa":
-    "/blog/productos",
+    "/blog",
   "como-aprovechar-al-maximo-tu-tiempo-en-las-pistas-de-sierra-nevada-y-evitar-las-colas":
     "/blog",
   "mejora-tu-tecnica-de-snowboard-y-el-equipamiento-que-necesitas-2025": "/blog",
   "aprende-a-esquiar-y-hacer-snowboard-con-explora-school-club-en-sierra-nevada":
     "/blog",
-  "los-mejores-accesorios-para-snowboard-en-2025-guia-completa": "/blog/productos",
-  "los-mejores-guantes-para-esqui-y-snowboard-hestra-heli-ski": "/blog/productos",
+  "los-mejores-accesorios-para-snowboard-en-2025-guia-completa": "/blog",
+  "los-mejores-guantes-para-esqui-y-snowboard-hestra-heli-ski": "/blog",
   "10-trucos-secretos-para-dominar-el-snowboard-en-sierra-nevada-que-ni-los-expertos-conocen":
     "/blog",
   "los-diferentes-tipos-de-tablas-de-snowboard-cual-es-la-ideal-para-ti-2025": "/blog",
   "plano-de-pistas-de-sierra-nevada": "/blog",
   "gafas-fotocromaticas-para-deportes-de-nieve-y-montana-2025":
     "/blog/gafas-esqui-snowboard-sierra-nevada",
-  "5-mejores-opciones-de-protector-labial": "/blog/productos",
-  "guia-completa-sobre-cadenas-de-nieve-2025-seguridad-y-traccion": "/blog/productos",
+  "5-mejores-opciones-de-protector-labial": "/blog",
+  "guia-completa-sobre-cadenas-de-nieve-2025-seguridad-y-traccion": "/blog",
 };
 
 const disciplineRedirects = [
@@ -174,6 +174,12 @@ const seoRedirects: Redirect[] = [
     destination: "/clases-de-esqui-adaptado",
     permanent: true,
   },
+  { source: "/blog/productos", destination: "/blog", permanent: true },
+  { source: "/blog/productos/:path*", destination: "/blog", permanent: true },
+  { source: "/en/blog/gear", destination: "/en/blog", permanent: true },
+  { source: "/en/blog/gear/:path*", destination: "/en/blog", permanent: true },
+  { source: "/es/blog/productos", destination: "/blog", permanent: true },
+  { source: "/es/blog/productos/:path*", destination: "/blog", permanent: true },
 ];
 
 const legacyRedirects: LegacyRedirect[] = [

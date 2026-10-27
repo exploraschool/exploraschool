@@ -66,14 +66,6 @@ export const pathnames = {
     es: "/blog/guias/[page]",
     en: "/blog/guides/[page]",
   },
-  "/blog/productos": {
-    es: "/blog/productos",
-    en: "/blog/gear",
-  },
-  "/blog/productos/[page]": {
-    es: "/blog/productos/[page]",
-    en: "/blog/gear/[page]",
-  },
   "/blog/[slug]": "/blog/[slug]",
   "/cuenta": {
     es: "/cuenta",

@@ -2,7 +2,6 @@ import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { isListedEditorial, publicEditorialSlug } from "@/data/blog-urls";
 import { getMainDisciplines } from "@/data/disciplines";
-import { listPublishedAffiliatePosts } from "@/lib/affiliate-blog";
 import { disciplinePath, isIndexableProduct, productPath, publicUrl } from "@/lib/seo-urls";
 import { products } from "@/data/products";
 
@@ -33,7 +32,6 @@ const STATIC_ROUTES: SitemapRoute[] = [
   { path: "/como-llegar", changeFrequency: "monthly", priority: 0.8 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
   { path: "/blog/guias", changeFrequency: "weekly", priority: 0.65 },
-  { path: "/blog/productos", changeFrequency: "weekly", priority: 0.65 },
   { path: "/preguntas-frecuentes", changeFrequency: "monthly", priority: 0.7 },
   { path: "/contacto", changeFrequency: "monthly", priority: 0.7 },
   { path: "/aviso-legal", changeFrequency: "yearly", priority: 0.3 },
@@ -57,8 +55,8 @@ function productRoutes(): SitemapRoute[] {
   }));
 }
 
-async function blogPostRoutes(): Promise<SitemapRoute[]> {
-  const editorial: SitemapRoute[] = blogPosts
+function blogPostRoutes(): SitemapRoute[] {
+  return blogPosts
     .filter((post) => isListedEditorial(post.slug))
     .map((post) => ({
       path: `/blog/${publicEditorialSlug(post.slug, "es")}`,
@@ -67,30 +65,10 @@ async function blogPostRoutes(): Promise<SitemapRoute[]> {
       lastModified: new Date(post.date),
       pathForLocale: (locale: string) => `/blog/${publicEditorialSlug(post.slug, locale)}`,
     }));
-  let affiliate: SitemapRoute[] = [];
-  try {
-    const posts = await Promise.race([
-      listPublishedAffiliatePosts(),
-      new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error("timeout")), 8000);
-      }),
-    ]);
-    affiliate = posts.map((post) => ({
-      path: `/blog/${post.slug}`,
-      changeFrequency: "weekly" as const,
-      priority: 0.55,
-      lastModified: new Date(post.publishedAt || post.updatedAt),
-      pathForLocale: (locale: string) =>
-        `/blog/${locale === "en" ? post.slugEn || post.slug : post.slug}`,
-    }));
-  } catch {
-    affiliate = [];
-  }
-  return [...editorial, ...affiliate];
 }
 
 export async function getSitemapRoutes(): Promise<SitemapRoute[]> {
-  return [...STATIC_ROUTES, ...productRoutes(), ...disciplineRoutes(), ...(await blogPostRoutes())];
+  return [...STATIC_ROUTES, ...productRoutes(), ...disciplineRoutes(), ...blogPostRoutes()];
 }
 
 export function buildLocalizedUrl(locale: string, path: string): string {

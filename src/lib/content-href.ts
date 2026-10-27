@@ -2,7 +2,7 @@ import { blogHref, toHref, type AppHref } from "@/i18n/href";
 import { getBlogPost } from "@/data/blog";
 import { editorialSeo, publicEditorialSlug } from "@/data/blog-urls";
 
-const BLOG_SECTIONS = new Set(["guias", "productos", "guides", "gear"]);
+const BLOG_SECTIONS = new Set(["guias", "guides"]);
 
 function splitSuffix(href: string): { path: string; suffix: string } {
   const hash = href.indexOf("#");

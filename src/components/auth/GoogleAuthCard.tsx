@@ -61,7 +61,7 @@ function GoogleMark() {
 
 export type GoogleAuthSuccess = {
   role?: "staff" | "student";
-  staffRole?: "admin" | "affiliate_editor";
+  staffRole?: "admin";
   homePath?: string;
   onboardingComplete?: boolean;
   email?: string;

@@ -3,7 +3,6 @@ import Image from "next/image";
 import { notFound, permanentRedirect } from "next/navigation";
 import { BackLink } from "@/components/BackLink";
 import { BlogMarkdown } from "@/components/BlogMarkdown";
-import { AffiliatePostView } from "@/components/AffiliatePostView";
 import { BlogViewTracker } from "@/components/BlogViewTracker";
 import { Link } from "@/i18n/routing";
 import { blogHref } from "@/i18n/href";
@@ -23,9 +22,7 @@ import {
   faqFromMarkdown,
   headingsFromMarkdown,
   inferBlogDiscipline,
-  parseExploraScore,
 } from "@/lib/blog-article";
-import { primaryProductImage } from "@/lib/affiliate-blog-shared";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -42,47 +39,12 @@ export const dynamicParams = true;
 export const revalidate = 3600;
 export const maxDuration = 60;
 
-function absoluteImage(siteUrl: string, src: string): string {
-  if (src.startsWith("http://") || src.startsWith("https://")) return src;
-  return `${siteUrl}${src}`;
-}
-
-function euroPrice(raw: string): number | null {
-  const match = raw.match(/(\d{1,5}(?:[.\s]\d{3})*(?:[.,]\d{2})|\d+(?:[.,]\d+)?)/);
-  if (!match) return null;
-  let num = match[1].replace(/\s/g, "");
-  if (num.includes(",") && num.includes(".")) num = num.replace(/\./g, "").replace(",", ".");
-  else if (num.includes(",")) num = num.replace(",", ".");
-  const value = Number(num);
-  return Number.isFinite(value) && value > 0 ? value : null;
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const resolved = await resolvePublicBlogPost(slug);
   if (!resolved) notFound();
   if (resolved.kind === "redirect") {
     return {};
-  }
-  if (resolved.kind === "affiliate") {
-    const post = resolved.post;
-    const canonicalSlug = locale === "en" ? post.slugEn || post.slug : post.slug;
-    return buildPageMetadata({
-      locale,
-      path: `/blog/${canonicalSlug}`,
-      pathForLocale: (loc) => `/blog/${loc === "en" ? post.slugEn || post.slug : post.slug}`,
-      title: pickLocale(locale, post.seoTitleEs || post.titleEs, post.seoTitleEn || post.titleEn),
-      description: pickLocale(
-        locale,
-        post.seoDescriptionEs || post.excerptEs,
-        post.seoDescriptionEn || post.excerptEn,
-      ),
-      ogImage: post.coverImage,
-      ogImageAlt: pickLocale(locale, post.coverAltEs, post.coverAltEn),
-      ogType: "article",
-      publishedTime: (post.publishedAt || post.updatedAt).slice(0, 10),
-      modifiedTime: post.updatedAt.slice(0, 10),
-    });
   }
   const post = resolved.post;
   const canonicalSlug = publicEditorialSlug(post.slug, locale);
@@ -114,164 +76,6 @@ export default async function BlogPostPage({ params }: Props) {
 
   if (resolved.kind === "redirect") {
     permanentRedirect(localizedPath(locale, resolved.href));
-  }
-
-  if (resolved.kind === "affiliate") {
-    const post = resolved.post;
-    const canonicalSlug = locale === "en" ? post.slugEn || post.slug : post.slug;
-    if (slug !== canonicalSlug) {
-      permanentRedirect(
-        localizedPath(locale, { pathname: "/blog/[slug]", params: { slug: canonicalSlug } }),
-      );
-    }
-    const postTitle = pickLocale(locale, post.titleEs, post.titleEn);
-    const siteUrl = getSiteUrl();
-    const date = (post.publishedAt || post.updatedAt).slice(0, 10);
-    const articleLd = {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      headline: postTitle,
-      description: pickLocale(locale, post.excerptEs, post.excerptEn),
-      image: absoluteImage(siteUrl, post.coverImage),
-      datePublished: date,
-      dateModified: post.updatedAt.slice(0, 10),
-      author: { "@type": "Organization", name: "Explora School & Club" },
-      publisher: {
-        "@type": "Organization",
-        name: "Explora School & Club",
-        logo: { "@type": "ImageObject", url: `${siteUrl}${media.logo}` },
-      },
-      mainEntityOfPage: publicUrl(locale, `/blog/${canonicalSlug}`),
-      inLanguage: locale === "en" ? "en-GB" : "es-ES",
-    };
-    const listLd =
-      post.type === "ranking"
-        ? {
-            "@context": "https://schema.org",
-            "@type": "ItemList",
-            itemListElement: post.products.map((product, index) => ({
-              "@type": "ListItem",
-              position: index + 1,
-              name: pickLocale(locale, product.nameEs, product.nameEn),
-              url: product.affiliateUrl,
-              image: product.images?.[0]?.src || product.imageSrc || undefined,
-            })),
-          }
-        : null;
-    const winner = post.products[post.winnerIndex] ?? post.products[0];
-    const exploraScore = parseExploraScore(post.score);
-    const faqItems = post.faq.map((item) => ({
-      question: pickLocale(locale, item.qEs, item.qEn),
-      answer: pickLocale(locale, item.aEs, item.aEn),
-    }));
-    const reviewBody = pickLocale(
-      locale,
-      post.verdictEs || post.excerptEs,
-      post.verdictEn || post.excerptEn,
-    );
-    const price = winner ? euroPrice(winner.priceText) : null;
-    const reviewLd =
-      post.type === "review" && winner
-        ? {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            name: pickLocale(locale, winner.nameEs, winner.nameEn),
-            image: absoluteImage(siteUrl, primaryProductImage(winner) || post.coverImage),
-            url: publicUrl(locale, `/blog/${canonicalSlug}`),
-            brand: winner.brand
-              ? { "@type": "Brand", name: winner.brand }
-              : undefined,
-            ...(price
-              ? {
-                  offers: {
-                    "@type": "AggregateOffer",
-                    lowPrice: price,
-                    highPrice: price,
-                    offerCount: 1,
-                    priceCurrency: "EUR",
-                    availability: "https://schema.org/InStock",
-                    url: winner.affiliateUrl,
-                  },
-                }
-              : {}),
-            ...(exploraScore > 0
-              ? {
-                  aggregateRating: {
-                    "@type": "AggregateRating",
-                    ratingValue: Number(exploraScore.toFixed(1)),
-                    reviewCount: 1,
-                    bestRating: 5,
-                    worstRating: 1,
-                  },
-                }
-              : {}),
-            review: {
-              "@type": "Review",
-              name: postTitle,
-              reviewBody,
-              datePublished: date,
-              author: { "@type": "Organization", name: "Explora School & Club" },
-              reviewRating:
-                exploraScore > 0
-                  ? {
-                      "@type": "Rating",
-                      ratingValue: Number(exploraScore.toFixed(1)),
-                      bestRating: 5,
-                      worstRating: 1,
-                    }
-                  : undefined,
-            },
-          }
-        : null;
-
-    return (
-      <>
-        <BlogViewTracker slug={post.slug} />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
-        />
-        {listLd ? (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(listLd) }}
-          />
-        ) : null}
-        {reviewLd ? (
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewLd) }}
-          />
-        ) : null}
-        <FaqJsonLd items={faqItems} />
-        <BreadcrumbJsonLd
-          locale={locale}
-          items={[
-            { name: "Blog", path: "/blog" },
-            { name: postTitle, path: `/blog/${canonicalSlug}` },
-          ]}
-        />
-        <section className="page-header">
-          <div className="container-page">
-            <BackLink href="/blog">
-              {pickLocale(locale, "Volver al blog", "Back to the blog")}
-            </BackLink>
-            <time className="mt-4 block text-xs font-medium uppercase tracking-wider text-oro">
-              {new Date(date).toLocaleDateString(locale === "en" ? "en-GB" : "es-ES")}
-            </time>
-            <h1 className="page-title mt-2 sm:mt-2.5">{postTitle}</h1>
-            <p className="mt-3 max-w-2xl text-muted">
-              {pickLocale(locale, post.excerptEs, post.excerptEn)}
-            </p>
-          </div>
-        </section>
-        <article className="section-padding pt-6">
-          <div className="container-page content-narrow">
-            <AffiliatePostView post={post} locale={locale} />
-          </div>
-        </article>
-      </>
-    );
   }
 
   if (resolved.kind !== "guide") notFound();

@@ -1,12 +1,10 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import {
   ADMIN_GOOGLE_EMAIL,
   ADMIN_SESSION_COOKIE,
   getStaffRole,
   isAllowedStaffEmail,
   isFullAdminEmail,
-  staffHomePath,
   type StaffRole,
 } from "@/lib/admin-auth-config";
 import { getAdminAuth } from "@/lib/firebase/admin";
@@ -14,10 +12,8 @@ import { getAdminAuth } from "@/lib/firebase/admin";
 export {
   ADMIN_GOOGLE_EMAIL,
   ADMIN_SESSION_COOKIE,
-  AFFILIATE_EDITOR_GOOGLE_EMAIL,
   getStaffRole,
   isAllowedStaffEmail,
-  isAffiliateEditorEmail,
   isFullAdminEmail,
   staffCustomClaims,
   staffHomePath,
@@ -28,7 +24,7 @@ export function normalizeAdminEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-/** Full Explora admin only — never the affiliate editor. */
+/** Full Explora admin only. */
 export function isAllowedAdminEmail(email: string | null | undefined): boolean {
   return isFullAdminEmail(email);
 }
@@ -67,10 +63,4 @@ export async function getAdminSession(): Promise<{ email: string } | null> {
 
 export async function isAdminAuthenticated(): Promise<boolean> {
   return (await getAdminSession()) !== null;
-}
-
-export async function requireAffiliateBlogSession(): Promise<StaffSession> {
-  const staff = await getStaffSession();
-  if (!staff) redirect("/admin/login");
-  return staff;
 }
