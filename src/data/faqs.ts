@@ -115,9 +115,7 @@ Si te va mejor hablar con nosotros:
 - [${site.phoneDisplay}](tel:${site.phone})
 - [${site.email}](mailto:${site.email})
 
-Respondemos de 9:00 a 20:00.
-
-> 10% de descuento si reservas antes del 1 de noviembre de 2026.`,
+Respondemos de 9:00 a 20:00.`,
     questionEn: "How do I book my lesson?",
     answerEn: `Book on the website. We confirm by email and there is no online payment.
 
@@ -130,9 +128,7 @@ If you would rather talk to us:
 - [${site.phoneDisplay}](tel:${site.phone})
 - [${site.email}](mailto:${site.email})
 
-We reply from 9:00 am to 8:00 pm.
-
-> 10% off if you book before 1 November 2026.`,
+We reply from 9:00 am to 8:00 pm.`,
   },
   {
     id: "precio-clases",
