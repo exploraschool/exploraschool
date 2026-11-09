@@ -868,13 +868,13 @@
     min-height: 0;
     flex-direction: column;
     justify-content: center;
-    padding-top: 1.1rem;
-    padding-bottom: 2.85rem;
+    padding-top: 1.65rem;
+    padding-bottom: 2.35rem;
   }
 
   .home-trust-bar {
     flex-shrink: 0;
-    margin-top: -1.25rem;
+    margin-top: -1.45rem;
   }
 
   @media (min-width: 640px) {
