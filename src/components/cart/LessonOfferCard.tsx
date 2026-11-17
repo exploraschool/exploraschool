@@ -68,8 +68,8 @@ export function LessonOfferCard({
         ) : null}
       </div>
 
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="font-display text-lg font-semibold text-hielo">
+      <div className="flex min-h-0 flex-1 flex-col p-4 sm:p-5">
+        <h3 className="font-display text-lg font-semibold leading-snug text-hielo">
           {href ? (
             <Link href={href} className="transition hover:text-accent-dark">
               {title}
@@ -78,40 +78,38 @@ export function LessonOfferCard({
             title
           )}
         </h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-pizarra/75">{summary}</p>
+        <p className="mt-1.5 line-clamp-2 min-h-[2.5rem] text-sm leading-relaxed text-pizarra/75">
+          {summary}
+        </p>
 
-        {facts.length > 0 ? (
-          <ul className="mt-3 flex flex-wrap gap-1.5">
-            {facts.map((fact) => (
-              <li
-                key={fact}
-                className="rounded-full bg-nieve px-2.5 py-0.5 text-[0.7rem] font-semibold text-hielo"
+        <ul className="mt-3 flex min-h-[1.75rem] flex-wrap gap-1.5">
+          {facts.map((fact) => (
+            <li
+              key={fact}
+              className="rounded-full bg-nieve px-2.5 py-0.5 text-[0.7rem] font-semibold text-hielo"
+            >
+              {fact}
+            </li>
+          ))}
+        </ul>
+
+        <ul className="mt-4 flex-1 space-y-1.5">
+          {highlights.map((item) => (
+            <li key={item} className="flex items-start gap-2 text-sm text-pizarra">
+              <svg
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 text-oro"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                aria-hidden
               >
-                {fact}
-              </li>
-            ))}
-          </ul>
-        ) : null}
-
-        {highlights.length > 0 ? (
-          <ul className="mt-4 space-y-1.5">
-            {highlights.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-pizarra">
-                <svg
-                  className="mt-0.5 h-3.5 w-3.5 shrink-0 text-oro"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  aria-hidden
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                </svg>
-                {item}
-              </li>
-            ))}
-          </ul>
-        ) : null}
+                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+              </svg>
+              {item}
+            </li>
+          ))}
+        </ul>
 
         <div className="mt-auto flex flex-col gap-3 pt-4">
           {fromPrice !== null ? (

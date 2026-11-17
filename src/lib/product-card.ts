@@ -7,9 +7,17 @@ export function productFacts(product: Product, locale: string): string[] {
 
   switch (product.id) {
     case "full-day":
-      return pickLocale(locale, ["5 h de clase", people], ["5 h teaching", people]);
+      return pickLocale(
+        locale,
+        ["5 h de clase", "Mejor €/h", people],
+        ["5 h teaching", "Best €/h", people],
+      );
     case "particular":
-      return pickLocale(locale, ["Mín. 2 h", people], ["Min. 2 h", people]);
+      return pickLocale(
+        locale,
+        ["Mín. 2 h", "Horario libre", people],
+        ["Min. 2 h", "Flexible time", people],
+      );
     case "curso-empresa":
       return pickLocale(
         locale,

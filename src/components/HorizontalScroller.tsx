@@ -106,7 +106,7 @@ export function HorizontalScroller({
   const itemClass =
     count <= 1
       ? "flex h-full w-full min-w-0 [&>*]:h-full [&>*]:min-w-0 [&>*]:w-full"
-      : "flex h-full w-[calc(100%-2.75rem)] shrink-0 snap-start [&>*]:h-full [&>*]:min-w-0 [&>*]:w-full sm:w-full sm:min-w-0 sm:max-w-none sm:shrink";
+      : "flex h-full w-[calc(100%-2.75rem)] shrink-0 snap-start [&>*]:flex [&>*]:h-full [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:w-full sm:w-full sm:min-w-0 sm:max-w-none sm:shrink";
 
   return (
     <div className="min-w-0">
