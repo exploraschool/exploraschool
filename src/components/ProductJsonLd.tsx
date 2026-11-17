@@ -4,7 +4,7 @@ import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
 import { productOfferSummary } from "@/lib/product-landing-copy";
 import { getProductOfferRange } from "@/lib/product-offer";
-import { EARLY_BIRD_DEADLINE, SEASON_DISCOUNT_DEADLINE } from "@/lib/promotions";
+import { EARLY_BIRD_DEADLINE } from "@/lib/promotions";
 import { productPath, publicUrl, type IndexableProductId } from "@/lib/seo-urls";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -20,8 +20,7 @@ function localIsoDate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
-function priceValidUntil(productId: IndexableProductId): string {
-  if (productId === "curso-snow") return localIsoDate(SEASON_DISCOUNT_DEADLINE);
+function priceValidUntil(): string {
   return localIsoDate(new Date(EARLY_BIRD_DEADLINE.getTime() - 1));
 }
 
@@ -46,7 +45,7 @@ export function ProductJsonLd({ locale, productId }: ProductJsonLdProps) {
   };
 
   if (range.discountActive) {
-    offers.priceValidUntil = priceValidUntil(productId);
+    offers.priceValidUntil = priceValidUntil();
   }
 
   const visibleReviews = getFeaturedReviews().slice(0, 3);

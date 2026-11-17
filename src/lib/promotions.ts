@@ -5,25 +5,16 @@ export const EARLY_BIRD_DISCOUNT_PERCENT = 10;
 /** Last moment the early-bird discount applies (exclusive): 1 Nov 2026 00:00 local. */
 export const EARLY_BIRD_DEADLINE = new Date(2026, 10, 1, 0, 0, 0, 0);
 
-/**
- * End of ski season 2026/27 (inclusive through 31 May 2027).
- * Used for products that keep the promo all season (e.g. curso snowboard).
- */
-export const SEASON_DISCOUNT_DEADLINE = new Date(2027, 4, 31, 23, 59, 59, 999);
-
-/** Products that keep the 10% discount for the whole season, past 1 Nov. */
-export const SEASON_LONG_DISCOUNT_PRODUCTS = new Set<ProductId>(["curso-snow"]);
-
-/** Active until 1 November 2026 — banner and general discounts hidden from that date onward. */
+/** Active until 1 November 2026 — banner and discounts hidden from that date onward. */
 export function isEarlyBirdActive(now = new Date()): boolean {
   return now < EARLY_BIRD_DEADLINE;
 }
 
-/** Whether the early-bird / promo price applies for a given product. */
-export function isDiscountActiveForProduct(productId?: ProductId | string, now = new Date()): boolean {
-  if (productId && SEASON_LONG_DISCOUNT_PRODUCTS.has(productId as ProductId)) {
-    return now <= SEASON_DISCOUNT_DEADLINE;
-  }
+/** Whether the early-bird promo price applies for a given product. */
+export function isDiscountActiveForProduct(
+  _productId?: ProductId | string,
+  now = new Date(),
+): boolean {
   return isEarlyBirdActive(now);
 }
 
