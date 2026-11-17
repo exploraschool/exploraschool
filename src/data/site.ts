@@ -175,9 +175,9 @@ export const site: SiteConfig = {
   aboutLeadEn:
     "A group of named instructors. Ski, snowboard, telemark and more, in small groups.",
   homeMetaDescriptionEs:
-    `Clases de esquí y snowboard baratas en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. Instructores titulados, grupos de 1 a 8. Reserva online.`,
+    `Clases de esquí, snowboard y telemark en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. Instructores titulados, grupos de 1 a 8. Reserva online.`,
   homeMetaDescriptionEn:
-    `Affordable ski and snowboard lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a Full Day. Qualified instructors, groups of 1 to 8. Book online.`,
+    `Ski, snowboard and telemark lessons in Sierra Nevada from €${FULL_DAY_HOURLY_EUR}/h on a Full Day. Qualified instructors, groups of 1 to 8. Book online.`,
   rentalPartner: {
     name: "José Luis Sáez",
     discountPercent: 20,

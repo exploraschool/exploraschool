@@ -43,8 +43,8 @@ export function buildPageMetadata({
   const imageAlt =
     ogImageAlt ??
     (isSpanish
-      ? `${site.name} — clases de esquí y snowboard en Sierra Nevada`
-      : `${site.name} — ski and snowboard lessons in Sierra Nevada`);
+      ? `${site.name} — clases de esquí, snowboard y telemark en Sierra Nevada`
+      : `${site.name} — ski, snowboard and telemark lessons in Sierra Nevada`);
 
   return {
     title: { absolute: fullTitle },
@@ -120,9 +120,10 @@ function languageAlternatesFromPath(
 /** Metadatos por defecto (español) para el layout raíz y fallbacks. */
 export function buildRootSpanishMetadata(): Metadata {
   const siteUrl = getSiteUrl();
-  const title = "Escuela de esquí en Sierra Nevada | Explora School & Club";
+  const title = "Esquí, snowboard y telemark en Sierra Nevada | Explora School & Club";
   const description = site.homeMetaDescriptionEs;
   const canonical = publicUrl("es", "/");
+  const imageAlt = `${site.name} — clases de esquí, snowboard y telemark en Sierra Nevada`;
 
   return {
     metadataBase: new URL(siteUrl),
@@ -157,7 +158,7 @@ export function buildRootSpanishMetadata(): Metadata {
           url: DEFAULT_OG,
           width: 1200,
           height: 630,
-          alt: `${site.name} — clases de esquí y snowboard en Sierra Nevada`,
+          alt: imageAlt,
         },
       ],
     },
@@ -168,7 +169,7 @@ export function buildRootSpanishMetadata(): Metadata {
       images: [
         {
           url: DEFAULT_OG,
-          alt: `${site.name} — clases de esquí y snowboard en Sierra Nevada`,
+          alt: imageAlt,
         },
       ],
     },

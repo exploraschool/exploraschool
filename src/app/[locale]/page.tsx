@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/",
     title: pickLocale(
       locale,
-      "Escuela de esquí en Sierra Nevada",
-      "Ski school in Sierra Nevada",
+      "Esquí, snowboard y telemark en Sierra Nevada",
+      "Ski, snowboard and telemark in Sierra Nevada",
     ),
     description: pickLocale(locale, site.homeMetaDescriptionEs, site.homeMetaDescriptionEn),
     ogImage: "/images/stock/hero.jpg",

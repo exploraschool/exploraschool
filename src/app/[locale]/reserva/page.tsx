@@ -12,7 +12,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return buildPageMetadata({
     locale,
     path: "/reserva",
-    title: pickLocale(locale, "Reservar clases de esquí y snowboard", "Book ski and snowboard lessons"),
+    title: pickLocale(
+      locale,
+      "Reservar clases de esquí, snowboard y telemark",
+      "Book ski, snowboard and telemark lessons",
+    ),
     description: pickLocale(
       locale,
       "Reserva clases de esquí, snowboard o telemark en Sierra Nevada. Elige fechas y personas y envía tu solicitud online, sin pago por adelantado.",

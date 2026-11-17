@@ -32,16 +32,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(
       locale,
       pageNum > 1
-        ? `Guías de esquí y snowboard en Sierra Nevada (página ${pageNum})`
-        : "Guías de esquí y snowboard en Sierra Nevada",
+        ? `Guías de esquí, snowboard y telemark (página ${pageNum})`
+        : "Guías de esquí, snowboard y telemark en Sierra Nevada",
       pageNum > 1
-        ? `Ski and snowboard guides for Sierra Nevada (page ${pageNum})`
-        : "Ski and snowboard guides for Sierra Nevada",
+        ? `Ski, snowboard and telemark guides (page ${pageNum})`
+        : "Ski, snowboard and telemark guides for Sierra Nevada",
     ),
     description: pickLocale(
       locale,
-      "Guías de esquí y snowboard en Sierra Nevada: clases, forfait, familias, seguridad y qué llevar el primer día.",
-      "Ski and snowboard guides for Sierra Nevada: lessons, lift passes, families, safety and what to pack for day one.",
+      "Guías de esquí, snowboard y telemark en Sierra Nevada: clases, forfait, familias, seguridad y qué llevar el primer día.",
+      "Ski, snowboard and telemark guides for Sierra Nevada: lessons, lift passes, families, safety and what to pack for day one.",
     ),
   });
 }

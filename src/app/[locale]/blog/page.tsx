@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/blog",
     title: pickLocale(
       locale,
-      "Blog de esquí y snowboard en Sierra Nevada",
-      "Ski and snowboard blog for Sierra Nevada",
+      "Blog de esquí, snowboard y telemark en Sierra Nevada",
+      "Ski, snowboard and telemark blog for Sierra Nevada",
     ),
     description: pickLocale(
       locale,
-      "Guías para esquiar y hacer snowboard en Sierra Nevada: clases, forfait, familias, material y tu primer día en la estación.",
-      "Guides for skiing and snowboarding in Sierra Nevada: lessons, lift passes, families, gear and your first day at the resort.",
+      "Guías de esquí, snowboard y telemark en Sierra Nevada: clases, forfait, familias, material y tu primer día en la estación.",
+      "Ski, snowboard and telemark guides for Sierra Nevada: lessons, lift passes, families, gear and your first day at the resort.",
     ),
     ogImage: "/images/blog/blog-primera-vez.jpg",
     ogImageAlt: pickLocale(
