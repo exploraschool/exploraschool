@@ -23,9 +23,10 @@ export function Hero({ locale }: HeroProps) {
           "Esquí en la estación de Sierra Nevada (Granada)",
           "Skiing at Sierra Nevada ski resort (Granada)",
         )}
-        fill
+        width={2400}
+        height={1600}
         priority
-        className="object-cover object-[center_22%] sm:object-[center_30%]"
+        className="absolute inset-0 h-full w-full object-cover object-[center_22%] sm:object-[center_30%]"
         sizes="100vw"
       />
 

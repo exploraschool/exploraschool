@@ -53,8 +53,9 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                         `${d.nameEs} en Sierra Nevada`,
                         `${d.nameEn} in Sierra Nevada`,
                       )}
-                      fill
-                      className="object-cover transition duration-500 group-hover:scale-105"
+                      width={960}
+                      height={600}
+                      className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       sizes="(max-width: 639px) 85vw, (max-width: 1023px) 33vw, 20vw"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-pizarra/50 to-transparent" />
@@ -93,8 +94,9 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                       `${d.nameEs} en Sierra Nevada`,
                       `${d.nameEn} in Sierra Nevada`,
                     )}
-                    fill
-                    className="object-cover transition duration-700 group-hover:scale-110"
+                    width={960}
+                    height={600}
+                    className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-110"
                     sizes="(max-width: 640px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-pizarra/70 via-transparent to-transparent" />

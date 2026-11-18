@@ -88,6 +88,20 @@ export async function Footer() {
             © {year} {site.legalName}. {t("rights")}
           </p>
           <p className="mt-1">{t("since", { year: site.foundedYear })}</p>
+          <p className="mt-2">
+            {t("legalOwner", {
+              name: site.legalOwner.name,
+              nif: site.legalOwner.nif,
+            })}
+          </p>
+          <p className="mt-0.5">
+            {t("legalAddress", {
+              street: site.legalOwner.streetAddress,
+              postalCode: site.legalOwner.postalCode,
+              locality: site.legalOwner.locality,
+              region: site.legalOwner.region,
+            })}
+          </p>
         </div>
       </div>
     </footer>

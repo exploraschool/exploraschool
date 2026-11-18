@@ -29,34 +29,41 @@ export function JsonLd({ locale }: JsonLdProps) {
     site.homeMetaDescriptionEn,
   );
   const inLanguage = isSpanish ? "es-ES" : "en-GB";
-  const lessonOffers = (["full-day", "curso-snow", "particular"] as const satisfies readonly IndexableProductId[]).flatMap(
-    (productId) => {
-      const product = getProductBySlug(productId);
-      const path = productPath(productId);
-      const range = getProductOfferRange(productId);
-      if (!product || !path || !range) return [];
-      const url = publicUrl(locale, path);
-      const name = pickLocale(locale, product.titleEs, product.titleEn);
-      return [
-        {
+  const lessonProducts = (
+    ["full-day", "curso-snow", "particular"] as const satisfies readonly IndexableProductId[]
+  ).flatMap((productId) => {
+    const product = getProductBySlug(productId);
+    const path = productPath(productId);
+    const range = getProductOfferRange(productId);
+    if (!product || !path || !range) return [];
+    const url = publicUrl(locale, path);
+    const name = pickLocale(locale, product.titleEs, product.titleEn);
+    const image = product.image.startsWith("http")
+      ? product.image
+      : `${site.domain}${product.image}`;
+    return [
+      {
+        "@type": "Product",
+        "@id": `${url}#product`,
+        name,
+        description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
+        image,
+        sku: product.id,
+        url,
+        brand: {
+          "@type": "Brand",
+          name: site.name,
+        },
+        offers: {
           "@type": "Offer",
-          name,
-          url,
           price: range.lowPrice,
           priceCurrency: "EUR",
           availability: "https://schema.org/InStock",
-          description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
-          itemOffered: {
-            "@type": "Service",
-            name,
-            description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
-            url,
-            areaServed: "Sierra Nevada, Granada",
-          },
+          url,
         },
-      ];
-    },
-  );
+      },
+    ];
+  });
 
   const graph = [
     {
@@ -69,8 +76,18 @@ export function JsonLd({ locale }: JsonLdProps) {
       foundingDate: String(site.foundedYear),
       email: site.email,
       telephone: site.phone,
+      taxID: site.legalOwner.nif,
+      legalName: site.legalOwner.name,
       sameAs,
       description: tagline,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: site.legalOwner.streetAddress,
+        addressLocality: site.legalOwner.locality,
+        addressRegion: site.legalOwner.region,
+        postalCode: site.legalOwner.postalCode,
+        addressCountry: "ES",
+      },
       areaServed: {
         "@type": "Place",
         name: "Sierra Nevada, Granada, España",
@@ -137,19 +154,26 @@ export function JsonLd({ locale }: JsonLdProps) {
         "@type": "OfferCatalog",
         name: pickLocale(locale, "Clases de nieve", "Snow lessons"),
         itemListElement: [
-          ...lessonOffers,
+          ...lessonProducts.map((product) => ({
+            "@type": "Offer",
+            itemOffered: { "@id": product["@id"] },
+            price: product.offers.price,
+            priceCurrency: "EUR",
+            availability: "https://schema.org/InStock",
+            url: product.url,
+          })),
           ...getMainDisciplines().map((d) => ({
             "@type": "Offer",
             itemOffered: {
               "@type": "Service",
               name: pickLocale(locale, d.nameEs, d.nameEn),
-              description: pickLocale(locale, d.descriptionEs, d.descriptionEn),
               url: publicUrl(locale, disciplinePath(d.id)),
             },
           })),
         ],
       },
     },
+    ...lessonProducts,
   ];
 
   return (

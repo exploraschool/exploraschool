@@ -234,7 +234,53 @@ const firebaseHostingDomain =
     ? `${process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`
     : "exploraschool-9ea82.firebaseapp.com";
 
+/** Next.js / GA still need inline scripts; Firebase + Google Auth need their origins. */
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://apis.google.com https://*.firebaseapp.com https://www.googleapis.com",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https:",
+  "font-src 'self' data:",
+  "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://*.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://firestore.googleapis.com https://firebasestorage.googleapis.com https://storage.googleapis.com https://api.open-meteo.com https://*.open-meteo.com wss://*.firebaseio.com",
+  "frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://www.google.com",
+  "worker-src 'self' blob:",
+  "upgrade-insecure-requests",
+].join("; ");
+
+const securityHeaders = [
+  {
+    key: "Content-Security-Policy",
+    value: CONTENT_SECURITY_POLICY,
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "DENY",
+  },
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+  },
+  // Google Identity / Firebase popup auth polls window.closed; same-origin COOP breaks it.
+  {
+    key: "Cross-Origin-Opener-Policy",
+    value: "same-origin-allow-popups",
+  },
+];
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "firebasestorage.googleapis.com" },
@@ -264,28 +310,11 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Google Identity / Firebase popup auth polls window.closed and then
-  // window.close. COOP: same-origin (or a missing explicit policy in Chrome)
-  // isolates the opener from that popup and aborts sign-in.
   async headers() {
     return [
       {
-        source: "/",
-        headers: [
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin-allow-popups",
-          },
-        ],
-      },
-      {
         source: "/:path*",
-        headers: [
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin-allow-popups",
-          },
-        ],
+        headers: securityHeaders,
       },
     ];
   },

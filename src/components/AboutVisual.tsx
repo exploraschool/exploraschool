@@ -20,8 +20,9 @@ export function AboutVisual({ locale, compact = false }: AboutVisualProps) {
             <Image
               src={media.gallery[0].src}
               alt={pickLocale(locale, media.gallery[0].altEs, media.gallery[0].altEn)}
-              fill
-              className="object-cover transition duration-500 group-hover:scale-105"
+              width={1600}
+              height={1200}
+              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, 50vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-pizarra/40 to-transparent" />

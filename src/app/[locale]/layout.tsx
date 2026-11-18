@@ -7,7 +7,7 @@ import { DocumentShell } from "@/components/DocumentShell";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookieBanner } from "@/components/CookieBanner";
-import { FaqChatWidget } from "@/components/FaqChatWidget";
+import { FaqChatWidgetLazy } from "@/components/FaqChatWidgetLazy";
 import { JsonLd } from "@/components/JsonLd";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { CartProvider } from "@/context/CartContext";
@@ -55,7 +55,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             </main>
             <Footer />
             <CookieBanner />
-            <FaqChatWidget />
+            <FaqChatWidgetLazy />
             <JsonLd locale={locale} />
           </CartProvider>
         </NextIntlClientProvider>

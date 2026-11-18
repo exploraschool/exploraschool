@@ -45,8 +45,9 @@ export function LessonOfferCard({
         <Image
           src={product.image}
           alt={productImageAlt(product, locale)}
-          fill
-          className="object-cover object-center transition duration-500 group-hover:scale-[1.04]"
+          width={1280}
+          height={800}
+          className="absolute inset-0 h-full w-full object-cover object-center transition duration-500 group-hover:scale-[1.04]"
           sizes="(max-width: 639px) 85vw, (max-width: 1024px) 50vw, 33vw"
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-pizarra/50 via-pizarra/10 to-transparent" />

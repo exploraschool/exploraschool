@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/routing";
 import { Reveal } from "@/components/Reveal";
-import { FAQAccordion } from "@/components/FAQAccordion";
+import { HomeFaqTeaser } from "@/components/HomeFaqTeaser";
 import { pickLocale } from "@/lib/locale";
 import { site } from "@/data/site";
 
@@ -23,7 +23,7 @@ export function HomeClosing({ locale }: HomeClosingProps) {
               )}
             </h2>
             <div className="section-body-sm">
-              <FAQAccordion locale={locale} limit={3} />
+              <HomeFaqTeaser locale={locale} limit={3} />
             </div>
             <Link href="/preguntas-frecuentes" className="btn-secondary mt-5 !w-auto sm:mt-6">
               {pickLocale(locale, "Ver todas", "View all")}
