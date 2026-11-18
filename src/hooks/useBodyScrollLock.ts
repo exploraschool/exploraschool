@@ -3,9 +3,37 @@ import { useEffect } from "react";
 let lockCount = 0;
 let savedScrollY = 0;
 let savedLocation = "";
+let appliedPaddingRight = "";
 
 function currentLocation() {
   return `${window.location.pathname}${window.location.search}${window.location.hash}`;
+}
+
+/** Classic scrollbar compensation is desktop-only; iOS reports false gaps and leaves padding. */
+function shouldCompensateScrollbar(): boolean {
+  if (typeof window === "undefined") return false;
+  if (window.matchMedia("(pointer: coarse)").matches) return false;
+  if (window.matchMedia("(hover: none)").matches) return false;
+  const ua = window.navigator.userAgent;
+  if (/iP(ad|hone|od)/i.test(ua)) return false;
+  if (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1) return false;
+  return true;
+}
+
+function clearBodyLockStyles() {
+  document.documentElement.classList.remove("modal-open");
+  document.body.classList.remove("modal-open");
+  document.body.style.removeProperty("position");
+  document.body.style.removeProperty("top");
+  document.body.style.removeProperty("left");
+  document.body.style.removeProperty("right");
+  document.body.style.removeProperty("width");
+  document.body.style.removeProperty("overflow");
+  document.body.style.removeProperty("padding-right");
+  if (appliedPaddingRight) {
+    document.documentElement.style.removeProperty("padding-right");
+    appliedPaddingRight = "";
+  }
 }
 
 function lockBody() {
@@ -18,7 +46,9 @@ function lockBody() {
   savedScrollY = window.scrollY;
   savedLocation = currentLocation();
 
-  const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
+  const scrollbarGap = shouldCompensateScrollbar()
+    ? Math.max(0, window.innerWidth - document.documentElement.clientWidth)
+    : 0;
 
   document.documentElement.classList.add("modal-open");
   document.body.classList.add("modal-open");
@@ -30,7 +60,9 @@ function lockBody() {
   document.body.style.overflow = "hidden";
 
   if (scrollbarGap > 0) {
-    document.body.style.paddingRight = `${scrollbarGap}px`;
+    appliedPaddingRight = `${scrollbarGap}px`;
+    document.body.style.paddingRight = appliedPaddingRight;
+    document.documentElement.style.paddingRight = appliedPaddingRight;
   }
 }
 
@@ -38,15 +70,12 @@ function unlockBody() {
   lockCount = Math.max(0, lockCount - 1);
   if (lockCount > 0) return;
 
-  document.documentElement.classList.remove("modal-open");
-  document.body.classList.remove("modal-open");
-  document.body.style.position = "";
-  document.body.style.top = "";
-  document.body.style.left = "";
-  document.body.style.right = "";
-  document.body.style.width = "";
-  document.body.style.overflow = "";
-  document.body.style.paddingRight = "";
+  const active = document.activeElement;
+  if (active instanceof HTMLElement) {
+    active.blur();
+  }
+
+  clearBodyLockStyles();
 
   if (currentLocation() === savedLocation) {
     window.scrollTo(0, savedScrollY);

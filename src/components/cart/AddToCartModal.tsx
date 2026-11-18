@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
@@ -150,6 +150,7 @@ export function AddToCartModal({
   const [mounted, setMounted] = useState(false);
   const [overlayReady, setOverlayReady] = useState(false);
   const [instructorPool, setInstructorPool] = useState<Instructor[] | null>(null);
+  const wasOpenRef = useRef(false);
 
   const implicitDiscipline = product
     ? getSingleProductDiscipline(product.disciplines)
@@ -160,9 +161,15 @@ export function AddToCartModal({
     product?.disciplines.includes("snowboard")
       ? "snowboard"
       : discipline || implicitDiscipline || undefined;
+  const safeParticipants = Number.isFinite(participants) ? participants : Number.NaN;
   const slots = useMemo(
-    () => getSlotsForProduct(productId, slotsDiscipline, participants),
-    [productId, slotsDiscipline, participants],
+    () =>
+      getSlotsForProduct(
+        productId,
+        slotsDiscipline,
+        Number.isFinite(safeParticipants) ? safeParticipants : undefined,
+      ),
+    [productId, slotsDiscipline, safeParticipants],
   );
 
   useBodyScrollLock(open && !!product);
@@ -197,40 +204,44 @@ export function AddToCartModal({
     };
   }, []);
 
+  // Reset form only when the modal opens — not when parent defaults change mid-session
+  // (iPhone: changing group size / going back was remounting state and breaking the footer).
   useEffect(() => {
-    if (open) {
-      const preferredInstructor = defaultInstructorSlug ?? "";
-      const singleDiscipline = product
-        ? getSingleProductDiscipline(product.disciplines)
-        : undefined;
-      const initialDiscipline =
-        preferredInstructor &&
-        isSnowboardOnlyInstructor(preferredInstructor) &&
-        product?.disciplines.includes("snowboard")
-          ? "snowboard"
-          : (defaultDiscipline ?? singleDiscipline ?? "");
-      const slotId = resolveInitialTimeSlotId(
-        productId,
-        defaultTimeSlotId,
-        initialDiscipline || undefined,
-        defaultParticipants,
-        lockSelection,
-      );
-      const people = resolveInitialParticipants(
-        productId,
-        slotId,
-        initialDiscipline || undefined,
-        defaultParticipants,
-      );
+    const justOpened = open && !wasOpenRef.current;
+    wasOpenRef.current = open;
+    if (!justOpened) return;
 
-      setDates([]);
-      setTimeSlotId(slotId);
-      setParticipants(people);
-      setDiscipline(initialDiscipline);
-      setModality("");
-      setInstructorSlug(preferredInstructor);
-      setNotes("");
-    }
+    const preferredInstructor = defaultInstructorSlug ?? "";
+    const singleDiscipline = product
+      ? getSingleProductDiscipline(product.disciplines)
+      : undefined;
+    const initialDiscipline =
+      preferredInstructor &&
+      isSnowboardOnlyInstructor(preferredInstructor) &&
+      product?.disciplines.includes("snowboard")
+        ? "snowboard"
+        : (defaultDiscipline ?? singleDiscipline ?? "");
+    const slotId = resolveInitialTimeSlotId(
+      productId,
+      defaultTimeSlotId,
+      initialDiscipline || undefined,
+      defaultParticipants,
+      lockSelection,
+    );
+    const people = resolveInitialParticipants(
+      productId,
+      slotId,
+      initialDiscipline || undefined,
+      defaultParticipants,
+    );
+
+    setDates([]);
+    setTimeSlotId(slotId);
+    setParticipants(people);
+    setDiscipline(initialDiscipline);
+    setModality("");
+    setInstructorSlug(preferredInstructor);
+    setNotes("");
   }, [
     open,
     product,
@@ -253,10 +264,10 @@ export function AddToCartModal({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  const sessionPrice = useMemo(
-    () => calculateSessionPrice(productId, participants, timeSlotId, slotsDiscipline),
-    [productId, participants, timeSlotId, slotsDiscipline],
-  );
+  const sessionPrice = useMemo(() => {
+    if (!Number.isFinite(participants)) return null;
+    return calculateSessionPrice(productId, participants, timeSlotId, slotsDiscipline);
+  }, [productId, participants, timeSlotId, slotsDiscipline]);
 
   const disabledSlotIds = useMemo(() => {
     if (dates.length === 0) return [] as TimeSlotId[];
@@ -428,7 +439,7 @@ export function AddToCartModal({
   }
 
   const modal = (
-    <div className="fixed inset-0 z-[130] overscroll-none">
+    <div className="fixed inset-0 z-[130] max-w-[100vw] overflow-x-hidden overscroll-none">
       <button
         type="button"
         className="absolute inset-0 bg-pizarra/60 backdrop-blur-sm modal-overlay"
@@ -441,11 +452,11 @@ export function AddToCartModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="add-to-cart-title"
-        className="absolute inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 w-full max-w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
+        className="absolute inset-x-0 bottom-0 z-[1] flex h-[100dvh] max-h-[100dvh] min-h-0 w-full max-w-[100vw] flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-[min(88dvh,calc(100dvh-2rem))] sm:max-h-[min(88dvh,calc(100dvh-2rem))] sm:w-[min(100%,42rem)] sm:max-w-[min(100%,42rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
       >
         <div className="pad-x-device shrink-0 border-b border-hielo/10 bg-white py-3 sm:py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
+          <div className="flex min-w-0 items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
               <p className="eyebrow text-[0.65rem]">{t("addToCart")}</p>
               <h2 id="add-to-cart-title" className="font-display text-lg font-semibold text-pizarra sm:text-xl">
                 {getBookingItemTitle(productId, locale, timeSlotId)}
@@ -462,8 +473,8 @@ export function AddToCartModal({
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div className="modal-scroll pad-x-device min-h-0 flex-1 py-4 sm:py-5">
+        <form onSubmit={handleSubmit} className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+            <div className="modal-scroll pad-x-device min-h-0 min-w-0 flex-1 py-4 sm:py-5">
               <div className="space-y-4 sm:space-y-5">
               <p className="hidden text-sm text-muted sm:block">
                 {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
@@ -527,37 +538,65 @@ export function AddToCartModal({
                 </p>
               ) : null}
               <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="cart-participants" className="mb-1.5 block text-sm font-medium">
+                <div className="min-w-0">
+                  <p id="cart-participants-label" className="mb-1.5 block text-sm font-medium">
                     {t("participants")} *
-                  </label>
-                  <input
-                    id="cart-participants"
-                    type="number"
-                    required
-                    min={minPeople}
-                    max={maxPeople}
-                    step={1}
-                    inputMode="numeric"
-                    value={Number.isFinite(participants) ? participants : ""}
-                    disabled={isIndividualized || lockSelection}
-                    onChange={(e) => {
-                      const raw = e.target.value;
-                      if (raw === "") {
-                        setParticipants(Number.NaN);
-                        return;
+                  </p>
+                  <div
+                    className="flex h-[2.875rem] min-w-0 items-stretch overflow-hidden rounded-xl border border-hielo/15 bg-nieve"
+                    role="group"
+                    aria-labelledby="cart-participants-label"
+                  >
+                    <button
+                      type="button"
+                      aria-label={pickLocale(locale, "Quitar participante", "Remove participant")}
+                      disabled={
+                        isIndividualized ||
+                        lockSelection ||
+                        !Number.isFinite(participants) ||
+                        participants <= minPeople
                       }
-                      const next = Number(raw);
-                      if (!Number.isFinite(next)) return;
-                      setParticipants(Math.trunc(next));
-                    }}
-                    onBlur={() => {
-                      setParticipants(
-                        clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId),
-                      );
-                    }}
-                    className="w-full rounded-xl border border-hielo/15 bg-nieve px-4 py-3 text-sm focus:border-hielo focus:outline-none disabled:cursor-not-allowed disabled:opacity-70"
-                  />
+                      onClick={() => {
+                        setParticipants((current) =>
+                          clampParticipantCount(
+                            (Number.isFinite(current) ? current : minPeople) - 1,
+                            productId,
+                            effectiveDiscipline,
+                            timeSlotId,
+                          ),
+                        );
+                      }}
+                      className="flex w-11 shrink-0 items-center justify-center border-r border-hielo/10 text-lg font-semibold text-hielo transition enabled:hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      −
+                    </button>
+                    <div className="flex min-w-0 flex-1 items-center justify-center px-2 text-sm font-semibold tabular-nums text-pizarra">
+                      {Number.isFinite(participants) ? participants : "—"}
+                    </div>
+                    <button
+                      type="button"
+                      aria-label={pickLocale(locale, "Añadir participante", "Add participant")}
+                      disabled={
+                        isIndividualized ||
+                        lockSelection ||
+                        !Number.isFinite(participants) ||
+                        participants >= maxPeople
+                      }
+                      onClick={() => {
+                        setParticipants((current) =>
+                          clampParticipantCount(
+                            (Number.isFinite(current) ? current : minPeople) + 1,
+                            productId,
+                            effectiveDiscipline,
+                            timeSlotId,
+                          ),
+                        );
+                      }}
+                      className="flex w-11 shrink-0 items-center justify-center border-l border-hielo/10 text-lg font-semibold text-hielo transition enabled:hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      +
+                    </button>
+                  </div>
                   <p className="mt-1 text-xs text-muted">
                     {isIndividualized
                       ? pickLocale(
@@ -718,17 +757,17 @@ export function AddToCartModal({
               </div>
             </div>
 
-            <div className="pad-x-device shrink-0 space-y-1.5 border-t border-hielo/10 bg-white py-2 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] sm:space-y-2 sm:py-2.5">
+            <div className="pad-x-device min-w-0 shrink-0 space-y-1.5 border-t border-hielo/10 bg-white py-2 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] sm:space-y-2 sm:py-2.5">
               <BookingPriceSummary
                 locale={locale}
                 productId={productId}
                 sessionPrice={sessionPrice}
                 datesCount={dates.length}
-                participants={participants}
+                participants={Number.isFinite(participants) ? participants : 0}
                 compact
               />
 
-              <div className="modal-action-bar">
+              <div className="modal-action-bar min-w-0">
                 <button
                   type="submit"
                   disabled={!canAddToCart}

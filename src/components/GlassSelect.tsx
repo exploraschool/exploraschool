@@ -133,7 +133,7 @@ export function GlassSelect<T extends string>({
   const overlay =
     open && mounted
       ? createPortal(
-          <div className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center sm:p-6">
+          <div className="fixed inset-0 z-[90] flex max-w-[100vw] items-end justify-center overflow-x-hidden sm:items-center sm:p-6">
             <button
               type="button"
               className="absolute inset-0 bg-pizarra/55 backdrop-blur-md sm:bg-pizarra/50"
@@ -145,7 +145,7 @@ export function GlassSelect<T extends string>({
               role="dialog"
               aria-modal="true"
               aria-labelledby={titleId}
-              className="glass-select-window relative z-[1] w-full max-w-full rounded-t-3xl pb-[max(1.15rem,env(safe-area-inset-bottom,0px))] sm:max-w-[26rem] sm:rounded-3xl sm:pb-6"
+              className="glass-select-window relative z-[1] w-full max-w-[100vw] rounded-t-3xl pb-[max(1.15rem,env(safe-area-inset-bottom,0px))] sm:max-w-[26rem] sm:rounded-3xl sm:pb-6"
             >
               <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-white/25 sm:hidden" aria-hidden />
 

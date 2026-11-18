@@ -25,6 +25,7 @@ export function BookingPriceSummary({
 }: BookingPriceSummaryProps) {
   if (sessionPrice === null) return null;
 
+  const peopleCount = Number.isFinite(participants) ? Math.max(0, Math.trunc(participants)) : 0;
   const perPerson = productId ? getFlatUnitPrice(productId) : null;
   const showPerPerson = productId ? usesPerPersonPricing(productId) : false;
   const unitPrice = perPerson ? resolvePriceDisplay(perPerson, new Date(), productId) : null;
@@ -37,15 +38,15 @@ export function BookingPriceSummary({
   const selectionLabel = hasDates
     ? pickLocale(
         locale,
-        `${datesCount} día(s) · ${participants} pers.`,
-        `${datesCount} day(s) · ${participants} people`,
+        `${datesCount} día(s) · ${peopleCount} pers.`,
+        `${datesCount} day(s) · ${peopleCount} people`,
       )
     : pickLocale(locale, "Añade al menos un día", "Add at least one day");
 
   if (compact) {
     return (
-      <div className="flex items-center justify-between gap-2 rounded-lg border border-oro/20 bg-oro/5 px-2.5 py-1.5">
-        <div className="min-w-0">
+      <div className="flex min-w-0 items-center justify-between gap-2 overflow-hidden rounded-lg border border-oro/20 bg-oro/5 px-2.5 py-1.5">
+        <div className="min-w-0 flex-1 overflow-hidden">
           <p className="truncate text-[0.6875rem] font-medium leading-tight text-pizarra">
             {selectionLabel}
           </p>
@@ -55,7 +56,7 @@ export function BookingPriceSummary({
             </p>
           )}
         </div>
-        <div className="shrink-0 text-right leading-none">
+        <div className="shrink-0 tabular-nums text-right leading-none">
           {showPerPerson && unitPrice && !hasDates ? (
             <>
               {unitPrice.discountActive && (

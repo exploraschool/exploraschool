@@ -770,6 +770,9 @@
     grid-template-columns: minmax(0, 1fr) auto;
     gap: 0.5rem;
     align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
   }
 
   .modal-action-btn {
@@ -1471,13 +1474,15 @@
 html.modal-open,
 body.modal-open {
   overflow: hidden;
-  overflow-x: visible;
+  overflow-x: hidden;
   overscroll-behavior: none;
 }
 
 body.modal-open {
   touch-action: none;
   max-width: none;
+  /* Avoid iOS layout shift from leftover inline padding when opening/closing sheets */
+  box-sizing: border-box;
 }
 
 body.modal-open [data-cookie-banner] {
