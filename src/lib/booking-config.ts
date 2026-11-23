@@ -405,39 +405,35 @@ export function getBookingItemTitle(
   return isEn ? product.titleEn : product.titleEs;
 }
 
-export type QuickBookFormat = "full-day" | "particular";
+/** Preset from hero quick book — only seeds the modal; the user can still change slot/product flow inside. */
+export type QuickBookClass = "2h" | "full-day" | "3h";
 
 /**
- * Reserva rápida: Full Day or private lessons.
- * Snowboard from 4 people on the private format uses the morning group course (10:00–13:00).
+ * Reserva rápida: 2 h / Full Day / 3 h as starting defaults.
+ * 2 h and 3 h open particulares so all private slots stay selectable in the modal.
  */
 export function resolveQuickBookSelection(
   discipline: MainDisciplineId,
   people: string | null | undefined,
-  format: QuickBookFormat = "full-day",
+  lessonClass: QuickBookClass = "full-day",
 ): {
   productId: ProductId;
   participants: number;
   timeSlotId?: TimeSlotId;
 } {
   const count = parseQuickBookPeople(people) ?? 2;
-  if (format === "full-day") {
+  if (lessonClass === "full-day") {
     return {
       productId: "full-day",
       participants: clampParticipantCount(count, "full-day", discipline, "fd-10-16"),
       timeSlotId: "fd-10-16",
     };
   }
-  if (discipline === "snowboard" && count > PRIVATE_SNOWBOARD_MORNING_MAX) {
-    return {
-      productId: "curso-snow",
-      participants: clampParticipantCount(count, "curso-snow", "snowboard", "3h-10-13"),
-      timeSlotId: "3h-10-13",
-    };
-  }
+  const timeSlotId: TimeSlotId = lessonClass === "2h" ? "2h-10-12" : "3h-12-15";
   return {
     productId: "particular",
-    participants: clampParticipantCount(count, "particular", discipline),
+    participants: clampParticipantCount(count, "particular", discipline, timeSlotId),
+    timeSlotId,
   };
 }
 

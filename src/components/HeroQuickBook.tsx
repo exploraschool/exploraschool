@@ -5,7 +5,7 @@ import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
 import {
   resolveQuickBookSelection,
-  type QuickBookFormat,
+  type QuickBookClass,
 } from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
 import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
@@ -20,9 +20,10 @@ const peopleOptions = PEOPLE_COUNT_HEADERS_ES.map((_, index) => {
   return { value: n, labelEs: PEOPLE_COUNT_HEADERS_ES[index], labelEn: PEOPLE_COUNT_HEADERS_EN[index] };
 });
 
-const formatOptions: { value: QuickBookFormat; labelEs: string; labelEn: string }[] = [
+const classOptions: { value: QuickBookClass; labelEs: string; labelEn: string }[] = [
+  { value: "2h", labelEs: "2 horas", labelEn: "2 hours" },
   { value: "full-day", labelEs: "Full Day", labelEn: "Full Day" },
-  { value: "particular", labelEs: "Particulares", labelEn: "Private lessons" },
+  { value: "3h", labelEs: "3 horas", labelEn: "3 hours" },
 ];
 
 function bookingDiscipline(id: MainDisciplineId): MainDisciplineId {
@@ -30,18 +31,16 @@ function bookingDiscipline(id: MainDisciplineId): MainDisciplineId {
 }
 
 export function HeroQuickBook({ locale }: HeroQuickBookProps) {
-  const formatLabelId = useId();
+  const classLabelId = useId();
   const disciplineLabelId = useId();
   const peopleLabelId = useId();
-  const [format, setFormat] = useState<QuickBookFormat>("full-day");
+  const [lessonClass, setLessonClass] = useState<QuickBookClass>("full-day");
   const [discipline, setDiscipline] = useState<MainDisciplineId>(getMainDisciplines()[0].slug);
   const [people, setPeople] = useState("2");
   const [bookingOpen, setBookingOpen] = useState(false);
   const disciplines = getMainDisciplines();
   const resolvedDiscipline = bookingDiscipline(discipline);
-  const quickBook = resolveQuickBookSelection(resolvedDiscipline, people, format);
-  const isSnowboardCourse = quickBook.productId === "curso-snow";
-  const isFullDay = quickBook.productId === "full-day";
+  const quickBook = resolveQuickBookSelection(resolvedDiscipline, people, lessonClass);
 
   function handleBook() {
     setBookingOpen(true);
@@ -78,19 +77,19 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
         <div className="grid grid-cols-2 items-end gap-2.5 sm:grid-cols-3 sm:gap-2">
           <div className="min-w-0">
             <span
-              id={formatLabelId}
+              id={classLabelId}
               className="mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wider text-nieve/85 sm:text-xs"
             >
-              {pickLocale(locale, "Formato", "Format")}
+              {pickLocale(locale, "Clases", "Lessons")}
             </span>
             <GlassSelect
               compact
-              labelledBy={formatLabelId}
-              title={pickLocale(locale, "Formato", "Format")}
+              labelledBy={classLabelId}
+              title={pickLocale(locale, "Clases", "Lessons")}
               closeLabel={pickLocale(locale, "Cerrar", "Close")}
-              value={format}
-              onChange={(value) => setFormat(value as QuickBookFormat)}
-              options={formatOptions.map((opt) => ({
+              value={lessonClass}
+              onChange={(value) => setLessonClass(value as QuickBookClass)}
+              options={classOptions.map((opt) => ({
                 value: opt.value,
                 label: pickLocale(locale, opt.labelEs, opt.labelEn),
               }))}
@@ -148,25 +147,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           {pickLocale(locale, "Reservar", "Book")}
         </button>
 
-        {isFullDay ? (
-          <p className="mt-2.5 text-center text-[0.7rem] font-semibold leading-snug text-oro-light sm:mt-3 sm:text-left sm:text-xs">
-            {pickLocale(
-              locale,
-              `Full Day · 5 h de clase · desde ${FULL_DAY_HOURLY_EUR} €/h`,
-              `Full Day · 5 h teaching · from €${FULL_DAY_HOURLY_EUR}/h`,
-            )}
-          </p>
-        ) : null}
-        {isSnowboardCourse ? (
-          <p className="mt-2.5 text-center text-[0.7rem] font-semibold leading-snug text-oro-light sm:mt-3 sm:text-left sm:text-xs">
-            {pickLocale(
-              locale,
-              "Curso de snowboard · 10:00–13:00 · desde 4 personas",
-              "Snowboard course · 10:00 am–1:00 pm · from 4 people",
-            )}
-          </p>
-        ) : null}
-        <p className={`text-center text-[0.7rem] leading-snug text-nieve/80 sm:text-left sm:text-xs ${isFullDay || isSnowboardCourse ? "mt-1" : "mt-2.5 sm:mt-3"}`}>
+        <p className="mt-2.5 text-center text-[0.7rem] leading-snug text-nieve/80 sm:mt-3 sm:text-left sm:text-xs">
           {pickLocale(
             locale,
             "Sin compromiso · Confirmamos por email",
@@ -182,6 +163,8 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
         defaultDiscipline={resolvedDiscipline}
         defaultTimeSlotId={quickBook.timeSlotId}
         defaultParticipants={quickBook.participants}
+        lockSelection={false}
+        flexibleDuration
       />
     </>
   );

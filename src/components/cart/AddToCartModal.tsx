@@ -56,7 +56,16 @@ type AddToCartModalProps = {
   defaultParticipants?: number;
   /** Keep the rate-table cell (product slot + group size) instead of switching to defaults. */
   lockSelection?: boolean;
+  /**
+   * Hero quick book: offer particulares (2 h / 3 h) and Full Day together so the
+   * initial class preset does not lock the schedule picker.
+   */
+  flexibleDuration?: boolean;
 };
+
+function productIdForSlot(slotId: TimeSlotId): ProductId {
+  return slotId.startsWith("fd-") ? "full-day" : "particular";
+}
 
 function resolveInitialTimeSlotId(
   productId: ProductId,
@@ -110,13 +119,20 @@ export function AddToCartModal({
   defaultTimeSlotId,
   defaultParticipants,
   lockSelection = false,
+  flexibleDuration = false,
 }: AddToCartModalProps) {
   const t = useTranslations("cart");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const { addItems } = useCart();
-  const product = getProductBySlug(productId);
+  const allowFlexibleDuration =
+    flexibleDuration &&
+    !lockSelection &&
+    (productId === "particular" || productId === "full-day");
+
+  const [activeProductId, setActiveProductId] = useState<ProductId>(productId);
+  const product = getProductBySlug(activeProductId);
 
   const [dates, setDates] = useState<string[]>([]);
   const [timeSlotId, setTimeSlotId] = useState<TimeSlotId>(() =>
@@ -161,15 +177,20 @@ export function AddToCartModal({
       ? "snowboard"
       : discipline || implicitDiscipline || undefined;
   const safeParticipants = Number.isFinite(participants) ? participants : Number.NaN;
-  const slots = useMemo(
-    () =>
-      getSlotsForProduct(
-        productId,
-        slotsDiscipline,
-        Number.isFinite(safeParticipants) ? safeParticipants : undefined,
-      ),
-    [productId, slotsDiscipline, safeParticipants],
-  );
+  const slots = useMemo(() => {
+    const people = Number.isFinite(safeParticipants) ? safeParticipants : undefined;
+    if (!allowFlexibleDuration) {
+      return getSlotsForProduct(activeProductId, slotsDiscipline, people);
+    }
+    const privateSlots = getSlotsForProduct("particular", slotsDiscipline, people);
+    const fullDaySlots = getSlotsForProduct("full-day", slotsDiscipline, people);
+    const seen = new Set<TimeSlotId>();
+    return [...privateSlots, ...fullDaySlots].filter((slot) => {
+      if (seen.has(slot.id)) return false;
+      seen.add(slot.id);
+      return true;
+    });
+  }, [allowFlexibleDuration, activeProductId, slotsDiscipline, safeParticipants]);
 
   useBodyScrollLock(open && !!product);
 
@@ -210,14 +231,15 @@ export function AddToCartModal({
     wasOpenRef.current = open;
     if (!justOpened) return;
 
+    const openingProduct = getProductBySlug(productId);
     const preferredInstructor = defaultInstructorSlug ?? "";
-    const singleDiscipline = product
-      ? getSingleProductDiscipline(product.disciplines)
+    const singleDiscipline = openingProduct
+      ? getSingleProductDiscipline(openingProduct.disciplines)
       : undefined;
     const initialDiscipline =
       preferredInstructor &&
       isSnowboardOnlyInstructor(preferredInstructor) &&
-      product?.disciplines.includes("snowboard")
+      openingProduct?.disciplines.includes("snowboard")
         ? "snowboard"
         : (defaultDiscipline ?? singleDiscipline ?? "");
     const slotId = resolveInitialTimeSlotId(
@@ -234,6 +256,7 @@ export function AddToCartModal({
       defaultParticipants,
     );
 
+    setActiveProductId(productId);
     setDates([]);
     setTimeSlotId(slotId);
     setParticipants(people);
@@ -243,7 +266,6 @@ export function AddToCartModal({
     setNotes("");
   }, [
     open,
-    product,
     productId,
     defaultDiscipline,
     defaultInstructorSlug,
@@ -265,8 +287,8 @@ export function AddToCartModal({
 
   const sessionPrice = useMemo(() => {
     if (!Number.isFinite(participants)) return null;
-    return calculateSessionPrice(productId, participants, timeSlotId, slotsDiscipline);
-  }, [productId, participants, timeSlotId, slotsDiscipline]);
+    return calculateSessionPrice(activeProductId, participants, timeSlotId, slotsDiscipline);
+  }, [activeProductId, participants, timeSlotId, slotsDiscipline]);
 
   const disabledSlotIds = useMemo(() => {
     if (dates.length === 0) return [] as TimeSlotId[];
@@ -293,9 +315,25 @@ export function AddToCartModal({
         slots.find((slot) => slot.hours === currentHours && !disabledSlotIds.includes(slot.id)) ??
         slots.find((slot) => !disabledSlotIds.includes(slot.id)) ??
         slots[0];
-      if (next) setTimeSlotId(next.id);
+      if (next) {
+        setTimeSlotId(next.id);
+        if (allowFlexibleDuration) {
+          setActiveProductId(productIdForSlot(next.id));
+        }
+      }
+    } else if (allowFlexibleDuration) {
+      const matched = productIdForSlot(timeSlotId);
+      if (matched !== activeProductId) setActiveProductId(matched);
     }
-  }, [open, lockSelection, disabledSlotIds, timeSlotId, slots]);
+  }, [
+    open,
+    lockSelection,
+    allowFlexibleDuration,
+    activeProductId,
+    disabledSlotIds,
+    timeSlotId,
+    slots,
+  ]);
 
   if (!mounted || !open || !product) return null;
 
@@ -332,7 +370,7 @@ export function AddToCartModal({
     if (next && isIndividualizedDiscipline(next)) {
       setParticipants(1);
     } else if (next && !lockSelection) {
-      setParticipants((current) => clampParticipantCount(current, productId, next));
+      setParticipants((current) => clampParticipantCount(current, activeProductId, next));
     }
     if (instructorSlug) {
       const instructor =
@@ -353,7 +391,11 @@ export function AddToCartModal({
     }
   }
 
-  const { minPeople, maxPeople } = getParticipantLimits(productId, effectiveDiscipline, timeSlotId);
+  const { minPeople, maxPeople } = getParticipantLimits(
+    activeProductId,
+    effectiveDiscipline,
+    timeSlotId,
+  );
   const isIndividualized = effectiveDiscipline
     ? isIndividualizedDiscipline(effectiveDiscipline)
     : false;
@@ -368,7 +410,7 @@ export function AddToCartModal({
 
   const disciplineValid = Boolean(resolvedDisciplineForSubmit);
   const selectedSlotAllowed = isSlotAllowedForBooking(
-    productId,
+    activeProductId,
     timeSlotId,
     resolvedDisciplineForSubmit,
     participants,
@@ -386,7 +428,7 @@ export function AddToCartModal({
     e.preventDefault();
     const people = lockSelection
       ? participants
-      : clampParticipantCount(participants, productId, effectiveDiscipline, timeSlotId);
+      : clampParticipantCount(participants, activeProductId, effectiveDiscipline, timeSlotId);
     if (!lockSelection) setParticipants(people);
     if (!datesValid || !disciplineValid || sessionPrice === null) return;
     if (people < minPeople || people > maxPeople) return;
@@ -394,7 +436,7 @@ export function AddToCartModal({
     const instructor = instructors.find((i) => i.slug === instructorSlug);
     const resolvedDiscipline = resolvedDisciplineForSubmit;
     if (!resolvedDiscipline) return;
-    if (!isSlotAllowedForBooking(productId, timeSlotId, resolvedDiscipline, people)) return;
+    if (!isSlotAllowedForBooking(activeProductId, timeSlotId, resolvedDiscipline, people)) return;
 
     const bookableDates = dates.filter((date) => isBookingStillOpen(date, timeSlotId));
     if (bookableDates.length === 0) return;
@@ -405,7 +447,7 @@ export function AddToCartModal({
     const newItems = bookableDates
       .map((date) =>
         buildCartItem({
-          productId,
+          productId: activeProductId,
           discipline: resolvedDiscipline,
           modality: modality || undefined,
           instructorSlug: instructor?.slug,
@@ -450,7 +492,7 @@ export function AddToCartModal({
             <div className="min-w-0 flex-1">
               <p className="eyebrow text-[0.65rem]">{t("addToCart")}</p>
               <h2 id="add-to-cart-title" className="font-display text-lg font-semibold text-pizarra sm:text-xl">
-                {getBookingItemTitle(productId, locale, timeSlotId)}
+                {getBookingItemTitle(activeProductId, locale, timeSlotId)}
               </h2>
             </div>
             <button
@@ -490,10 +532,24 @@ export function AddToCartModal({
                     slots={pickerSlots}
                     value={timeSlotId}
                     onChange={(id) => {
-                      if (!lockSelection) setTimeSlotId(id as TimeSlotId);
+                      if (lockSelection) return;
+                      const nextSlot = id as TimeSlotId;
+                      setTimeSlotId(nextSlot);
+                      if (allowFlexibleDuration) {
+                        const nextProduct = productIdForSlot(nextSlot);
+                        setActiveProductId(nextProduct);
+                        setParticipants((current) =>
+                          clampParticipantCount(
+                            current,
+                            nextProduct,
+                            discipline || implicitDiscipline || undefined,
+                            nextSlot,
+                          ),
+                        );
+                      }
                     }}
                     title={
-                      pickerSlots.length === 1 && productId.startsWith("full-day")
+                      pickerSlots.length === 1 && activeProductId.startsWith("full-day")
                         ? t("fullDaySchedule")
                         : t("timeSlot")
                     }
@@ -509,7 +565,7 @@ export function AddToCartModal({
                       )}
                     </p>
                   ) : null}
-                  {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(productId) ? (
+                  {effectiveDiscipline === "snowboard" && isPrivateLessonProduct(activeProductId) ? (
                     <p className="mt-2 text-xs text-muted">{t("snowboardMorningCourseHint")}</p>
                   ) : null}
                 </div>
@@ -542,7 +598,7 @@ export function AddToCartModal({
                         setParticipants((current) =>
                           clampParticipantCount(
                             (Number.isFinite(current) ? current : minPeople) - 1,
-                            productId,
+                            activeProductId,
                             effectiveDiscipline,
                             timeSlotId,
                           ),
@@ -568,7 +624,7 @@ export function AddToCartModal({
                         setParticipants((current) =>
                           clampParticipantCount(
                             (Number.isFinite(current) ? current : minPeople) + 1,
-                            productId,
+                            activeProductId,
                             effectiveDiscipline,
                             timeSlotId,
                           ),
@@ -588,7 +644,7 @@ export function AddToCartModal({
                         )
                       : (
                         <>
-                          {productId === "curso-snow"
+                          {activeProductId === "curso-snow"
                             ? pickLocale(
                                 locale,
                                 `A partir de ${minPeople} participantes (máx. ${maxPeople})`,
@@ -742,7 +798,7 @@ export function AddToCartModal({
             <div className="pad-x-device min-w-0 shrink-0 space-y-1.5 border-t border-hielo/10 bg-white py-2 pb-[max(0.375rem,env(safe-area-inset-bottom,0px))] sm:space-y-2 sm:py-2.5">
               <BookingPriceSummary
                 locale={locale}
-                productId={productId}
+                productId={activeProductId}
                 sessionPrice={sessionPrice}
                 datesCount={dates.length}
                 participants={Number.isFinite(participants) ? participants : 0}
