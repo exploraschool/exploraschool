@@ -82,14 +82,14 @@ export function productImageAlt(product: Product, locale: string): string {
     case "full-day":
       return pickLocale(
         locale,
-        "Clase Full Day de esquí en Sierra Nevada",
-        "Full Day ski lesson in Sierra Nevada",
+        "Clase Full Day de esquí o snowboard con Explora School en Sierra Nevada",
+        "Full Day ski or snowboard lesson with Explora School in Sierra Nevada",
       );
     case "particular":
       return pickLocale(
         locale,
-        "Clase particular de esquí en Sierra Nevada",
-        "Private ski lesson in Sierra Nevada",
+        "Clase particular de esquí o snowboard con Explora School en Sierra Nevada",
+        "Private ski or snowboard lesson with Explora School in Sierra Nevada",
       );
     case "medio-dia":
       return pickLocale(

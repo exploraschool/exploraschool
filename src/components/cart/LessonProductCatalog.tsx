@@ -55,17 +55,17 @@ export function LessonProductCatalog({ locale }: LessonProductCatalogProps) {
   return (
     <div className="space-y-8 sm:space-y-10">
       <div>
-        <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-hielo">
           {pickLocale(locale, "Los más elegidos", "Most popular")}
-        </h3>
+        </h2>
         <CatalogCards products={featured} locale={locale} popular />
       </div>
 
       {others.length > 0 ? (
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-hielo">
             {pickLocale(locale, "Otros formatos", "More formats")}
-          </h3>
+          </h2>
           <CatalogCards products={others} locale={locale} />
         </div>
       ) : null}

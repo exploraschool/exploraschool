@@ -23,38 +23,48 @@
 - VAT included in published prices
 - Lift pass and equipment rental not included (partner José Luis Sáez: 20% off for Explora students)
 
-## Canonical URLs (Spanish)
+## Canonical URLs (Spanish, x-default)
 
 - Home: https://www.explora-school.es/
 - Lessons hub: https://www.explora-school.es/clases
 - Rates: https://www.explora-school.es/tarifas
 - Booking: https://www.explora-school.es/reserva
-- Getting here: https://www.explora-school.es/como-llegar
+- Getting here: https://www.explora-school.es/como-llegar-a-sierra-nevada
 - FAQ: https://www.explora-school.es/preguntas-frecuentes
 - Contact: https://www.explora-school.es/contacto
 - Blog guides: https://www.explora-school.es/blog
 
-## Discipline landings
+## Discipline landings (Spanish)
 
-- Ski: https://www.explora-school.es/clases/esqui
-- Snowboard: https://www.explora-school.es/clases/snowboard
-- Telemark: https://www.explora-school.es/clases/telemark
-- Adaptive: https://www.explora-school.es/clases/esqui-adaptado
-- Kids: https://www.explora-school.es/clases/ninos
+- Ski: https://www.explora-school.es/clases-de-esqui
+- Snowboard: https://www.explora-school.es/clases-de-snowboard
+- Telemark: https://www.explora-school.es/clases-de-telemark
+- Adaptive: https://www.explora-school.es/clases-de-esqui-adaptado
+- Kids: https://www.explora-school.es/clases-para-ninos
 
-## Product landings
+## Product landings (Spanish)
 
-- Full Day: https://www.explora-school.es/clases/full-day
-- Private lessons: https://www.explora-school.es/clases/particulares
-- Snowboard course: https://www.explora-school.es/clases/curso-snowboard
+- Full Day: https://www.explora-school.es/full-day
+- Private lessons: https://www.explora-school.es/clases-particulares
+- Snowboard course: https://www.explora-school.es/curso-de-snowboard
 
-## English
+## English (locale prefix /en)
 
-English mirrors use the `/en` locale prefix and localized pathnames (e.g. `/en/ski-lessons`). Prefer Spanish (`es`) as `x-default`.
+- Home: https://www.explora-school.es/en
+- Lessons: https://www.explora-school.es/en/lessons
+- Rates: https://www.explora-school.es/en/rates
+- Book: https://www.explora-school.es/en/book
+- Getting here: https://www.explora-school.es/en/getting-to-sierra-nevada
+- FAQ: https://www.explora-school.es/en/faq
+- Ski lessons: https://www.explora-school.es/en/ski-lessons
+- Snowboard lessons: https://www.explora-school.es/en/snowboard-lessons
+- Full Day: https://www.explora-school.es/en/full-day
+- Private lessons: https://www.explora-school.es/en/private-lessons
+- Snowboard course: https://www.explora-school.es/en/snowboard-course
 
 ## Citation notes
 
 - Best hourly rate format: Full Day (~5 h teaching + 1 h buffer).
 - Default meeting point: Borreguiles / Al-Andalus snow exit unless Full Day pick-up is confirmed.
 - Practical arrival buffer from Pradollano: ~90 minutes (parking, pass, rental, gondola queue).
-- TripAdvisor rating and review count: see site footer / product pages (live values on the website).
+- TripAdvisor rating and review count: see live values on the website.

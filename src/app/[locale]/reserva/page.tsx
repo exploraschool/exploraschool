@@ -1,5 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { BookingCheckout } from "@/components/cart/BookingCheckout";
+import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
@@ -21,6 +22,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       "Reserva clases de esquí, snowboard o telemark en Sierra Nevada. Elige fechas y personas y envía tu solicitud online, sin pago por adelantado.",
       "Book ski, snowboard or telemark lessons in Sierra Nevada. Choose dates and group size and send your request online, with no upfront payment.",
+    ),
+    ogImage: media.clasesHero.src,
+    ogImageAlt: pickLocale(
+      locale,
+      "Reservar clases de Explora School en Sierra Nevada",
+      "Book Explora School lessons in Sierra Nevada",
     ),
   });
 }

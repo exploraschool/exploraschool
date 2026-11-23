@@ -17,7 +17,11 @@ export function BlogLessonCta({
         <div className="relative min-h-40 sm:min-h-full">
           <Image
             src={discipline.image}
-            alt={pickLocale(locale, discipline.nameEs, discipline.nameEn)}
+            alt={pickLocale(
+              locale,
+              `Clase de ${discipline.nameEs.toLowerCase()} con Explora School en Sierra Nevada`,
+              `${discipline.nameEn} lesson with Explora School in Sierra Nevada`,
+            )}
             fill
             className="object-cover"
             sizes="(max-width: 640px) 100vw, 200px"

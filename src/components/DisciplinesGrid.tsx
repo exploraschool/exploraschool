@@ -50,8 +50,8 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                       src={d.image}
                       alt={pickLocale(
                         locale,
-                        `${d.nameEs} en Sierra Nevada`,
-                        `${d.nameEn} in Sierra Nevada`,
+                        `Clases de ${d.nameEs.toLowerCase()} con Explora School en Sierra Nevada`,
+                        `${d.nameEn} lessons with Explora School in Sierra Nevada`,
                       )}
                       width={960}
                       height={600}
@@ -91,8 +91,8 @@ export function DisciplinesGrid({ locale, compact = false }: DisciplinesGridProp
                     src={d.image}
                     alt={pickLocale(
                       locale,
-                      `${d.nameEs} en Sierra Nevada`,
-                      `${d.nameEn} in Sierra Nevada`,
+                      `Clases de ${d.nameEs.toLowerCase()} con Explora School en Sierra Nevada`,
+                      `${d.nameEn} lessons with Explora School in Sierra Nevada`,
                     )}
                     width={960}
                     height={600}

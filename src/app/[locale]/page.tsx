@@ -31,8 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ogImage: "/images/stock/hero.jpg",
     ogImageAlt: pickLocale(
       locale,
-      "Esquí en la estación de Sierra Nevada (Granada)",
-      "Skiing at Sierra Nevada ski resort (Granada)",
+      "Clases de esquí de Explora School en la estación de Sierra Nevada (Granada)",
+      "Explora School ski lessons at Sierra Nevada ski resort (Granada)",
     ),
   });
 }

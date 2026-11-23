@@ -84,6 +84,7 @@ export async function DisciplineLessonPage({
   const aeo = DISCIPLINE_AEO[d.id];
   const showModalities = disciplinesWithModalities.includes(d.id);
   const isEsquiPage = d.id === "esqui";
+  const isSnowboardPage = d.id === "snowboard";
   const path = disciplinePath(d.id);
 
   const heading = pickLocale(
@@ -124,13 +125,20 @@ export async function DisciplineLessonPage({
                 FAQ
               </Link>
             </p>
-            {isEsquiPage && (
+            {isEsquiPage ? (
               <p className="mt-3 text-sm">
                 <Link href="/clases/snowboard" className="font-semibold text-accent hover:underline">
                   {pickLocale(locale, "Ver también clases de snowboard →", "See snowboard lessons too →")}
                 </Link>
               </p>
-            )}
+            ) : null}
+            {isSnowboardPage ? (
+              <p className="mt-3 text-sm">
+                <Link href="/clases/esqui" className="font-semibold text-accent hover:underline">
+                  {pickLocale(locale, "Ver también clases de esquí →", "See ski lessons too →")}
+                </Link>
+              </p>
+            ) : null}
             <a href="#clases-disponibles" className="btn-primary mt-8 inline-flex !w-auto">
               {pickLocale(locale, "Ver clases disponibles", "View available lessons")}
             </a>
@@ -140,8 +148,8 @@ export async function DisciplineLessonPage({
               src={d.image}
               alt={pickLocale(
                 locale,
-                `${d.nameEs} en Sierra Nevada`,
-                `${d.nameEn} in Sierra Nevada`,
+                `Clases de ${d.nameEs.toLowerCase()} con Explora School en Sierra Nevada`,
+                `${d.nameEn} lessons with Explora School in Sierra Nevada`,
               )}
               fill
               className="object-cover"

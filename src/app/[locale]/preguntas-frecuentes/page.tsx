@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { FAQ_CATEGORIES, getFaqsSorted } from "@/data/faqs";
+import { media } from "@/lib/media";
 import { faqAnswerPlainText } from "@/lib/faq-text";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
@@ -30,6 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       "Forfait, cajeros en parkings y Silla del Pueblo, punto de encuentro, material de alquiler y cómo reservar clases de esquí, snowboard o telemark en Sierra Nevada.",
       "Lift pass machines, meeting point, rental gear and how to book ski, snowboard or telemark lessons in Sierra Nevada.",
     ),
+    ogImage: media.clasesHero.src,
+    ogImageAlt: pickLocale(locale, media.clasesHero.altEs, media.clasesHero.altEn),
   });
 }
 

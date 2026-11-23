@@ -53,6 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ),
       ogImage: media.clubAbout.src,
       ogImageAlt: pickLocale(locale, media.clubAbout.altEs, media.clubAbout.altEn),
+      noIndex: true,
     });
   }
 

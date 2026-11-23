@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { ContactInfoPanel } from "@/components/ContactInfoPanel";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
+import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
@@ -19,6 +20,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: "/contacto",
     title: t("title"),
     description: t("subtitle"),
+    ogImage: media.clasesHero.src,
+    ogImageAlt: pickLocale(
+      locale,
+      "Contacto de Explora School en la estación de Sierra Nevada",
+      "Contact Explora School at Sierra Nevada ski resort",
+    ),
   });
 }
 

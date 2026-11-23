@@ -42,7 +42,11 @@ export function TeamStrip({ locale }: TeamStripProps) {
                   <div className="relative h-full w-full overflow-hidden rounded-full">
                     <Image
                       src={instructor.photo}
-                      alt={instructor.name}
+                      alt={pickLocale(
+                        locale,
+                        `${instructor.name}, instructor de Explora School en Sierra Nevada`,
+                        `${instructor.name}, Explora School instructor in Sierra Nevada`,
+                      )}
                       fill
                       className="object-cover transition duration-500 group-hover:scale-110"
                       sizes="(max-width: 640px) 96px, 140px"

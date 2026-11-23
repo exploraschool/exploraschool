@@ -1,6 +1,7 @@
 import { routing } from "@/i18n/routing";
 import { blogPosts } from "@/data/blog";
 import { isListedEditorial, publicEditorialSlug } from "@/data/blog-urls";
+import { CLUB_PAGE_LIVE } from "@/data/club";
 import { getMainDisciplines } from "@/data/disciplines";
 import { disciplinePath, isIndexableProduct, productPath, publicUrl } from "@/lib/seo-urls";
 import { products } from "@/data/products";
@@ -28,7 +29,9 @@ const STATIC_ROUTES: SitemapRoute[] = [
   { path: "/clases", changeFrequency: "weekly", priority: 0.9 },
   { path: "/tarifas", changeFrequency: "weekly", priority: 0.9 },
   { path: "/reserva", changeFrequency: "weekly", priority: 0.9 },
-  { path: "/club", changeFrequency: "monthly", priority: 0.8 },
+  ...(CLUB_PAGE_LIVE
+    ? [{ path: "/club", changeFrequency: "monthly" as const, priority: 0.8 }]
+    : []),
   { path: "/como-llegar", changeFrequency: "monthly", priority: 0.8 },
   { path: "/blog", changeFrequency: "weekly", priority: 0.7 },
   { path: "/blog/guias", changeFrequency: "weekly", priority: 0.65 },

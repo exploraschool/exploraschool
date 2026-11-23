@@ -111,9 +111,9 @@ export function DisciplineProducts({
     <div className="space-y-8 sm:space-y-10">
       {featured.length > 0 ? (
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
+          <p className="text-sm font-bold uppercase tracking-wider text-hielo">
             {pickLocale(locale, "Los más elegidos", "Most popular")}
-          </h3>
+          </p>
           <ProductScroller
             list={featured}
             locale={locale}
@@ -126,9 +126,9 @@ export function DisciplineProducts({
 
       {others.length > 0 ? (
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-hielo">
+          <p className="text-sm font-bold uppercase tracking-wider text-hielo">
             {pickLocale(locale, "Otros formatos", "More formats")}
-          </h3>
+          </p>
           <ProductScroller
             list={others}
             locale={locale}

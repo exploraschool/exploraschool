@@ -18,8 +18,8 @@ export const media = {
   og: "/images/stock/hero.jpg",
   clubAbout: {
     src: "/images/stock/club-about.jpg",
-    altEs: "Esquís y material de nieve en la montaña",
-    altEn: "Skis and snow gear in the mountains",
+    altEs: "Esquís y material de nieve de Explora School en Sierra Nevada",
+    altEn: "Explora School skis and snow gear in Sierra Nevada",
   },
   gallery: [
     {

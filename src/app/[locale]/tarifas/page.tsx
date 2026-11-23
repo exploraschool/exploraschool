@@ -51,6 +51,13 @@ export default async function TarifasPage({ params }: Props) {
 
       <section className="section-padding pt-3 sm:pt-5 md:pt-7">
         <div className="container-page">
+          <h2 className="section-title mb-6 sm:mb-8">
+            {pickLocale(
+              locale,
+              "Cuadro oficial de tarifas",
+              "Official rate chart",
+            )}
+          </h2>
           <CompleteRateTables locale={locale} />
         </div>
       </section>

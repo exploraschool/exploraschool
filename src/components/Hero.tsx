@@ -20,8 +20,8 @@ export function Hero({ locale }: HeroProps) {
         src={media.hero}
         alt={pickLocale(
           locale,
-          "Esquí en la estación de Sierra Nevada (Granada)",
-          "Skiing at Sierra Nevada ski resort (Granada)",
+          "Clases de esquí de Explora School en la estación de Sierra Nevada (Granada)",
+          "Explora School ski lessons at Sierra Nevada ski resort (Granada)",
         )}
         width={2400}
         height={1600}

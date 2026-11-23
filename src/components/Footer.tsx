@@ -1,12 +1,14 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { FooterNavGroups } from "@/components/FooterNavGroups";
 import { media } from "@/lib/media";
 import { site } from "@/data/site";
+import { pickLocale } from "@/lib/locale";
 
 export async function Footer() {
   const t = await getTranslations("footer");
   const nav = await getTranslations("nav");
+  const locale = await getLocale();
   const year = new Date().getFullYear();
 
   const sections = [
@@ -15,6 +17,19 @@ export async function Footer() {
       title: t("explora"),
       links: [
         { href: "/clases", label: nav("clases") },
+        {
+          href: "/clases/esqui",
+          label: pickLocale(locale, "Clases de esquí", "Ski lessons"),
+        },
+        {
+          href: "/clases/snowboard",
+          label: pickLocale(locale, "Clases de snowboard", "Snowboard lessons"),
+        },
+        { href: "/clases/full-day", label: "Full Day" },
+        {
+          href: "/clases/particulares",
+          label: pickLocale(locale, "Clases particulares", "Private lessons"),
+        },
         { href: "/tarifas", label: nav("tarifas") },
         { href: "/reserva", label: nav("reservar") },
         { href: "/club", label: nav("club") },

@@ -4,6 +4,7 @@ import { BlogCardGrid } from "@/components/blog/BlogCardGrid";
 import { BlogPagination } from "@/components/BlogPagination";
 import { SectionHeader } from "@/components/SectionHeader";
 import { listPublicBlogSections, paginateBlogCards } from "@/lib/blog-catalog";
+import { media } from "@/lib/media";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
@@ -42,6 +43,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       "Guías de esquí, snowboard y telemark en Sierra Nevada: clases, forfait, familias, seguridad y qué llevar el primer día.",
       "Ski, snowboard and telemark guides for Sierra Nevada: lessons, lift passes, families, safety and what to pack for day one.",
+    ),
+    ogImage: media.clasesHero.src,
+    ogImageAlt: pickLocale(
+      locale,
+      "Guías de esquí y snowboard de Explora School en Sierra Nevada",
+      "Explora School ski and snowboard guides for Sierra Nevada",
     ),
   });
 }

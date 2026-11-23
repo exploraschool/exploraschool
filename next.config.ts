@@ -97,12 +97,23 @@ const disciplineRedirects = [
   { from: "ninos", toEs: "/clases-para-ninos", toEn: "/en/kids-ski-lessons" },
 ];
 
+const productRedirects = [
+  { from: "full-day", toEs: "/full-day", toEn: "/en/full-day" },
+  { from: "particulares", toEs: "/clases-particulares", toEn: "/en/private-lessons" },
+  { from: "curso-snowboard", toEs: "/curso-de-snowboard", toEn: "/en/snowboard-course" },
+];
+
 const seoRedirects: Redirect[] = [
   { source: "/es", destination: "/", permanent: true },
   ...disciplineRedirects.flatMap((d) => [
     { source: `/clases/${d.from}`, destination: d.toEs, permanent: true },
     { source: `/es/clases/${d.from}`, destination: d.toEs, permanent: true },
     { source: `/en/clases/${d.from}`, destination: d.toEn, permanent: true },
+  ]),
+  ...productRedirects.flatMap((p) => [
+    { source: `/clases/${p.from}`, destination: p.toEs, permanent: true },
+    { source: `/es/clases/${p.from}`, destination: p.toEs, permanent: true },
+    { source: `/en/clases/${p.from}`, destination: p.toEn, permanent: true },
   ]),
   { source: "/en/clases", destination: "/en/lessons", permanent: true },
   { source: "/es/clases", destination: "/clases", permanent: true },

@@ -23,7 +23,7 @@ export function Testimonials({ locale, limit = 6 }: TestimonialsProps) {
             />
             <img
               src="/images/tripadvisor-logo.svg"
-              alt="TripAdvisor"
+              alt={pickLocale(locale, "Valoraciones de Explora School en TripAdvisor", "Explora School ratings on TripAdvisor")}
               width={148}
               height={32}
               className="h-7 w-auto max-w-[9.5rem] shrink-0 self-start sm:mb-1 sm:h-8"
