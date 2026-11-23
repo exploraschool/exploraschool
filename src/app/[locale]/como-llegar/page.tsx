@@ -1,5 +1,8 @@
 import { setRequestLocale } from "next-intl/server";
+import { COMO_LLEGAR_AEO } from "@/data/landing-aeo";
 import { PageHeader } from "@/components/PageHeader";
+import { LandingAnswerBlocks } from "@/components/LandingAnswerBlocks";
+import { LandingFaqSection } from "@/components/LandingFaqSection";
 import { Link } from "@/i18n/routing";
 import { site } from "@/data/site";
 import { pickLocale } from "@/lib/locale";
@@ -18,8 +21,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: pickLocale(locale, "Cómo llegar a Sierra Nevada", "Getting to Sierra Nevada"),
     description: pickLocale(
       locale,
-      "Cómo llegar a Sierra Nevada y al punto de encuentro de Explora en Borreguiles: telecabina, parking, tiempos y Google Maps.",
-      "How to get to Sierra Nevada and Explora’s meeting point in Borreguiles: gondola, parking, timings and Google Maps.",
+      "Cómo llegar a Sierra Nevada y al punto de encuentro de Explora en Borreguiles: telecabina Al-Andalus, parking Plaza de Andalucía, regla de 90 minutos.",
+      "How to get to Sierra Nevada and Explora’s meeting point in Borreguiles: Al-Andalus gondola, Plaza de Andalucía parking, 90-minute rule.",
     ),
     ogImage: "/images/stock/gallery-06-gondola.jpg",
     ogImageAlt: pickLocale(
@@ -49,24 +52,22 @@ export default async function ComoLlegarPage({ params }: Props) {
       />
       <PageHeader
         eyebrow={pickLocale(locale, "Ubicación", "Location")}
-        title={pickLocale(locale, "Cómo llegar", "Getting here")}
-        description={pickLocale(
-          locale,
-          "Punto de encuentro en la estación, subida desde Pradollano y alquiler de material.",
-          "Meeting point at the resort, getting up from Pradollano, and equipment rental.",
-        )}
+        title={pickLocale(locale, "Cómo llegar a Explora en Sierra Nevada", "Getting to Explora in Sierra Nevada")}
+        description={pickLocale(locale, COMO_LLEGAR_AEO.leadEs, COMO_LLEGAR_AEO.leadEn)}
       />
 
       <section className="section-padding">
         <div className="container-page grid grid-gap-lg md:grid-cols-2">
           <div className="prose-page">
-            <h2>{pickLocale(locale, "Dirección", "Address")}</h2>
+            <h2>{pickLocale(locale, "Dirección y NAP", "Address and NAP")}</h2>
             <p>
               {site.meetingPoint.name}
               <br />
               {site.nap.streetAddress}, {site.nap.addressLocality}
               <br />
               {site.nap.addressRegion} {site.nap.postalCode}, {site.nap.addressCountry}
+              <br />
+              {site.nap.telephone} · {site.nap.email}
             </p>
 
             <h2>{pickLocale(locale, "Punto de encuentro", "Meeting point")}</h2>
@@ -80,15 +81,6 @@ export default async function ComoLlegarPage({ params }: Props) {
               {pickLocale(locale, "Abrir punto de encuentro en Google Maps", "Open meeting point in Google Maps")}
             </a>
 
-            <h2>{pickLocale(locale, "Cómo llegar a la estación", "Getting to the resort")}</h2>
-            <p>
-              {pickLocale(
-                locale,
-                "Sierra Nevada está a unos 30 km de Granada, en coche, autobús o transfer. El forfait se saca en sierranevada.es, en los cajeros de los parkings y de la Silla del Pueblo, o en Plaza de Andalucía.",
-                "Sierra Nevada is about 30 km from Granada, by car, bus or transfer. Lift passes are at sierranevada.es, at the car park and Village chairlift machines, or at Plaza de Andalucía.",
-              )}
-            </p>
-
             <h2>{pickLocale(locale, "Alquiler de material", "Equipment rental")}</h2>
             <p>{pickLocale(locale, site.rentalPartner.howToFindEs, site.rentalPartner.howToFindEn)}</p>
             <a
@@ -100,12 +92,14 @@ export default async function ComoLlegarPage({ params }: Props) {
               {pickLocale(locale, "Cómo llegar al alquiler", "Directions to the rental shop")}
             </a>
 
-            <a href={`mailto:${site.email}`} className="btn-secondary mt-4 !w-auto">
-              {site.email}
-            </a>
-            <Link href="/clases" className="btn-secondary mt-4 !w-auto">
-              {pickLocale(locale, "Elegir clases", "Choose lessons")}
-            </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a href={`mailto:${site.email}`} className="btn-secondary !w-auto">
+                {site.email}
+              </a>
+              <Link href="/clases" className="btn-secondary !w-auto">
+                {pickLocale(locale, "Elegir clases", "Choose lessons")}
+              </Link>
+            </div>
           </div>
 
           <div className="space-y-3 sm:space-y-4">
@@ -129,6 +123,19 @@ export default async function ComoLlegarPage({ params }: Props) {
           </div>
         </div>
       </section>
+
+      <LandingAnswerBlocks
+        locale={locale}
+        sections={COMO_LLEGAR_AEO.sections}
+        className="section-padding bg-nieve"
+      />
+
+      <LandingFaqSection
+        locale={locale}
+        faqs={COMO_LLEGAR_AEO.faqs}
+        links={COMO_LLEGAR_AEO.links}
+        className="section-padding bg-white"
+      />
     </>
   );
 }

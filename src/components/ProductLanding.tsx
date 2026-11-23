@@ -1,11 +1,13 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
+import { PRODUCT_AEO } from "@/data/landing-aeo";
 import { getProductBySlug } from "@/data/products";
 import { site } from "@/data/site";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
 import { BreadcrumbJsonLd } from "@/components/BreadcrumbJsonLd";
 import { CTASection } from "@/components/CTASection";
+import { LandingFaqSection } from "@/components/LandingFaqSection";
 import { PriceTag } from "@/components/PriceTag";
 import { ProductJsonLd } from "@/components/ProductJsonLd";
 import { Testimonials } from "@/components/Testimonials";
@@ -13,6 +15,8 @@ import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
 import { buildPageMetadata } from "@/lib/metadata";
 import {
+  productAnswerBody,
+  productAnswerLead,
   productAudience,
   productIncludeLines,
   productMetaDescription,
@@ -55,6 +59,7 @@ export async function ProductLanding({ locale, productId }: ProductLandingProps)
   const fromPrice = product.fromPrice ?? getProductFromPrice(product.id);
   const includes = productIncludeLines(product, locale);
   const rangeCopy = productPriceRangeCopy(locale, productId, range, product.minPeople ?? 1);
+  const aeo = PRODUCT_AEO[productId];
 
   return (
     <>
@@ -89,9 +94,7 @@ export async function ProductLanding({ locale, productId }: ProductLandingProps)
             </nav>
 
             <h1 className="page-title mt-4">{title}</h1>
-            <p className="page-lead">
-              {pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn)}
-            </p>
+            <p className="page-lead">{productAnswerLead(locale, productId)}</p>
 
             {fromPrice !== null ? (
               <p className="mt-5">
@@ -144,8 +147,11 @@ export async function ProductLanding({ locale, productId }: ProductLandingProps)
         <div className="container-page grid gap-10 md:grid-cols-2 md:gap-16">
           <div>
             <h2 className="section-title">
-              {pickLocale(locale, "Qué incluye", "What's included")}
+              {pickLocale(locale, "¿Qué incluye?", "What's included?")}
             </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+              {productAnswerBody(locale, productId)}
+            </p>
             <ul className="mt-5 space-y-2.5">
               {includes.map((item) => (
                 <li key={item} className="flex items-start gap-2 text-sm text-pizarra">
@@ -167,17 +173,33 @@ export async function ProductLanding({ locale, productId }: ProductLandingProps)
 
           <div>
             <h2 className="section-title">
-              {pickLocale(locale, "Para quién es", "Who it is for")}
+              {pickLocale(locale, "¿Para quién es?", "Who is it for?")}
             </h2>
             <p className="section-intro mt-4">{productAudience(locale, productId)}</p>
             <p className="mt-4 text-sm text-muted">
               {pickLocale(locale, site.instructorQualificationsEs, site.instructorQualificationsEn)}
             </p>
+            <p className="mt-4 text-sm text-muted">
+              <Link href="/tarifas" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
+                {pickLocale(locale, "Ver tarifas completas", "See full rates")}
+              </Link>
+              {" · "}
+              <Link href="/preguntas-frecuentes" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
+                FAQ
+              </Link>
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="border-b border-hielo/10 bg-white">
+      <LandingFaqSection
+        locale={locale}
+        faqs={aeo.faqs}
+        links={aeo.links}
+        className="section-padding bg-white"
+      />
+
+      <section className="border-b border-hielo/10 bg-nieve">
         <div className="container-page py-8 sm:py-10">
           <p className="text-sm font-semibold text-pizarra">
             <a

@@ -1,4 +1,5 @@
 import { getDisciplineBySlug, type MainDisciplineId } from "@/data/disciplines";
+import { DISCIPLINE_AEO } from "@/data/landing-aeo";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
@@ -6,6 +7,8 @@ import { CTASection } from "@/components/CTASection";
 import { BackLink } from "@/components/BackLink";
 import { DisciplineModalities } from "@/components/DisciplineModalities";
 import { DisciplineProducts } from "@/components/cart/DisciplineProducts";
+import { LandingAnswerBlocks } from "@/components/LandingAnswerBlocks";
+import { LandingFaqSection } from "@/components/LandingFaqSection";
 import { Reveal } from "@/components/Reveal";
 import { Link } from "@/i18n/routing";
 import { pickLocale } from "@/lib/locale";
@@ -34,7 +37,7 @@ const SEO_TITLES: Record<string, { es: string; en: string }> = {
     en: "Adaptive ski lessons in Sierra Nevada",
   },
   ninos: {
-    es: "Clases de esquí para niños",
+    es: "Clases de esquí para niños Sierra Nevada",
     en: "Kids ski lessons in Sierra Nevada",
   },
 };
@@ -45,29 +48,6 @@ const PAGE_TITLES: Record<string, { es: string; en: string }> = {
   telemark: { es: "Clases de telemark", en: "Telemark lessons" },
   "esqui-adaptado": { es: "Esquí adaptado", en: "Adaptive skiing" },
   ninos: { es: "Clases para niños", en: "Kids lessons" },
-};
-
-const PAGE_LEADS: Record<string, { es: string; en: string }> = {
-  esqui: {
-    es: "En pista, freeride y freestyle. Grupos de 1 a 8, todas las edades y niveles.",
-    en: "On piste, freeride and freestyle. Groups of 1 to 8, all ages and levels.",
-  },
-  snowboard: {
-    es: "De iniciación a snowpark y fuera de pista. También hay curso colectivo por las mañanas.",
-    en: "From first turns to snowpark and off-piste. There is also a morning group course.",
-  },
-  telemark: {
-    es: "Técnica nórdica en pista, con instructores especializados.",
-    en: "Nordic-style technique on piste, with specialist instructors.",
-  },
-  "esqui-adaptado": {
-    es: "Clases individualizadas e inclusivas, con seguridad y ritmo propio.",
-    en: "Individualized, inclusive lessons at your own pace.",
-  },
-  ninos: {
-    es: "Esquí y snowboard desde 3 años. Grupos de 1 a 8.",
-    en: "Ski and snowboard from age 3. Groups of 1 to 8.",
-  },
 };
 
 export async function disciplineMetadata(locale: string, id: MainDisciplineId): Promise<Metadata> {
@@ -101,6 +81,7 @@ export async function DisciplineLessonPage({
   const d = getDisciplineBySlug(id);
   if (!d) notFound();
 
+  const aeo = DISCIPLINE_AEO[d.id];
   const showModalities = disciplinesWithModalities.includes(d.id);
   const isEsquiPage = d.id === "esqui";
   const path = disciplinePath(d.id);
@@ -111,11 +92,7 @@ export async function DisciplineLessonPage({
     PAGE_TITLES[d.id]?.en ?? d.nameEn,
   );
 
-  const lead = pickLocale(
-    locale,
-    PAGE_LEADS[d.id]?.es ?? d.descriptionEs,
-    PAGE_LEADS[d.id]?.en ?? d.descriptionEn,
-  );
+  const lead = pickLocale(locale, aeo.leadEs, aeo.leadEn);
 
   return (
     <>
@@ -137,6 +114,14 @@ export async function DisciplineLessonPage({
             <p className="mt-4 text-sm text-muted">
               <Link href="/como-llegar" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
                 {pickLocale(locale, "Cómo llegar y punto de encuentro", "Getting here and meeting point")}
+              </Link>
+              {" · "}
+              <Link href="/tarifas" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
+                {pickLocale(locale, "Tarifas", "Rates")}
+              </Link>
+              {" · "}
+              <Link href="/preguntas-frecuentes" className="font-semibold text-hielo underline decoration-hielo/25 underline-offset-2 hover:decoration-hielo">
+                FAQ
               </Link>
             </p>
             {isEsquiPage && (
@@ -167,9 +152,11 @@ export async function DisciplineLessonPage({
         </div>
       </section>
 
+      <LandingAnswerBlocks locale={locale} sections={aeo.sections} className="section-padding bg-nieve" />
+
       {showModalities && <DisciplineModalities locale={locale} parentId={d.id} />}
 
-      <section id="clases-disponibles" className="section-padding scroll-target bg-nieve">
+      <section id="clases-disponibles" className="section-padding scroll-target bg-white">
         <div className="container-page">
           <Reveal>
             <h2 className="section-title">
@@ -188,6 +175,13 @@ export async function DisciplineLessonPage({
           </div>
         </div>
       </section>
+
+      <LandingFaqSection
+        locale={locale}
+        faqs={aeo.faqs}
+        links={aeo.links}
+        className="section-padding bg-nieve"
+      />
 
       <CTASection locale={locale} onClassesPage />
     </>

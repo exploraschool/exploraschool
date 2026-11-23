@@ -1,0 +1,60 @@
+# Explora School & Club
+
+> Escuela de esquí, snowboard y telemark en Sierra Nevada (Granada, España). Clases particulares, Full Day y curso colectivo de snowboard. Fundada en 2010.
+
+## NAP / Contact
+
+- Name: Explora School & Club
+- Meeting point: Estación de esquí de Sierra Nevada, Borreguiles, Pradollano (salida a la nieve del Telecabina Al-Andalus, ~2.700 m)
+- Phone: +34 660 262 790
+- Email: explora.sclub@gmail.com
+- Hours: Monday–Sunday 09:00–20:00
+- Languages: Spanish, English
+- Maps: https://www.google.com/maps/place/Explora+School+%26+Club/@37.0711362,-3.3890244,17z
+
+## Services
+
+- Ski lessons (on-piste, freeride, freestyle)
+- Snowboard lessons + morning group course
+- Telemark lessons
+- Adaptive ski (one-to-one)
+- Kids lessons from age 3
+- Group size: 1–8 (adaptive: individual)
+- VAT included in published prices
+- Lift pass and equipment rental not included (partner José Luis Sáez: 20% off for Explora students)
+
+## Canonical URLs (Spanish)
+
+- Home: https://www.explora-school.es/
+- Lessons hub: https://www.explora-school.es/clases
+- Rates: https://www.explora-school.es/tarifas
+- Booking: https://www.explora-school.es/reserva
+- Getting here: https://www.explora-school.es/como-llegar
+- FAQ: https://www.explora-school.es/preguntas-frecuentes
+- Contact: https://www.explora-school.es/contacto
+- Blog guides: https://www.explora-school.es/blog
+
+## Discipline landings
+
+- Ski: https://www.explora-school.es/clases/esqui
+- Snowboard: https://www.explora-school.es/clases/snowboard
+- Telemark: https://www.explora-school.es/clases/telemark
+- Adaptive: https://www.explora-school.es/clases/esqui-adaptado
+- Kids: https://www.explora-school.es/clases/ninos
+
+## Product landings
+
+- Full Day: https://www.explora-school.es/clases/full-day
+- Private lessons: https://www.explora-school.es/clases/particulares
+- Snowboard course: https://www.explora-school.es/clases/curso-snowboard
+
+## English
+
+English mirrors use the `/en` locale prefix and localized pathnames (e.g. `/en/ski-lessons`). Prefer Spanish (`es`) as `x-default`.
+
+## Citation notes
+
+- Best hourly rate format: Full Day (~5 h teaching + 1 h buffer).
+- Default meeting point: Borreguiles / Al-Andalus snow exit unless Full Day pick-up is confirmed.
+- Practical arrival buffer from Pradollano: ~90 minutes (parking, pass, rental, gondola queue).
+- TripAdvisor rating and review count: see site footer / product pages (live values on the website).

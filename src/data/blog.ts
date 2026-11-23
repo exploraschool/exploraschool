@@ -42,7 +42,7 @@ export const blogPosts: BlogPost[] = [
 
 La solicitud entra [online](/reserva). Te confirmamos por email, no cobramos por adelantado y, si hace falta, seguimos por [WhatsApp](${site.whatsappUrl}) o [teléfono](/contacto). El objetivo no es venderte el formato más largo: es que el día te funcione.
 
-## Por qué importa que nos escribas
+## ¿Por qué importa que nos cuentes tu viaje?
 
 Un horario en una tabla no sabe si es tu primera vez, si el grupo mezcla niveles, si dormís en Pradollano o en la ciudad, ni si tenéis que recoger el material a las 8:30. Esa información cambia la recomendación.
 
@@ -58,7 +58,7 @@ Con eso te decimos si te conviene una particular de 2 horas, 3 horas o un [Full 
 
 Si quieres comparar formatos por tu cuenta, está la [guía de tipos de clase](/blog/que-tipo-clases-elegir-sierra-nevada) y el [cuadro de tarifas](/tarifas). El asesoramiento sirve precisamente cuando la tabla no responde: “venimos un sábado con dos adultos y un niño debutante” o “solo tenemos la mañana”.
 
-## Cómo es la reserva con Explora
+## ¿Cómo es la reserva con Explora?
 
 1. Eliges producto, fechas y personas en [Reservar](/reserva), o nos escribes directo.
 2. Nos llega el email. Si falta un dato, te preguntamos. Si el formato no encaja, te proponemos otro.
@@ -67,7 +67,7 @@ Si quieres comparar formatos por tu cuenta, está la [guía de tipos de clase](/
 
 No hay pago online. La clase se cierra cuando ambos tenemos claro el plan. Si reservas antes del 1 de noviembre de 2026, hay un 10% de descuento de pretemporada.
 
-## Alojamiento: no vendemos hoteles, sí orientamos
+## ¿Dónde conviene alojarse si tienes clase?
 
 No gestionamos reservas de hotel. Sí te decimos qué encaja con tu clase y con el reloj de Sierra Nevada.
 
@@ -79,7 +79,7 @@ Si os alojáis en un hotel de la estación y reserváis Full Day, podemos coordi
 
 No te recomendamos un hotel concreto a ciegas. Te preguntamos presupuesto, fechas y si priorizáis estar arriba o bajar a Granada por la noche, y te damos criterio honesto.
 
-## Alquiler de material: José Luis Sáez y 20% con Explora
+## ¿Dónde alquilar material con descuento Explora?
 
 La clase no incluye esquís, tabla, botas ni bastones. Traes el tuyo o alquilas.
 
@@ -89,7 +89,7 @@ En fechas punta (puentes, Navidad, Semana Santa) el alquiler se llena. Mejor rec
 
 Casco: muy recomendable; con niños, imprescindible.
 
-## Forfait: va aparte, y el tipo tiene que coincidir con tu clase
+## ¿El forfait está incluido en la clase?
 
 Cetursa vende los remontes. Explora vende la enseñanza. Cada persona que suba —también los niños— necesita su [forfait](/blog/forfait-sierra-nevada-guia-compra).
 
@@ -102,7 +102,7 @@ El tipo de forfait tiene que cuadrar con el horario:
 
 Un error clásico es comprar medio día y tener clase hasta las 16:00. Otro, llegar a taquilla a las 9:40 el sábado. Si nos dices hora de clase y si vais a seguir esquiando después, te decimos qué pase encaja.
 
-## Lo que queremos evitarte
+## ¿Qué errores quieres evitar al reservar?
 
 Llegar tarde al punto de encuentro porque el forfait o el alquiler se han comido la mañana. Reservar 2 horas cuando el grupo necesita un Full Day, o al revés. Mezclar un debutante con alguien que ya baja negras en la misma particular. Dormir en Granada sin margen de carretera. No decirnos que hay un niño de 3 años.
 
@@ -115,7 +115,7 @@ Todo eso se resuelve **antes**, hablando. Por eso insistimos en el email y el Wh
 
 The request comes in [online](/reserva). We confirm by email, we do not charge upfront and, if needed, we continue on [WhatsApp](${site.whatsappUrl}) or [phone](/contacto). The aim is not to sell you the longest format. It is to make the day work.
 
-## Why it matters that you write to us
+## Why does it matter that you tell us about your trip?
 
 A time slot on a chart does not know if it is your first time, if the group mixes levels, whether you sleep in Pradollano or in the city, or if you have to collect rental gear at 8:30 am. That information changes the recommendation.
 
@@ -131,7 +131,7 @@ With that we can say whether a 2-hour private, 3 hours or a [Full Day](/tarifas)
 
 If you want to compare formats yourself, there is the [lesson-type guide](/blog/que-tipo-clases-elegir-sierra-nevada) and the [rate chart](/tarifas). Advice is for when the table cannot answer: “we are coming on a Saturday with two adults and a beginner child” or “we only have the morning”.
 
-## How booking with Explora works
+## How does booking with Explora work?
 
 1. You choose a product, dates and group size at [Book](/reserva), or you write to us directly.
 2. We get the email. If a detail is missing, we ask. If the format is a poor fit, we suggest another.
@@ -140,7 +140,7 @@ If you want to compare formats yourself, there is the [lesson-type guide](/blog/
 
 There is no online payment. The lesson is confirmed when both of us have a clear plan. Book before 1 November 2026 for 10% pre-season off.
 
-## Accommodation: we do not sell hotels, we do give direction
+## Where should you stay if you have a lesson?
 
 We do not take hotel bookings. We do tell you what fits your lesson and Sierra Nevada’s clock.
 
@@ -152,7 +152,7 @@ If you stay in a resort hotel and book a Full Day, we can arrange **pick-up and 
 
 We will not recommend a specific hotel blindly. We ask about budget, dates and whether you would rather stay up the mountain or go down to Granada at night, and we give honest criteria.
 
-## Equipment rental: José Luis Sáez and 20% with Explora
+## Where can you rent gear with an Explora discount?
 
 The lesson does not include skis, board, boots or poles. You bring your own or you rent.
 
@@ -162,7 +162,7 @@ At peak dates (long weekends, Christmas, Easter) rental books out. Collect with 
 
 Helmet: strongly recommended; essential for children.
 
-## Lift pass: it is separate, and the type must match your lesson
+## Is the lift pass included in the lesson?
 
 Cetursa sells the lifts. Explora sells the teaching. Everyone who goes up — children included — needs their own [lift pass](/blog/forfait-sierra-nevada-guia-compra).
 
@@ -175,7 +175,7 @@ The pass type has to match the timetable:
 
 A classic mistake is buying a half-day pass when the lesson runs until 4:00 pm. Another is arriving at the ticket office at 9:40 am on a Saturday. If you tell us the lesson time and whether you will keep skiing afterwards, we will say which pass fits.
 
-## What we want to spare you
+## What booking mistakes should you avoid?
 
 Arriving late because the pass or the rental ate the morning. Booking 2 hours when the group needs a Full Day, or the other way round. Putting a beginner in the same private with someone already on blacks. Sleeping in Granada with no road margin. Not mentioning a 3-year-old.
 
@@ -202,35 +202,35 @@ All of that is solved **beforehand**, by talking. That is why we push email and 
     migrated: false,
     contentEs: `Sierra Nevada es una de las estaciones más accesibles de España y, para muchos visitantes, la primera vez que ponen los pies en la nieve. Esa mezcla de emoción y nervios es completamente normal. Con un poco de planificación, tu experiencia puede pasar de "sobrevivir al día" a "quiero volver mañana".
 
-## 1. Reserva con antelación, sobre todo en temporada alta
+## ¿Cuándo debes reservar tu primera vez en Sierra Nevada?
 
 Fines de semana, puentes y vacaciones escolares concentran mucha demanda en forfaits, alojamiento y clases. Si sabes las fechas de tu viaje, reserva lo antes posible. En Explora School & Club puedes [elegir tu tipo de clase](/clases) online y [reservar](/reserva) confirmando por email, sin pagar por adelantado. También te conviene revisar [qué llevar el primer día](/blog/que-llevar-esqui-sierra-nevada).
 
-## 2. Contrata clases si es tu primera vez (de verdad)
+## ¿Merece la pena contratar clases la primera vez?
 
 Aprender solo o con un amigo que "ya sabe" suele traducirse en caídas innecesarias, miedo y frustración. Un instructor titulado te enseña la postura correcta, cómo frenar con seguridad y cómo leer la montaña desde el primer día. En dos horas notarás una diferencia enorme respecto a intentarlo por tu cuenta. Si dudas, lee [por qué contratar clases de esquí o snowboard](/blog/por-que-contratar-clases-esqui-snowboard).
 
-## 3. Lleva ropa en capas y protección solar
+## ¿Qué ropa llevar el primer día?
 
 La temperatura en la estación puede variar mucho entre la mañana, el mediodía y la tarde. Mejor varias capas finas que un solo abrigo grueso. No olvides guantes impermeables, gafas de sol o máscara, y protector solar en la cara: la nieve refleja los rayos UV con intensidad.
 
-## 4. Desayuna bien y mantente hidratado
+## ¿Cómo gestionar energía e hidratación?
 
 Esquiar y hacer snowboard son deportes exigentes, aunque no lo parezca. Un desayuno equilibrado y agua a lo largo del día marcan la diferencia en tu energía y concentración. Evita comer demasiado justo antes de subir a la montaña.
 
-## 5. Llega con tiempo al punto de encuentro
+## ¿Cuánto margen necesitas hasta el punto de encuentro?
 
-En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcula al menos 45 minutos extra si necesitas recoger forfait o equipamiento. En Explora el punto de encuentro habitual es la zona de Borreguiles; consulta también [cómo llegar a Sierra Nevada](/como-llegar) y te lo confirmamos al [reservar](/reserva).
+En temporada alta hay colas en cintas, telecabinas y alquiler de material. Calcula al menos 45 minutos extra si necesitas recoger forfait o equipamiento (la regla práctica Explora es ~90 minutos desde Pradollano). El punto de encuentro habitual es Borreguiles; consulta [cómo llegar](/como-llegar) y te lo confirmamos al [reservar](/reserva).
 
-## 6. No subestimes el forfait y el material
+## ¿El forfait y el material van aparte?
 
 Si no tienes equipo propio, el alquiler en la estación es cómodo, pero conviene reservarlo con antelación en fechas punta. En Explora recomendamos **José Luis Sáez** (junto a los telecabinas Al-Andalus y Borreguiles): con nosotros obtienes un 20% de descuento; dilo al alquilar. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}). Pregunta por el nivel de rigidez adecuado a tu peso y experiencia: un material mal ajustado dificulta el aprendizaje.
 
-## 7. Empieza en pistas verdes y ten paciencia
+## ¿Por dónde debes empezar a esquiar?
 
 Sierra Nevada ofrece pistas para todos los niveles, pero la tentación de subir "solo un poco más" es grande cuando empiezas. Progresar paso a paso construye confianza real. Las primeras horas en pistas fáciles son una inversión, no tiempo perdido.
 
-## 8. Disfruta del entorno, no solo de las bajadas
+## ¿Solo cuentan las bajadas?
 
 Sierra Nevada no es solo esquí: es paisaje, gastronomía andaluza en la montaña y una experiencia que se vive mejor sin prisas. Reserva tiempo para calentarte, tomar un chocolate caliente y disfrutar del ambiente de la estación.
 
@@ -239,35 +239,35 @@ Sierra Nevada no es solo esquí: es paisaje, gastronomía andaluza en la montañ
 Si quieres empezar con buen pie, en Explora School & Club llevamos más de 15 años enseñando en Sierra Nevada. Ofrecemos [clases de esquí](/clases/esqui), [snowboard](/clases/snowboard) y [telemark](/clases/telemark), en español e inglés. [Reserva tu clase](/reserva) y te acompañamos desde el primer giro.`,
     contentEn: `Sierra Nevada is one of the most accessible ski resorts in Spain, and for many visitors it is their first time on snow. That mix of excitement and nerves is completely normal. With a little planning, your experience can go from "just surviving the day" to "I want to come back tomorrow".
 
-## 1. Book ahead, especially in peak season
+## When should you book your first time in Sierra Nevada?
 
 Weekends, public holidays and school breaks bring high demand for lift passes, accommodation and lessons. If you know your travel dates, book as early as you can. At Explora School & Club you can [choose your lesson type](/clases) online and [book](/reserva) confirming by email, with no upfront payment. It also helps to check [what to pack for your first day](/blog/que-llevar-esqui-sierra-nevada).
 
-## 2. Take lessons if it is genuinely your first time
+## Are lessons worth it on your first day?
 
 Learning alone or with a friend who "already knows how" often means unnecessary falls, fear and frustration. A qualified instructor teaches you the right stance, how to stop safely and how to read the mountain from day one. In two hours you will notice a huge difference compared to trying on your own. If you are unsure, read [why book ski or snowboard lessons](/blog/por-que-contratar-clases-esqui-snowboard).
 
-## 3. Wear layers and sun protection
+## What should you wear on day one?
 
 Temperatures at the resort can vary a lot between morning, midday and afternoon. Several thin layers work better than one thick coat. Do not forget waterproof gloves, sunglasses or goggles, and sunscreen on your face: snow reflects UV rays intensely.
 
-## 4. Eat well and stay hydrated
+## How do you manage energy and hydration?
 
 Skiing and snowboarding are demanding sports, even when they do not look like it. A balanced breakfast and water throughout the day make a real difference to your energy and focus. Avoid eating too much right before heading up the mountain.
 
-## 5. Arrive early at the meeting point
+## How much time do you need to reach the meeting point?
 
-In peak season there are queues at lifts, gondolas and rental shops. Allow at least 45 extra minutes if you need to collect a lift pass or equipment. At Explora our usual meeting point is the Borreguiles area; also see [how to get to Sierra Nevada](/como-llegar) and we confirm it when you [book](/reserva).
+In peak season there are queues at lifts, gondolas and rental shops. Allow at least 45 extra minutes if you need to collect a lift pass or equipment (Explora’s practical rule is ~90 minutes from Pradollano). Our usual meeting point is Borreguiles; also see [getting here](/como-llegar) and we confirm it when you [book](/reserva).
 
-## 6. Do not underestimate the lift pass and equipment
+## Are the lift pass and equipment included?
 
 If you do not have your own gear, renting at the resort is convenient, but it is worth booking ahead on busy dates. At Explora we recommend **José Luis Sáez** (next to the Al-Andalus and Borreguiles gondolas): with us you get 20% off; mention it when you rent. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}). Ask about the right stiffness for your weight and experience. Poorly fitted equipment makes learning much harder.
 
-## 7. Start on green runs and be patient
+## Where should beginners start?
 
 Sierra Nevada has slopes for every level, but the temptation to go "just a little higher" is strong when you are starting out. Progressing step by step builds real confidence. The first hours on easy runs are an investment, not wasted time.
 
-## 8. Enjoy the setting, not just the descents
+## Is it only about the descents?
 
 Sierra Nevada is not only about skiing: it is landscape, mountain food with an Andalusian touch, and an experience that is best enjoyed without rushing. Leave time to warm up, have a hot chocolate and soak up the resort atmosphere.
 
@@ -292,11 +292,11 @@ If you want to start on the right foot, Explora School & Club has been teaching 
     migrated: false,
     contentEs: `"¿De verdad necesito clases?" Es una de las preguntas que más escuchamos en Explora School & Club. La respuesta corta: no es obligatorio, pero casi siempre es la mejor decisión—sobre todo si quieres disfrutar, progresar y volver a casa sin lesiones evitables. Puedes comparar formatos en nuestra [guía de tipos de clase](/blog/que-tipo-clases-elegir-sierra-nevada).
 
-## Aprendes más rápido y con menos frustración
+## ¿Aprendes más rápido con un instructor?
 
 Un instructor titulado (TD I, II o III) sabe exactamente qué errores cometen los principiantes y cómo corregirlos al momento. Lo que a un autodidacta le puede costar varios días de prueba y error, en una clase de dos horas empieza a encajar. Menos caídas innecesarias significa más tiempo esquiando y más diversión.
 
-## Evitas malos hábitos que luego cuestan mucho desaprender
+## ¿Por qué evitar malos hábitos desde el día uno?
 
 La postura, la distribución del peso y la técnica de frenado se aprenden desde el principio. Si los primeros días los pasas agarrado en cuclillas o frenando en cuña sin control, tu cuerpo memoriza esos patrones. Después, corregirlos requiere más tiempo y paciencia que aprender bien desde el inicio.
 
@@ -321,11 +321,11 @@ Las clases no son solo para principiantes. Muchos esquiadores intermedios se est
 En Explora School & Club llevamos desde 2010 en Sierra Nevada con instructores titulados, clases en español e inglés y grupos reducidos de hasta 8 personas. Consulta todas las [clases disponibles](/clases) y [reserva online](/reserva) el formato que encaje con tu viaje. Tu yo del futuro en la nieve te lo agradecerá.`,
     contentEn: `"Do I really need lessons?" It is one of the questions we hear most often at Explora School & Club. The short answer: they are not mandatory, but they are almost always the best decision—especially if you want to enjoy yourself, progress and go home without avoidable injuries. You can compare formats in our [lesson type guide](/blog/que-tipo-clases-elegir-sierra-nevada).
 
-## You learn faster with less frustration
+## Do you learn faster with an instructor?
 
 A qualified instructor (TD I, II or III) knows exactly which mistakes beginners make and how to fix them on the spot. What might take a self-taught skier several days of trial and error can start to click in a two-hour lesson. Fewer unnecessary falls means more time skiing and more fun.
 
-## You avoid bad habits that are hard to unlearn later
+## Why avoid bad habits from day one?
 
 Stance, weight distribution and braking technique are learned from the start. If your first days are spent crouching or snowploughing without control, your body memorises those patterns. Correcting them later takes more time and patience than learning properly from the beginning.
 
@@ -388,13 +388,9 @@ Recomendada para principiantes que vienen pocos días al año y quieren progresa
 
 Si sois cuatro o más amigos con ganas de aprender snowboard, el curso de 3 horas en grupo es una opción social y económica. Compartís instructor, progresáis juntos y el ambiente de grupo motiva mucho, sobre todo entre jóvenes y adultos que empiezan de cero.
 
-## Cursos de varios días: para empresas y clubs deportivos
-
-Si organizas una salida corporativa o un viaje con tu club, los cursos de 2 a 5 días permiten una progresión estructurada con el mismo equipo de instructores. Es la fórmula que usan muchas empresas para team building en la nieve y clubs que repiten temporada tras temporada.
-
 ### ¿Cómo elegir según tu situación?
 
-Si es tu primera vez en la nieve y vienes solo o en pareja, empieza con una clase particular de 2 horas. Si viajas en familia con niños, consulta nuestras [clases de esquí para niños](/clases/ninos) desde los 3 años. Si organizas un grupo de empresa, mira los [cursos corporativos](/blog/cursos-esqui-empresas-sierra-nevada). Si vienes un solo día y quieres exprimirlo al máximo, la jornada completa es tu mejor aliada.
+Si es tu primera vez en la nieve y vienes solo o en pareja, empieza con una clase particular de 2 horas. Si viajas en familia con niños, consulta nuestras [clases de esquí para niños](/clases/ninos) desde los 3 años. Si vienes un solo día y quieres exprimirlo al máximo, la jornada completa es tu mejor aliada.
 
 ### Reserva con tranquilidad
 
@@ -423,13 +419,9 @@ Recommended for beginners who visit only a few days a year and want real progres
 
 If you are four or more friends keen to learn snowboard, the 3-hour snowboard course is a social and affordable option. You share an instructor, progress together and the group atmosphere motivates—especially among young people and adults starting from scratch.
 
-## Multi-day courses: for companies and sports clubs
-
-If you are organising a corporate trip or a club outing, 2- to 5-day courses allow structured progression with the same instructor team. It is the format many companies use for snow team building and clubs that return season after season.
-
 ### How to choose for your situation
 
-If it is your first time on snow and you are travelling alone or as a couple, start with a 2-hour private lesson. If you are travelling with children, see our [kids' ski lessons](/clases/ninos) from age 3. If you are organising a company group, check our [corporate courses](/blog/cursos-esqui-empresas-sierra-nevada). If you have only one day and want to make the most of it, the full day is your best ally.
+If it is your first time on snow and you are travelling alone or as a couple, start with a 2-hour private lesson. If you are travelling with children, see our [kids' ski lessons](/clases/ninos) from age 3. If you have only one day and want to make the most of it, the full day is your best ally.
 
 ### Book with peace of mind
 
@@ -1004,32 +996,78 @@ All these disciplines need more than good intentions. Avalanches, park falls and
     coverAltEn: "Freestyle in the Sierra Nevada snowpark",
     relatedSlugs: ["freeride-freestyle-telemark-sierra-nevada", "por-que-contratar-clases-esqui-snowboard", "normas-seguridad-pista-esqui"],
     migrated: false,
-    contentEs: `El freestyle combina técnica y creatividad en el snowpark: saltos, rails, boxes y halfpipe. En snowboard es la disciplina natural del park; en esquí cada vez más esquiadores se inician en módulos y pequeños saltos.
+    contentEs: `El freestyle combina técnica y creatividad en el snowpark: saltos, rails, boxes y halfpipe. En snowboard es la disciplina natural del park; en esquí cada vez más riders se inician en módulos y pequeños saltos. En Explora School & Club lo trabajamos con método: primero seguridad y control, después estilo.
 
-## Empieza por la seguridad
+## ¿Qué es el freestyle en Sierra Nevada?
 
-Las [clases de freestyle](/clases/esqui) en Explora empiezan por la seguridad en el park, la posición en el aire y aterrizajes controlados. Ideal para adolescentes y adultos que buscan adrenalina con método, no solo prueba y error.
+Es progresar en features del snowpark (cajones, rails, saltos) y en terreno preparado para trucos. No es “tirarse a lo loco”: es aprender a leer la línea, controlar la velocidad de entrada, estabilizar el aire y aterrizar de forma repetible. Sierra Nevada ofrece un entorno de park que cambia con la temporada; el instructor adapta el plan a lo que esté abierto ese día.
 
-## Esquí o snowboard
+## ¿Para quién son las clases de freestyle?
 
-Tanto en [esquí](/clases/esqui) como en [snowboard](/clases/snowboard) el park exige progresión. Un instructor titulado adapta los módulos a tu nivel real.
+Para adolescentes y adultos que ya controlan la pista (nivel intermedio recomendado) y quieren subir un escalón con adrenalina controlada. Si aún frenas con duda en azules, primero consolidamos pista; el park premia una base sólida. También encaja si vienes de freeride y quieres precisión en features.
 
-También te puede interesar [freeride](/blog/freeride-sierra-nevada) o [telemark](/blog/telemark-sierra-nevada).
+## ¿Cómo progresáis en el snowpark?
 
-[Reserva una clase](/reserva) y te proponemos la sesión que encaje. Repasa las [normas de seguridad](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
-    contentEn: `Freestyle combines technique and creativity in the snowpark: jumps, rails, boxes and halfpipe. On snowboard it is the natural park discipline; on skis more and more riders start on features and small jumps.
+Las [clases de freestyle](/clases/esqui) (y de [snowboard](/clases/snowboard)) en Explora suelen seguir esta lógica:
 
-## Start with safety
+1. Normas del park, prioridad y zonas de caída
+2. Postura, edge control y velocidad de entrada
+3. Features bajos (boxes / small jumps) con repetición
+4. Altura y rotaciones solo cuando el aterrizaje es estable
 
-[Freestyle lessons](/clases/esqui) at Explora begin with park safety, air position and controlled landings. Ideal for teenagers and adults who want adrenaline with method, not just trial and error.
+El objetivo no es un truco viral el primer día: es salir con 2–3 gestos seguros que puedas repetir.
 
-## Ski or snowboard
+## ¿Esquí o snowboard freestyle?
 
-In both [ski](/clases/esqui) and [snowboard](/clases/snowboard) the park needs progression. A qualified instructor matches features to your real level.
+En snowboard el park es el hogar natural; en esquí el freestyle exige un trabajo específico de switches, presses y aterrizajes. Un instructor titulado adapta módulos a tu nivel real, no al que crees tener. Si dudas entre modalidades, mira también [freeride](/blog/freeride-sierra-nevada) y [telemark](/blog/telemark-sierra-nevada).
 
-You may also like [freeride](/blog/freeride-sierra-nevada) or [telemark](/blog/telemark-sierra-nevada).
+## ¿Qué formato de clase conviene?
 
-[Book a lesson](/reserva) and we will suggest the right session. Review [safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
+Particulares (mín. 2 h) si quieres foco técnico intenso. Full Day si buscas más repeticiones en el park al mejor €/h. Grupos pequeños (1–8) funcionan cuando el nivel es similar. Precios e IVA en [tarifas](/tarifas). Forfait y material van aparte; casco muy recomendable.
+
+## ¿Dónde quedamos y qué debes llevar?
+
+Punto habitual: Borreguiles, salida Telecabina Al-Andalus (salvo recogida Full Day). Llega con margen (~90 min desde Pradollano). Revisa [cómo llegar](/como-llegar) y las [normas de seguridad](/blog/seguridad-esqui-snowboard-sierra-nevada).
+
+### Reserva freestyle con método
+
+[Reserva una clase](/reserva) y te proponemos la sesión que encaje con tu nivel y el park del día.`,
+    contentEn: `Freestyle combines technique and creativity in the snowpark: jumps, rails, boxes and halfpipe. On snowboard it is the natural park discipline; on skis more riders start on features and small jumps. At Explora School & Club we teach it with a method: safety and control first, style second.
+
+## What is freestyle in Sierra Nevada?
+
+It means progressing on snowpark features (boxes, rails, jumps) and terrain built for tricks. It is not “send it blindly”: you learn to read the line, control entry speed, stabilise in the air and land repeatably. Sierra Nevada’s park changes through the season; the instructor adapts the plan to what is open that day.
+
+## Who are freestyle lessons for?
+
+Teenagers and adults who already control the piste (intermediate recommended) and want a step up with controlled adrenaline. If you still brake uncertainly on blues, we consolidate piste first; the park rewards a solid base. It also suits freeriders who want precision on features.
+
+## How do you progress in the snowpark?
+
+[Freestyle lessons](/clases/esqui) (and [snowboard](/clases/snowboard)) at Explora usually follow this path:
+
+1. Park rules, priority and fall zones
+2. Stance, edge control and entry speed
+3. Low features (boxes / small jumps) with repetition
+4. Height and rotations only when landings are stable
+
+The goal is not a viral trick on day one: it is leaving with 2–3 safe moves you can repeat.
+
+## Ski or snowboard freestyle?
+
+On snowboard the park is home; on skis freestyle needs specific switch, press and landing work. A qualified instructor matches features to your real level. If you are choosing modalities, also see [freeride](/blog/freeride-sierra-nevada) and [telemark](/blog/telemark-sierra-nevada).
+
+## Which lesson format fits?
+
+Private lessons (min. 2 h) for intense technical focus. Full Day if you want more park reps at the best €/h. Small groups (1–8) work when levels are similar. Prices and VAT under [rates](/tarifas). Lift pass and gear are separate; a helmet is strongly recommended.
+
+## Where do we meet and what should you bring?
+
+Usual point: Borreguiles, Al-Andalus gondola snow exit (unless Full Day pick-up). Allow a buffer (~90 min from Pradollano). See [getting here](/como-llegar) and [safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).
+
+### Book freestyle with a method
+
+[Book a lesson](/reserva) and we will suggest the session that fits your level and the day’s park.`,
   },
   {
     slug: "telemark-sierra-nevada",
@@ -1046,26 +1084,72 @@ You may also like [freeride](/blog/freeride-sierra-nevada) or [telemark](/blog/t
     coverAltEn: "Telemark skier in Sierra Nevada",
     relatedSlugs: ["freeride-freestyle-telemark-sierra-nevada", "que-tipo-clases-elegir-sierra-nevada", "por-que-contratar-clases-esqui-snowboard"],
     migrated: false,
-    contentEs: `El telemark es una técnica de esquí con talón libre y un estilo de giro característico. Es exigente físicamente y muy gratificante cuando encaja. Atrae a esquiadores que buscan un reto técnico distinto y una conexión más clásica con la montaña.
+    contentEs: `El telemark es una técnica de esquí con talón libre y un giro característico. Es exigente físicamente y muy gratificante cuando encaja. En Explora School & Club lo enseñamos en Sierra Nevada con instructores especializados, en pista y —según nivel— fuera de ella.
 
-## En pista y fuera
+## ¿Qué es el telemark?
 
-En Sierra Nevada el telemark tiene espacio tanto en pista como fuera de ella. Si llevas años esquiando alpino y quieres renovar tu relación con la nieve, una [clase de telemark](/clases/telemark) puede ser el descubrimiento de la temporada.
+Es esquí de bajada con el talón libre: la fijación permite levantar el talón y el giro se construye con una flexión profunda y un cambio de peso muy distinto al alpino. No es “más de lo mismo con otra bota”: cambia equilibrio, timing y fuerza de piernas. Por eso progresa mejor con feedback cercano que solo mirando vídeos.
 
-## Progresión con instructor
+## ¿Para quién es el telemark en Sierra Nevada?
 
-Un instructor especializado adapta el contenido a tu nivel: no hace falta ser experto alpino, pero sí ganas de trabajar la técnica. Combínalo con [freeride](/blog/freeride-sierra-nevada) o [freestyle](/blog/freestyle-sierra-nevada) si quieres explorar otras modalidades.
+Para esquiadores que buscan un reto técnico nuevo, una estética más clásica o una vía distinta hacia fuera de pista. Ayuda haber esquiado alpino, pero no es obligatorio. Si vienes de cero, empezamos por equilibrio y primeros giros en terreno suave. Si ya bajas rojas, afinamos angulación, ritmo y nieve variable.
+
+## ¿Cómo son las clases de telemark con Explora?
+
+Las [clases de telemark](/clases/telemark) se ofrecen en particulares (mín. 2 h) y Full Day (mejor €/h). Grupos de 1 a 8 si el nivel es comparable. No hay curso colectivo de mañana (ese formato es de snowboard). El instructor adapta:
+
+- Posición y flexión telemark
+- Iniciación y control de velocidad
+- Giros enlazados en pista
+- Lectura de nieve y, si toca, fuera de pista con criterio de seguridad
+
+## ¿Necesito material específico?
+
+Sí: botas y fijaciones de telemark (y esquís adecuados). Confirma alquiler en estación o trae el tuyo. En la reserva te orientamos sobre qué llevar el primer día. Forfait aparte; casco recomendable. Precios e IVA en [tarifas](/tarifas).
+
+## ¿Dónde es el punto de encuentro?
+
+Habitualmente Borreguiles, salida a la nieve del Telecabina Al-Andalus, salvo recogida acordada en Full Day. Deja ~90 minutos desde Pradollano. Detalle en [cómo llegar](/como-llegar).
+
+## ¿Telemark, freeride o freestyle?
+
+Si buscas talón libre y técnica nórdica: telemark. Si priorizas fuera de pista alpino/snow: [freeride](/blog/freeride-sierra-nevada). Si quieres park y trucos: [freestyle](/blog/freestyle-sierra-nevada). En Explora te ayudamos a elegir según objetivo, no por moda.
+
+### Reserva telemark en Sierra Nevada
 
 [Reserva telemark](/reserva) con Explora. Antes, revisa las [normas de seguridad](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
-    contentEn: `Telemark is a skiing technique with a free heel and a distinctive turn style. It is physically demanding and very rewarding when it clicks. It attracts skiers looking for a different technical challenge and a more classic connection with the mountain.
+    contentEn: `Telemark is a free-heel skiing technique with a distinctive turn. It is physically demanding and very rewarding when it clicks. At Explora School & Club we teach it in Sierra Nevada with specialist instructors, on piste and — by level — off piste.
 
-## On and off piste
+## What is telemark?
 
-In Sierra Nevada telemark has room both on and off piste. If you have skied alpine for years and want to refresh your relationship with snow, a [telemark lesson](/clases/telemark) may be your discovery of the season.
+It is downhill skiing with a free heel: the binding lets the heel lift and the turn is built from a deep flex and weight change very different from alpine. It is not “the same with another boot”: balance, timing and leg strength change. That is why it progresses better with close feedback than from videos alone.
 
-## Progress with an instructor
+## Who is telemark for in Sierra Nevada?
 
-A specialist instructor matches content to your level: you do not need to be an expert alpine skier, just willing to work on technique. Pair it with [freeride](/blog/freeride-sierra-nevada) or [freestyle](/blog/freestyle-sierra-nevada) if you want to explore other disciplines.
+Skiers looking for a new technical challenge, a more classic aesthetic, or a different path toward off-piste. Prior alpine skiing helps but is not required. From scratch we start with balance and first turns on gentle terrain. If you already ski reds, we refine angulation, rhythm and variable snow.
+
+## What are telemark lessons like at Explora?
+
+[Telemark lessons](/clases/telemark) are offered as private (min. 2 h) and Full Day (best €/h). Groups of 1 to 8 when levels match. There is no morning group course (that format is snowboard). The instructor adapts:
+
+- Telemark stance and flex
+- Speed initiation and control
+- Linked turns on piste
+- Snow reading and, when appropriate, off-piste with a safety focus
+
+## Do I need specific gear?
+
+Yes: telemark boots and bindings (and suitable skis). Check resort rental or bring your own. When you book we advise what to bring on day one. Lift pass separate; helmet recommended. Prices and VAT under [rates](/tarifas).
+
+## Where is the meeting point?
+
+Usually Borreguiles, Al-Andalus gondola snow exit, unless Full Day pick-up is arranged. Allow ~90 minutes from Pradollano. Details in [getting here](/como-llegar).
+
+## Telemark, freeride or freestyle?
+
+Free heel and Nordic-style technique: telemark. Alpine/snow off-piste priority: [freeride](/blog/freeride-sierra-nevada). Park and tricks: [freestyle](/blog/freestyle-sierra-nevada). At Explora we help you choose by goal, not hype.
+
+### Book telemark in Sierra Nevada
 
 [Book telemark](/reserva) with Explora. First, review [safety rules](/blog/seguridad-esqui-snowboard-sierra-nevada).`,
   },
@@ -1240,88 +1324,6 @@ Sierra Nevada offers more than slopes: walks, food, bowling, activities for bad 
 ### Explore as a family
 
 At Explora School & Club we have been guiding families in Sierra Nevada for years. Check [how to get there](/como-llegar), pick a [lesson type](/blog/que-tipo-clases-elegir-sierra-nevada) and [book online](/reserva) to start making memories on snow.`,
-  },
-  {
-    slug: "cursos-esqui-empresas-sierra-nevada",
-    titleEs: "Cursos de esquí para empresas en Sierra Nevada: team building que deja huella",
-    titleEn: "Corporate ski courses in Sierra Nevada: team building that makes an impact",
-    excerptEs:
-      "Un viaje de empresa a la nieve une equipos, rompe rutinas y crea recuerdos compartidos. Te explicamos cómo organizar un curso corporativo con Explora.",
-    excerptEn:
-      "A company snow trip brings teams together, breaks routines and creates shared memories. Here is how to organise a corporate course with Explora.",
-    date: "2026-09-01",
-    author: "Explora School & Club",
-    coverImage: "/images/blog/blog-empresas.jpg",
-    coverAltEs: "Equipo de empresa en curso de esquí en Sierra Nevada",
-    coverAltEn: "Company team on a ski course in Sierra Nevada",
-    relatedSlugs: ["que-tipo-clases-elegir-sierra-nevada","como-llegar-sierra-nevada-guia","forfait-sierra-nevada-guia-compra"],
-    migrated: false,
-    contentEs: `Los viajes de empresa a la nieve funcionan porque sacan al equipo del despacho y los ponen en un entorno donde todos empiezan de cero o casi. No importa si eres el director o el último en llegar: en la montaña el terreno es el mismo para todos y eso iguala, divierte y fortalece vínculos de una forma que ninguna reunión en sala consigue.
-
-## Por qué Sierra Nevada para un evento corporativo
-
-Sierra Nevada está a solo 30 km de Granada, con buenas conexiones por carretera y aeropuerto cercano. Es la estación de esquí más meridional de Europa, con temporada larga y pistas para todos los niveles. Para empresas del sur de España y equipos que buscan una experiencia accesible sin volar a los Alpes, es una opción excelente.
-
-## Qué incluye un curso de empresa con Explora
-
-Ofrecemos cursos de 2 a 5 días consecutivos en [jornada completa](/blog/que-tipo-clases-elegir-sierra-nevada) (de 10:00 a 16:00). Cada día incluye 5 horas de clase con instructor titulado. Las disciplinas disponibles son [esquí alpino](/clases/esqui), [snowboard](/clases/snowboard) y [telemark](/clases/telemark).
-
-## Beneficios reales para tu equipo
-
-Más allá del eslogan de team building, un curso en la nieve desarrolla confianza, comunicación y capacidad de apoyarse mutuamente. Los equipos que nunca han esquiado juntos descubren fortalezas inesperadas en sus compañeros. Los que ya tienen experiencia disfrutan de un reto compartido fuera del entorno laboral habitual.
-
-## Cómo planificar el viaje
-
-Lo ideal es contactar con varias semanas de antelación, sobre todo si el grupo supera las 8 personas (podemos organizar varios instructores). Define fechas, número de participantes, nivel medio del grupo y si preferís esquí o snowboard. Nosotros adaptamos el programa diario a vuestras necesidades.
-
-## Logística que nos ocupamos nosotros
-
-En la opción de día completo incluimos recogida y entrega en hotel bajo petición. Coordinamos el punto de encuentro, horarios y asignación de instructores. El forfait y el material de alquiler se gestionan aparte: para el material recomendamos **José Luis Sáez** (junto a los telecabinas) con un 20% de descuento. [Cómo llegar al alquiler](${site.rentalPartner.googleMapsUrl}). Te orientamos en todo el proceso para que nadie llegue perdido el primer día.
-
-## Ideas para complementar el curso
-
-Cena de equipo en Pradollano, tarde libre para quien quiera seguir esquiando por su cuenta o actividades de après-ski. Muchas empresas combinan dos días de curso con un día libre para que cada uno explore a su ritmo.
-
-## Presupuesto y reserva
-
-Los cursos corporativos parten de 195 €/día para 1 persona, más 25 €/día por cada persona extra. Para grupos y varios días consecutivos, escríbenos a explora.sclub@gmail.com o llámanos al +34 660 262 790. Te enviamos una propuesta personalizada sin compromiso.
-
-### Organiza tu salida corporativa con Explora
-
-Más de 15 años enseñando en Sierra Nevada. [Contáctanos](/contacto) o [reserva](/reserva) y te enviamos una propuesta. También te ayudamos con [cómo llegar](/como-llegar) y el [forfait](/blog/forfait-sierra-nevada-guia-compra).`,
-    contentEn: `Company snow trips work because they take the team out of the office and put them in an environment where everyone starts from scratch or nearly so. It does not matter if you are the director or the newest hire: on the mountain the terrain is the same for everyone, and that levels the field, entertains and strengthens bonds in a way no meeting room can.
-
-## Why Sierra Nevada for a corporate event
-
-Sierra Nevada is only 30 km from Granada, with good road links and a nearby airport. It is Europe's southernmost ski resort, with a long season and runs for every level. For companies in southern Spain and teams looking for an accessible experience without flying to the Alps, it is an excellent choice.
-
-## What a corporate course with Explora includes
-
-We offer 2 to 5 consecutive [full-day](/blog/que-tipo-clases-elegir-sierra-nevada) courses (10:00 am to 4:00 pm). Each day includes 5 hours of lessons with a qualified instructor. Available disciplines are [alpine skiing](/clases/esqui), [snowboard](/clases/snowboard) and [telemark](/clases/telemark).
-
-## Real benefits for your team
-
-Beyond the team building slogan, a snow course builds trust, communication and mutual support. Teams who have never skied together discover unexpected strengths in colleagues. Those with experience enjoy a shared challenge outside the usual work environment.
-
-## How to plan the trip
-
-Ideally contact us several weeks ahead, especially if the group exceeds 8 people (we can arrange multiple instructors). Define dates, number of participants, average group level and whether you prefer ski or snowboard. We adapt the daily programme to your needs.
-
-## Logistics we handle
-
-With the Full Day option we include hotel pick-up and drop-off on request. We coordinate the meeting point, schedules and instructor assignment. Lift passes and rental equipment are arranged separately: for gear we recommend **José Luis Sáez** (next to the gondolas) with 20% off. [Directions to the rental shop](${site.rentalPartner.googleMapsUrl}). We guide you through the process so no one arrives lost on day one.
-
-## Ideas to complement the course
-
-Team dinner in Pradollano, a free afternoon for those who want to keep skiing on their own or après-ski activities. Many companies combine two course days with a free day for everyone to explore at their own pace.
-
-## Budget and booking
-
-Corporate courses start from €195/day for 1 person, plus €25/day for each extra person. For groups and several consecutive days, email explora.sclub@gmail.com or call +34 660 262 790. We will send a personalised proposal with no obligation.
-
-### Organise your corporate trip with Explora
-
-Over 15 years teaching in Sierra Nevada. [Contact us](/contacto) or [book](/reserva) and we will send a proposal. We also help with [getting there](/como-llegar) and the [lift pass](/blog/forfait-sierra-nevada-guia-compra).`,
   },
   {
     slug: "como-llegar-sierra-nevada-guia",

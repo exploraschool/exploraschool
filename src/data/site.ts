@@ -171,9 +171,9 @@ export const site: SiteConfig = {
   heroLeadEn:
     "Qualified instructors with 25 years of experience. Explora since 2010. Book online in minutes.",
   aboutLeadEs:
-    "Agrupación de instructores con nombre y cara. Esquí, snowboard, telemark y más, en grupos reducidos.",
+    "Explora School & Club es una escuela de esquí, snowboard y telemark en Sierra Nevada (Pradollano / Borreguiles, Granada), fundada en 2010 por instructores con trayectoria desde 2000. Clases en grupos de 1 a 8, en español e inglés, con punto de encuentro en la salida a la nieve del Telecabina Al-Andalus.",
   aboutLeadEn:
-    "A group of named instructors. Ski, snowboard, telemark and more, in small groups.",
+    "Explora School & Club is a ski, snowboard and telemark school in Sierra Nevada (Pradollano / Borreguiles, Granada), founded in 2010 by instructors active since 2000. Lessons in groups of 1 to 8, in Spanish and English, meeting at the Al-Andalus gondola snow exit.",
   homeMetaDescriptionEs:
     `Clases de esquí, snowboard y telemark en Sierra Nevada desde ${FULL_DAY_HOURLY_EUR} €/h en Full Day. Instructores titulados, grupos de 1 a 8. Reserva online.`,
   homeMetaDescriptionEn:

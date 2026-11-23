@@ -1,16 +1,25 @@
 import { Link } from "@/i18n/routing";
 import { Reveal } from "@/components/Reveal";
+import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { HomeFaqTeaser } from "@/components/HomeFaqTeaser";
+import { getFaqsSorted } from "@/data/faqs";
 import { pickLocale } from "@/lib/locale";
 import { site } from "@/data/site";
+import { faqAnswerPlainText } from "@/lib/faq-text";
 
 type HomeClosingProps = {
   locale: string;
 };
 
 export function HomeClosing({ locale }: HomeClosingProps) {
+  const teaserFaqs = getFaqsSorted().slice(0, 3).map((faq) => ({
+    question: pickLocale(locale, faq.questionEs, faq.questionEn),
+    answer: faqAnswerPlainText(pickLocale(locale, faq.answerEs, faq.answerEn)),
+  }));
+
   return (
     <section className="section-padding-sm bg-nieve">
+      <FaqJsonLd items={teaserFaqs} />
       <div className="container-page grid grid-gap-lg lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
         <Reveal>
           <div>

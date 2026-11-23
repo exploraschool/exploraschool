@@ -52,6 +52,7 @@ export function ProductJsonLd({ locale, productId }: ProductJsonLdProps) {
   const data = {
     "@context": "https://schema.org",
     "@type": "Product",
+    "@id": `${url}#product`,
     name,
     description: productOfferSummary(locale, productId),
     image: imagePath,

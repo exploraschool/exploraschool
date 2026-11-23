@@ -1,3 +1,4 @@
+import { PRODUCT_AEO } from "@/data/landing-aeo";
 import { getProductBySlug, type Product } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
 import { getProductOfferRange, type ProductOfferRange } from "@/lib/product-offer";
@@ -32,6 +33,16 @@ const AUDIENCE: Record<IndexableProductId, { es: string; en: string }> = {
     en: "For anyone who wants to choose the time and discipline. Groups of 1 to 8, 2-hour minimum, all levels, and children from age 3.",
   },
 };
+
+export function productAnswerLead(locale: string, productId: IndexableProductId): string {
+  const aeo = PRODUCT_AEO[productId];
+  return pickLocale(locale, aeo.leadEs, aeo.leadEn);
+}
+
+export function productAnswerBody(locale: string, productId: IndexableProductId): string {
+  const aeo = PRODUCT_AEO[productId];
+  return pickLocale(locale, aeo.bodyEs, aeo.bodyEn);
+}
 
 export function productSeoTitle(locale: string, productId: IndexableProductId): string {
   return pickLocale(locale, SEO_TITLE[productId].es, SEO_TITLE[productId].en);

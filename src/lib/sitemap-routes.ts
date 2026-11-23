@@ -83,5 +83,12 @@ export function buildLanguageAlternates(
     const path = route.pathForLocale?.(locale) ?? route.path;
     languages[locale] = publicUrl(locale, path);
   }
+  const defaultPath = route.pathForLocale?.("es") ?? route.path;
+  languages["x-default"] = publicUrl("es", defaultPath);
   return languages;
+}
+
+/** Fallback routes if dynamic sitemap building fails. */
+export function getStaticSitemapFallbackRoutes(): SitemapRoute[] {
+  return STATIC_ROUTES;
 }

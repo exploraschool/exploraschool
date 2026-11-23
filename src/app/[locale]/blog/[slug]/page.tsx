@@ -107,6 +107,7 @@ export default async function BlogPostPage({ params }: Props) {
     author: {
       "@type": "Organization",
       name: post.author,
+      url: siteUrl,
     },
     publisher: {
       "@type": "Organization",
@@ -115,6 +116,15 @@ export default async function BlogPostPage({ params }: Props) {
         "@type": "ImageObject",
         url: `${siteUrl}${media.logo}`,
       },
+    },
+    isPartOf: {
+      "@type": "WebSite",
+      name: "Explora School & Club",
+      url: siteUrl,
+    },
+    about: {
+      "@type": "Thing",
+      name: "Ski and snowboard lessons in Sierra Nevada",
     },
     mainEntityOfPage: publicUrl(locale, `/blog/${canonicalSlug}`),
     inLanguage: locale === "en" ? "en-GB" : "es-ES",

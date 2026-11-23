@@ -21,7 +21,11 @@ type JsonLdProps = {
 export function JsonLd({ locale }: JsonLdProps) {
   const isSpanish = locale !== "en";
   const localeHome = homeUrl(locale);
-  const sameAs = [...site.social.map((s) => s.url), site.tripAdvisor.url];
+  const sameAs = [
+    ...site.social.map((s) => s.url),
+    site.tripAdvisor.url,
+    site.meetingPoint.googleMapsUrl,
+  ];
   const tagline = pickLocale(locale, site.taglineEs, site.taglineEn);
   const homeDescription = pickLocale(
     locale,
@@ -29,7 +33,7 @@ export function JsonLd({ locale }: JsonLdProps) {
     site.homeMetaDescriptionEn,
   );
   const inLanguage = isSpanish ? "es-ES" : "en-GB";
-  const lessonProducts = (
+  const lessonServices = (
     ["full-day", "curso-snow", "particular"] as const satisfies readonly IndexableProductId[]
   ).flatMap((productId) => {
     const product = getProductBySlug(productId);
@@ -37,33 +41,33 @@ export function JsonLd({ locale }: JsonLdProps) {
     const range = getProductOfferRange(productId);
     if (!product || !path || !range) return [];
     const url = publicUrl(locale, path);
-    const name = pickLocale(locale, product.titleEs, product.titleEn);
-    const image = product.image.startsWith("http")
-      ? product.image
-      : `${site.domain}${product.image}`;
     return [
       {
-        "@type": "Product",
-        "@id": `${url}#product`,
-        name,
-        description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
-        image,
-        sku: product.id,
-        url,
-        brand: {
-          "@type": "Brand",
-          name: site.name,
-        },
-        offers: {
-          "@type": "Offer",
-          price: range.lowPrice,
-          priceCurrency: "EUR",
-          availability: "https://schema.org/InStock",
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: pickLocale(locale, product.titleEs, product.titleEn),
+          description: pickLocale(locale, product.shortDescriptionEs, product.shortDescriptionEn),
           url,
         },
+        price: range.lowPrice,
+        priceCurrency: "EUR",
+        url,
       },
     ];
   });
+
+  const sierraNevadaPlace = {
+    "@type": "Place",
+    "@id": `${site.domain}/#sierra-nevada`,
+    name: "Sierra Nevada",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Sierra Nevada",
+      addressRegion: "Granada",
+      addressCountry: "ES",
+    },
+  };
 
   const graph = [
     {
@@ -88,10 +92,21 @@ export function JsonLd({ locale }: JsonLdProps) {
         postalCode: site.legalOwner.postalCode,
         addressCountry: "ES",
       },
-      areaServed: {
-        "@type": "Place",
-        name: "Sierra Nevada, Granada, España",
-      },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          telephone: site.phone,
+          email: site.email,
+          availableLanguage: ["Spanish", "English"],
+          areaServed: "ES",
+        },
+      ],
+      areaServed: [
+        sierraNevadaPlace,
+        { "@type": "Place", name: "Pradollano" },
+        { "@type": "AdministrativeArea", name: "Granada" },
+      ],
     },
     {
       "@type": "WebSite",
@@ -102,6 +117,7 @@ export function JsonLd({ locale }: JsonLdProps) {
       publisher: { "@id": `${site.domain}/#organization` },
       inLanguage: ["es-ES", "en-GB"],
     },
+    sierraNevadaPlace,
     {
       "@type": ["SportsActivityLocation", "LocalBusiness"],
       "@id": `${site.domain}/#business`,
@@ -126,6 +142,7 @@ export function JsonLd({ locale }: JsonLdProps) {
         longitude: site.meetingPoint.longitude,
       },
       hasMap: site.meetingPoint.googleMapsUrl,
+      containedInPlace: { "@id": `${site.domain}/#sierra-nevada` },
       openingHoursSpecification: {
         "@type": "OpeningHoursSpecification",
         dayOfWeek: [
@@ -150,18 +167,23 @@ export function JsonLd({ locale }: JsonLdProps) {
       },
       sameAs,
       knowsLanguage: ["es", "en"],
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "reservations",
+        telephone: site.phone,
+        email: site.email,
+        availableLanguage: ["Spanish", "English"],
+      },
+      areaServed: [
+        { "@id": `${site.domain}/#sierra-nevada` },
+        { "@type": "Place", name: "Pradollano" },
+        { "@type": "Place", name: "Borreguiles" },
+      ],
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: pickLocale(locale, "Clases de nieve", "Snow lessons"),
         itemListElement: [
-          ...lessonProducts.map((product) => ({
-            "@type": "Offer",
-            itemOffered: { "@id": product["@id"] },
-            price: product.offers.price,
-            priceCurrency: "EUR",
-            availability: "https://schema.org/InStock",
-            url: product.url,
-          })),
+          ...lessonServices,
           ...getMainDisciplines().map((d) => ({
             "@type": "Offer",
             itemOffered: {
@@ -173,7 +195,6 @@ export function JsonLd({ locale }: JsonLdProps) {
         ],
       },
     },
-    ...lessonProducts,
   ];
 
   return (
