@@ -405,19 +405,29 @@ export function getBookingItemTitle(
   return isEn ? product.titleEn : product.titleEs;
 }
 
+export type QuickBookFormat = "full-day" | "particular";
+
 /**
- * Reserva rápida: snowboard from 4 people is the morning group course (10:00–13:00).
- * Smaller groups and other disciplines stay on private lessons.
+ * Reserva rápida: Full Day or private lessons.
+ * Snowboard from 4 people on the private format uses the morning group course (10:00–13:00).
  */
 export function resolveQuickBookSelection(
   discipline: MainDisciplineId,
   people: string | null | undefined,
+  format: QuickBookFormat = "full-day",
 ): {
   productId: ProductId;
   participants: number;
   timeSlotId?: TimeSlotId;
 } {
   const count = parseQuickBookPeople(people) ?? 2;
+  if (format === "full-day") {
+    return {
+      productId: "full-day",
+      participants: clampParticipantCount(count, "full-day", discipline, "fd-10-16"),
+      timeSlotId: "fd-10-16",
+    };
+  }
   if (discipline === "snowboard" && count > PRIVATE_SNOWBOARD_MORNING_MAX) {
     return {
       productId: "curso-snow",

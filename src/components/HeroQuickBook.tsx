@@ -3,7 +3,10 @@
 import { useId, useState } from "react";
 import { getMainDisciplines, type MainDisciplineId } from "@/data/disciplines";
 import { AddToCartModal } from "@/components/cart/AddToCartModal";
-import { resolveQuickBookSelection } from "@/lib/booking-config";
+import {
+  resolveQuickBookSelection,
+  type QuickBookFormat,
+} from "@/lib/booking-config";
 import { pickLocale } from "@/lib/locale";
 import { FULL_DAY_HOURLY_EUR, PEOPLE_COUNT_HEADERS_EN, PEOPLE_COUNT_HEADERS_ES } from "@/lib/lesson-pricing";
 import { GlassSelect } from "@/components/GlassSelect";
@@ -17,20 +20,28 @@ const peopleOptions = PEOPLE_COUNT_HEADERS_ES.map((_, index) => {
   return { value: n, labelEs: PEOPLE_COUNT_HEADERS_ES[index], labelEn: PEOPLE_COUNT_HEADERS_EN[index] };
 });
 
+const formatOptions: { value: QuickBookFormat; labelEs: string; labelEn: string }[] = [
+  { value: "full-day", labelEs: "Full Day", labelEn: "Full Day" },
+  { value: "particular", labelEs: "Particulares", labelEn: "Private lessons" },
+];
+
 function bookingDiscipline(id: MainDisciplineId): MainDisciplineId {
   return id === "ninos" ? "esqui" : id;
 }
 
 export function HeroQuickBook({ locale }: HeroQuickBookProps) {
+  const formatLabelId = useId();
   const disciplineLabelId = useId();
   const peopleLabelId = useId();
+  const [format, setFormat] = useState<QuickBookFormat>("full-day");
   const [discipline, setDiscipline] = useState<MainDisciplineId>(getMainDisciplines()[0].slug);
   const [people, setPeople] = useState("2");
   const [bookingOpen, setBookingOpen] = useState(false);
   const disciplines = getMainDisciplines();
   const resolvedDiscipline = bookingDiscipline(discipline);
-  const quickBook = resolveQuickBookSelection(resolvedDiscipline, people);
+  const quickBook = resolveQuickBookSelection(resolvedDiscipline, people, format);
   const isSnowboardCourse = quickBook.productId === "curso-snow";
+  const isFullDay = quickBook.productId === "full-day";
 
   function handleBook() {
     setBookingOpen(true);
@@ -64,7 +75,28 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
           {pickLocale(locale, "Reserva rápida", "Quick booking")}
         </p>
 
-        <div className="grid grid-cols-2 items-end gap-2.5 sm:grid-cols-[1fr_1fr_auto] sm:gap-2">
+        <div className="grid grid-cols-2 items-end gap-2.5 sm:grid-cols-3 sm:gap-2">
+          <div className="min-w-0">
+            <span
+              id={formatLabelId}
+              className="mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wider text-nieve/85 sm:text-xs"
+            >
+              {pickLocale(locale, "Formato", "Format")}
+            </span>
+            <GlassSelect
+              compact
+              labelledBy={formatLabelId}
+              title={pickLocale(locale, "Formato", "Format")}
+              closeLabel={pickLocale(locale, "Cerrar", "Close")}
+              value={format}
+              onChange={(value) => setFormat(value as QuickBookFormat)}
+              options={formatOptions.map((opt) => ({
+                value: opt.value,
+                label: pickLocale(locale, opt.labelEs, opt.labelEn),
+              }))}
+            />
+          </div>
+
           <div className="min-w-0">
             <span
               id={disciplineLabelId}
@@ -86,7 +118,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
             />
           </div>
 
-          <div className="min-w-0">
+          <div className="min-w-0 col-span-2 sm:col-span-1">
             <span
               id={peopleLabelId}
               className="mb-1.5 block text-[0.7rem] font-semibold uppercase tracking-wider text-nieve/85 sm:text-xs"
@@ -106,16 +138,25 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
               }))}
             />
           </div>
-
-          <button
-            type="button"
-            onClick={handleBook}
-            className="btn-primary col-span-2 mt-1.5 h-11 !w-full py-0 sm:col-span-1 sm:mt-auto sm:h-11 sm:!w-auto sm:px-5"
-          >
-            {pickLocale(locale, "Reservar", "Book")}
-          </button>
         </div>
 
+        <button
+          type="button"
+          onClick={handleBook}
+          className="btn-primary mt-3 h-11 !w-full py-0 sm:mt-3.5"
+        >
+          {pickLocale(locale, "Reservar", "Book")}
+        </button>
+
+        {isFullDay ? (
+          <p className="mt-2.5 text-center text-[0.7rem] font-semibold leading-snug text-oro-light sm:mt-3 sm:text-left sm:text-xs">
+            {pickLocale(
+              locale,
+              `Full Day · 5 h de clase · desde ${FULL_DAY_HOURLY_EUR} €/h`,
+              `Full Day · 5 h teaching · from €${FULL_DAY_HOURLY_EUR}/h`,
+            )}
+          </p>
+        ) : null}
         {isSnowboardCourse ? (
           <p className="mt-2.5 text-center text-[0.7rem] font-semibold leading-snug text-oro-light sm:mt-3 sm:text-left sm:text-xs">
             {pickLocale(
@@ -125,7 +166,7 @@ export function HeroQuickBook({ locale }: HeroQuickBookProps) {
             )}
           </p>
         ) : null}
-        <p className={`text-center text-[0.7rem] leading-snug text-nieve/80 sm:text-left sm:text-xs ${isSnowboardCourse ? "mt-1" : "mt-2.5 sm:mt-3"}`}>
+        <p className={`text-center text-[0.7rem] leading-snug text-nieve/80 sm:text-left sm:text-xs ${isFullDay || isSnowboardCourse ? "mt-1" : "mt-2.5 sm:mt-3"}`}>
           {pickLocale(
             locale,
             "Sin compromiso · Confirmamos por email",
