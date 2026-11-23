@@ -1,6 +1,5 @@
 import type { Product } from "@/data/products";
 import { pickLocale } from "@/lib/locale";
-import { CLUB_EMPRESA_EXTRA_EUR } from "@/lib/lesson-pricing";
 
 export function productFacts(product: Product, locale: string): string[] {
   const people = peopleBit(product, locale);
@@ -17,12 +16,6 @@ export function productFacts(product: Product, locale: string): string[] {
         locale,
         ["Mín. 2 h", "Horario libre", people],
         ["Min. 2 h", "Flexible time", people],
-      );
-    case "curso-empresa":
-      return pickLocale(
-        locale,
-        ["2–5 días", "10:00–16:00", people],
-        ["2–5 days", "10:00 am–4:00 pm", people],
       );
     default:
       break;
@@ -62,12 +55,6 @@ export function productCardHighlights(product: Product, locale: string): string[
         ["Desde 4 personas", "Grupo reducido, máximo 8", "Snowboard, todas las edades"],
         ["From 4 people", "Small group, max. 8", "Snowboard, all ages"],
       );
-    case "curso-empresa":
-      return pickLocale(
-        locale,
-        [`+${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra`, "Esquí, snowboard o telemark", "Máximo 8 personas"],
-        [`+€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person`, "Ski, snowboard or telemark", "Maximum 8 people"],
-      );
     default:
       return [];
   }
@@ -78,7 +65,7 @@ export function productPricePrefix(product: Product, locale: string): string | u
 }
 
 export function productPriceSuffix(product: Product, locale: string): string | undefined {
-  if (product.category === "full-day" || product.id === "curso-empresa") {
+  if (product.category === "full-day") {
     return pickLocale(locale, " / día", " / day");
   }
   return undefined;
@@ -115,12 +102,6 @@ export function productImageAlt(product: Product, locale: string): string {
         locale,
         "Grupo de snowboard en un curso en Sierra Nevada",
         "Snowboard group on a course in Sierra Nevada",
-      );
-    case "curso-empresa":
-      return pickLocale(
-        locale,
-        "Curso de esquí de varios días en Sierra Nevada",
-        "Multi-day ski course in Sierra Nevada",
       );
     default:
       return pickLocale(

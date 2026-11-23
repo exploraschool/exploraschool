@@ -23,7 +23,7 @@ import {
   type Instructor,
 } from "@/data/instructors";
 import { useCart } from "@/context/CartContext";
-import { buildCartItem, areConsecutiveDates } from "@/lib/cart";
+import { buildCartItem } from "@/lib/cart";
 import { isBookingStillOpen, isBookingTooLate } from "@/lib/booking-cutoff";
 import {
   calculateSessionPrice,
@@ -117,7 +117,6 @@ export function AddToCartModal({
   const pathname = usePathname();
   const { addItems } = useCart();
   const product = getProductBySlug(productId);
-  const bookingConfig = getProductBookingConfig(productId);
 
   const [dates, setDates] = useState<string[]>([]);
   const [timeSlotId, setTimeSlotId] = useState<TimeSlotId>(() =>
@@ -358,15 +357,7 @@ export function AddToCartModal({
   const isIndividualized = effectiveDiscipline
     ? isIndividualizedDiscipline(effectiveDiscipline)
     : false;
-  const minDays = bookingConfig.minDays;
-  const maxDays = bookingConfig.maxDays;
-  const requireConsecutiveDays = bookingConfig.requireConsecutiveDays ?? false;
-
-  const datesValid =
-    dates.length > 0 &&
-    (!minDays || dates.length >= minDays) &&
-    (!maxDays || dates.length <= maxDays) &&
-    (!requireConsecutiveDays || areConsecutiveDates(dates));
+  const datesValid = dates.length > 0;
 
   const resolvedDisciplineForSubmit: MainDisciplineId | undefined =
     instructorSlug &&
@@ -484,20 +475,11 @@ export function AddToCartModal({
                 locale={locale}
                 dates={dates}
                 onChange={setDates}
-                minDays={minDays}
-                maxDays={maxDays}
-                requireConsecutiveDays={requireConsecutiveDays}
                 isDateUnavailable={(dateKey) => isBookingTooLate(dateKey, timeSlotId)}
                 labels={{
-                  title: minDays && maxDays ? t("courseDates") : t("dates"),
-                  hint:
-                    minDays && maxDays
-                      ? t("courseDatesHint", { min: minDays, max: maxDays })
-                      : t("datesHint"),
-                  empty:
-                    minDays && maxDays
-                      ? t("courseDatesEmpty", { min: minDays, max: maxDays })
-                      : t("datesEmpty"),
+                  title: t("dates"),
+                  hint: t("datesHint"),
+                  empty: t("datesEmpty"),
                 }}
               />
 

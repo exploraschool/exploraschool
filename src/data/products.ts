@@ -1,14 +1,11 @@
 import type { DisciplineId } from "./disciplines";
 import { CURRENT_SEASON } from "./season";
-import { site } from "./site";
 import {
   CURSO_COLECTIVO_FROM_EUR,
   CURSO_COLECTIVO_PER_PERSON_EN,
   CURSO_COLECTIVO_PER_PERSON_ES,
   SESSION_2H_STANDARD,
   SESSION_3H_AFTERNOON,
-  SESSION_CLUB_EMPRESA,
-  CLUB_EMPRESA_EXTRA_EUR,
   SESSION_FULL_DAY,
 } from "@/lib/lesson-pricing";
 
@@ -21,7 +18,6 @@ export type ProductId =
   | "medio-dia"
   | "curso-snow"
   | "particular"
-  | "curso-empresa"
   | "grupal";
 
 export type ProductCategory =
@@ -316,44 +312,6 @@ export const products: Product[] = [
     highlighted: true,
     sortOrder: 2,
     image: "/images/stock/product-private.jpg",
-  },
-  {
-    id: "curso-empresa",
-    slug: "curso-empresa",
-    category: "course",
-    titleEs: "Cursos de 2 a 5 días",
-    titleEn: "2 to 5-day courses",
-    shortDescriptionEs: "Para empresas, clubes y grupos. De 2 a 5 días consecutivos.",
-    shortDescriptionEn: "For companies, clubs and groups. 2 to 5 consecutive days.",
-    descriptionEs:
-      `Cursos de 2 a 5 días en jornada completa (10:00–16:00) para viajes de empresa, clubes deportivos y grupos. ${SESSION_CLUB_EMPRESA[0]} €/día para 1 persona; +${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra. Grupo máximo 8.`,
-    descriptionEn:
-      `2 to 5-day full-day courses (10:00 am–4:00 pm) for corporate trips, sports clubs and groups. €${SESSION_CLUB_EMPRESA[0]}/day for 1 person; +€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person. Maximum group size 8.`,
-    disciplines: ["esqui", "snowboard", "telemark"],
-    fromPrice: SESSION_CLUB_EMPRESA[0],
-    hours: 6,
-    minPeople: 1,
-    maxPeople: 8,
-    scheduleEs: "10:00 – 16:00 (jornada completa)",
-    scheduleEn: "10:00 am – 4:00 pm (full day)",
-    featuresEs: [
-      "Jornada completa cada día (10:00–16:00)",
-      `${SESSION_CLUB_EMPRESA[0]} €/día (1 persona)`,
-      `+${CLUB_EMPRESA_EXTRA_EUR} €/día por cada persona extra`,
-      "De 2 a 5 días consecutivos",
-      site.instructorQualificationsEs,
-    ],
-    featuresEn: [
-      "Full day each day (10:00 am–4:00 pm)",
-      `€${SESSION_CLUB_EMPRESA[0]}/day (1 person)`,
-      `+€${CLUB_EMPRESA_EXTRA_EUR}/day for each extra person`,
-      "2 to 5 consecutive days",
-      site.instructorQualificationsEn,
-    ],
-    season: CURRENT_SEASON.key,
-    highlighted: false,
-    sortOrder: 11,
-    image: "/images/stock/product-corporate.jpg",
   },
 ];
 

@@ -152,17 +152,6 @@ export const EDITORIAL_SEO: Record<string, EditorialSeo> = {
     seoDescriptionEn:
       "Family skiing in Sierra Nevada: how to plan a trip with children, lessons, balanced days and less stress at the resort.",
   },
-  "cursos-esqui-empresas-sierra-nevada": {
-    slug: "cursos-esqui-empresas-sierra-nevada",
-    slugEn: "corporate-ski-courses-sierra-nevada",
-    legacySlugs: [],
-    seoTitleEs: "Cursos de esquí para empresas en Sierra Nevada",
-    seoTitleEn: "Corporate ski courses in Sierra Nevada",
-    seoDescriptionEs:
-      "Cursos de esquí para empresas en Sierra Nevada: team building en la nieve, grupos reducidos e instructores titulados.",
-    seoDescriptionEn:
-      "Corporate ski courses in Sierra Nevada: snow team building, small groups and qualified instructors for your company trip.",
-  },
   "como-llegar-sierra-nevada-guia": {
     slug: "como-llegar-sierra-nevada-guia",
     slugEn: "how-to-get-to-sierra-nevada",

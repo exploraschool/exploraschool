@@ -10,7 +10,6 @@ import {
   SESSION_3H_AFTERNOON,
   SESSION_3H_MORNING,
   SESSION_3H_STANDARD,
-  SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   UNIFIED_SIZE_LABEL_ES,
 } from "@/lib/lesson-pricing";
@@ -274,20 +273,6 @@ export const completeRateTables: CompleteRateTable[] = [
         scheduleEs: "10:00–13:00",
         scheduleEn: "10:00 am–1:00 pm",
         prices: cursoSnowTotals,
-      },
-    ],
-  },
-  {
-    id: "curso-empresa",
-    titleEs: "Cursos de 2 a 5 días",
-    titleEn: "2 to 5-day courses",
-    subtitleEs: "Precio por día",
-    subtitleEn: "Price per day",
-    rows: [
-      {
-        scheduleEs: "10:00–16:00",
-        scheduleEn: "10:00 am–4:00 pm",
-        prices: groupPrices(SESSION_CLUB_EMPRESA),
       },
     ],
   },

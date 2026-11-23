@@ -8,7 +8,6 @@ import {
   SESSION_3H_AFTERNOON,
   SESSION_3H_MORNING,
   SESSION_3H_STANDARD,
-  SESSION_CLUB_EMPRESA,
   SESSION_FULL_DAY,
   sessionPriceForParticipants,
 } from "@/lib/lesson-pricing";
@@ -119,16 +118,8 @@ export type ProductBookingConfig = {
   slotIds: TimeSlotId[];
   defaultSlotId: TimeSlotId;
   flatPricePerPerson?: number;
-  /** Overrides slot table (e.g. club/empresa vs Full Day). */
-  sessionPrices?: readonly number[];
   minPeople?: number;
   maxPeople?: number;
-  /** Minimum calendar days to select (e.g. 2-day course). */
-  minDays?: number;
-  /** Maximum calendar days to select (e.g. 5-day course). */
-  maxDays?: number;
-  /** When true, selected days must form one consecutive block. */
-  requireConsecutiveDays?: boolean;
 };
 
 export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
@@ -188,17 +179,6 @@ export const PRODUCT_BOOKING_CONFIG: Record<ProductId, ProductBookingConfig> = {
     defaultSlotId: "2h-10-12",
     minPeople: 1,
     maxPeople: 8,
-  },
-  "curso-empresa": {
-    profile: "session",
-    slotIds: ["fd-10-16"],
-    defaultSlotId: "fd-10-16",
-    sessionPrices: SESSION_CLUB_EMPRESA,
-    minPeople: 1,
-    maxPeople: 8,
-    minDays: 2,
-    maxDays: 5,
-    requireConsecutiveDays: true,
   },
   /** @deprecated Legacy cart lines — same pricing as `particular`. */
   grupal: {
@@ -323,7 +303,7 @@ export function calculateSessionPrice(
     return Math.round(unit * participants);
   }
 
-  const table = config.sessionPrices ?? SESSION_PRICES_BY_SLOT[slotId];
+  const table = SESSION_PRICES_BY_SLOT[slotId];
   if (!table) return null;
   return sessionPriceForParticipants(table, participants);
 }
@@ -349,7 +329,6 @@ const RATE_TABLE_PRODUCT: Record<string, ProductId> = {
   "medio-dia": "medio-dia",
   "full-day": "full-day",
   "curso-snow": "curso-snow",
-  "curso-empresa": "curso-empresa",
 };
 
 /** Per-table slot map so identical clocks (10:00–13:00, 10:00–16:00) keep the product of that section. */
@@ -372,9 +351,6 @@ const RATE_TABLE_SLOTS: Record<string, Record<string, TimeSlotId>> = {
   },
   "curso-snow": {
     "10:00–13:00": "3h-10-13",
-  },
-  "curso-empresa": {
-    "10:00–16:00": "fd-10-16",
   },
 };
 

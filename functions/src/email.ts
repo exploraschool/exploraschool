@@ -79,7 +79,6 @@ const PRODUCT_TITLES: Record<string, { es: string; en: string }> = {
   "medio-dia": { es: "Clases Forfait medio día", en: "Half-day lift pass lessons" },
   "curso-snow": { es: "Curso de snowboard", en: "Snowboard course" },
   particular: { es: "Clases particulares", en: "Private lessons" },
-  "curso-empresa": { es: "Cursos de 2 a 5 días", en: "2 to 5-day courses" },
 };
 
 const DISCIPLINE_TITLES: Record<string, { es: string; en: string }> = {

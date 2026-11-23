@@ -82,7 +82,6 @@ const images = {
   "stock/product-technical.jpg": sierraNevada.borreguiles5,
   "stock/product-afternoon.jpg": sierraNevada.vistaBorreguiles1,
   "stock/product-private-zona.jpg": sierraNevada.zonaDebutantes2,
-  "stock/product-corporate.jpg": sierraNevada.panorama,
   "stock/product-group.jpg": sierraNevada.estacion2006,
   "stock/video-poster.jpg": sierraNevada.telecabina2025,
   "stock/team-backs.jpg": sierraNevada.vistaBorreguiles2,
